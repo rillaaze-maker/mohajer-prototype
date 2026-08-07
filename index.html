@@ -1,0 +1,1066 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mohajer · Prototype v0.2</title>
+
+<!--
+  MOHAJER · PROTOTYPE v0.2
+  W1 narrow    · Toman → digital dollar
+  W2 secondary · transfer, with a defensible receipt
+  W3 final     · the wallet as a wealth mobility layer
+  Type: Radical (./fonts) — one family, FA + EN + Persian digits.
+  All mock numbers: CONFIG object at the bottom.
+-->
+
+<style>
+@font-face{font-family:Radical;src:url('./fonts/Radical-Light.woff2') format('woff2'),url('./fonts/Radical-Light.ttf') format('truetype');font-weight:300;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Regular.woff2') format('woff2'),url('./fonts/Radical-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Medium.woff2') format('woff2'),url('./fonts/Radical-Medium.ttf') format('truetype');font-weight:500;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-SemiBold.woff2') format('woff2'),url('./fonts/Radical-SemiBold.ttf') format('truetype');font-weight:600;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Bold.woff2') format('woff2'),url('./fonts/Radical-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-ExtraBold.woff2') format('woff2'),url('./fonts/Radical-ExtraBold.ttf') format('truetype');font-weight:800;font-display:swap}
+
+:root{
+  --f:Radical,system-ui,sans-serif;
+
+  --canvas:#F4F4F1;
+  --surface:#FFFFFF;
+  --surface-2:#EDEDE9;
+  --ink:#0D0F12;
+  --ink-2:#6B7076;
+  --ink-3:#A4A9AE;
+  --line:#E4E4DF;
+  --line-2:#EFEFEA;
+
+  --gold:#D5A45C;          /* only ever on dark */
+  --ok:#17936A;
+  --ok-soft:#E7F3EE;
+  --warn:#C2703A;
+
+  --dark:linear-gradient(168deg,#1E232B 0%,#0D0F12 52%,#161B21 100%);
+
+  --r-md:16px; --r-lg:22px; --r-xl:28px;
+  --spring:cubic-bezier(.16,1,.3,1);
+  --swift:cubic-bezier(.4,0,.2,1);
+  --shadow:0 1px 2px rgba(13,15,18,.04),0 10px 30px -16px rgba(13,15,18,.14);
+  --shadow-dark:0 2px 6px rgba(13,15,18,.10),0 24px 48px -22px rgba(13,15,18,.55);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+body{
+  font-family:var(--f);font-weight:400;
+  background:radial-gradient(900px 600px at 50% 0%,#FBFBF9,#E9E9E4 70%,#E2E2DC);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;padding:26px 16px;color:var(--ink);-webkit-font-smoothing:antialiased;
+}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+
+/* ── chrome ── */
+.chrome{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.chip{
+  font:500 12px/1 var(--f);background:rgba(255,255,255,.7);border:1px solid rgba(13,15,18,.07);
+  color:var(--ink-2);padding:8px 13px;border-radius:99px;cursor:pointer;
+  backdrop-filter:blur(8px);transition:.22s var(--swift);white-space:nowrap;
+}
+.chip:hover{background:#fff;color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.wedge-tag{font:500 11px/1 var(--f);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);height:13px;transition:.35s var(--spring)}
+.wedge-tag b{color:var(--ink);font-weight:600}
+
+/* desktop only: the phone scales to whatever height the window has */
+.dev-fab{display:none}
+.stage{position:relative;flex:none}
+.phone{transform-origin:top left}
+
+/* ── phone ── */
+.phone{
+  width:390px;height:844px;position:absolute;top:0;left:0;background:var(--canvas);border-radius:46px;
+  box-shadow:0 0 0 10px #101317,0 0 0 11.5px #303740,0 30px 70px -30px rgba(13,15,18,.55);
+  overflow:hidden;
+}
+.notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:110px;height:30px;background:#101317;border-radius:99px;z-index:60}
+.statusbar{position:absolute;top:0;inset-inline:0;height:52px;z-index:55;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 13px/1 var(--f);pointer-events:none}
+.statusbar .sig{display:flex;gap:4px;align-items:flex-end;opacity:.9}
+.statusbar .sig i{display:block;width:3px;background:currentColor;border-radius:2px}
+
+/* ── screens ── */
+.viewport{position:absolute;inset:0;overflow:hidden}
+.screen{
+  position:absolute;inset:0;padding:58px 20px 20px;display:flex;flex-direction:column;background:var(--canvas);
+  opacity:0;visibility:hidden;pointer-events:none;transform:translateX(22px) scale(.985);
+  transition:opacity .3s var(--swift),transform .5s var(--spring),visibility .5s;
+}
+.screen.active{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.screen.leaving{transform:translateX(-14px) scale(.985);opacity:0}
+html[dir=rtl] .screen{transform:translateX(-22px) scale(.985)}
+html[dir=rtl] .screen.active{transform:none}
+html[dir=rtl] .screen.leaving{transform:translateX(14px) scale(.985)}
+
+/* staggered entrance for direct children marked .rise */
+.screen .rise{opacity:0;transform:translateY(14px);transition:opacity .5s var(--swift),transform .6s var(--spring)}
+.screen.active .rise{opacity:1;transform:none}
+.screen.active .rise:nth-child(1){transition-delay:.04s}
+.screen.active .rise:nth-child(2){transition-delay:.08s}
+.screen.active .rise:nth-child(3){transition-delay:.12s}
+.screen.active .rise:nth-child(4){transition-delay:.16s}
+.screen.active .rise:nth-child(5){transition-delay:.20s}
+.screen.active .rise:nth-child(6){transition-delay:.24s}
+
+.scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;margin:0 -20px;padding:0 20px}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ── nav ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:18px;min-height:38px}
+.back{width:38px;height:38px;border-radius:50%;border:none;background:var(--surface);display:grid;place-items:center;cursor:pointer;flex:none;box-shadow:0 1px 2px rgba(13,15,18,.05);transition:.22s var(--spring)}
+.back:hover{background:var(--ink)}
+.back:hover svg{stroke:#fff}
+.back:active{transform:scale(.9)}
+.back svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s}
+html[dir=rtl] .back svg{transform:scaleX(-1)}
+.nav h2{font-size:17px;font-weight:600;letter-spacing:-.015em}
+.nav .step{margin-inline-start:auto;font-size:12px;font-weight:500;color:var(--ink-3)}
+
+/* ── type ── */
+h1{font-size:29px;font-weight:600;letter-spacing:-.03em;line-height:1.26}
+.lead{font-size:14.5px;font-weight:400;line-height:1.7;color:var(--ink-2)}
+.tiny{font-size:12px;line-height:1.6;color:var(--ink-3)}
+.eyebrow{font-size:11.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+html[lang=fa] .eyebrow{text-transform:none;letter-spacing:0;font-size:12px}
+
+/* ── buttons ── */
+.btn{width:100%;border:none;cursor:pointer;font-family:inherit;height:56px;border-radius:var(--r-md);font-size:15.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .2s var(--spring),background .2s,opacity .3s var(--swift),box-shadow .2s}
+.btn:active{transform:scale(.972)}
+.btn-primary{background:var(--ink);color:#fff;box-shadow:0 8px 22px -10px rgba(13,15,18,.6)}
+.btn-primary:hover{background:#000}
+.btn-ghost{background:transparent;color:var(--ink-2);height:44px;font-weight:500;font-size:13.5px}
+.btn-soft{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(13,15,18,.05)}
+.btn-soft:hover{background:#fff}
+.cta-slot{margin-top:14px;transition:opacity .35s var(--swift),transform .5s var(--spring)}
+.cta-slot.hidden{opacity:0;transform:translateY(16px);pointer-events:none}
+
+/* ── surfaces ── */
+.card{background:var(--surface);border-radius:var(--r-lg);padding:20px;box-shadow:var(--shadow)}
+.dark-card{background:var(--dark);border-radius:var(--r-xl);color:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow-dark)}
+.dark-card::after{content:'';position:absolute;inset-inline-end:-140px;top:-180px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(213,164,92,.16),rgba(213,164,92,.05) 45%,transparent 70%);pointer-events:none}
+
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0}
+.row+.row{border-top:1px solid var(--line-2)}
+.row .k{font-size:13.5px;color:var(--ink-2)}
+.row .v{font-size:13.5px;font-weight:500;text-align:end}
+.row.total .k{font-weight:600;color:var(--ink);font-size:14.5px}
+.row.total .v{font-weight:700;font-size:16.5px}
+
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:6px 11px;font-size:11.5px;font-weight:500;line-height:1}
+.badge-ok{background:var(--ok-soft);color:var(--ok)}
+.badge-quiet{background:var(--surface-2);color:var(--ink-2)}
+.badge-dark{background:rgba(255,255,255,.10);color:rgba(255,255,255,.72)}
+.badge svg{width:12px;height:12px;flex:none}
+
+/* ══ 01 HOME ══ */
+.brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.logo{display:flex;align-items:center;gap:9px}
+.mark{width:31px;height:31px;border-radius:10px;background:var(--ink);display:grid;place-items:center;flex:none}
+.mark svg{width:16px;height:16px}
+.logo .name{font-size:17.5px;font-weight:600;letter-spacing:-.02em}
+
+.hero{padding:28px 24px 26px}
+.hero .lab{font-size:12.5px;color:rgba(255,255,255,.5)}
+.hero .bal{font-size:46px;font-weight:700;letter-spacing:-.04em;line-height:1.04;margin-top:9px}
+.hero .bal::first-letter{color:var(--gold)}
+.hero .sub{font-size:12.5px;color:rgba(255,255,255,.42);margin-top:8px}
+.hero .foot{display:flex;gap:8px;margin-top:22px}
+
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.tile{background:var(--surface);border:none;border-radius:var(--r-lg);padding:18px;cursor:pointer;transition:.26s var(--spring);text-align:start;font-family:inherit;box-shadow:var(--shadow)}
+.tile:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(13,15,18,.05),0 18px 34px -16px rgba(13,15,18,.24)}
+.tile:active{transform:translateY(-1px) scale(.985)}
+.tile:disabled{opacity:.45;cursor:default;transform:none;box-shadow:var(--shadow)}
+.tile .ic{width:38px;height:38px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;margin-bottom:26px}
+.tile .ic svg{width:17px;height:17px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tile .t{font-size:14px;font-weight:600;letter-spacing:-.01em}
+.tile .d{font-size:11.5px;color:var(--ink-3);margin-top:3px;line-height:1.5}
+
+.strip{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--surface);border-radius:var(--r-md);margin-top:12px;box-shadow:var(--shadow);flex:none}
+.strip svg{width:15px;height:15px;stroke:var(--ok);fill:none;stroke-width:1.9;flex:none}
+.strip span{font-size:11.5px;color:var(--ink-2);line-height:1.55}
+.strip u{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink-3);cursor:pointer}
+
+/* ══ 02 EXCHANGE — the dark conversion card ══ */
+.conv{padding:24px 22px 6px}
+.conv-side{display:flex;flex-direction:column;gap:5px}
+.conv-side .cur{font-size:12.5px;font-weight:500;color:rgba(255,255,255,.5)}
+.conv-side .val{font-size:34px;font-weight:700;letter-spacing:-.035em;line-height:1.12;color:#fff}
+.conv-side .val.zero{color:rgba(255,255,255,.24)}
+.conv-side.out .val{font-size:30px}
+.conv-side.out .val::first-letter{color:var(--gold)}
+.caret{display:inline-block;width:2px;height:.78em;background:var(--gold);vertical-align:-.05em;margin-inline-start:3px;animation:blink 1.05s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+.conv-div{display:flex;align-items:center;gap:14px;margin:18px 0}
+.conv-div .ln{flex:1;height:1px;background:rgba(255,255,255,.10)}
+.conv-div .sw{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);display:grid;place-items:center;flex:none}
+.conv-div .sw svg{width:15px;height:15px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* rate + all-in cost, folded into the card so the screen holds 4 blocks not 6 */
+.conv-foot{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:20px;padding:14px 0 16px;border-top:1px solid rgba(255,255,255,.09);background:none;border-inline:none;border-bottom:none;font-family:inherit;font-size:12px;color:rgba(255,255,255,.5);cursor:pointer;position:relative;z-index:1}
+.conv-foot .r{display:flex;align-items:center;gap:5px;font-weight:500;color:rgba(255,255,255,.86)}
+.conv-foot svg{width:13px;height:13px;stroke:rgba(255,255,255,.5);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+html[dir=rtl] .conv-foot svg{transform:scaleX(-1)}
+
+.presets{display:flex;gap:8px;margin-top:16px}
+.preset{flex:1;height:42px;border-radius:99px;border:none;background:var(--surface);font-family:inherit;font-size:13.5px;font-weight:500;color:var(--ink-2);cursor:pointer;transition:.22s var(--spring);box-shadow:0 1px 2px rgba(13,15,18,.05)}
+.preset:hover{background:var(--ink);color:#fff}
+.preset:active{transform:scale(.94)}
+
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:auto}
+.key{height:64px;border:none;background:transparent;border-radius:20px;font-family:inherit;font-size:24px;font-weight:500;color:var(--ink);cursor:pointer;position:relative;overflow:hidden;transition:transform .16s var(--spring)}
+.key::before{content:'';position:absolute;inset:0;background:var(--ink);opacity:0;border-radius:inherit;transition:opacity .3s var(--swift)}
+.key:active::before{opacity:.07;transition:opacity .04s}
+.key:active{transform:scale(.9)}
+.key svg{width:22px;height:22px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto;position:relative}
+
+/* ══ 03 CONFIRM ══ */
+.delta{padding:22px;text-align:center}
+.delta .cap{font-size:12px;color:rgba(255,255,255,.5)}
+.delta .big{font-size:40px;font-weight:700;letter-spacing:-.04em;color:var(--gold);margin:8px 0 12px;line-height:1.04}
+.delta .pair{display:flex;justify-content:center;gap:22px;font-size:12px;color:rgba(255,255,255,.45)}
+.delta .pair b{display:block;font-size:15px;font-weight:600;color:rgba(255,255,255,.9);margin-top:4px;letter-spacing:-.02em}
+
+.note{display:flex;gap:10px;align-items:flex-start;padding:14px 16px;background:var(--surface-2);border-radius:var(--r-md);margin-top:16px}
+.note svg{width:15px;height:15px;stroke:var(--ink-2);fill:none;stroke-width:1.9;flex:none;margin-top:1px}
+.note p{font-size:11.5px;color:var(--ink-2);line-height:1.7}
+.note b{color:var(--ink);font-weight:600}
+
+/* ══ 04 SUCCESS ══ */
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.tick{width:82px;height:82px;border-radius:50%;background:var(--ok-soft);display:grid;place-items:center;margin-bottom:24px}
+.tick svg{width:36px;height:36px;stroke:var(--ok);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.tick svg path{stroke-dasharray:42;stroke-dashoffset:42}
+.screen.active .tick svg path{animation:draw .6s .28s var(--spring) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.screen.active .tick{animation:pop .6s var(--spring)}
+@keyframes pop{0%{transform:scale(.5);opacity:0}62%{transform:scale(1.07)}100%{transform:scale(1);opacity:1}}
+.succ-amt{font-size:38px;font-weight:700;letter-spacing:-.04em}
+
+/* ══ 05 WALLET ══ */
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.act{background:var(--surface);border:none;border-radius:var(--r-lg);padding:16px 12px;cursor:pointer;font-family:inherit;transition:.26s var(--spring);display:flex;flex-direction:column;align-items:center;gap:9px;box-shadow:var(--shadow)}
+.act:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(13,15,18,.05),0 18px 34px -16px rgba(13,15,18,.24)}
+.act:active{transform:scale(.98)}
+.act svg{width:19px;height:19px;stroke:var(--ink);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.act span{font-size:13px;font-weight:500}
+
+.sec{font-size:12.5px;font-weight:600;color:var(--ink-3);margin:22px 0 8px}
+.tx{display:flex;align-items:center;gap:12px;padding:13px 0}
+.tx+.tx{border-top:1px solid var(--line-2)}
+.tx .ic{width:37px;height:37px;border-radius:12px;background:var(--surface);display:grid;place-items:center;flex:none;box-shadow:0 1px 2px rgba(13,15,18,.05)}
+.tx .ic svg{width:16px;height:16px;stroke:var(--ink-2);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tx .m{flex:1;min-width:0}
+.tx .m .t{font-size:13.5px;font-weight:500}
+.tx .m .d{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.tx .a{font-size:13.5px;font-weight:600}
+.tx .a.in{color:var(--ok)}
+
+.ready{display:flex;align-items:center;gap:12px;padding:15px;background:var(--ok-soft);border-radius:var(--r-md);margin-top:12px}
+.ready .ic{width:32px;height:32px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none}
+.ready .ic svg{width:15px;height:15px;stroke:var(--ok);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ready .t{font-size:13px;font-weight:600;color:var(--ok)}
+.ready .d{font-size:11.5px;color:var(--ink-2);margin-top:2px;line-height:1.55}
+
+/* ══ 06 SEND ══ */
+.choice{width:100%;display:flex;align-items:center;gap:13px;padding:16px;background:var(--surface);border:1.5px solid transparent;border-radius:var(--r-lg);cursor:pointer;font-family:inherit;text-align:start;transition:.26s var(--spring);box-shadow:var(--shadow)}
+.choice+.choice{margin-top:9px}
+.choice:active{transform:scale(.985)}
+.choice[aria-pressed=true]{border-color:var(--ink)}
+.choice[aria-pressed=true] .radio{border-color:var(--ink);background:var(--ink)}
+.choice[aria-pressed=true] .radio::after{transform:scale(1)}
+.choice .ic{width:42px;height:42px;border-radius:13px;background:var(--surface-2);display:grid;place-items:center;flex:none}
+.choice .ic svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.choice .m{flex:1}
+.choice .m .t{font-size:14px;font-weight:600}
+.choice .m .d{font-size:11.5px;color:var(--ink-3);margin-top:3px;line-height:1.5}
+.radio{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);flex:none;display:grid;place-items:center;transition:.26s var(--spring)}
+.radio::after{content:'';width:7px;height:7px;border-radius:50%;background:#fff;transform:scale(0);transition:.26s var(--spring)}
+
+.field{margin-top:14px}
+.field label{font-size:12.5px;font-weight:500;color:var(--ink-2);display:block;margin-bottom:7px}
+.field input{width:100%;height:52px;border-radius:var(--r-md);border:1.5px solid transparent;background:var(--surface);padding:0 16px;font-family:inherit;font-size:15px;font-weight:500;color:var(--ink);box-shadow:var(--shadow);transition:.22s var(--swift)}
+.field input:focus{outline:none;border-color:var(--ink)}
+.field input::placeholder{color:var(--ink-3);font-weight:400}
+
+/* ══ 07 ROUTES ══ */
+.route{width:100%;padding:17px;background:var(--surface);border:1.5px solid transparent;border-radius:var(--r-lg);cursor:pointer;font-family:inherit;text-align:start;transition:.26s var(--spring);box-shadow:var(--shadow)}
+.route+.route{margin-top:9px}
+.route:active{transform:scale(.985)}
+.route[aria-pressed=true]{border-color:var(--ink);transform:translateY(-2px);box-shadow:0 2px 4px rgba(13,15,18,.05),0 16px 30px -14px rgba(13,15,18,.26)}
+.route[aria-pressed=true] .radio{border-color:var(--ink);background:var(--ink)}
+.route[aria-pressed=true] .radio::after{transform:scale(1)}
+.route .hd{display:flex;align-items:center;gap:9px;margin-bottom:14px}
+.route .hd .t{font-size:14.5px;font-weight:600;letter-spacing:-.015em}
+.route .hd .radio{margin-inline-start:auto}
+.route .why{font-size:11.5px;color:var(--ink-2);line-height:1.65;margin-top:13px;padding-top:13px;border-top:1px solid var(--line-2)}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.metric .n{font-size:10.5px;color:var(--ink-3);margin-bottom:6px}
+.metric .v{font-size:13px;font-weight:600;letter-spacing:-.01em}
+.dots{display:flex;gap:3px;margin-top:6px}
+.dots i{width:100%;height:4px;border-radius:2px;background:var(--line)}
+.dots i.on{background:var(--ink-3)}
+.dots.hi i.on{background:var(--ok)}
+.dots.lo i.on{background:var(--warn)}
+
+/* ══ 08 RECEIPT ══ */
+.receipt{background:var(--surface);border-radius:var(--r-lg) var(--r-lg) 0 0;padding:22px;box-shadow:var(--shadow)}
+.receipt-edge{height:13px;background:radial-gradient(circle at 6.5px 0,transparent 6.5px,var(--surface) 7px) 0 0/13px 13px repeat-x;margin-bottom:14px}
+.chain{margin-top:18px;padding-top:18px;border-top:1px solid var(--line-2)}
+.chain-item{display:flex;gap:12px;padding-bottom:16px;position:relative}
+.chain-item:last-child{padding-bottom:0}
+.chain-item::before{content:'';position:absolute;inset-inline-start:9.5px;top:21px;bottom:-2px;width:1.5px;background:var(--line)}
+.chain-item:last-child::before{display:none}
+.chain-item .dot{width:20px;height:20px;border-radius:50%;background:var(--ok-soft);display:grid;place-items:center;flex:none;z-index:1}
+.chain-item .dot svg{width:10px;height:10px;stroke:var(--ok);fill:none;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round}
+.chain-item .t{font-size:13px;font-weight:500;line-height:1.45}
+.chain-item .d{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+
+/* ── sheet ── */
+.sheet-bg{position:absolute;inset:0;background:rgba(13,15,18,.42);z-index:70;opacity:0;visibility:hidden;transition:.32s var(--swift);backdrop-filter:blur(3px)}
+.sheet-bg.on{opacity:1;visibility:visible}
+.sheet{position:absolute;inset-inline:0;bottom:0;z-index:71;background:var(--surface);border-radius:var(--r-xl) var(--r-xl) 0 0;padding:12px 20px 26px;transform:translateY(101%);transition:transform .46s var(--spring);max-height:78%;overflow-y:auto}
+.sheet.on{transform:none}
+.grip{width:38px;height:4px;border-radius:99px;background:var(--line);margin:0 auto 18px}
+
+/* ── mobile: full bleed. Prototype controls collapse into a corner FAB so they
+      can never sit on top of the app's own primary button. ── */
+@media (max-width:440px){
+  body{padding:0;gap:0;justify-content:flex-start;background:var(--canvas)}
+  .stage{width:100vw;height:100dvh}
+  .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none;transform:none!important}
+  .notch{display:none}
+  .wedge-tag{display:none}
+
+  .dev-fab{
+    display:grid;place-items:center;position:fixed;top:9px;inset-inline-start:9px;z-index:120;
+    width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;
+    background:rgba(13,15,18,.07);backdrop-filter:blur(8px);
+    transition:.24s var(--spring);
+  }
+  .dev-fab span{width:3px;height:3px;border-radius:50%;background:var(--ink-2);box-shadow:0 -5px 0 var(--ink-2),0 5px 0 var(--ink-2)}
+  .dev-fab[aria-expanded=true]{background:var(--ink);transform:rotate(90deg)}
+  .dev-fab[aria-expanded=true] span{background:#fff;box-shadow:0 -5px 0 #fff,0 5px 0 #fff}
+
+  .chrome{
+    position:fixed;top:46px;inset-inline-start:9px;z-index:119;
+    flex-direction:column;align-items:flex-start;gap:6px;
+    opacity:0;visibility:hidden;transform:translateY(-8px);
+    transition:.26s var(--spring);
+  }
+  .chrome.open{opacity:1;visibility:visible;transform:none}
+  .chip{background:rgba(255,255,255,.94);box-shadow:0 4px 14px -6px rgba(13,15,18,.3)}
+}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+<div class="phone" id="phone">
+  <div class="notch"></div>
+  <div class="statusbar">
+    <span class="num" id="clock">9:41</span>
+    <span class="sig"><i style="height:5px"></i><i style="height:7px"></i><i style="height:9px"></i><i style="height:11px"></i></span>
+  </div>
+
+  <div class="viewport">
+
+    <!-- ══ 01 HOME ══ -->
+    <section class="screen active" data-screen="home" data-wedge="3">
+      <div class="brand rise">
+        <div class="logo">
+          <div class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 17 L10 8 L14 13 L20 5" stroke="#D5A45C" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="name" data-i18n="brand">مهاجر</div>
+        </div>
+        <span class="badge badge-quiet" data-i18n="viewOnly">حالت مشاهده</span>
+      </div>
+
+      <div class="scroll">
+        <div class="rise" style="margin-bottom:22px">
+          <h1 data-i18n="homeH1">همسفر مالی، مهاجر</h1>
+          <p class="lead" style="margin-top:10px" data-i18n="homeLead">تبدیل تومان به دلار دیجیتال و انتقال آن، با مسیری که قابل دفاع است.</p>
+        </div>
+
+        <div class="dark-card hero rise">
+          <div class="lab" data-i18n="balLabel">موجودی دلار دیجیتال</div>
+          <div class="bal num" id="home-balance">$0.00</div>
+          <div class="sub" data-i18n="balEmpty">هنوز تبدیلی انجام نشده</div>
+          <div class="foot"><span class="badge badge-dark" data-i18n="custody">نگهداری نزد شریک دارای مجوز</span></div>
+        </div>
+
+        <div class="tiles rise">
+          <button class="tile" onclick="go('exchange')">
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M7 10h13l-3-3M17 14H4l3 3"/></svg></div>
+            <div class="t" data-i18n="tileExT">تبدیل</div>
+            <div class="d" data-i18n="tileExD">تومان به دلار دیجیتال</div>
+          </button>
+          <button class="tile" id="tile-send" onclick="go('send')" disabled>
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2-6-8-2z"/></svg></div>
+            <div class="t" data-i18n="tileSendT">انتقال</div>
+            <div class="d" data-i18n="tileSendD">به شخص یا برای یک هدف</div>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- disclosure anchors the bottom edge, so the gap above it reads as composition, not a hole -->
+      <div class="strip rise">
+        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span data-i18n="strip">اجرا و نگهداری از طریق شرکای دارای مجوز. <u>فهرست شرکا</u></span>
+      </div>
+    </section>
+
+    <!-- ══ 02 EXCHANGE ══ -->
+    <section class="screen" data-screen="exchange" data-wedge="1">
+      <div class="nav">
+        <button class="back" onclick="go('home')" aria-label="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <h2 data-i18n="exTitle">تبدیل</h2>
+        <span class="step num">1/2</span>
+      </div>
+
+      <div class="dark-card conv">
+        <div class="conv-side">
+          <div class="cur" data-i18n="curToman">تومان</div>
+          <div class="val num" id="amount-display">0<span class="caret"></span></div>
+        </div>
+        <div class="conv-div">
+          <div class="ln"></div>
+          <div class="sw"><svg viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg></div>
+        </div>
+        <div class="conv-side out">
+          <div class="cur" data-i18n="curUsd">دلار دیجیتال</div>
+          <div class="val num" id="usd-out">$0.00</div>
+        </div>
+        <button class="conv-foot" onclick="openSheet()">
+          <span class="num" id="rate-inline">۱ دلار = ۱۴۶,۳۰۵ تومان</span>
+          <span class="r"><span data-i18n="allIn">هزینهٔ کل</span><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span>
+        </button>
+      </div>
+
+      <div class="presets">
+        <button class="preset num" data-preset="50"   onclick="setAmount(50000000)">۵۰ م</button>
+        <button class="preset num" data-preset="100"  onclick="setAmount(100000000)">۱۰۰ م</button>
+        <button class="preset num" data-preset="300"  onclick="setAmount(300000000)">۳۰۰ م</button>
+      </div>
+
+      <div class="keypad">
+        <button class="key num" onclick="key('1')">1</button>
+        <button class="key num" onclick="key('2')">2</button>
+        <button class="key num" onclick="key('3')">3</button>
+        <button class="key num" onclick="key('4')">4</button>
+        <button class="key num" onclick="key('5')">5</button>
+        <button class="key num" onclick="key('6')">6</button>
+        <button class="key num" onclick="key('7')">7</button>
+        <button class="key num" onclick="key('8')">8</button>
+        <button class="key num" onclick="key('9')">9</button>
+        <button class="key num" onclick="key('000')">000</button>
+        <button class="key num" onclick="key('0')">0</button>
+        <button class="key" onclick="key('del')"><svg viewBox="0 0 24 24"><path d="M20 6H9l-5 6 5 6h11a1 1 0 001-1V7a1 1 0 00-1-1z"/><path d="M17 10l-4 4M13 10l4 4"/></svg></button>
+      </div>
+
+      <div class="cta-slot hidden" id="ex-slot">
+        <button class="btn btn-primary" onclick="go('confirm')" data-i18n="continue">ادامه</button>
+      </div>
+    </section>
+
+    <!-- ══ 03 CONFIRM ══ -->
+    <section class="screen" data-screen="confirm" data-wedge="1">
+      <div class="nav">
+        <button class="back" onclick="go('exchange')" aria-label="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <h2 data-i18n="confirmTitle">بررسی</h2>
+        <span class="step num">2/2</span>
+      </div>
+
+      <div class="scroll">
+        <div class="dark-card delta">
+          <div class="cap" data-i18n="deltaCap">نسبت به مسیر صرافی</div>
+          <div class="big num" id="delta-val">+$13.08</div>
+          <div class="pair">
+            <span><span data-i18n="viaSarrafi">صرافی</span><b class="num" id="p-them">$668.92</b></span>
+            <span><span data-i18n="viaMohajer">مهاجر</span><b class="num" id="p-us">$682.00</b></span>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px;padding:4px 20px">
+          <div class="row"><span class="k" data-i18n="rowPay">مبلغ</span><span class="v num" id="r-pay">۱۰۰,۰۰۰,۰۰۰</span></div>
+          <div class="row"><span class="k" data-i18n="rowRate">نرخ</span><span class="v num" id="r-rate">۱۴۶,۳۰۵</span></div>
+          <div class="row"><span class="k" data-i18n="rowSpread">اسپرد ۰٫۹٪</span><span class="v num" id="r-spread">۹۰۰,۰۰۰</span></div>
+          <div class="row"><span class="k" data-i18n="rowFee">کارمزد ثابت</span><span class="v num">$1.50</span></div>
+          <div class="row total"><span class="k" data-i18n="rowNet">دریافتی</span><span class="v num" id="r-net">$682.00</span></div>
+        </div>
+
+        <div class="note">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01" stroke-linecap="round"/></svg>
+          <p data-i18n="note"><b>دلار دیجیتال</b> استیبل‌کوینی با پشتوانهٔ دلار است که نزد شریک نگهدارندهٔ دارای مجوز مهاجر نگهداری می‌شود. نرخ تا ۹۰ ثانیه معتبر است.</p>
+        </div>
+        <div style="height:12px"></div>
+      </div>
+
+      <button class="btn btn-primary" style="margin-top:12px" onclick="doExchange()" data-i18n="confirmCta">تأیید تبدیل</button>
+      <button class="btn btn-ghost" onclick="go('exchange')" data-i18n="editAmount">اصلاح مبلغ</button>
+    </section>
+
+    <!-- ══ 04 SUCCESS ══ -->
+    <section class="screen" data-screen="success" data-wedge="1">
+      <div class="center">
+        <div class="tick"><svg viewBox="0 0 24 24"><path d="M5 13l4.5 4.5L19 7"/></svg></div>
+        <div class="succ-amt num" id="succ-amount">$682.00</div>
+        <p class="lead" style="margin-top:8px" data-i18n="succSub">به کیف پول افزوده شد</p>
+        <div style="margin-top:16px"><span class="badge badge-ok">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4 10-10"/></svg>
+          <span data-i18n="succBadge">سند تبدیل ثبت شد</span></span></div>
+      </div>
+      <button class="btn btn-primary" onclick="go('wallet')" data-i18n="goWallet">کیف پول</button>
+    </section>
+
+    <!-- ══ 05 WALLET ══ -->
+    <section class="screen" data-screen="wallet" data-wedge="3">
+      <div class="brand">
+        <div class="logo">
+          <div class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 17 L10 8 L14 13 L20 5" stroke="#D5A45C" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="name" data-i18n="brand">مهاجر</div>
+        </div>
+        <button class="back" onclick="go('home')" aria-label="home"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      </div>
+
+      <div class="scroll">
+        <div class="dark-card hero">
+          <div class="lab" data-i18n="balLabel">موجودی دلار دیجیتال</div>
+          <div class="bal num" id="wallet-balance">$682.00</div>
+          <div class="sub num" id="wallet-sub">≈ ۹۸,۸۹۰,۵۲۸ تومان</div>
+        </div>
+
+        <div class="acts">
+          <button class="act" onclick="go('send')"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg><span data-i18n="actSend">انتقال</span></button>
+          <button class="act" onclick="go('exchange')"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="actAdd">تبدیل</span></button>
+        </div>
+
+        <div class="ready">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M5 13l4 4 10-10"/></svg></div>
+          <div>
+            <div class="t" data-i18n="readyT">منشأ وجه: مستند</div>
+            <div class="d" data-i18n="readyD">سند تبدیل و رسید بانکی برای این موجودی ثبت شده است.</div>
+          </div>
+        </div>
+
+        <div class="sec" data-i18n="activity">فعالیت</div>
+        <div id="tx-list">
+          <div class="tx">
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M7 10h13l-3-3M17 14H4l3 3"/></svg></div>
+            <div class="m"><div class="t" data-i18n="txExchange">تبدیل تومان به دلار</div><div class="d" data-i18n="txNow">همین حالا · مهاجر</div></div>
+            <div class="a in num" id="tx-amount">+$682.00</div>
+          </div>
+        </div>
+        <div style="height:16px"></div>
+      </div>
+    </section>
+
+    <!-- ══ 06 SEND ══ -->
+    <section class="screen" data-screen="send" data-wedge="2">
+      <div class="nav">
+        <button class="back" onclick="go('wallet')" aria-label="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <h2 data-i18n="sendTitle">انتقال</h2>
+        <span class="step num">1/3</span>
+      </div>
+
+      <div class="scroll">
+        <div class="eyebrow" style="margin-bottom:12px" data-i18n="destination">مقصد</div>
+
+        <button class="choice" id="ch-person" aria-pressed="true" onclick="setTo('person')">
+          <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg></div>
+          <div class="m"><div class="t" data-i18n="toPersonT">به یک شخص</div><div class="d" data-i18n="toPersonD">خانواده، آشنا، یا حساب خودتان در کشوری دیگر</div></div>
+          <div class="radio"></div>
+        </button>
+
+        <button class="choice" id="ch-purpose" aria-pressed="false" onclick="setTo('purpose')">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 8l8-4 8 4-8 4-8-4z"/><path d="M7 11v4c0 1.5 2.2 3 5 3s5-1.5 5-3v-4"/></svg></div>
+          <div class="m"><div class="t" data-i18n="toPurposeT">برای یک هدف مشخص</div><div class="d" data-i18n="toPurposeD">شهریه، اجاره، هزینهٔ درمان</div></div>
+          <div class="radio"></div>
+        </button>
+
+        <div class="field">
+          <label id="recip-label" data-i18n="recipLabel">گیرنده</label>
+          <input id="recip-input" placeholder="نام و کشور" data-i18n-ph="recipPh">
+        </div>
+        <div class="field">
+          <label data-i18n="amountLabel">مبلغ · دلار</label>
+          <input id="send-amount" class="num" value="500" inputmode="decimal" oninput="onSendAmount()">
+        </div>
+        <div style="height:12px"></div>
+      </div>
+
+      <button class="btn btn-primary" style="margin-top:12px" onclick="go('routes')" data-i18n="seeRoutes">مقایسهٔ مسیرها</button>
+    </section>
+
+    <!-- ══ 07 ROUTES ══ -->
+    <section class="screen" data-screen="routes" data-wedge="2">
+      <div class="nav">
+        <button class="back" onclick="go('send')" aria-label="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <h2 data-i18n="routesTitle">مسیر</h2>
+        <span class="step num">2/3</span>
+      </div>
+
+      <div class="scroll">
+        <p class="lead" style="margin-bottom:14px" data-i18n="routesLead">سه مسیر برای انتقال <b class="num" id="routes-amt">$500</b>. سریع‌ترین، لزوماً قابل‌دفاع‌ترین نیست.</p>
+
+        <button class="route" data-route="fast" aria-pressed="false" onclick="setRoute('fast')">
+          <div class="hd"><span class="t" data-i18n="rFastT">مسیر سریع</span><span class="badge badge-quiet" data-i18n="rFastTag">استیبل‌کوین</span><span class="radio"></span></div>
+          <div class="metrics">
+            <div class="metric"><div class="n" data-i18n="mSpeed">سرعت</div><div class="v" data-i18n="rFastSpeed">۱۰ دقیقه</div></div>
+            <div class="metric"><div class="n" data-i18n="mCost">هزینه</div><div class="v num">$2.00</div></div>
+            <div class="metric"><div class="n" data-i18n="mDef">قابل دفاع</div><div class="dots lo"><i class="on"></i><i></i><i></i></div></div>
+          </div>
+          <div class="why" data-i18n="rFastWhy">گیرنده به کیف پول کریپتو نیاز دارد. رسید بانکی تولید نمی‌شود.</div>
+        </button>
+
+        <button class="route" data-route="bank" aria-pressed="true" onclick="setRoute('bank')">
+          <div class="hd"><span class="t" data-i18n="rBankT">بانک شریک</span><span class="badge badge-ok" data-i18n="rBankTag">پیشنهاد مهاجر</span><span class="radio"></span></div>
+          <div class="metrics">
+            <div class="metric"><div class="n" data-i18n="mSpeed">سرعت</div><div class="v" data-i18n="rBankSpeed">۱–۲ روز کاری</div></div>
+            <div class="metric"><div class="n" data-i18n="mCost">هزینه</div><div class="v num">$12.00</div></div>
+            <div class="metric"><div class="n" data-i18n="mDef">قابل دفاع</div><div class="dots hi"><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+          </div>
+          <div class="why" data-i18n="rBankWhy">به حساب بانکی گیرنده می‌نشیند، همراه با سند منشأ وجهی که بانک مقصد می‌پذیرد.</div>
+        </button>
+
+        <button class="route" data-route="card" aria-pressed="false" onclick="setRoute('card')">
+          <div class="hd"><span class="t" data-i18n="rCardT">شارژ کارت</span><span class="badge badge-quiet" data-i18n="rCardTag">آنی</span><span class="radio"></span></div>
+          <div class="metrics">
+            <div class="metric"><div class="n" data-i18n="mSpeed">سرعت</div><div class="v" data-i18n="rCardSpeed">آنی</div></div>
+            <div class="metric"><div class="n" data-i18n="mCost">هزینه</div><div class="v num">$4.00</div></div>
+            <div class="metric"><div class="n" data-i18n="mDef">قابل دفاع</div><div class="dots"><i class="on"></i><i class="on"></i><i></i></div></div>
+          </div>
+          <div class="why" data-i18n="rCardWhy">مناسب هزینه‌های روزمره. سقف ماهانه دارد و برای مبالغ بزرگ مناسب نیست.</div>
+        </button>
+        <div style="height:12px"></div>
+      </div>
+
+      <button class="btn btn-primary" style="margin-top:12px" onclick="doSend()" data-i18n="sendCta">تأیید و ارسال</button>
+    </section>
+
+    <!-- ══ 08 RECEIPT ══ -->
+    <section class="screen" data-screen="receipt" data-wedge="2">
+      <div class="nav">
+        <button class="back" onclick="go('wallet')" aria-label="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <h2 data-i18n="receiptTitle">رسید</h2>
+        <span class="step num">3/3</span>
+      </div>
+
+      <div class="scroll">
+        <div class="receipt">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <span class="badge badge-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4 10-10"/></svg><span data-i18n="rcSent">ارسال شد</span></span>
+            <span class="tiny num" id="rc-id">MHJ-4192-B</span>
+          </div>
+          <div class="num" style="font-size:33px;font-weight:700;letter-spacing:-.04em" id="rc-amount">$500.00</div>
+          <div class="tiny" style="margin-top:5px" id="rc-to">به سارا · تورنتو، کانادا</div>
+
+          <div style="margin-top:16px">
+            <div class="row"><span class="k" data-i18n="rcRoute">مسیر</span><span class="v" id="rc-route">بانک شریک</span></div>
+            <div class="row"><span class="k" data-i18n="rcFee">هزینه</span><span class="v num" id="rc-fee">$12.00</span></div>
+            <div class="row"><span class="k" data-i18n="rcEta">زمان رسیدن</span><span class="v" id="rc-eta">۱–۲ روز کاری</span></div>
+          </div>
+
+          <div class="chain">
+            <div class="tiny" style="font-weight:600;color:var(--ink);margin-bottom:14px" data-i18n="chainTitle">زنجیرهٔ منشأ وجه</div>
+            <div class="chain-item"><div class="dot"><svg viewBox="0 0 24 24"><path d="M5 13l4 4 10-10"/></svg></div><div><div class="t" data-i18n="chain1T">واریز ریالی از حساب بانکی</div><div class="d num" id="chain1d">۱۰۰,۰۰۰,۰۰۰ تومان</div></div></div>
+            <div class="chain-item"><div class="dot"><svg viewBox="0 0 24 24"><path d="M5 13l4 4 10-10"/></svg></div><div><div class="t" data-i18n="chain2T">تبدیل به دلار دیجیتال · مهاجر</div><div class="d num" id="chain2d">$682.00 · ۱۴۶,۳۰۵</div></div></div>
+            <div class="chain-item"><div class="dot"><svg viewBox="0 0 24 24"><path d="M5 13l4 4 10-10"/></svg></div><div><div class="t" data-i18n="chain3T">انتقال از طریق بانک شریک</div><div class="d" data-i18n="chain3D">با سند قابل ارائه به بانک مقصد</div></div></div>
+          </div>
+        </div>
+        <div class="receipt-edge"></div>
+        <button class="btn btn-soft" style="height:50px" data-i18n="downloadPdf">دریافت PDF قابل ارائه به بانک</button>
+        <div style="height:12px"></div>
+      </div>
+
+      <button class="btn btn-primary" style="margin-top:12px" onclick="go('wallet')" data-i18n="done">تمام</button>
+    </section>
+
+  </div>
+
+  <div class="sheet-bg" id="sheet-bg" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheet">
+    <div class="grip"></div>
+    <h2 style="font-size:18.5px;font-weight:600;letter-spacing:-.02em" data-i18n="sheetTitle">هزینهٔ واقعی این تبدیل</h2>
+    <p class="tiny" style="margin-top:8px;margin-bottom:4px" data-i18n="sheetLead">کارمزد تنها بخش دیدنی هزینه است. این‌ها همهٔ آن است.</p>
+    <div class="row"><span class="k" data-i18n="sheetMarket">نرخ بازار آزاد</span><span class="v num" id="s-market">۱۴۵,۰۰۰</span></div>
+    <div class="row"><span class="k" data-i18n="sheetOurRate">نرخ مهاجر</span><span class="v num" id="s-rate">۱۴۶,۳۰۵</span></div>
+    <div class="row"><span class="k" data-i18n="sheetSpread">اسپرد ۰٫۹٪</span><span class="v num" id="s-spread">۹۰۰,۰۰۰</span></div>
+    <div class="row"><span class="k" data-i18n="sheetFlat">کارمزد ثابت</span><span class="v num">$1.50</span></div>
+    <div class="row total"><span class="k" data-i18n="sheetTotal">هزینهٔ کل</span><span class="v num" id="s-total">$8.20</span></div>
+    <div class="note" style="margin-top:14px">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01" stroke-linecap="round"/></svg>
+      <p data-i18n="sheetNote">هزینهٔ پنهانی وجود ندارد. آنچه در صفحهٔ قبل نمایش داده شد، دقیقاً همان مبلغ دریافتی است.</p>
+    </div>
+    <button class="btn btn-primary" style="margin-top:16px" onclick="closeSheet()" data-i18n="gotIt">بستن</button>
+  </div>
+</div>
+</div><!-- /stage -->
+
+<button class="dev-fab" id="dev-fab" aria-expanded="false" onclick="toggleDev()" aria-label="prototype controls"><span></span></button>
+
+<div class="wedge-tag" id="wedge-tag"></div>
+<div class="chrome" id="chrome">
+  <button class="chip" id="lang-btn" onclick="toggleLang()">EN</button>
+  <button class="chip" onclick="resetProto()">↻ Reset</button>
+  <button class="chip" id="annot-btn" aria-pressed="true" onclick="toggleAnnot()">Wedge labels</button>
+</div>
+
+<script>
+/* ══ CONFIG — every mock number lives here ══ */
+const CONFIG={
+  marketRate:145000, mohajerSpread:0.009, sarrafiSpread:0.031, mohajerFlatFee:1.50,
+  routes:{fast:{fee:2,eta:'rFastSpeed',name:'rFastT'},
+          bank:{fee:12,eta:'rBankSpeed',name:'rBankT'},
+          card:{fee:4,eta:'rCardSpeed',name:'rCardT'}}
+};
+
+/* ══ copy — formal register, no second-person familiarity ══ */
+const T={
+ fa:{
+  brand:'مهاجر', viewOnly:'حالت مشاهده',
+  homeH1:'همسفر مالی، مهاجر',
+  homeLead:'تبدیل تومان به دلار دیجیتال و انتقال آن، با مسیری که قابل دفاع است.',
+  balLabel:'موجودی دلار دیجیتال', balEmpty:'هنوز تبدیلی انجام نشده',
+  custody:'نگهداری نزد شریک دارای مجوز',
+  tileExT:'تبدیل', tileExD:'تومان به دلار دیجیتال',
+  tileSendT:'انتقال', tileSendD:'به شخص یا برای یک هدف',
+  strip:'اجرا و نگهداری از طریق شرکای دارای مجوز. <u>فهرست شرکا</u>',
+  exTitle:'تبدیل', curToman:'تومان', curUsd:'دلار دیجیتال', allIn:'هزینهٔ کل', continue:'ادامه',
+  rateFmt:(r)=>`۱ دلار = ${r} تومان`,
+  confirmTitle:'بررسی', deltaCap:'نسبت به مسیر صرافی',
+  viaSarrafi:'صرافی', viaMohajer:'مهاجر',
+  rowPay:'مبلغ', rowRate:'نرخ', rowSpread:'اسپرد ۰٫۹٪', rowFee:'کارمزد ثابت', rowNet:'دریافتی',
+  note:'<b>دلار دیجیتال</b> استیبل‌کوینی با پشتوانهٔ دلار است که نزد شریک نگهدارندهٔ دارای مجوز مهاجر نگهداری می‌شود. نرخ تا ۹۰ ثانیه معتبر است.',
+  confirmCta:'تأیید تبدیل', editAmount:'اصلاح مبلغ',
+  succSub:'به کیف پول افزوده شد', succBadge:'سند تبدیل ثبت شد', goWallet:'کیف پول',
+  actSend:'انتقال', actAdd:'تبدیل',
+  readyT:'منشأ وجه: مستند', readyD:'سند تبدیل و رسید بانکی برای این موجودی ثبت شده است.',
+  activity:'فعالیت', txExchange:'تبدیل تومان به دلار', txNow:'همین حالا · مهاجر',
+  txSent:'انتقال به خارج', txSentSub:'همین حالا · بانک شریک',
+  sendTitle:'انتقال', destination:'مقصد',
+  toPersonT:'به یک شخص', toPersonD:'خانواده، آشنا، یا حساب خودتان در کشوری دیگر',
+  toPurposeT:'برای یک هدف مشخص', toPurposeD:'شهریه، اجاره، هزینهٔ درمان',
+  recipLabel:'گیرنده', recipPh:'نام و کشور',
+  recipLabelP:'هدف پرداخت', recipPhP:'مثلاً شهریهٔ دانشگاه تورنتو',
+  amountLabel:'مبلغ · دلار', seeRoutes:'مقایسهٔ مسیرها',
+  routesTitle:'مسیر',
+  routesLead:'سه مسیر برای انتقال <b class="num" id="routes-amt">$500</b>. سریع‌ترین، لزوماً قابل‌دفاع‌ترین نیست.',
+  rFastT:'مسیر سریع', rFastTag:'استیبل‌کوین', rFastSpeed:'۱۰ دقیقه',
+  rFastWhy:'گیرنده به کیف پول کریپتو نیاز دارد. رسید بانکی تولید نمی‌شود.',
+  rBankT:'بانک شریک', rBankTag:'پیشنهاد مهاجر', rBankSpeed:'۱–۲ روز کاری',
+  rBankWhy:'به حساب بانکی گیرنده می‌نشیند، همراه با سند منشأ وجهی که بانک مقصد می‌پذیرد.',
+  rCardT:'شارژ کارت', rCardTag:'آنی', rCardSpeed:'آنی',
+  rCardWhy:'مناسب هزینه‌های روزمره. سقف ماهانه دارد و برای مبالغ بزرگ مناسب نیست.',
+  mSpeed:'سرعت', mCost:'هزینه', mDef:'قابل دفاع', sendCta:'تأیید و ارسال',
+  receiptTitle:'رسید', rcSent:'ارسال شد', rcRoute:'مسیر', rcFee:'هزینه', rcEta:'زمان رسیدن',
+  chainTitle:'زنجیرهٔ منشأ وجه',
+  chain1T:'واریز ریالی از حساب بانکی', chain2T:'تبدیل به دلار دیجیتال · مهاجر',
+  chain3T:'انتقال از طریق بانک شریک', chain3D:'با سند قابل ارائه به بانک مقصد',
+  downloadPdf:'دریافت PDF قابل ارائه به بانک', done:'تمام',
+  sheetTitle:'هزینهٔ واقعی این تبدیل', sheetLead:'کارمزد تنها بخش دیدنی هزینه است. این‌ها همهٔ آن است.',
+  sheetMarket:'نرخ بازار آزاد', sheetOurRate:'نرخ مهاجر', sheetSpread:'اسپرد ۰٫۹٪',
+  sheetFlat:'کارمزد ثابت', sheetTotal:'هزینهٔ کل',
+  sheetNote:'هزینهٔ پنهانی وجود ندارد. آنچه در صفحهٔ قبل نمایش داده شد، دقیقاً همان مبلغ دریافتی است.',
+  gotIt:'بستن', toman:'تومان',
+  rcToPerson:'به سارا · تورنتو، کانادا', rcToPurpose:'شهریهٔ دانشگاه · تورنتو، کانادا'
+ },
+ en:{
+  brand:'Mohajer', viewOnly:'View only',
+  homeH1:'Mohajer, your financial travel companion',
+  homeLead:'Convert Toman into digital dollars and move them, on a route that holds up to scrutiny.',
+  balLabel:'Digital dollar balance', balEmpty:'No conversions yet',
+  custody:'Held with a licensed custody partner',
+  tileExT:'Exchange', tileExD:'Toman to digital dollars',
+  tileSendT:'Send', tileSendD:'To a person or a purpose',
+  strip:'Execution and custody through licensed partners. <u>Partner list</u>',
+  exTitle:'Exchange', curToman:'Toman', curUsd:'Digital dollars', allIn:'All-in cost', continue:'Continue',
+  rateFmt:(r)=>`1 USD = ${r} Toman`,
+  confirmTitle:'Review', deltaCap:'Compared with an exchange office',
+  viaSarrafi:'Exchange office', viaMohajer:'Mohajer',
+  rowPay:'Amount', rowRate:'Rate', rowSpread:'Spread 0.9%', rowFee:'Flat fee', rowNet:'You receive',
+  note:'<b>Digital dollar</b> is a dollar-backed stablecoin held with Mohajer’s licensed custody partner. The rate holds for 90 seconds.',
+  confirmCta:'Confirm conversion', editAmount:'Adjust amount',
+  succSub:'added to the wallet', succBadge:'Conversion record saved', goWallet:'Wallet',
+  actSend:'Send', actAdd:'Exchange',
+  readyT:'Source of funds: documented', readyD:'A conversion record and bank receipt exist for this balance.',
+  activity:'Activity', txExchange:'Toman → digital dollars', txNow:'Just now · Mohajer',
+  txSent:'Sent abroad', txSentSub:'Just now · Partner bank',
+  sendTitle:'Send', destination:'Destination',
+  toPersonT:'To a person', toPersonD:'Family, an acquaintance, or your own account abroad',
+  toPurposeT:'For a specific purpose', toPurposeD:'Tuition, rent, medical costs',
+  recipLabel:'Recipient', recipPh:'Name and country',
+  recipLabelP:'Purpose of payment', recipPhP:'e.g. University of Toronto tuition',
+  amountLabel:'Amount · USD', seeRoutes:'Compare routes',
+  routesTitle:'Route',
+  routesLead:'Three ways to move <b class="num" id="routes-amt">$500</b>. The fastest is not necessarily the most defensible.',
+  rFastT:'Fast route', rFastTag:'Stablecoin', rFastSpeed:'10 minutes',
+  rFastWhy:'The recipient needs a crypto wallet. No bank receipt is produced.',
+  rBankT:'Partner bank', rBankTag:'Mohajer’s pick', rBankSpeed:'1–2 business days',
+  rBankWhy:'Lands in the recipient’s bank account with a source-of-funds record the receiving bank accepts.',
+  rCardT:'Card top-up', rCardTag:'Instant', rCardSpeed:'Instant',
+  rCardWhy:'Suited to everyday spending. Monthly cap applies; not for large amounts.',
+  mSpeed:'Speed', mCost:'Cost', mDef:'Defensible', sendCta:'Confirm and send',
+  receiptTitle:'Receipt', rcSent:'Sent', rcRoute:'Route', rcFee:'Cost', rcEta:'Arrives in',
+  chainTitle:'Source of funds trail',
+  chain1T:'Rial deposit from a bank account', chain2T:'Converted to digital dollars · Mohajer',
+  chain3T:'Transferred via partner bank', chain3D:'With a record the receiving bank accepts',
+  downloadPdf:'Download bank-ready PDF', done:'Done',
+  sheetTitle:'What this conversion really costs', sheetLead:'The fee is only the visible part. This is all of it.',
+  sheetMarket:'Free-market rate', sheetOurRate:'Mohajer rate', sheetSpread:'Spread 0.9%',
+  sheetFlat:'Flat fee', sheetTotal:'All-in cost',
+  sheetNote:'There is no hidden cost. What the previous screen showed is exactly what is received.',
+  gotIt:'Close', toman:'Toman',
+  rcToPerson:'To Sara · Toronto, Canada', rcToPurpose:'University tuition · Toronto, Canada'
+ }
+};
+
+const S={lang:'fa',screen:'home',raw:'',balance:0,sendTo:'person',route:'bank',sendAmount:500,annot:true};
+
+/* ── digits ── */
+const FA=['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+const loc=s=>S.lang==='fa'?String(s).replace(/\d/g,d=>FA[+d]):String(s);
+const grp=n=>Math.round(n).toLocaleString('en-US');
+const toman=n=>loc(grp(n));
+/* dollar amounts stay in Latin digits in both languages — mixing $ with ۰۱۲
+   reads as broken to Iranian eyes; Toman keeps Persian digits. */
+const usd=n=>'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const usd0=n=>'$'+grp(n);
+
+/* ── number that eases to its new value (Revolut-style) ── */
+const tweens=new WeakMap();
+function tweenTo(el,to,fmt,ms=420){
+  if(!el) return;
+  const prev=tweens.get(el);
+  if(prev) cancelAnimationFrame(prev.raf);
+  const from=prev?prev.cur:to;
+  if(Math.abs(to-from)<0.005){el.textContent=fmt(to);tweens.set(el,{cur:to,raf:0});return}
+  const t0=performance.now();
+  const step=t=>{
+    const p=Math.min(1,(t-t0)/ms);
+    const e=1-Math.pow(1-p,3);          // easeOutCubic
+    const cur=from+(to-from)*e;
+    el.textContent=fmt(cur);
+    const st=tweens.get(el)||{}; st.cur=cur;
+    if(p<1){st.raf=requestAnimationFrame(step)} else {st.cur=to;st.raf=0;el.textContent=fmt(to)}
+    tweens.set(el,st);
+  };
+  tweens.set(el,{cur:from,raf:requestAnimationFrame(step)});
+}
+
+/* ── the money model ── */
+function calc(){
+  const amt=+S.raw||0;
+  const mRate=CONFIG.marketRate*(1+CONFIG.mohajerSpread);
+  const sRate=CONFIG.marketRate*(1+CONFIG.sarrafiSpread);
+  const gross=amt/mRate;
+  const net=Math.max(0,gross-(amt>0?CONFIG.mohajerFlatFee:0));
+  const theirs=amt/sRate;
+  return{amt,mRate,sRate,gross,net,theirs,saved:net-theirs,
+         spread:amt*CONFIG.mohajerSpread,
+         allIn:(amt/CONFIG.marketRate)-net};
+}
+
+/* ── render ── */
+function applyLang(){
+  const t=T[S.lang];
+  document.documentElement.lang=S.lang;
+  document.documentElement.dir=S.lang==='fa'?'rtl':'ltr';
+  document.getElementById('lang-btn').textContent=S.lang==='fa'?'EN':'فا';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const v=t[el.dataset.i18n]; if(typeof v==='string') el.innerHTML=v;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const v=t[el.dataset.i18nPh]; if(v) el.placeholder=v;
+  });
+  document.querySelectorAll('.preset').forEach(el=>{
+    const p=el.dataset.preset;
+    el.textContent=S.lang==='fa'
+      ?(p==='1000'?'۱ میلیارد':loc(p)+' م')
+      :(p==='1000'?'1 bn':p+' m');
+  });
+  document.getElementById('clock').textContent=loc('9:41');
+  setTo(S.sendTo,true);
+  render(true);
+}
+
+function render(instant){
+  const t=T[S.lang], c=calc(), snap=v=>v;
+  const jump=!!instant;
+
+  /* exchange */
+  const disp=document.getElementById('amount-display');
+  disp.innerHTML=(S.raw?toman(+S.raw):loc('0'))+'<span class="caret"></span>';
+  disp.classList.toggle('zero',!S.raw);
+  const out=document.getElementById('usd-out');
+  jump ? out.textContent=usd(c.net) : tweenTo(out,c.net,usd);
+  out.classList.toggle('zero',c.net<=0);
+  document.getElementById('rate-inline').textContent=t.rateFmt(toman(c.mRate));
+  document.getElementById('ex-slot').classList.toggle('hidden',!(c.amt>=1000000));
+
+  /* confirm */
+  const dv=document.getElementById('delta-val');
+  jump ? dv.textContent='+'+usd(Math.max(0,c.saved)) : tweenTo(dv,Math.max(0,c.saved),v=>'+'+usd(v));
+  document.getElementById('p-them').textContent=usd(c.theirs);
+  document.getElementById('p-us').textContent=usd(c.net);
+  document.getElementById('r-pay').textContent=toman(c.amt);
+  document.getElementById('r-rate').textContent=toman(c.mRate);
+  document.getElementById('r-spread').textContent=toman(c.spread);
+  document.getElementById('r-net').textContent=usd(c.net);
+
+  /* sheet */
+  document.getElementById('s-market').textContent=toman(CONFIG.marketRate);
+  document.getElementById('s-rate').textContent=toman(c.mRate);
+  document.getElementById('s-spread').textContent=toman(c.spread);
+  document.getElementById('s-total').textContent=usd(Math.max(0,c.allIn));
+
+  /* balances */
+  const hb=document.getElementById('home-balance'), wb=document.getElementById('wallet-balance');
+  jump?(hb.textContent=usd(S.balance),wb.textContent=usd(S.balance))
+      :(tweenTo(hb,S.balance,usd,700),tweenTo(wb,S.balance,usd,700));
+  document.getElementById('wallet-sub').textContent='≈ '+toman(S.balance*CONFIG.marketRate)+' '+t.toman;
+  document.getElementById('tile-send').disabled=S.balance<=0;
+
+  /* send + receipt */
+  const sa=S.sendAmount||0, rt=CONFIG.routes[S.route];
+  const ra=document.getElementById('routes-amt'); if(ra) ra.textContent=usd0(sa);
+  document.getElementById('rc-amount').textContent=usd(sa);
+  document.getElementById('rc-fee').textContent=usd(rt.fee);
+  document.getElementById('rc-route').textContent=t[rt.name];
+  document.getElementById('rc-eta').textContent=t[rt.eta];
+  document.getElementById('rc-to').textContent=S.sendTo==='person'?t.rcToPerson:t.rcToPurpose;
+  document.getElementById('rc-id').textContent=loc('MHJ-4192-B');
+  document.getElementById('chain1d').textContent=toman(c.amt||100000000)+' '+t.toman;
+  document.getElementById('chain2d').textContent=usd(S.balance||c.net)+' · '+toman(c.mRate);
+
+  updateWedgeTag();
+}
+
+/* ── navigation ── */
+function go(name){
+  const cur=document.querySelector('.screen.active');
+  const nxt=document.querySelector(`[data-screen="${name}"]`);
+  if(!nxt||cur===nxt) return;
+  if(cur){cur.classList.remove('active');cur.classList.add('leaving');
+          setTimeout(()=>cur.classList.remove('leaving'),500)}
+  nxt.classList.add('active');
+  nxt.querySelector('.scroll')?.scrollTo(0,0);
+  S.screen=name;
+
+  updateWedgeTag();
+}
+
+/* ── input ── */
+function key(k){
+  if(k==='del') S.raw=S.raw.slice(0,-1);
+  else if(S.raw.length<13) S.raw=(S.raw==='0'?'':S.raw)+k;
+  render();
+}
+function setAmount(n){S.raw=String(n);render()}
+
+function doExchange(){
+  const c=calc();
+  S.balance+=c.net;
+  document.getElementById('succ-amount').textContent=usd(c.net);
+  document.getElementById('tx-amount').textContent='+'+usd(c.net);
+  go('success'); render(true);
+}
+
+function setTo(kind,silent){
+  S.sendTo=kind; const t=T[S.lang];
+  document.getElementById('ch-person').setAttribute('aria-pressed',kind==='person');
+  document.getElementById('ch-purpose').setAttribute('aria-pressed',kind==='purpose');
+  document.getElementById('recip-label').textContent=kind==='person'?t.recipLabel:t.recipLabelP;
+  document.getElementById('recip-input').placeholder=kind==='person'?t.recipPh:t.recipPhP;
+  if(!silent) render();
+}
+function onSendAmount(){
+  const v=parseFloat(document.getElementById('send-amount').value.replace(/[^\d.]/g,''));
+  S.sendAmount=isNaN(v)?0:v; render();
+}
+function setRoute(r){
+  S.route=r;
+  document.querySelectorAll('.route').forEach(el=>el.setAttribute('aria-pressed',el.dataset.route===r));
+  render();
+}
+function doSend(){
+  const t=T[S.lang], rt=CONFIG.routes[S.route];
+  S.balance=Math.max(0,S.balance-S.sendAmount-rt.fee);
+  const row=document.createElement('div');
+  row.className='tx';
+  row.innerHTML=`<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div>
+    <div class="m"><div class="t">${t.txSent}</div><div class="d">${t.txSentSub}</div></div>
+    <div class="a num">−${usd(S.sendAmount)}</div>`;
+  document.getElementById('tx-list').prepend(row);
+  go('receipt'); render(true);
+}
+
+const openSheet=()=>{document.getElementById('sheet-bg').classList.add('on');document.getElementById('sheet').classList.add('on')};
+const closeSheet=()=>{document.getElementById('sheet-bg').classList.remove('on');document.getElementById('sheet').classList.remove('on')};
+const toggleLang=()=>{S.lang=S.lang==='fa'?'en':'fa';applyLang()};
+
+function resetProto(){
+  S.raw='';S.balance=0;S.sendTo='person';S.route='bank';S.sendAmount=500;
+  document.getElementById('send-amount').value='500';
+  document.getElementById('recip-input').value='';
+  /* keep the seed row (it owns #tx-amount) wherever prepending moved it, drop the rest */
+  document.querySelectorAll('#tx-list .tx').forEach(el=>{if(!el.querySelector('#tx-amount'))el.remove()});
+  setRoute('bank');setTo('person');go('home');render(true);
+}
+
+const WEDGE={1:['NARROW WEDGE','Toman → digital dollar'],
+             2:['SECONDARY WEDGE','transfer · defensible receipt'],
+             3:['FINAL WEDGE','the wallet as a mobility layer']};
+function updateWedgeTag(){
+  const el=document.getElementById('wedge-tag');
+  const w=document.querySelector('.screen.active')?.dataset.wedge;
+  el.style.opacity=S.annot&&w?'1':'0';
+  if(S.annot&&w) el.innerHTML=`<b>${WEDGE[w][0]}</b> &nbsp;·&nbsp; ${WEDGE[w][1]}`;
+}
+function toggleAnnot(){
+  S.annot=!S.annot;
+  document.getElementById('annot-btn').setAttribute('aria-pressed',S.annot);
+  updateWedgeTag();
+}
+
+/* ── the whole 390×844 device scales to fit whatever window height exists,
+      so the prototype never needs browser zoom to be seen whole ── */
+function fitPhone(){
+  const stage=document.getElementById('stage'), phone=document.getElementById('phone');
+  if(window.innerWidth<=440){stage.style.width='';stage.style.height='';phone.style.transform='';return}
+  const reserved=112;                                   // wedge tag + control row + gaps
+  const s=Math.min(1,Math.max(.45,(window.innerHeight-reserved-52)/844));
+  phone.style.transform=`scale(${s})`;
+  stage.style.width=(390*s)+'px';
+  stage.style.height=(844*s)+'px';
+}
+addEventListener('resize',fitPhone);
+fitPhone();
+
+function toggleDev(){
+  const f=document.getElementById('dev-fab'), c=document.getElementById('chrome');
+  const open=f.getAttribute('aria-expanded')!=='true';
+  f.setAttribute('aria-expanded',open);
+  c.classList.toggle('open',open);
+}
+
+document.addEventListener('keydown',e=>{
+  if(S.screen!=='exchange') return;
+  if(/^\d$/.test(e.key)) key(e.key);
+  else if(e.key==='Backspace') key('del');
+  else if(e.key==='Enter'&&!document.getElementById('ex-slot').classList.contains('hidden')) go('confirm');
+});
+
+setAmount(100000000);
+applyLang();
+</script>
+</body>
+</html>

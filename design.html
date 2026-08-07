@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mohajer · Design System v0.2</title>
+<style>
+@font-face{font-family:Radical;src:url('./fonts/Radical-Light.woff2') format('woff2'),url('./fonts/Radical-Light.ttf') format('truetype');font-weight:300;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Regular.woff2') format('woff2'),url('./fonts/Radical-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Medium.woff2') format('woff2'),url('./fonts/Radical-Medium.ttf') format('truetype');font-weight:500;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-SemiBold.woff2') format('woff2'),url('./fonts/Radical-SemiBold.ttf') format('truetype');font-weight:600;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Bold.woff2') format('woff2'),url('./fonts/Radical-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-ExtraBold.woff2') format('woff2'),url('./fonts/Radical-ExtraBold.ttf') format('truetype');font-weight:800;font-display:swap}
+
+:root{
+  --f:Radical,system-ui,sans-serif;
+  --canvas:#F4F4F1;--surface:#FFF;--surface-2:#EDEDE9;
+  --ink:#0D0F12;--ink-2:#6B7076;--ink-3:#A4A9AE;
+  --line:#E4E4DF;--line-2:#EFEFEA;
+  --gold:#D5A45C;--ok:#17936A;--ok-soft:#E7F3EE;--warn:#C2703A;
+  --dark:linear-gradient(168deg,#1E232B 0%,#0D0F12 52%,#161B21 100%);
+  --spring:cubic-bezier(.16,1,.3,1);--swift:cubic-bezier(.4,0,.2,1);
+  --shadow:0 1px 2px rgba(13,15,18,.04),0 10px 30px -16px rgba(13,15,18,.14);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f);background:var(--canvas);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.6}
+.num{font-variant-numeric:tabular-nums}
+
+.wrap{max-width:940px;margin:0 auto;padding:56px 28px 100px}
+header{border-bottom:1px solid var(--line);padding-bottom:34px;margin-bottom:44px}
+.kicker{font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-size:40px;font-weight:700;letter-spacing:-.035em;margin-top:12px;line-height:1.12}
+header p{color:var(--ink-2);font-size:15px;margin-top:12px;max-width:56ch}
+.links{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap}
+.links a{font-size:12.5px;font-weight:500;text-decoration:none;color:var(--ink);background:var(--surface);
+  padding:9px 15px;border-radius:99px;box-shadow:var(--shadow);transition:.2s var(--spring)}
+.links a:hover{background:var(--ink);color:#fff}
+
+section{margin-bottom:56px}
+h2{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+   padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:24px}
+h3{font-size:15px;font-weight:600;letter-spacing:-.015em;margin-bottom:14px}
+p.note{font-size:13.5px;color:var(--ink-2);max-width:64ch;margin-bottom:20px}
+.rule{background:var(--surface);border-inline-start:2.5px solid var(--ink);border-radius:0 12px 12px 0;
+  padding:14px 18px;font-size:13.5px;color:var(--ink-2);margin:20px 0;box-shadow:var(--shadow)}
+.rule b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:720px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+
+/* colour */
+.sw{background:var(--surface);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.sw .chipc{height:74px}
+.sw .meta{padding:11px 13px}
+.sw .nm{font-size:12.5px;font-weight:600}
+.sw .hx{font-size:11.5px;color:var(--ink-3);margin-top:2px;font-variant-numeric:tabular-nums}
+
+/* type specimen */
+.spec{background:var(--surface);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:10px;
+      display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.spec .sample{letter-spacing:-.03em}
+.spec .tag{font-size:11.5px;color:var(--ink-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+th,td{text-align:start;padding:13px 18px;font-size:13px;border-bottom:1px solid var(--line-2)}
+th{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td code,code.i{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--surface-2);
+  padding:2px 7px;border-radius:5px;color:var(--ink)}
+
+/* component demos */
+.demo{background:var(--surface);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
+.demo.dark{background:var(--dark);position:relative;overflow:hidden}
+.demo.dark::after{content:'';position:absolute;right:-140px;top:-180px;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(213,164,92,.16),rgba(213,164,92,.05) 45%,transparent 70%)}
+.btn{border:none;font-family:inherit;height:52px;border-radius:16px;font-size:15px;font-weight:600;width:100%;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .2s var(--spring)}
+.btn:active{transform:scale(.972)}
+.btn-primary{background:var(--ink);color:#fff;box-shadow:0 8px 22px -10px rgba(13,15,18,.6)}
+.btn-soft{background:var(--surface-2);color:var(--ink)}
+.btn-ghost{background:transparent;color:var(--ink-2);font-weight:500;font-size:13.5px;height:44px}
+.badge{display:inline-flex;align-items:center;border-radius:99px;padding:6px 12px;font-size:11.5px;font-weight:500}
+.b-ok{background:var(--ok-soft);color:var(--ok)}
+.b-quiet{background:var(--surface-2);color:var(--ink-2)}
+.b-dark{background:rgba(255,255,255,.10);color:rgba(255,255,255,.72)}
+
+.hero-demo .lab{font-size:12.5px;color:rgba(255,255,255,.5);position:relative}
+.hero-demo .bal{font-size:46px;font-weight:700;letter-spacing:-.04em;color:#fff;margin-top:9px;position:relative}
+.hero-demo .bal::first-letter{color:var(--gold)}
+.hero-demo .sub{font-size:12.5px;color:rgba(255,255,255,.42);margin-top:8px;position:relative}
+
+.dots{display:flex;gap:3px;margin-top:6px;width:80px}
+.dots i{width:100%;height:4px;border-radius:2px;background:var(--line)}
+.dots i.on{background:var(--ok)}
+
+.motion-demo{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--ink-2)}
+.ball{width:16px;height:16px;border-radius:50%;background:var(--ink)}
+.track{flex:1;height:2px;background:var(--line);position:relative}
+.ball.a{animation:slide 2.4s var(--spring) infinite}
+.ball.b{animation:slide 2.4s var(--swift) infinite}
+@keyframes slide{0%,12%{transform:translateX(0)}50%,62%{transform:translateX(160px)}100%{transform:translateX(0)}}
+
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:720px){.do-dont{grid-template-columns:1fr}}
+.dd{background:var(--surface);border-radius:14px;padding:18px;box-shadow:var(--shadow);border-top:3px solid var(--ok)}
+.dd.no{border-top-color:#C0392B}
+.dd .h{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ok);margin-bottom:10px}
+.dd.no .h{color:#C0392B}
+.dd p{font-size:13px;color:var(--ink-2)}
+.dd .fa{font-size:15px;color:var(--ink);margin-bottom:6px;direction:rtl;font-weight:500}
+
+footer{border-top:1px solid var(--line);padding-top:22px;font-size:12px;color:var(--ink-3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Mohajer · Phase 3</div>
+  <h1>Design System v0.2</h1>
+  <p>The rules the prototype is built from. Everything here is already live in the app — this page is the reference, not a proposal.</p>
+  <div class="links">
+    <a href="./index.html">Open the app →</a>
+    <a href="./deck.html">Stakeholder deck →</a>
+  </div>
+</header>
+
+<!-- ══ BRAND ══ -->
+<section>
+  <h2>Brand</h2>
+  <div class="grid g2">
+    <div class="demo">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:34px;height:34px;border-radius:11px;background:var(--ink);display:grid;place-items:center">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M4 17 L10 8 L14 13 L20 5" stroke="#D5A45C" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="font-size:19px;font-weight:600;letter-spacing:-.02em">مهاجر</div>
+      </div>
+      <div style="margin-top:18px;font-size:22px;font-weight:600;letter-spacing:-.02em;direction:rtl">همسفر مالی، مهاجر</div>
+      <div style="font-size:13px;color:var(--ink-2);margin-top:6px">Mohajer, your financial travel companion</div>
+    </div>
+    <div class="demo dark hero-demo">
+      <div class="lab">موجودی دلار دیجیتال</div>
+      <div class="bal num">$682.00</div>
+      <div class="sub">The wallet is the product. Everything else supports it.</div>
+    </div>
+  </div>
+  <div class="rule"><b>Voice.</b> Formal register throughout. No second-person familiarity (<code class="i">تو</code>, <code class="i">ـَت</code>), no verbs attached to currency labels. The audience has money and does not want to be spoken to like a friend.</div>
+</section>
+
+<!-- ══ TYPE ══ -->
+<section>
+  <h2>Typography — Radical</h2>
+  <p class="note">One family covers Persian, Latin, and Persian digits, so FA and EN never diverge typographically. Six weights are loaded: 300 / 400 / 500 / 600 / 700 / 800.</p>
+
+  <div class="spec"><span class="sample num" style="font-size:46px;font-weight:700;letter-spacing:-.04em">$682.00</span><span class="tag">Display · 46 / 700 / −.04em · balance only</span></div>
+  <div class="spec"><span class="sample num" style="font-size:34px;font-weight:700;letter-spacing:-.035em">۱۰۰,۰۰۰,۰۰۰</span><span class="tag">Amount in · 34 / 700 / −.035em</span></div>
+  <div class="spec"><span class="sample" style="font-size:29px;font-weight:600;letter-spacing:-.03em;direction:rtl">همسفر مالی، مهاجر</span><span class="tag">H1 · 29 / 600 / −.03em</span></div>
+  <div class="spec"><span class="sample" style="font-size:17px;font-weight:600;letter-spacing:-.015em;direction:rtl">بررسی</span><span class="tag">Screen title · 17 / 600</span></div>
+  <div class="spec"><span class="sample" style="font-size:14.5px;font-weight:400;direction:rtl">تبدیل تومان به دلار دیجیتال و انتقال آن.</span><span class="tag">Body · 14.5 / 400 / 1.7</span></div>
+  <div class="spec"><span class="sample" style="font-size:12px;color:var(--ink-3);direction:rtl">نگهداری نزد شریک دارای مجوز</span><span class="tag">Caption · 12 / 400</span></div>
+
+  <div class="rule"><b>Digits.</b> Toman uses Persian numerals (<span class="num">۱۰۰,۰۰۰,۰۰۰</span>). Dollars always use Latin numerals (<span class="num">$682.00</span>) in both languages — <span class="num">$۶۸۲.۰۰</span> reads as broken. Every number carries <code class="i">tabular-nums</code> so animated values do not jitter.</div>
+</section>
+
+<!-- ══ COLOUR ══ -->
+<section>
+  <h2>Colour</h2>
+  <div class="grid g4">
+    <div class="sw"><div class="chipc" style="background:#0D0F12"></div><div class="meta"><div class="nm">ink</div><div class="hx">#0D0F12</div></div></div>
+    <div class="sw"><div class="chipc" style="background:#6B7076"></div><div class="meta"><div class="nm">ink-2</div><div class="hx">#6B7076</div></div></div>
+    <div class="sw"><div class="chipc" style="background:#A4A9AE"></div><div class="meta"><div class="nm">ink-3</div><div class="hx">#A4A9AE</div></div></div>
+    <div class="sw"><div class="chipc" style="background:#E4E4DF"></div><div class="meta"><div class="nm">line</div><div class="hx">#E4E4DF</div></div></div>
+    <div class="sw"><div class="chipc" style="background:#F4F4F1"></div><div class="meta"><div class="nm">canvas</div><div class="hx">#F4F4F1</div></div></div>
+    <div class="sw"><div class="chipc" style="background:#FFF;box-shadow:inset 0 0 0 1px var(--line)"></div><div class="meta"><div class="nm">surface</div><div class="hx">#FFFFFF</div></div></div>
+    <div class="sw"><div class="chipc" style="background:#EDEDE9"></div><div class="meta"><div class="nm">surface-2</div><div class="hx">#EDEDE9</div></div></div>
+    <div class="sw"><div class="chipc" style="background:linear-gradient(168deg,#1E232B,#0D0F12 52%,#161B21)"></div><div class="meta"><div class="nm">dark card</div><div class="hx">gradient 168°</div></div></div>
+    <div class="sw"><div class="chipc" style="background:#D5A45C"></div><div class="meta"><div class="nm">gold</div><div class="hx">#D5A45C</div></div></div>
+    <div class="sw"><div class="chipc" style="background:#17936A"></div><div class="meta"><div class="nm">ok</div><div class="hx">#17936A</div></div></div>
+    <div class="sw"><div class="chipc" style="background:#E7F3EE"></div><div class="meta"><div class="nm">ok-soft</div><div class="hx">#E7F3EE</div></div></div>
+    <div class="sw"><div class="chipc" style="background:#C2703A"></div><div class="meta"><div class="nm">warn</div><div class="hx">#C2703A</div></div></div>
+  </div>
+
+  <div class="rule"><b>The one colour rule: gold only ever touches black.</b> On the dark card it reads as money. On the light canvas the same hue reads dated. Light surfaces get ink, grey and white — nothing else. Green marks <em>defensible</em>, never <em>success</em> in general.</div>
+
+  <div class="do-dont" style="margin-top:18px">
+    <div class="dd">
+      <div class="h">Do</div>
+      <div class="fa">$682.00 &nbsp;<span style="color:var(--gold)">$</span></div>
+      <p>Gold on the dark card: the <code class="i">$</code> glyph, the ↓ badge, the delta figure, one soft glow.</p>
+    </div>
+    <div class="dd no">
+      <div class="h">Don't</div>
+      <div class="fa" style="color:#C2703A">Amber buttons on beige</div>
+      <p>No gold or amber on any light surface. No second accent colour. No gradient buttons.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SPACE ══ -->
+<section>
+  <h2>Space, radius, elevation</h2>
+  <table>
+    <tr><th>Token</th><th>Value</th><th>Used for</th></tr>
+    <tr><td><code>radius-md</code></td><td><code>16px</code></td><td>Buttons, inputs, small cards, sheets' inner rows</td></tr>
+    <tr><td><code>radius-lg</code></td><td><code>22px</code></td><td>Standard cards, tiles, choices, routes</td></tr>
+    <tr><td><code>radius-xl</code></td><td><code>28px</code></td><td>Dark hero cards, bottom sheet</td></tr>
+    <tr><td><code>radius-pill</code></td><td><code>99px</code></td><td>Presets, badges, chips</td></tr>
+    <tr><td><code>screen-pad</code></td><td><code>58 / 20 / 20</code></td><td>Top (status bar) / sides / bottom</td></tr>
+    <tr><td><code>shadow-card</code></td><td><code>0 1px 2px /.04 · 0 10px 30px −16px /.14</code></td><td>All light surfaces. Cards have no border — elevation separates them.</td></tr>
+    <tr><td><code>shadow-dark</code></td><td><code>0 2px 6px /.10 · 0 24px 48px −22px /.55</code></td><td>Dark hero cards only</td></tr>
+  </table>
+  <div class="rule"><b>Blocks per screen: four, maximum.</b> The exchange screen started at six and looked like scattered boxes. Rate and all-in cost were folded <em>into</em> the dark card; the duplicate comparison bars on the review screen were deleted outright.</div>
+</section>
+
+<!-- ══ COMPONENTS ══ -->
+<section>
+  <h2>Components</h2>
+  <div class="grid g2">
+    <div class="demo">
+      <h3>Buttons</h3>
+      <button class="btn btn-primary">تأیید تبدیل</button>
+      <div style="height:9px"></div>
+      <button class="btn btn-soft">دریافت PDF</button>
+      <div style="height:9px"></div>
+      <button class="btn btn-ghost">اصلاح مبلغ</button>
+      <p style="font-size:12px;color:var(--ink-3);margin-top:14px">One primary per screen. It rises into place when the form becomes valid rather than un-greying.</p>
+    </div>
+
+    <div class="demo">
+      <h3>Badges</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="badge b-ok">منشأ وجه: مستند</span>
+        <span class="badge b-quiet">حالت مشاهده</span>
+      </div>
+      <h3 style="margin-top:22px">Defensibility meter</h3>
+      <div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      <p style="font-size:12px;color:var(--ink-3);margin-top:12px">Three steps, never a number. It is a judgement, not a score.</p>
+    </div>
+
+    <div class="demo dark hero-demo">
+      <h3 style="color:rgba(255,255,255,.55);font-size:11px;letter-spacing:.1em;text-transform:uppercase;position:relative">Dark hero card</h3>
+      <div class="lab" style="margin-top:14px">تومان</div>
+      <div class="bal num" style="font-size:34px">۱۰۰,۰۰۰,۰۰۰</div>
+      <div style="display:flex;align-items:center;gap:14px;margin:16px 0;position:relative">
+        <div style="flex:1;height:1px;background:rgba(255,255,255,.10)"></div>
+        <div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);display:grid;place-items:center">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#D5A45C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="lab">دلار دیجیتال</div>
+      <div class="bal num" style="font-size:30px">$682.00</div>
+    </div>
+
+    <div class="demo">
+      <h3>Detail rows</h3>
+      <div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line-2);font-size:13.5px"><span style="color:var(--ink-2)">نرخ</span><span class="num" style="font-weight:500">۱۴۶,۳۰۵</span></div>
+      <div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line-2);font-size:13.5px"><span style="color:var(--ink-2)">کارمزد ثابت</span><span class="num" style="font-weight:500">$1.50</span></div>
+      <div style="display:flex;justify-content:space-between;padding:13px 0;font-size:14.5px"><span style="font-weight:600">دریافتی</span><span class="num" style="font-weight:700;font-size:16.5px">$682.00</span></div>
+      <p style="font-size:12px;color:var(--ink-3);margin-top:12px">Hairline separators, no outer border, total row heavier.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MOTION ══ -->
+<section>
+  <h2>Motion</h2>
+  <div class="demo" style="margin-bottom:14px">
+    <div class="motion-demo" style="margin-bottom:16px"><div class="ball a"></div><div class="track"></div><span>spring · <code class="i">cubic-bezier(.16,1,.3,1)</code></span></div>
+    <div class="motion-demo"><div class="ball b"></div><div class="track"></div><span>swift · <code class="i">cubic-bezier(.4,0,.2,1)</code></span></div>
+  </div>
+  <table>
+    <tr><th>Where</th><th>Duration</th><th>Curve</th></tr>
+    <tr><td>Number changing value</td><td><code>420ms</code></td><td>easeOutCubic, per-frame tween — never a snap</td></tr>
+    <tr><td>Balance arriving</td><td><code>700ms</code></td><td>easeOutCubic</td></tr>
+    <tr><td>Screen transition</td><td><code>300 / 500ms</code></td><td>swift opacity, spring transform</td></tr>
+    <tr><td>Entrance stagger</td><td><code>+40ms</code> each</td><td>spring, max 6 children</td></tr>
+    <tr><td>Key press</td><td><code>160ms</code></td><td>spring, scale to <code>.90</code> + ink flash</td></tr>
+    <tr><td>Card select / lift</td><td><code>260ms</code></td><td>spring</td></tr>
+    <tr><td>Bottom sheet</td><td><code>460ms</code></td><td>spring</td></tr>
+  </table>
+  <div class="rule"><b>Direction follows reading order.</b> Screens enter from the inline-end and leave toward the inline-start, so the animation flips automatically between RTL and LTR. Nothing is hard-coded left or right.</div>
+</section>
+
+<!-- ══ COPY ══ -->
+<section>
+  <h2>Copy rules</h2>
+  <div class="do-dont">
+    <div class="dd"><div class="h">Do</div><div class="fa">تومان &nbsp;→&nbsp; دلار دیجیتال</div><p>Currency labels stand alone. The arrow carries the meaning.</p></div>
+    <div class="dd no"><div class="h">Don't</div><div class="fa" style="color:#C2703A">می‌پردازی · می‌گیری</div><p>Verbs make it chatty. Cliché, and the wrong register for the audience.</p></div>
+    <div class="dd"><div class="h">Do</div><div class="fa">نسبت به مسیر صرافی <span style="color:var(--gold)">+$13.08</span></div><p>State the fact and the figure. Let the number do the persuading.</p></div>
+    <div class="dd no"><div class="h">Don't</div><div class="fa" style="color:#C2703A">این نرخ واقعیِ توست</div><p>Second-person familiarity. Assumes intimacy that has not been earned.</p></div>
+  </div>
+  <div class="rule"><b>Never say USDT in the interface.</b> The asset is <em>دلار دیجیتال</em>. The custody partner and backing are disclosed one line below the confirm button — architecture, not a footer.</div>
+</section>
+
+<!-- ══ LOGO ══ -->
+<section>
+  <h2>Logo — production sizes</h2>
+  <p class="note">Design the master as vector on a 24×24 grid. If it survives at 24px it survives everywhere; if it only works large, it is not an app mark.</p>
+  <table>
+    <tr><th>Use</th><th>Size</th><th>Notes</th></tr>
+    <tr><td>Master artwork</td><td><code>SVG</code>, 24×24 grid</td><td>Single source. All raster exports derive from this.</td></tr>
+    <tr><td>App icon master</td><td><code>1024×1024</code></td><td>Mark occupies ~800×800 centred (≈78%), 112px clear on each side</td></tr>
+    <tr><td>iOS icon set</td><td><code>180 · 167 · 152 · 120 · 87 · 80 · 60 · 58 · 40 · 29</code></td><td>Square, no transparency, no pre-rounded corners</td></tr>
+    <tr><td>Android</td><td><code>512</code> (Play) · <code>432×432</code> adaptive</td><td>Adaptive: keep the mark inside the centre 264px safe circle</td></tr>
+    <tr><td>In-app header mark</td><td><code>28–32px</code></td><td>What the app actually renders — currently 31px</td></tr>
+    <tr><td>Favicon</td><td><code>32 · 16</code> + <code>180</code> apple-touch-icon</td><td>Ship an SVG favicon too</td></tr>
+    <tr><td>Wordmark lockup</td><td><code>SVG</code></td><td>Mark + مهاجر, clear space = mark height on all sides</td></tr>
+  </table>
+  <div class="rule"><b>Constraints for a mark that works at 24px:</b> two shapes maximum · no stroke thinner than 2px when scaled to 24 · no gradients · no text inside the mark · one colour plus optionally gold · must read on both the near-black <code class="i">#0D0F12</code> and white.</div>
+</section>
+
+<footer>Mohajer · Design System v0.2 · Phase 3 prototype. Type: Radical. Tokens are the same variables the app ships with.</footer>
+</div>
+</body>
+</html>
