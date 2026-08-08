@@ -109,6 +109,9 @@ html[dir=rtl] .screen.leaving{transform:translateX(14px) scale(.985)}
 .screen.active .rise:nth-child(5){transition-delay:.20s}
 .screen.active .rise:nth-child(6){transition-delay:.24s}
 
+/* only the designated scroll area may flex; nothing else is ever squeezed
+   small enough to crop its own contents */
+.screen>*:not(.scroll){flex:none}
 .scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;margin:0 -20px;padding:0 20px}
 .scroll::-webkit-scrollbar{display:none}
 
@@ -331,12 +334,14 @@ html[dir=rtl] .conv-foot svg{transform:scaleX(-1)}
 .sheet.on{transform:none}
 .grip{width:38px;height:4px;border-radius:99px;background:var(--line);margin:0 auto 18px}
 
-/* ── mobile: full bleed. Prototype controls collapse into a corner FAB so they
-      can never sit on top of the app's own primary button. ── */
+/* ── mobile: the 390×844 device scales to fit the real viewport rather than
+      stretching to it. Browser toolbars can shrink the window as much as they
+      like — the layout stays exactly as designed and nothing can be clipped.
+      Prototype controls collapse into a corner FAB, clear of the app's CTA. ── */
 @media (max-width:440px){
-  body{padding:0;gap:0;justify-content:flex-start;background:var(--canvas)}
-  .stage{width:100vw;height:100dvh}
-  .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none;transform:none!important}
+  html,body{overflow:hidden;height:100%}
+  body{padding:0;gap:0;justify-content:center;background:var(--canvas)}
+  .phone{border-radius:0;box-shadow:none}
   .notch{display:none}
   .wedge-tag{display:none}
 
@@ -1035,14 +1040,23 @@ function toggleAnnot(){
       so the prototype never needs browser zoom to be seen whole ── */
 function fitPhone(){
   const stage=document.getElementById('stage'), phone=document.getElementById('phone');
-  if(window.innerWidth<=440){stage.style.width='';stage.style.height='';phone.style.transform='';return}
-  const reserved=112;                                   // wedge tag + control row + gaps
-  const s=Math.min(1,Math.max(.45,(window.innerHeight-reserved-52)/844));
+  const vv=window.visualViewport;                        // excludes mobile browser toolbars
+  const vw=Math.round(vv?vv.width :window.innerWidth);
+  const vh=Math.round(vv?vv.height:window.innerHeight);
+  const mobile=window.innerWidth<=440;
+
+  /* mobile fills the window; desktop leaves room for the control row below */
+  const availW = mobile ? vw : vw-40;
+  const availH = mobile ? vh : vh-138;   // body padding + wedge tag + control row
+
+  const s=Math.max(.35,Math.min(availW/390, availH/844, mobile?99:1));
   phone.style.transform=`scale(${s})`;
-  stage.style.width=(390*s)+'px';
+  stage.style.width =(390*s)+'px';
   stage.style.height=(844*s)+'px';
 }
 addEventListener('resize',fitPhone);
+addEventListener('orientationchange',()=>setTimeout(fitPhone,120));
+window.visualViewport?.addEventListener('resize',fitPhone);
 fitPhone();
 
 function toggleDev(){
