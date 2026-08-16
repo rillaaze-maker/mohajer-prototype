@@ -6,10 +6,15 @@ Three static pages, no build step, no dependencies.
 
 | File | What it is |
 |---|---|
-| `index.html` | The interactive app — 8 screens, FA/EN, works on phone and desktop |
-| `deck.html` | 9-slide stakeholder deck (arrow keys / swipe) |
-| `design.html` | Design system reference — tokens, type, motion, copy rules, logo sizes |
+| `index.html` | Landing page — links to everything below |
+| `wallet-v0.html` | **Prototype A · Digital Dollar Wallet v0** — the thing users test. 5 flows, 22 screens. |
+| `onboarding.html` | Team guide + the full WS0 document, 28 slides |
+| `deck.html` | 9-slide stakeholder deck |
+| `design.html` | Design system reference |
+| `wedge-v02.html` | Earlier wedge prototype (exchange + transfer), kept for comparison |
 | `fonts/` | Radical, 6 weights, woff2 + ttf fallback |
+
+**Give test participants the direct app link** (`/wallet-v0.html`), not the landing page — the landing page shows other options and can prime them.
 
 ## Publishing to GitHub Pages
 
