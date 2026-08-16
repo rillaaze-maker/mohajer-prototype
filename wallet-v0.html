@@ -2,8 +2,18 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>مهاجر · کیف پول دلار دیجیتال v0</title>
+
+<!-- installable: on a phone, Share → Add to Home Screen gives a real standalone app -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#F4F4F1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="مهاجر">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" href="./icons/icon-192.png">
 <!--
   MOHAJER · PROTOTYPE A · DIGITAL DOLLAR WALLET v0
   Built from Mohajer_Digital_Dollar_Wallet_WS0_v0
@@ -40,7 +50,8 @@
   --sh:0 1px 2px rgba(13,15,18,.04),0 10px 30px -16px rgba(13,15,18,.14);
   --sh-d:0 2px 6px rgba(13,15,18,.10),0 24px 48px -22px rgba(13,15,18,.55);
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;
+  touch-action:manipulation}   /* kills the double-tap-to-zoom delay */
 body{font-family:var(--f);background:radial-gradient(900px 600px at 50% 0%,#FBFBF9,#E9E9E4 70%,#E2E2DC);
   min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:16px;padding:26px 16px;color:var(--ink);-webkit-font-smoothing:antialiased}
@@ -315,21 +326,90 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 .hint{font:500 11px/1 var(--f);color:var(--ink-3);height:12px}
 .dev-fab{display:none}
 
-@media(max-width:440px){
-  html,body{overflow:hidden;height:100%}
-  body{padding:0;gap:0;justify-content:center;background:var(--canvas)}
-  .phone{border-radius:0;box-shadow:none}
-  .notch,.hint{display:none}
-  .dev-fab{display:grid;place-items:center;position:fixed;top:9px;inset-inline-start:9px;z-index:120;
-    width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;background:rgba(13,15,18,.07);
-    backdrop-filter:blur(8px);transition:.24s var(--spring)}
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE — behaves like an installed app, not a shrunken mock-up.
+   No scaling: the layout runs at true 1:1 CSS pixels so type stays
+   readable on small phones. Real safe-area insets, no zoom, no
+   text selection, no rubber-band scroll.
+   ══════════════════════════════════════════════════════════════════ */
+@media(max-width:768px){
+  html,body{height:100%;overflow:hidden;overscroll-behavior:none;
+            -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  body{padding:0;gap:0;display:block;background:var(--canvas)}
+
+  /* the fake device disappears entirely — the real phone is the device */
+  .stage{width:100%;height:100dvh}
+  .phone{position:fixed;inset:0;width:100%;height:100dvh;border-radius:0;box-shadow:none;
+         transform:none!important;background:var(--canvas)}
+  .notch,.statusbar,.hint{display:none}
+
+  /* real notch / home-indicator insets, plus a slim chrome strip at the top that
+     holds the test-data label and the facilitator dot on opposite edges, so
+     neither can ever sit on top of the app's own back button */
+  .screen{
+    padding-top:calc(env(safe-area-inset-top,0px) + 42px);
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 14px);
+    padding-inline:18px;
+  }
+  .screen.tabbed{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 70px)}
+  .scroll{margin-inline:-18px;padding-inline:18px}
+  .cta-slot{margin-top:10px}
+  .screen>*:last-child{margin-bottom:0}
+  /* a screen itself never scrolls — only its .scroll child does. Without this,
+     a stray 1–2px descendant overhang lets the whole view drag like a web page. */
+  .screen{overflow:hidden}
+
+  .tabbar{height:calc(62px + env(safe-area-inset-bottom,0px));
+          padding-bottom:calc(env(safe-area-inset-bottom,0px) + 4px)}
+
+  .sheet{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 22px)}
+
+  /* test label sits on the END edge; the facilitator dot on the START edge */
+  .testflag{top:calc(env(safe-area-inset-top,0px) + 12px);inset-inline-start:auto;inset-inline-end:18px;
+    font-size:8.5px;padding:3px 9px;border-radius:99px;opacity:.85;letter-spacing:.04em}
+
+  .dev-fab{display:grid;place-items:center;position:fixed;z-index:120;
+    top:calc(env(safe-area-inset-top,0px) + 6px);inset-inline-start:14px;
+    width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;
+    background:rgba(13,15,18,.07);backdrop-filter:blur(8px);transition:.24s var(--spring)}
   .dev-fab span{width:3px;height:3px;border-radius:50%;background:var(--ink-2);box-shadow:0 -5px 0 var(--ink-2),0 5px 0 var(--ink-2)}
   .dev-fab[aria-expanded=true]{background:var(--ink);transform:rotate(90deg)}
   .dev-fab[aria-expanded=true] span{background:#fff;box-shadow:0 -5px 0 #fff,0 5px 0 #fff}
-  .chrome{position:fixed;top:46px;inset-inline-start:9px;z-index:119;flex-direction:column;align-items:flex-start;
-    gap:6px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:.26s var(--spring)}
+  .chrome{position:fixed;z-index:119;top:calc(env(safe-area-inset-top,0px) + 44px);inset-inline-start:14px;
+    flex-direction:column;align-items:flex-start;gap:6px;max-width:none;
+    opacity:0;visibility:hidden;transform:translateY(-8px);transition:.26s var(--spring)}
   .chrome.open{opacity:1;visibility:visible;transform:none}
-  .chip{background:rgba(255,255,255,.95);box-shadow:0 4px 14px -6px rgba(13,15,18,.3)}
+  .chip{background:rgba(255,255,255,.96);box-shadow:0 4px 14px -6px rgba(13,15,18,.3)}
+
+  /* inputs may be selected; everything else may not */
+  input,textarea{-webkit-user-select:text;user-select:text}
+}
+
+/* ── short phones: compress the tall screens rather than clipping them ── */
+@media(max-width:768px) and (max-height:750px){
+  .screen{padding-top:calc(env(safe-area-inset-top,0px) + 36px)}
+  .keypad{gap:3px}
+  .key{height:52px;font-size:21px}
+  .amt{padding:2px 0}
+  .amt .v{font-size:34px;min-height:40px}
+  .btn{height:50px}
+  .bal-card .tot{font-size:34px}
+  .bal-card{padding:18px 17px 16px}
+  .split{margin-top:14px}
+  .nav{margin-bottom:12px}
+  .acts{gap:8px}
+  .act{padding:12px}
+  .presets{margin-top:9px}
+  .quote-head .v{font-size:29px}
+  .disc{width:66px;height:66px;margin-bottom:15px}
+  .disc svg{width:29px;height:29px}
+  .big-amt{font-size:28px}
+}
+@media(max-width:768px) and (max-height:640px){
+  .key{height:45px;font-size:19px}
+  .amt .v{font-size:29px;min-height:34px}
+  .btn{height:47px;font-size:14.5px}
+  .bal-card .tot{font-size:30px}
 }
 </style>
 </head>
@@ -1450,19 +1530,36 @@ function toggleDev(){
   f.setAttribute('aria-expanded',open); c.classList.toggle('open',open);
 }
 
-/* ════════ fit to viewport ════════ */
+/* ════════ layout ════════
+   Desktop shows a scaled device mock-up. Mobile does NOT scale — it runs the
+   real layout at 1:1 so type stays readable and it feels like a native app. */
+const MOBILE=()=>matchMedia('(max-width:768px)').matches;
 function fitPhone(){
-  const stage=$('stage'), phone=$('phone'), vv=window.visualViewport;
+  const stage=$('stage'), phone=$('phone');
+  if(MOBILE()){ phone.style.transform=''; stage.style.width=''; stage.style.height=''; return; }
+  const vv=window.visualViewport;
   const vw=Math.round(vv?vv.width:innerWidth), vh=Math.round(vv?vv.height:innerHeight);
-  const mobile=innerWidth<=440;
-  const availW=mobile?vw:vw-40, availH=mobile?vh:vh-138;
-  const s=Math.max(.35,Math.min(availW/390,availH/844,mobile?99:1));
+  const s=Math.max(.35,Math.min((vw-40)/390,(vh-138)/844,1));
   phone.style.transform=`scale(${s})`;
   stage.style.width=(390*s)+'px'; stage.style.height=(844*s)+'px';
 }
 addEventListener('resize',fitPhone);
-addEventListener('orientationchange',()=>setTimeout(fitPhone,120));
+addEventListener('orientationchange',()=>setTimeout(fitPhone,150));
 window.visualViewport?.addEventListener('resize',fitPhone);
+
+/* ════════ native feel: no pinch-zoom, no double-tap zoom, no pull-to-refresh ════════
+   iOS Safari ignores user-scalable=no, so the gesture events are blocked directly. */
+['gesturestart','gesturechange','gestureend'].forEach(ev=>
+  document.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
+let lastTap=0;
+document.addEventListener('touchend',e=>{
+  const now=Date.now();
+  if(now-lastTap<=320 && e.touches.length===0) e.preventDefault();  // second tap of a double-tap
+  lastTap=now;
+},{passive:false});
+document.addEventListener('touchmove',e=>{
+  if(e.touches.length>1) e.preventDefault();                        // two-finger pinch
+},{passive:false});
 
 buildTabs(); $('clock').textContent=fa('9:41'); render(); fitPhone();
 </script>
