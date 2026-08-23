@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مهاجر · جلسهٔ لنگرهای اعتماد</title>
+<meta name="theme-color" content="#0B0D10">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" href="./icons/icon-192.png">
+<style>
+@font-face{font-family:Radical;src:url('./fonts/Radical-Light.woff2') format('woff2'),url('./fonts/Radical-Light.ttf') format('truetype');font-weight:300;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Regular.woff2') format('woff2'),url('./fonts/Radical-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Medium.woff2') format('woff2'),url('./fonts/Radical-Medium.ttf') format('truetype');font-weight:500;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-SemiBold.woff2') format('woff2'),url('./fonts/Radical-SemiBold.ttf') format('truetype');font-weight:600;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Bold.woff2') format('woff2'),url('./fonts/Radical-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-ExtraBold.woff2') format('woff2'),url('./fonts/Radical-ExtraBold.ttf') format('truetype');font-weight:800;font-display:swap}
+
+:root{
+  --f:Radical,system-ui,sans-serif;
+  --gold:#D5A45C;--ok:#3FBF8F;--bad:#E0705A;--warn:#D98A52;--blue:#6FA8DC;
+  --w1:#fff;--w2:rgba(255,255,255,.68);--w3:rgba(255,255,255,.42);
+  --surf:rgba(255,255,255,.055);--surf2:rgba(255,255,255,.10);--brd:rgba(255,255,255,.11);
+  --spring:cubic-bezier(.16,1,.3,1);--swift:cubic-bezier(.4,0,.2,1);
+  --W:880px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--f);color:var(--w1);background:#0B0D10;-webkit-font-smoothing:antialiased;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(900px 600px at 80% -10%,rgba(213,164,92,.13),transparent 62%),
+             radial-gradient(700px 500px at 5% 110%,rgba(63,191,143,.06),transparent 60%),
+             linear-gradient(168deg,#1A1F26,#0B0D10 55%,#12161B)}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+
+.deck{position:fixed;inset:0;z-index:1}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:68px 6vw 80px;opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateY(16px);transition:opacity .38s var(--swift),transform .58s var(--spring),visibility .58s;
+  overflow-y:auto;overscroll-behavior:contain;align-items:flex-start}
+.slide::-webkit-scrollbar{display:none}
+.slide.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.slide>*{width:100%;max-width:var(--W);flex:none}
+.slide .in{opacity:0;transform:translateY(14px);transition:opacity .48s var(--swift),transform .64s var(--spring)}
+.slide.on .in{opacity:1;transform:none}
+.slide.on .in:nth-child(1){transition-delay:.05s}.slide.on .in:nth-child(2){transition-delay:.11s}
+.slide.on .in:nth-child(3){transition-delay:.17s}.slide.on .in:nth-child(4){transition-delay:.23s}
+.slide.on .in:nth-child(5){transition-delay:.29s}.slide.on .in:nth-child(6){transition-delay:.35s}
+
+.eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.14em;color:var(--gold);margin-bottom:16px}
+h1{font-size:clamp(28px,5vw,54px);font-weight:700;letter-spacing:-.035em;line-height:1.16}
+h2{font-size:clamp(21px,3.2vw,34px);font-weight:600;letter-spacing:-.028em;line-height:1.32;margin-bottom:6px}
+.lead{font-size:clamp(13.5px,1.5vw,16px);color:var(--w2);max-width:56ch;margin-top:12px}
+.sub{font-size:clamp(12px,1.3vw,14px);color:var(--w3);margin-top:10px}
+.hero-line{font-size:clamp(20px,3.2vw,34px);font-weight:600;letter-spacing:-.026em;line-height:1.45;max-width:24ch}
+.hero-line b{color:var(--gold);font-weight:700}
+b{font-weight:600}
+
+.pill{display:inline-flex;align-items:center;gap:7px;background:var(--surf2);border-radius:99px;padding:6px 13px;font-size:11.5px;color:var(--w2);font-weight:500}
+.pill .d{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+
+.cards{display:grid;gap:11px}
+.c2{grid-template-columns:repeat(2,1fr)}.c3{grid-template-columns:repeat(3,1fr)}.c4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:17px}
+.card .n{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--gold);margin-bottom:10px}
+.card h3{font-size:clamp(14px,1.7vw,17px);font-weight:600;letter-spacing:-.018em;line-height:1.4}
+.card p{font-size:12.5px;color:var(--w3);line-height:1.62;margin-top:7px}
+.card.lit{background:linear-gradient(160deg,rgba(213,164,92,.15),rgba(213,164,92,.03));border-color:rgba(213,164,92,.3)}
+.card.good{border-color:rgba(63,191,143,.32);background:linear-gradient(160deg,rgba(63,191,143,.10),transparent)}
+.card.bad{border-color:rgba(224,112,90,.30);background:linear-gradient(160deg,rgba(224,112,90,.09),transparent)}
+
+.steps{display:flex;flex-direction:column}
+.st{display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--brd);align-items:flex-start}
+.st:last-child{border-bottom:none}
+.st .i{font-size:11.5px;font-weight:700;color:var(--gold);flex:none;width:24px;line-height:1.7;padding-top:1px}
+.st .c{flex:1;min-width:0}
+.st .hd{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.st .t{font-size:clamp(14px,1.7vw,17px);font-weight:600;letter-spacing:-.018em;line-height:1.4}
+.st .d{font-size:12.5px;color:var(--w3);line-height:1.6;margin-top:4px}
+.tag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:99px;background:rgba(255,255,255,.09);color:var(--w3);flex:none;line-height:1.5}
+.tag.g{background:rgba(63,191,143,.16);color:var(--ok)}
+.tag.y{background:rgba(213,164,92,.16);color:var(--gold)}
+.tag.r{background:rgba(224,112,90,.15);color:var(--bad)}
+
+.toc{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.toc button{background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:17px;
+  cursor:pointer;font-family:inherit;text-align:start;color:#fff;transition:.24s var(--spring)}
+.toc button:hover{border-color:var(--gold);transform:translateY(-3px)}
+.toc .k{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--gold)}
+.toc .t{font-size:15px;font-weight:600;margin-top:8px;letter-spacing:-.02em}
+.toc .d{font-size:11.5px;color:var(--w3);margin-top:5px;line-height:1.5}
+
+.vs2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vsx{border-radius:16px;padding:20px;border:1px solid var(--brd)}
+.vsx.no{background:linear-gradient(160deg,rgba(224,112,90,.10),transparent);border-color:rgba(224,112,90,.3)}
+.vsx.yes{background:linear-gradient(160deg,rgba(63,191,143,.11),transparent);border-color:rgba(63,191,143,.33)}
+.vsx .h{font-size:10.5px;font-weight:700;letter-spacing:.12em;margin-bottom:12px}
+.vsx.no .h{color:var(--bad)}.vsx.yes .h{color:var(--ok)}
+.vsx .big{font-size:clamp(15px,1.9vw,19px);font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1.7}
+
+.anchors{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.an{background:var(--surf);border:1px solid var(--brd);border-radius:15px;padding:15px 13px;text-align:center}
+.an .ic{width:22px;height:22px;margin:0 auto 10px;display:block;color:var(--w2)}
+.an.hot .ic{color:var(--gold)}
+.an .t{font-size:12.5px;font-weight:600;letter-spacing:-.01em;line-height:1.35}
+.an .d{font-size:10.5px;color:var(--w3);margin-top:5px;line-height:1.45}
+.an.hot{border-color:rgba(213,164,92,.34);background:linear-gradient(160deg,rgba(213,164,92,.14),transparent)}
+
+.quote{background:var(--surf);border-inline-start:2.5px solid var(--gold);border-radius:0 14px 14px 0;padding:16px 18px}
+.quote p{font-size:14px;color:var(--w1);line-height:1.85}
+.quote .who{font-size:11px;color:var(--w3);margin-top:9px}
+
+.map{display:flex;flex-direction:column}
+.mr{display:grid;grid-template-columns:1fr 24px 1.35fr;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--brd)}
+.mr:last-child{border-bottom:none}
+.mr .a{font-size:13px;font-weight:600;letter-spacing:-.01em}
+.mr .a small{display:block;font-size:11px;color:var(--w3);font-weight:400;margin-top:2px}
+.mr .ar{color:var(--gold);text-align:center;font-size:15px;transform:scaleX(-1)}
+.mr .b{font-size:12.5px;color:var(--w2);line-height:1.55}
+.mr .b b{color:#fff}
+
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 0}
+.chk .b{width:18px;height:18px;border-radius:6px;background:rgba(63,191,143,.16);color:var(--ok);
+  display:grid;place-items:center;font-size:10px;flex:none;margin-top:2px;font-weight:700}
+.chk.x .b{background:rgba(224,112,90,.15);color:var(--bad)}
+.chk.q .b{background:rgba(213,164,92,.16);color:var(--gold)}
+.chk .t{font-size:13.5px;color:var(--w2);line-height:1.6}
+.chk .t b{color:#fff}
+
+.callout{background:linear-gradient(150deg,rgba(213,164,92,.13),rgba(213,164,92,.02));
+  border:1px solid rgba(213,164,92,.28);border-radius:18px;padding:20px}
+.callout .k{font-size:10.5px;font-weight:700;letter-spacing:.12em;color:var(--gold);margin-bottom:10px}
+.callout p{font-size:13.5px;color:var(--w2);line-height:1.75}
+.callout p+p{margin-top:9px}
+.callout b{color:#fff}
+.callout.ok{background:linear-gradient(150deg,rgba(63,191,143,.12),transparent);border-color:rgba(63,191,143,.3)}
+.callout.ok .k{color:var(--ok)}
+.callout.warn{background:linear-gradient(150deg,rgba(224,112,90,.10),transparent);border-color:rgba(224,112,90,.28)}
+.callout.warn .k{color:var(--bad)}
+
+.bar{position:fixed;bottom:0;inset-inline:0;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 6vw;z-index:10;gap:14px}
+.dots-nav{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.dots-nav button{width:6px;height:6px;border-radius:50%;border:none;background:rgba(255,255,255,.18);cursor:pointer;padding:0;transition:.3s var(--spring)}
+.dots-nav button[aria-current=true]{background:var(--gold);width:18px;border-radius:99px}
+.dots-nav .gap{width:9px}
+.arrows{display:flex;gap:8px;flex:none}
+.arrows button{width:38px;height:38px;border-radius:50%;border:1px solid var(--brd);background:var(--surf);cursor:pointer;display:grid;place-items:center;transition:.24s var(--spring)}
+.arrows button:hover:not(:disabled){background:#fff}
+.arrows button:hover:not(:disabled) svg{stroke:#0B0D10}
+.arrows button:disabled{opacity:.25;cursor:default}
+.arrows svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s;transform:scaleX(-1)}
+.brandbar{position:fixed;top:0;inset-inline:0;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 6vw;z-index:10;font-size:12px;color:var(--w3);gap:12px}
+.brandbar .lg{display:flex;align-items:center;gap:9px;color:#fff;font-weight:600;font-size:14.5px;flex:none;cursor:pointer}
+.brandbar .mk{width:25px;height:25px;border-radius:8px;background:rgba(255,255,255,.10);display:grid;place-items:center}
+.brandbar .ch{flex:1;text-align:center;color:var(--gold);font-weight:600;font-size:11.5px;letter-spacing:.08em}
+.prog{position:fixed;top:0;inset-inline-start:0;height:2px;background:var(--gold);z-index:11;transition:width .5s var(--spring)}
+
+@media(max-width:880px){
+  .c3,.c2,.c4,.vs2,.toc{grid-template-columns:1fr}
+  .anchors{grid-template-columns:repeat(2,1fr)}
+  .mr{grid-template-columns:1fr;gap:5px}
+  .mr .ar{display:none}
+  .slide{justify-content:flex-start;padding-top:80px}
+}
+</style>
+</head>
+<body>
+
+<div class="prog" id="prog"></div>
+<div class="brandbar">
+  <div class="lg" onclick="show(1)"><div class="mk"><svg viewBox="0 0 49.33 39.99" width="14" height="14" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></div>مهاجر</div>
+  <div class="ch" id="chapter"></div>
+  <div class="num" id="counter" style="flex:none">1 / 18</div>
+</div>
+
+<div class="deck" id="deck">
+
+<!-- 1 -->
+<section class="slide on" data-ch="">
+  <div class="in"><div class="pill"><span class="d"></span>جلسهٔ ایده‌پردازی · لنگرهای اعتماد</div></div>
+  <h1 class="in" style="margin-top:20px">چطور کسی به تو<br>پول می‌سپارد؟</h1>
+  <p class="lead in">جمع‌بندی جلسهٔ تیم دربارهٔ Trust Anchor — چه شد، چه بیرون آمد، و دقیقاً چه چیزی از آن باید وارد پروتوتایپ شود.</p>
+  <div class="sub in">با کلیدهای ← → یا سوایپ حرکت کن · روی لوگو بزنی به فهرست برمی‌گردی</div>
+</section>
+
+<!-- 2 · CONTENTS -->
+<section class="slide" data-ch="فهرست">
+  <div class="eyebrow in">فهرست</div>
+  <h2 class="in" style="margin-bottom:16px">چهار فصل</h2>
+  <div class="toc in">
+    <button onclick="show(2)"><div class="k">فصل ۱ · ۴ صفحه</div><div class="t">جلسه چه بود؟</div><div class="d">روش، گرم‌کردن‌ها و آن محدودیت عجیب</div></button>
+    <button onclick="show(6)"><div class="k">فصل ۲ · ۵ صفحه</div><div class="t">پنج لنگر</div><div class="d">ماتریس اصلی — خروجی واقعی جلسه</div></button>
+    <button onclick="show(11)"><div class="k">فصل ۳ · ۲ صفحه</div><div class="t">پروتکل بدون نام</div><div class="d">اعتماد را بساز، اسمش را نبر</div></button>
+    <button onclick="show(13)"><div class="k">فصل ۴ · ۵ صفحه</div><div class="t">برای پروتوتایپ</div><div class="d">هر لنگر دقیقاً چه چیزی در UI می‌شود</div></button>
+  </div>
+  <div class="callout in" style="margin-top:20px">
+    <p>اگر وقت نداری: <b>فصل ۲ و ۴.</b> فصل ۲ می‌گوید تیم چه چیزی کشف کرد، فصل ۴ می‌گوید من پیشنهاد می‌کنم چه بسازیم.</p>
+  </div>
+</section>
+
+<!-- 3 · METHOD -->
+<section class="slide" data-ch="فصل ۱ · جلسه">
+  <div class="eyebrow in">روش جلسه</div>
+  <h2 class="in" style="margin-bottom:6px">مکنزی برای ساختار، آیدیو برای قواعد</h2>
+  <p class="lead in" style="margin-bottom:16px">هدف این بود که آدم‌ها خودشان را سانسور نکنند. سه قانون روی میز بود:</p>
+  <div class="cards c3 in">
+    <div class="card lit"><div class="n">قانون ۱</div><h3>هیچ ایده‌ای احمقانه نیست</h3><p>ایدهٔ بد هم مسیر را باز می‌کند.</p></div>
+    <div class="card lit"><div class="n">قانون ۲</div><h3>کمیت بر کیفیت</h3><p>اول زیاد بساز، بعد انتخاب کن.</p></div>
+    <div class="card lit"><div class="n">قانون ۳</div><h3>هیچ‌کس را قضاوت نکن</h3><p>مهم‌ترینشان. یک پوزخند، جلسه را می‌بندد.</p></div>
+  </div>
+  <div class="quote in" style="margin-top:18px">
+    <p>«هیچ ایده‌ای احمقانه نیست. هر چقدر بتونید بیشتر ایده بدید، کمیت از کیفیت بهتره. و اصلاً مهم‌تر اینه که هیچ‌کس رو جاج نکنیم.»</p>
+    <div class="who">از ترنسکریپت جلسه</div>
+  </div>
+</section>
+
+<!-- 4 · WARMUP 1 -->
+<section class="slide" data-ch="فصل ۱ · جلسه">
+  <div class="eyebrow in">گرم‌کردن ۱</div>
+  <h2 class="in" style="margin-bottom:6px">چتر، به جز باران، به چه درد می‌خورد؟</h2>
+  <p class="lead in" style="margin-bottom:14px">تمرین کلاسیک تفکر واگرا. جواب‌های تیم:</p>
+  <div class="cards c4 in">
+    <div class="card"><h3>عصا</h3></div>
+    <div class="card"><h3>حریم خصوصی</h3><p>دیوار موقت برای یک گفت‌وگو</p></div>
+    <div class="card"><h3>دور کردن حیوانات</h3></div>
+    <div class="card"><h3>جمع‌کردن آب باران</h3></div>
+    <div class="card"><h3>گلدان برزنتی</h3></div>
+    <div class="card"><h3>لوستر و چراغ خواب</h3></div>
+    <div class="card"><h3>ترمز موتور</h3><p>باز کردنش رو به عقب</p></div>
+    <div class="card lit"><h3>…و ادامه داشت</h3><p>نکته همین است: بعد از ایدهٔ دهم، ایده‌های واقعی شروع می‌شوند.</p></div>
+  </div>
+</section>
+
+<!-- 5 · WARMUP 2 -->
+<section class="slide" data-ch="فصل ۱ · جلسه">
+  <div class="eyebrow in">گرم‌کردن ۲</div>
+  <h2 class="in" style="margin-bottom:6px">بدترین کافهٔ دنیا را طراحی کن</h2>
+  <p class="lead in" style="margin-bottom:14px">تمرین معکوس: به‌جای «تجربهٔ خوب چیست؟»، بپرس «چطور می‌شود همه‌چیز را خراب کرد؟»</p>
+  <div class="cards c2 in">
+    <div class="card bad"><div class="n" style="color:var(--bad)">محیط</div><h3>تابستان جهنم، زمستان یخبندان</h3><p>صندلی خیس · نور چشم‌زنِ چشمک‌زن · صدای ناخن روی تخته</p></div>
+    <div class="card bad"><div class="n" style="color:var(--bad)">اصطکاک</div><h3>هیچ پارکینگی نیست</h3><p>منوی دست‌نویس ناخوانا · محدودیت زمان نشستن · بیرونت می‌کنند</p></div>
+    <div class="card bad"><div class="n" style="color:var(--bad)">عملیات</div><h3>کیک با قاشق سوپ‌خوری</h3><p>قهوه در بشقاب کم‌عمق · غذای مانده · برخورد بی‌اعتنا</p></div>
+    <div class="card bad"><div class="n" style="color:var(--bad)">پرداخت</div><h3>فقط نقد یا سکهٔ طلا</h3><p>هیچ دستگاه کارت‌خوانی در کار نیست</p></div>
+  </div>
+  <div class="callout ok in" style="margin-top:16px">
+    <div class="k">چرا این تمرین کار می‌کند</div>
+    <p>«تجربهٔ خوب» مبهم است؛ همه سرشان را تکان می‌دهند و چیزی گفته نمی‌شود. اما <b>«بدترین حالت» دقیق است</b> — و هر موردش، وارونه‌اش می‌شود یک الزام طراحی. آن آخری را نگاه کن: «فقط نقد قبول می‌کنیم» دقیقاً همان دردی است که مهاجر می‌خواهد حل کند.</p>
+  </div>
+</section>
+
+<!-- 6 · THE CONSTRAINT -->
+<section class="slide" data-ch="فصل ۱ · جلسه">
+  <div class="eyebrow in">محدودیت اصلی جلسه</div>
+  <div class="hero-line in">اگر مهاجر <b>هیچ اپی</b> نداشت،<br>هیچ سایتی، هیچ رابط کاربری —<br>چطور کسی به آن پول می‌سپرد؟</div>
+  <p class="lead in" style="margin-top:20px">فرض کن سرویس فقط یک شمارهٔ تلفن است. یک آدم که وصل می‌کند. همین.</p>
+  <div class="callout in" style="margin-top:18px">
+    <div class="k">چرا این سؤال هوشمندانه است</div>
+    <p>وقتی UI را برمی‌داری، هر چیزی که فقط «ظاهرِ حرفه‌ای» بود از بین می‌رود. آنچه می‌ماند، <b>لنگرهای واقعی اعتماد</b> است.</p>
+    <p>و نتیجهٔ عملی‌اش این است: این لنگرها باید <b>محتوا</b> باشند، نه دکور. هر کدامشان باید در یک ربات تلگرام یا یک تماس تلفنی هم کار کند. اگر چیزی فقط داخل اپ معنا دارد، لنگر نیست.</p>
+  </div>
+</section>
+
+<!-- 7 · THE FIVE ANCHORS -->
+<section class="slide" data-ch="فصل ۲ · پنج لنگر">
+  <div class="eyebrow in">خروجی اصلی جلسه</div>
+  <h2 class="in" style="margin-bottom:16px">ماتریس پنج لنگر</h2>
+  <div class="anchors in">
+    <div class="an hot"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L5 13h6l-1 9 8-11h-6l1-9z"/></svg><div class="t">سرعت و عملیات</div><div class="d">تسویهٔ آنی · پشتیبانی واقعی ۲۴ ساعته</div></div>
+    <div class="an hot"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="16.5" cy="9.5" r="2.2"/><path d="M3 19c0-3.1 2.7-5.2 6-5.2s6 2.1 6 5.2"/><path d="M16.5 13.8c2.6 0 4.5 1.7 4.5 4.2"/></svg><div class="t">مقیاس اجتماعی</div><div class="d">من تنها مشتری نیستم</div></div>
+    <div class="an"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5L12 4.5l8.5 6"/><path d="M5.5 10v9h13v-9"/><path d="M10 19v-5.2h4V19"/></svg><div class="t">حضور فیزیکی</div><div class="d">دفتری هست که بشود رفت</div></div>
+    <div class="an"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2l7 2.9v5.7c0 4.3-2.9 7.2-7 8.7-4.1-1.5-7-4.4-7-8.7V6.1l7-2.9z"/></svg><div class="t">بیمهٔ سرمایه</div><div class="d">حتی در بحران</div></div>
+    <div class="an hot"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="15.5" cy="12" r="5.8"/><circle cx="5.5" cy="12" r="2.4"/></svg><div class="t">انعطاف در مبلغ</div><div class="d">با ۵ دلار هم می‌شود امتحان کرد</div></div>
+  </div>
+  <div class="callout in" style="margin-top:18px">
+    <div class="k">سه‌تای طلایی</div>
+    <p>سه لنگرِ رنگی، آن‌هایی هستند که <b>در پروتوتایپ v0 می‌شود ساخت و تست کرد</b> بدون هیچ شریک واقعی. دو تای دیگر ادعای عملیاتی‌اند و فعلاً فقط می‌شود واکنش کاربر به آن‌ها را سنجید.</p>
+  </div>
+</section>
+
+<!-- 8 · ANCHOR 1 -->
+<section class="slide" data-ch="لنگر ۱ · سرعت">
+  <div class="eyebrow in">لنگر ۱ · عملیاتی و سرعت</div>
+  <h2 class="in" style="margin-bottom:6px">پول که نشست، اعتماد قفل می‌شود</h2>
+  <div class="quote in" style="margin:14px 0">
+    <p>«طرف وقتی می‌بینه همون جا پول می‌شینه به حسابش، بهت اعتماد می‌کنه.»</p>
+    <div class="who">ترنسکریپت · بخش سرعت</div>
+  </div>
+  <div class="cards c2 in">
+    <div class="card lit"><div class="n">جزء ۱</div><h3>تسویهٔ بی‌وقفه</h3><p>بازخورد لحظه‌ای. کاربر نباید بپرسد «الان کجاست؟»</p></div>
+    <div class="card lit"><div class="n">جزء ۲</div><h3>پشتیبانی واقعیِ ۲۴ ساعته</h3><p>حتی اول فروردین، وقتی همهٔ صرافی‌ها بسته‌اند. این دقیقاً جایی است که رقبا شکست می‌خورند.</p></div>
+  </div>
+  <div class="callout warn in" style="margin-top:16px">
+    <div class="k">نقطهٔ درد رقبا</div>
+    <p>«جاهای دیگه پول معلق می‌شه و می‌گن ۷۲ ساعت دیگه میاد، در حالی که کل دارایی منه و کارم لنگه.» — <b>«۷۲ ساعت» دشمن اصلی است.</b> هر چیزی که این را از بین ببرد، لنگر است.</p>
+  </div>
+</section>
+
+<!-- 9 · ANCHOR 2 -->
+<section class="slide" data-ch="لنگر ۲ · مقیاس">
+  <div class="eyebrow in">لنگر ۲ · مقبولیت اجتماعی و مقیاس</div>
+  <h2 class="in" style="margin-bottom:6px">«من موش آزمایشگاهی نیستم»</h2>
+  <div class="quote in" style="margin:14px 0">
+    <p>«این حس رو بگیرم که من فقط مشتری یارو نیستم؛ یارو به جز من هزار تا مشتری داره. یارو لنگِ من نیست.»</p>
+    <div class="who">ترنسکریپت · بخش مقیاس</div>
+  </div>
+  <p class="lead in">این ظریف‌ترین لنگر است و بیشترین احتمال دارد که تیم از دستش بدهد. کاربر نمی‌خواهد حس کند <b style="color:#fff">مهم</b> است — می‌خواهد حس کند <b style="color:#fff">معمولی</b> است. سیستمی که بدون او هم می‌چرخد، امن‌تر به نظر می‌رسد.</p>
+  <div class="callout in" style="margin-top:16px">
+    <div class="k">تناقض با غریزهٔ طراحی</div>
+    <p>غریزهٔ ما می‌گوید کاربر را ویژه کن: «خوش آمدی!»، «مخصوص شما». اما این لنگر برعکس می‌گوید: <b>نشان بده که یک صفِ شلوغ وجود دارد و او یکی از آن‌هاست.</b></p>
+  </div>
+</section>
+
+<!-- 10 · ANCHOR 3 & 4 -->
+<section class="slide" data-ch="لنگر ۳ و ۴">
+  <div class="eyebrow in">لنگر ۳ و ۴ · ادعاهای سنگین</div>
+  <div class="cards c2 in">
+    <div class="card"><div class="n">لنگر ۳</div><h3>حضور فیزیکی و شعبه</h3>
+      <p style="margin-top:9px">دفتری که بشود پا شد و رفت آنجا. آدمی که بشود دید. این دقیقاً ترسِ «فین‌تکِ روحی» را می‌شکند — سرویسی که فقط یک لوگو و یک شمارهٔ پشتیبانی است و فردا ممکن است نباشد.</p></div>
+    <div class="card"><div class="n">لنگر ۴</div><h3>بیمهٔ سرمایه</h3>
+      <p style="margin-top:9px">تضمین دارایی در برابر ریسک‌های سیستمی: جنگ، قطعی اینترنت، بحران امنیتی. کاربر ایرانی این سناریوها را فرضی نمی‌داند.</p></div>
+  </div>
+  <div class="callout warn in" style="margin-top:18px">
+    <div class="k">هشدار — این دو با قانون WS0 برخورد دارند</div>
+    <p>سند WS0 صریح است: «هیچ Promise عملیاتیِ تأییدنشده به‌صورت قطعی نمایش داده نمی‌شود.» شعبهٔ فیزیکی و بیمهٔ جنگ، هر دو <b>تأییدنشده‌اند</b>.</p>
+    <p>پس در v0 نمی‌توانیم بگوییم «داریم». می‌توانیم فقط <b>واکنش کاربر به این ایده</b> را بسنجیم — با برچسب روشن «در حال بررسی».</p>
+  </div>
+</section>
+
+<!-- 11 · ANCHOR 5 -->
+<section class="slide" data-ch="لنگر ۵ · مبلغ کم">
+  <div class="eyebrow in">لنگر ۵ · انعطاف در سقف معامله</div>
+  <h2 class="in" style="margin-bottom:6px">با ۵ دلار شروع کن</h2>
+  <p class="lead in" style="margin-bottom:16px">امکان معاملهٔ خیلی کوچک — یک یا پنج دلار — برای اینکه کاربر سیستم را با ریسک نزدیک به صفر امتحان کند. بعد که دید کار می‌کند، مبلغ واقعی می‌آورد.</p>
+  <div class="cards c3 in">
+    <div class="card good"><div class="n" style="color:var(--ok)">چرا کار می‌کند</div><h3>نردبان اعتماد</h3><p>اعتماد یک‌باره ساخته نمی‌شود؛ پله‌پله ساخته می‌شود. اولین پله باید تقریباً رایگان باشد.</p></div>
+    <div class="card good"><div class="n" style="color:var(--ok)">اثر جانبی</div><h3>شبههٔ پول‌شویی را می‌شکند</h3><p>سرویسی که فقط مبالغ بزرگ قبول می‌کند، مشکوک به نظر می‌رسد.</p></div>
+    <div class="card bad"><div class="n" style="color:var(--bad)">وضع فعلی ما</div><h3>دکمهٔ تبدیل زیر ۱ میلیون تومان فعال نمی‌شود</h3><p>یعنی این لنگر در پروتوتایپ فعلی <b style="color:#fff">اصلاً وجود ندارد</b>.</p></div>
+  </div>
+  <div class="callout in" style="margin-top:16px">
+    <p>یک سؤال درست هم هست: سگمنت هدف ماهی ۵۰ تا ۶۰ میلیون تومان درآمد دارد. چرا برای او معاملهٔ ۵ دلاری بگذاریم؟ <b>چون آن ۵ دلار معامله نیست، آزمایش است.</b> مدل درآمدی نیست؛ درِ ورودی است.</p>
+  </div>
+</section>
+
+<!-- 12 · NO-NAME PROTOCOL -->
+<section class="slide" data-ch="فصل ۳ · پروتکل بدون نام">
+  <div class="eyebrow in">فصل ۳ · پروتکل «بدون نام، بدون اعتماد»</div>
+  <div class="hero-line in">چطور این را بفروشی<br>بدون اینکه کلمهٔ <b>«اعتماد»</b> را<br>به زبان بیاوری؟</div>
+  <p class="lead in" style="margin-top:18px">تمرین دوم جلسه: محصول را به یک دوست معرفی کن، بدون گفتن «بهش اعتماد کن» و بدون بردن اسم «مهاجر».</p>
+  <div class="vs2 in" style="margin-top:18px">
+    <div class="vsx no"><div class="h">به‌جای این</div><div class="big">«ما قابل اعتمادیم»<br>«امن و مطمئن»<br>«خیالت راحت باشه»</div></div>
+    <div class="vsx yes"><div class="h">این</div><div class="big">«۳ ماهه دارم استفاده می‌کنم»<br>«اول فروردین هم جواب دادن»<br>«۲ ثانیه‌ای تسویه شد»</div></div>
+  </div>
+  <div class="callout ok in" style="margin-top:16px">
+    <p>خبر خوب: پروتوتایپ فعلی ما <b>حتی یک بار</b> کلمهٔ «اعتماد» را در رابط کاربری نمی‌گوید. بررسی کردم — صفر مورد. این قانون از قبل رعایت شده و باید همین‌طور بماند.</p>
+  </div>
+</section>
+
+<!-- 13 · THREE SCRIPTS -->
+<section class="slide" data-ch="فصل ۳ · پروتکل بدون نام">
+  <div class="eyebrow in">سه اسکریپتی که تیم نوشت</div>
+  <div class="steps in">
+    <div class="st"><span class="i num">۰۱</span><div class="c"><div class="hd"><span class="t">اثبات گذشته</span><span class="tag y">حجم و سابقه</span></div>
+      <div class="d">«چند ماهه دارم مبالغ سنگین رو جابه‌جا می‌کنم، بدون مشکل. حتی شرکتی که توش کارم، حقوق دلاری رو از همین راه می‌ده.»</div></div></div>
+    <div class="st"><span class="i num">۰۲</span><div class="c"><div class="hd"><span class="t">حفظ ارزش آینده</span><span class="tag y">نقدشوندگی</span></div>
+      <div class="d">«حقوق ریالیم رو سریع دلار می‌کنم چون ماه دیگه گوشی می‌خوام. هر ثانیه‌ای هم اراده کنم، می‌کشمش بیرون و در لحظه ریالش تو حسابمه.»</div></div></div>
+    <div class="st"><span class="i num">۰۳</span><div class="c"><div class="hd"><span class="t">پشتیبانی در شرایط سخت</span><span class="tag g">قوی‌ترین</span></div>
+      <div class="d">«جاهای دیگه می‌گن ۷۲ ساعت. این‌ها اول فروردین که همه بسته بودن، در لحظه انجام دادن.»</div></div></div>
+  </div>
+  <div class="callout in" style="margin-top:18px">
+    <div class="k">الگوی مشترک هر سه</div>
+    <p>هیچ‌کدام صفت نمی‌گویند. همه <b>یک رویداد مشخص</b> تعریف می‌کنند: یک مبلغ، یک زمان، یک تاریخ. «اول فروردین» از «۲۴/۷» قوی‌تر است چون قابل تصور است.</p>
+    <p>قاعدهٔ نگارش برای ما: <b>در متن اپ، به‌جای صفت، رویداد بنویس.</b></p>
+  </div>
+</section>
+
+<!-- 14 · MAPPING -->
+<section class="slide" data-ch="فصل ۴ · برای پروتوتایپ">
+  <div class="eyebrow in">فصل ۴ · از حرف به صفحه</div>
+  <h2 class="in" style="margin-bottom:12px">هر لنگر دقیقاً چه چیزی در UI می‌شود</h2>
+  <div class="map in">
+    <div class="mr"><div class="a">۱ · سرعت و عملیات<small>Operational</small></div><div class="ar">←</div>
+      <div class="b">شمارندهٔ زمان واقعی روی هر تراکنش · نوار «پشتیبانی الان فعال است» با ساعت زنده · زمان تسویه <b>قبل</b> از تأیید</div></div>
+    <div class="mr"><div class="a">۲ · مقیاس اجتماعی<small>Social proof</small></div><div class="ar">←</div>
+      <div class="b">نوار فعالیت زنده: «۱٬۲۴۷ تراکنش در ۲۴ ساعت گذشته» · حجم تسویه‌شدهٔ امروز</div></div>
+    <div class="mr"><div class="a">۳ · حضور فیزیکی<small>Structural</small></div><div class="ar">←</div>
+      <div class="b">کارت «دفتر تهران» داخل شیت نگهداری — با برچسب <b>در حال بررسی</b>، نه وعده</div></div>
+    <div class="mr"><div class="a">۴ · بیمهٔ سرمایه<small>Capital insurance</small></div><div class="ar">←</div>
+      <div class="b">سطر بیمه در شیت نگهداری، با همان برچسب · متن محتاطانه</div></div>
+    <div class="mr"><div class="a">۵ · انعطاف در مبلغ<small>Micro-transaction</small></div><div class="ar">←</div>
+      <div class="b">حذف حداقلِ ۱ میلیون تومان · افزودن پریست <b>«۵ دلار — امتحان کن»</b> · بدون کارمزد ثابت روی تراکنش آزمایشی</div></div>
+  </div>
+</section>
+
+<!-- 15 · WHAT I PROPOSE -->
+<section class="slide" data-ch="فصل ۴ · برای پروتوتایپ">
+  <div class="eyebrow in">پیشنهاد من برای v0.3</div>
+  <h2 class="in" style="margin-bottom:12px">پنج تغییر، به ترتیب اهمیت</h2>
+  <div class="steps in">
+    <div class="st"><span class="i num">۰۱</span><div class="c"><div class="hd"><span class="t">تراکنش آزمایشی ۵ دلاری</span><span class="tag g">بیشترین اثر</span></div>
+      <div class="d">حداقل مبلغ حذف شود و یک پریست صریح اضافه شود. این تنها تغییری است که <b>رفتار</b> را عوض می‌کند، نه فقط ظاهر را.</div></div></div>
+    <div class="st"><span class="i num">۰۲</span><div class="c"><div class="hd"><span class="t">نوار فعالیت زنده</span><span class="tag g">ارزان و مؤثر</span></div>
+      <div class="d">یک خط روی خانه که نشان دهد سیستم بدون این کاربر هم مشغول است.</div></div></div>
+    <div class="st"><span class="i num">۰۳</span><div class="c"><div class="hd"><span class="t">وضعیت زندهٔ پشتیبانی</span></div>
+      <div class="d">«الان فعال · معمولاً زیر ۱۵ دقیقه» — و در روز تعطیل هم فعال بماند.</div></div></div>
+    <div class="st"><span class="i num">۰۴</span><div class="c"><div class="hd"><span class="t">شیت نگهداری کامل‌تر</span></div>
+      <div class="d">دفتر فیزیکی و بیمه، هر دو با برچسب «در حال بررسی».</div></div></div>
+    <div class="st"><span class="i num">۰۵</span><div class="c"><div class="hd"><span class="t">زمان تسویه قبل از تأیید</span></div>
+      <div class="d">در همهٔ Quoteها هست؛ باید برجسته‌تر شود.</div></div></div>
+  </div>
+</section>
+
+<!-- 16 · RISKS -->
+<section class="slide" data-ch="فصل ۴ · برای پروتوتایپ">
+  <div class="eyebrow in">قبل از اینکه بسازیم</div>
+  <h2 class="in" style="margin-bottom:12px">سه چیزی که باید حواسمان باشد</h2>
+  <div class="in">
+    <div class="chk q"><span class="b">؟</span><span class="t"><b>عدد اجتماعیِ ساختگی، شاهدِ ساختگی می‌سازد.</b> اگر کاربر به‌خاطر «۱۲۴۷ تراکنش» اعتماد کند، ما یاد نگرفته‌ایم که او به مهاجر اعتماد می‌کند — یاد گرفته‌ایم که به عدد بزرگ اعتماد می‌کند. باید برچسب آزمایشی داشته باشد و در تحلیل جدا حساب شود.</span></div>
+    <div class="chk x"><span class="b">✕</span><span class="t"><b>بیمهٔ جنگ را به‌صورت قطعی ننویس.</b> این یک ادعای حقوقی است، نه یک متن UI. در v0 فقط به‌عنوان مفهوم و با برچسب روشن.</span></div>
+    <div class="chk q"><span class="b">؟</span><span class="t"><b>حضور فیزیکی با مدل ما در تضاد است؟</b> این را باید تیم تصمیم بگیرد. اگر هرگز شعبه نخواهیم داشت، نمایشش در تست، انتظارِ اشتباه می‌سازد.</span></div>
+  </div>
+  <div class="callout ok in" style="margin-top:18px">
+    <div class="k">قاعدهٔ ساده</div>
+    <p>لنگری که <b>می‌توانیم انجامش دهیم</b> را نشان بده. لنگری که <b>هنوز نمی‌دانیم</b> را بپرس، نه اینکه ادعا کنی.</p>
+  </div>
+</section>
+
+<!-- 17 · HYPOTHESIS -->
+<section class="slide" data-ch="فصل ۴ · برای پروتوتایپ">
+  <div class="eyebrow in">وصل کردن به سند WS0</div>
+  <h2 class="in" style="margin-bottom:6px">این‌ها فرضیهٔ ۲ را تقویت می‌کنند</h2>
+  <p class="lead in" style="margin-bottom:16px">یادت باشد قانون WS0: هر صفحه‌ای که می‌سازیم باید به یکی از پنج فرضیه وصل باشد. این تغییرات همه زیر فرضیهٔ ۲ می‌نشینند:</p>
+  <div class="callout in">
+    <div class="k">فرضیهٔ ۲ · اعتماد به تبدیل و نگهداری</div>
+    <p>«Quote شفاف، توضیح Custody، مسیر خروج و History برای انجام تبدیل آزمایشی و نگه‌داشتن Balance اعتماد اولیه می‌سازند.»</p>
+  </div>
+  <div class="cards c2 in" style="margin-top:14px">
+    <div class="card good"><div class="n" style="color:var(--ok)">شاهد قوی جدید</div><h3>خودش تراکنش کوچک را انتخاب کند</h3><p>اگر کاربر بدون راهنمایی اول ۵ دلار بزند و بعد مبلغ واقعی بگوید — نردبان اعتماد کار کرده است.</p></div>
+    <div class="card bad"><div class="n" style="color:var(--bad)">شاهد مخالف</div><h3>«اینا رو هر کسی می‌تونه بنویسه»</h3><p>اگر کاربر نوار فعالیت و ادعای بیمه را باور نکند، یعنی این لنگرها بدون تأیید بیرونی بی‌اثرند.</p></div>
+  </div>
+</section>
+
+<!-- 18 · NEXT -->
+<section class="slide" data-ch="فصل ۴ · برای پروتوتایپ">
+  <div class="eyebrow in">قدم بعدی</div>
+  <h2 class="in" style="margin-bottom:14px">حالا می‌رویم سراغ ساخت</h2>
+  <div class="cards c2 in">
+    <div class="card lit"><div class="n">می‌سازیم</div><h3>wallet-v0 · نسخهٔ به‌روز</h3>
+      <p>پنج تغییر صفحهٔ قبل، روی همان پروتوتایپ. بدون شکستن هیچ Flow موجود.</p></div>
+    <div class="card"><div class="n">می‌پرسیم</div><h3>دو تصمیم با تیم</h3>
+      <p>شعبهٔ فیزیکی: در مدل ما هست یا نه؟ · بیمه: تا کجا می‌توانیم ادعا کنیم؟</p></div>
+  </div>
+  <div class="callout in" style="margin-top:18px">
+    <div class="k">یادت باشد</div>
+    <p>خروجی این جلسه یک <b>فهرست فیچر</b> نیست. یک فهرست <b>چیزهایی است که باید ثابت کنیم</b> — و بعضی‌هایشان اصلاً با UI ثابت نمی‌شوند.</p>
+  </div>
+</section>
+
+</div>
+
+<div class="bar">
+  <div class="dots-nav" id="dots"></div>
+  <div class="arrows">
+    <button id="prev" onclick="move(-1)" aria-label="قبلی"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button id="next" onclick="move(1)" aria-label="بعدی"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let i=0;
+const dots=document.getElementById('dots');
+slides.forEach((s,n)=>{
+  if(n===2||n===6||n===11||n===13){const g=document.createElement('span');g.className='gap';dots.appendChild(g)}
+  const b=document.createElement('button');b.onclick=()=>show(n);
+  b.setAttribute('aria-current',n===0);b.title=(n+1)+(s.dataset.ch?' · '+s.dataset.ch:'');
+  dots.appendChild(b);
+});
+function show(n){
+  i=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,k)=>{s.classList.toggle('on',k===i); if(k===i) s.scrollTo(0,0)});
+  [...dots.querySelectorAll('button')].forEach((d,k)=>d.setAttribute('aria-current',k===i));
+  document.getElementById('counter').textContent=`${i+1} / ${slides.length}`;
+  document.getElementById('chapter').textContent=slides[i].dataset.ch||'';
+  document.getElementById('prog').style.width=((i+1)/slides.length*100)+'%';
+  document.getElementById('prev').disabled=i===0;
+  document.getElementById('next').disabled=i===slides.length-1;
+}
+const move=d=>show(i+d);
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight') move(-1);
+  else if(e.key==='ArrowLeft') move(1);
+  else if(e.key===' '||e.key==='PageDown'){e.preventDefault();move(1)}
+  else if(e.key==='PageUp'){e.preventDefault();move(-1)}
+  else if(e.key==='Home') show(0);
+  else if(e.key==='End') show(slides.length-1);
+});
+let x0=null,y0=null;
+addEventListener('touchstart',e=>{x0=e.touches[0].clientX;y0=e.touches[0].clientY},{passive:true});
+addEventListener('touchend',e=>{
+  if(x0===null) return;
+  const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0;
+  if(Math.abs(dx)>56&&Math.abs(dx)>Math.abs(dy)*1.5) move(dx<0?-1:1);
+  x0=y0=null;
+},{passive:true});
+show(0);
+</script>
+</body>
+</html>
