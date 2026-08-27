@@ -962,7 +962,19 @@ document.addEventListener('touchmove',e=>{ if(e.touches.length>1) e.preventDefau
     document.body.classList.add('embedded');
     S.moment=false; showMoment('');
   }
-  render(); fitPhone(); log('session_start');
+  /* deep link, so a deck can open the exact screen it wants to compare:
+     &amt=100000000 pre-fills the amount, &s=summary jumps to that screen */
+  const amt=q.get('amt');
+  if(amt && /^\d+$/.test(amt)) S.raw=amt;
+  render(); fitPhone();
+  const scr=q.get('s');
+  if(scr && document.querySelector(`[data-screen="${scr}"]`)){
+    const cur=document.querySelector('.screen.active');
+    if(cur) cur.classList.remove('active');
+    document.querySelector(`[data-screen="${scr}"]`).classList.add('active');
+    current=scr;
+  }
+  log('session_start');
 })();
 </script>
 </body>

@@ -80,6 +80,17 @@ b{font-weight:600}
 .dev .shell{overflow:hidden;border-radius:26px;background:#F4F4F1}
 .dev iframe{display:block;border:none;width:390px;height:844px;transform-origin:top left;background:#F4F4F1}
 .dev.big .shell{border-radius:32px}
+.dev.duo{gap:8px}
+.dev.duo .shell{border-radius:28px}
+.dev.duo .frame{border-radius:36px}
+/* if an iframe cannot load — e.g. the deck was opened as a local file —
+   the device shows a way in rather than a blank white rectangle */
+.fallback{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  height:100%;padding:22px;text-align:center;background:var(--canvas);color:#0D0F12}
+.fallback .t{font-size:13px;font-weight:600;line-height:1.5}
+.fallback .d{font-size:11px;color:#6B7076;line-height:1.6}
+.fallback a{display:inline-flex;align-items:center;justify-content:center;background:#0D0F12;color:#fff;
+  text-decoration:none;border-radius:12px;padding:10px 16px;font-size:12px;font-weight:600}
 .dev .cap{text-align:center}
 .dev .cap .t{font-size:13.5px;font-weight:600;letter-spacing:-.015em}
 .dev .cap .d{font-size:11px;color:var(--w3);margin-top:3px;line-height:1.5}
@@ -292,28 +303,25 @@ b{font-weight:600}
   </div>
 </section>
 
-<!-- 7 · THREE VARIANTS -->
+<!-- 7 · P0 vs P1, at the screen that differs -->
 <section class="slide" data-frames="1">
-  <div class="eyebrow in" style="align-self:flex-start">سه نسخه، کنار هم</div>
-  <h2 class="in" style="align-self:flex-start;margin-bottom:14px">یک محصول، سه پاسخ به یک سؤال</h2>
+  <div class="eyebrow in" style="align-self:flex-start">همان صفحه، در دو نسخه</div>
+  <h2 class="in" style="align-self:flex-start;margin-bottom:12px">تفاوت، یک بلوک است</h2>
   <div class="phones in">
-    <div class="dev trio b0">
+    <div class="dev duo b0">
       <span class="badge">P0 · پایه</span>
-      <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p0&embed=1" title="P0"></iframe></div></div>
-      <div class="cap"><div class="t">فقط کارکرد</div><div class="d">نرخ و کارمزد شفاف،<br>بدون تأکید ویژه</div></div>
+      <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p0&amp;embed=1&amp;s=summary&amp;amt=100000000" title="P0"></iframe></div></div>
+      <div class="cap"><div class="t">فقط عددها</div><div class="d">کاربر نمی‌داند چطور برمی‌گردد</div></div>
     </div>
-    <div class="dev trio b1">
+    <div class="dev duo b1">
       <span class="badge">P1 · کنترل</span>
-      <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p1&embed=1" title="P1"></iframe></div></div>
-      <div class="cap"><div class="t">خروج، قبل از ورود</div><div class="d">مسیر بازگشت را پیش از<br>پرداخت نشان می‌دهد</div></div>
-    </div>
-    <div class="dev trio b2">
-      <span class="badge">P2 · کنترل + آزمایش</span>
-      <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p2&embed=1" title="P2"></iframe></div></div>
-      <div class="cap"><div class="t">اول با ۵ دلار</div><div class="d">یک دور کامل بی‌ریسک،<br>بعد مبلغ واقعی</div></div>
+      <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p1&amp;embed=1&amp;s=summary&amp;amt=100000000" title="P1"></iframe></div></div>
+      <div class="cap"><div class="t">همان عددها + مسیر بازگشت</div><div class="d">پیش از پرداخت می‌بیند چطور خارج می‌شود</div></div>
     </div>
   </div>
-  <div class="sub in" style="margin-top:14px">هر سه زنده‌اند. تفاوتشان را روی صفحهٔ «قبل از پرداخت» مقایسه کنید.</div>
+  <div class="callout in" style="margin-top:14px">
+    <p>هر دو، صفحهٔ «قبل از پرداخت» با مبلغ یکسان‌اند — نرخ، کارمزد و مبلغ نهایی مو‌به‌مو یکی. تنها متغیر، بلوک سبزِ «اگر بخواهید برگردانید» است. اگر رفتار عوض شود، علتش <b>فقط همین</b> است.</p>
+  </div>
 </section>
 
 <!-- 8 · THE DIFFERENTIATOR -->
@@ -455,10 +463,10 @@ slides.forEach((s,n)=>{
 /* Devices are scaled to the viewport so a projector or a laptop both work. */
 function fitDevices(){
   const vh=innerHeight, vw=innerWidth;
-  const big  = Math.min(0.82, (vh-290)/844, (vw*0.34)/390);
-  const trio = Math.min(0.62, (vh-395)/844, (vw*0.26)/390);
+  const big = Math.min(0.86, (vh-290)/844, (vw*0.36)/390);
+  const duo = Math.min(0.74, (vh-400)/844, (vw*0.34)/390);
   document.querySelectorAll('.dev').forEach(d=>{
-    const k=Math.max(.28, d.classList.contains('big')?big:trio);
+    const k=Math.max(.30, d.classList.contains('big')?big:duo);
     const sh=d.querySelector('.shell'), fr=d.querySelector('iframe');
     sh.style.width=(390*k)+'px'; sh.style.height=(844*k)+'px';
     fr.style.transform=`scale(${k})`;
@@ -470,8 +478,28 @@ addEventListener('resize',fitDevices);
    booting at once on slide 1 would make the whole deck feel slow. */
 function loadFrames(s){
   s.querySelectorAll('iframe[data-src]').forEach(f=>{
-    f.src=f.dataset.src; f.removeAttribute('data-src');
+    const url=f.dataset.src;
+    f.src=url; f.removeAttribute('data-src');
+    /* Opened as a local file, Chrome gives each file its own opaque origin and
+       the frame comes back empty. Rather than a blank device, offer a way in. */
+    setTimeout(()=>{
+      let dead=false;
+      try{
+        const d=f.contentDocument;
+        dead = !d || !d.body || d.body.childElementCount===0;
+      }catch(e){ dead=true; }
+      if(dead) showFallback(f,url);
+    },1600);
   });
+}
+function showFallback(f,url){
+  const shell=f.closest('.shell'); if(!shell||shell.dataset.fallback) return;
+  shell.dataset.fallback='1';
+  shell.innerHTML=`<div class="fallback">
+      <div class="t">پروتوتایپ اینجا بارگذاری نشد</div>
+      <div class="d">این صفحه به‌صورت فایل محلی باز شده است. روی نسخهٔ منتشرشده، پروتوتایپ داخل همین کادر اجرا می‌شود.</div>
+      <a href="${url}" target="_blank" rel="noopener">باز کردن پروتوتایپ ←</a>
+    </div>`;
 }
 function show(n){
   i=Math.max(0,Math.min(slides.length-1,n));
