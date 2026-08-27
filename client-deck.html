@@ -36,11 +36,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
   padding:62px 5vw 74px;opacity:0;visibility:hidden;pointer-events:none;
   transform:translateY(14px);transition:opacity .38s var(--swift),transform .58s var(--spring),visibility .58s;
-  overflow-y:auto;overscroll-behavior:contain;align-items:center}
+  overflow-y:auto;overscroll-behavior:contain;align-items:flex-start;
+  padding-inline:max(5vw, calc((100% - 1120px) / 2))}
 .slide::-webkit-scrollbar{display:none}
 .slide.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
-.slide>*{width:100%;max-width:1120px;flex:none}
-.slide.narrow>*{max-width:860px}
+.slide>*{width:100%;max-width:100%;flex:none}
+.slide.narrow{padding-inline:max(5vw, calc((100% - 880px) / 2))}
 .slide.tight{padding-top:52px;padding-bottom:58px}
 .slide .in{opacity:0;transform:translateY(13px);transition:opacity .46s var(--swift),transform .62s var(--spring)}
 .slide.on .in{opacity:1;transform:none}
@@ -80,9 +81,9 @@ b{font-weight:600}
    is instead given a real phone width (320px, a size the prototype already
    supports) and a height from the viewport. Nothing is scaled. */
 .dev .shell{border-radius:26px;background:#F4F4F1;overflow:hidden;line-height:0}
-.dev iframe{display:block;border:none;width:320px;background:#F4F4F1}
+.dev iframe{display:block;border:none;background:#F4F4F1}
 .dev.big .shell{border-radius:32px}
-.dev.duo{gap:8px}
+.dev.duo{gap:6px}
 .dev.duo .shell{border-radius:28px}
 .dev.duo .frame{border-radius:36px}
 /* if an iframe cannot load — e.g. the deck was opened as a local file —
@@ -110,6 +111,12 @@ b{font-weight:600}
 
 .sideby{display:grid;grid-template-columns:1fr auto;gap:clamp(18px,3vw,44px);align-items:center}
 @media(max-width:900px){.sideby{grid-template-columns:1fr}}
+
+/* device stage: minimal chrome so the phone can be a real phone shape */
+.slide.stage-slide{padding-top:42px;padding-bottom:44px;justify-content:flex-start}
+.stagehead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:10px}
+.badge-inline{font-size:9.5px;font-weight:700;letter-spacing:.06em;border-radius:99px;
+  padding:4px 11px;background:rgba(213,164,92,.18);color:var(--gold)}
 
 /* barriers */
 .bx{background:var(--surf);border:1px solid var(--brd);border-radius:14px;padding:14px}
@@ -271,9 +278,9 @@ b{font-weight:600}
 
 <!-- 5 · STRATEGY -->
 <section class="slide">
-  <div class="eyebrow in" style="align-self:flex-start">جهت طراحی</div>
-  <h2 class="in" style="align-self:flex-start;margin-bottom:4px">اعتماد را در پنج قدم می‌سازیم</h2>
-  <p class="lead in" style="align-self:flex-start;margin-bottom:18px">ترتیبش هم مهم است. هر قدم، پیش‌شرط قدم بعدی است.</p>
+  <div class="eyebrow in">جهت طراحی</div>
+  <h2 class="in" style="margin-bottom:4px">اعتماد را در پنج قدم می‌سازیم</h2>
+  <p class="lead in" style="margin-bottom:18px">ترتیبش هم مهم است. هر قدم، پیش‌شرط قدم بعدی است.</p>
 
   <div class="ladder in">
     <div class="rung core">
@@ -313,50 +320,58 @@ b{font-weight:600}
   </div>
 </section>
 
-<!-- 6 · LIVE PROTOTYPE -->
-<section class="slide" data-frames="1">
-  <div class="eyebrow in" style="align-self:flex-start">پروتوتایپ · زنده</div>
-  <div class="sideby in">
-    <div>
-      <h2 style="margin-bottom:10px">همین حالا امتحانش کنید</h2>
-      <p class="lead">این یک تصویر نیست. پروتوتایپ واقعی داخل همین اسلاید در حال اجراست — می‌توانید مبلغ وارد کنید، نرخ را ببینید، تأیید کنید و پول را برگردانید.</p>
-      <div class="livetag" style="margin-top:14px"><i></i> در حال اجرا</div>
-      <div class="callout" style="margin-top:16px">
-        <div class="k">مسیر ثابت است، نسخه‌ها متفاوت</div>
-        <p>هفت مرحله: ورود ← مبلغ ← خلاصهٔ قبل از پرداخت ← تأیید ← وضعیت ← موجودی ← خروج.</p>
-        <p>نرخ، کارمزد، مبلغ نهایی و زمان در <b>همهٔ نسخه‌ها یکسان</b> است. فقط مکانیزم اعتماد عوض می‌شود — تا بفهمیم تفاوت رفتار از کجاست.</p>
-      </div>
-    </div>
+<!-- 6 · WHAT THE PROTOTYPE IS (text only) -->
+<section class="slide narrow">
+  <div class="eyebrow in">پروتوتایپ</div>
+  <h2 class="in" style="margin-bottom:6px">یک مسیر ثابت، سه نسخهٔ متفاوت</h2>
+  <p class="lead in">هفت مرحله: ورود ← مبلغ ← خلاصهٔ قبل از پرداخت ← تأیید ← وضعیت ← موجودی ← خروج.</p>
+  <div class="cards c2 in" style="margin-top:20px">
+    <div class="card lit"><div class="n">ثابت در هر سه نسخه</div><h3>نرخ، کارمزد، مبلغ نهایی، زمان</h3>
+      <p>اگر یکی از نسخه‌ها تجربهٔ بهتری داشته باشد، دیگر نمی‌دانیم تفاوت رفتار از مکانیزم اعتماد بود یا از رابط بهتر. برای همین این‌ها مو‌به‌مو یکسان‌اند.</p></div>
+    <div class="card"><div class="n">متغیر</div><h3>فقط مکانیزم اعتماد</h3>
+      <p>پیش‌نمایش خروج، تجربهٔ آزمایشی، پشتوانهٔ قابل ردیابی و مسئولِ نام‌دار — هرکدام روشن و خاموش می‌شوند.</p></div>
+  </div>
+  <div class="sub in" style="margin-top:18px">در دو صفحهٔ بعد، پروتوتایپ واقعی را می‌بینید — نه تصویر. می‌توانید همان‌جا با آن کار کنید.</div>
+</section>
+
+<!-- 7 · THE DEVICE, full height -->
+<section class="slide stage-slide" data-frames="1">
+  <div class="stagehead in">
+    <span class="eyebrow" style="margin:0">پروتوتایپ · زنده</span>
+    <span class="livetag"><i></i> می‌توانید همین‌جا کار کنید</span>
+    <span class="badge-inline">P1 · کنترل</span>
+  </div>
+  <div class="phones in">
     <div class="dev big b1">
-      <span class="badge">P1 · کنترل</span>
-      <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p1&embed=1" title="پروتوتایپ"></iframe></div></div>
+      <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p1&amp;embed=1" title="پروتوتایپ"></iframe></div></div>
     </div>
   </div>
 </section>
 
-<!-- 7 · P0 vs P1, at the screen that differs -->
-<section class="slide tight" data-frames="1">
-  <div class="eyebrow in" style="align-self:flex-start">همان صفحه، همان مبلغ، دو نسخه</div>
-  <h2 class="in" style="align-self:flex-start;margin-bottom:10px">تفاوت، یک بلوک است</h2>
+<!-- 7b · P0 vs P1, at the screen that differs -->
+<section class="slide stage-slide" data-frames="1">
+  <div class="stagehead in">
+    <span class="eyebrow" style="margin:0">همان صفحه، همان مبلغ، دو نسخه</span>
+    <span class="sub" style="margin:0">تنها متغیر، بلوک سبزِ «اگر بخواهید برگردانید» است</span>
+  </div>
   <div class="phones in">
     <div class="dev duo b0">
       <span class="badge">P0 · پایه</span>
       <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p0&amp;embed=1&amp;s=summary&amp;amt=100000000" title="P0"></iframe></div></div>
-      <div class="cap"><div class="t">فقط عددها — کاربر نمی‌داند چطور برمی‌گردد</div></div>
+      <div class="cap"><div class="t">فقط عددها</div></div>
     </div>
     <div class="dev duo b1">
       <span class="badge">P1 · کنترل</span>
       <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p1&amp;embed=1&amp;s=summary&amp;amt=100000000" title="P1"></iframe></div></div>
-      <div class="cap"><div class="t">همان عددها + مسیر بازگشت، پیش از پرداخت</div></div>
+      <div class="cap"><div class="t">همان عددها + مسیر بازگشت</div></div>
     </div>
   </div>
-  <div class="sub in" style="align-self:flex-start;margin-top:10px">نرخ، کارمزد و مبلغ نهایی مو‌به‌مو یکی است. تنها متغیر، بلوک سبزِ «اگر بخواهید برگردانید» است.</div>
 </section>
 
 <!-- 8 · THE DIFFERENTIATOR -->
 <section class="slide narrow">
-  <div class="eyebrow in" style="align-self:flex-start">تصمیم طراحی کلیدی</div>
-  <div class="hero in" style="align-self:flex-start">مسیر <b>خروج</b> را پیش از<br>ورود پول نشان می‌دهیم.</div>
+  <div class="eyebrow in">تصمیم طراحی کلیدی</div>
+  <div class="hero in">مسیر <b>خروج</b> را پیش از<br>ورود پول نشان می‌دهیم.</div>
   <div class="cards c2 in" style="margin-top:22px">
     <div class="card"><div class="n">غریزهٔ رایج</div><h3>در لحظهٔ جذب، از رفتن حرف نزن</h3>
       <p>اکثر محصولات مالی مسیر خروج را پنهان یا سخت می‌کنند تا کاربر بماند.</p></div>
@@ -370,8 +385,8 @@ b{font-weight:600}
 
 <!-- 9 · FIVE MOMENTS -->
 <section class="slide">
-  <div class="eyebrow in" style="align-self:flex-start">پنج لحظه‌ای که اعتماد ساخته یا شکسته می‌شود</div>
-  <h2 class="in" style="align-self:flex-start;margin-bottom:14px">هر صفحه به یکی از این‌ها پاسخ می‌دهد</h2>
+  <div class="eyebrow in">پنج لحظه‌ای که اعتماد ساخته یا شکسته می‌شود</div>
+  <h2 class="in" style="margin-bottom:14px">هر صفحه به یکی از این‌ها پاسخ می‌دهد</h2>
   <div class="moments in">
     <div class="mo"><div class="n">۰۱</div><div class="t">قبل از پرداخت</div><div class="q">اگر وارد کنم چه می‌شود؟</div></div>
     <div class="mo hot"><div class="n">۰۲</div><div class="t">پیش‌نمایش خروج</div><div class="q">اگر بخواهم برگردم چه؟</div></div>
@@ -389,8 +404,8 @@ b{font-weight:600}
 
 <!-- 10 · DESIGN PRINCIPLES -->
 <section class="slide">
-  <div class="eyebrow in" style="align-self:flex-start">اصول طراحی</div>
-  <h2 class="in" style="align-self:flex-start;margin-bottom:14px">پنج قاعده‌ای که در همهٔ صفحه‌ها رعایت شده</h2>
+  <div class="eyebrow in">اصول طراحی</div>
+  <h2 class="in" style="margin-bottom:14px">پنج قاعده‌ای که در همهٔ صفحه‌ها رعایت شده</h2>
   <div class="cards c5 in">
     <div class="card lit"><div class="n">۰۱</div><h3>هیچ وعدهٔ تأییدنشده</h3><p>هر چیزی که هنوز قطعی نیست، برچسب «در حال بررسی» دارد.</p></div>
     <div class="card"><div class="n">۰۲</div><h3>عدد قبل از تأیید</h3><p>نرخ، کارمزد، مبلغ نهایی و زمان — همیشه پیش از تصمیم.</p></div>
@@ -415,8 +430,8 @@ b{font-weight:600}
 
 <!-- 11 · WHAT WE LEARN -->
 <section class="slide narrow">
-  <div class="eyebrow in" style="align-self:flex-start">مرحلهٔ بعد</div>
-  <h2 class="in" style="align-self:flex-start;margin-bottom:12px">چه چیزی را اندازه می‌گیریم</h2>
+  <div class="eyebrow in">مرحلهٔ بعد</div>
+  <h2 class="in" style="margin-bottom:12px">چه چیزی را اندازه می‌گیریم</h2>
   <div class="steps in">
     <div class="st"><span class="i num">۰۱</span><div><div class="t">مبلغی که حاضر است امتحان کند</div>
       <div class="d">اولین عددی که خودش می‌گوید — نه عددی که ما پیشنهاد می‌دهیم.</div></div></div>
@@ -435,9 +450,9 @@ b{font-weight:600}
 
 <!-- 12 · OUTPUT -->
 <section class="slide narrow">
-  <div class="eyebrow in" style="align-self:flex-start">خروجی مرحلهٔ بعد</div>
-  <h2 class="in" style="align-self:flex-start;margin-bottom:6px">معماری اعتماد · نسخهٔ ۱</h2>
-  <p class="lead in" style="align-self:flex-start;margin-bottom:16px">بعد از تست، هر مکانیزم یکی از این وضعیت‌ها را می‌گیرد — و همین می‌شود پایهٔ تصمیم‌های محصول و شراکت.</p>
+  <div class="eyebrow in">خروجی مرحلهٔ بعد</div>
+  <h2 class="in" style="margin-bottom:6px">معماری اعتماد · نسخهٔ ۱</h2>
+  <p class="lead in" style="margin-bottom:16px">بعد از تست، هر مکانیزم یکی از این وضعیت‌ها را می‌گیرد — و همین می‌شود پایهٔ تصمیم‌های محصول و شراکت.</p>
   <div class="cards c5 in">
     <div class="card lit"><h3>Core</h3><p>بدون آن معماری ناقص است</p></div>
     <div class="card"><h3>Supporting</h3><p>بهترش می‌کند، محرک اصلی نیست</p></div>
@@ -453,8 +468,8 @@ b{font-weight:600}
 
 <!-- 13 · DECISIONS -->
 <section class="slide narrow">
-  <div class="eyebrow in" style="align-self:flex-start">آنچه از شما می‌خواهیم</div>
-  <h2 class="in" style="align-self:flex-start;margin-bottom:14px">سه تصمیم</h2>
+  <div class="eyebrow in">آنچه از شما می‌خواهیم</div>
+  <h2 class="in" style="margin-bottom:14px">سه تصمیم</h2>
   <div class="steps in">
     <div class="st"><span class="i num">۰۱</span><div><div class="t">شریک نگهدارنده و مسیر تسویه</div>
       <div class="d">ماژول «پشتوانه» تا وقتی شریک قطعی نشود، فقط به‌صورت مفهوم تست می‌شود. هر عددی که به کاربر نشان دهیم باید واقعاً قابل اجرا باشد.</div></div></div>
@@ -490,15 +505,22 @@ slides.forEach((s,n)=>{
 });
 
 /* Devices are scaled to the viewport so a projector or a laptop both work. */
+const PHONE_RATIO = 390/844;                 // the design aspect
 function fitDevices(){
-  const vh=innerHeight;
-  const bigH = Math.max(430, Math.min(700, vh-250));
-  const duoH = Math.max(400, Math.min(600, vh-312));
+  const vh=innerHeight, vw=innerWidth;
   document.querySelectorAll('.dev').forEach(d=>{
-    const h=Math.round(d.classList.contains('big')?bigH:duoH);
+    const duo = d.classList.contains('duo');
+    /* chrome above and below the device on its own slide */
+    let h = Math.round(vh - (duo ? 214 : 150));
+    let w = Math.round(h * PHONE_RATIO);
+    /* two devices must also fit across the column */
+    const maxW = duo ? Math.min(360,(vw*0.9-40)/2) : 380;
+    if(w > maxW){ w = Math.round(maxW); h = Math.round(w / PHONE_RATIO); }
+    /* never below a real phone width, or the app's own layout gets cramped */
+    if(w < 264){ w = 264; h = Math.round(264 / PHONE_RATIO); }
     const sh=d.querySelector('.shell'), fr=d.querySelector('iframe');
-    sh.style.width='320px'; sh.style.height=h+'px';
-    fr.style.height=h+'px';
+    sh.style.width=w+'px'; sh.style.height=h+'px';
+    fr.style.width=w+'px'; fr.style.height=h+'px';
   });
 }
 addEventListener('resize',fitDevices);
