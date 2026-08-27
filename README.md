@@ -1,45 +1,51 @@
-# Mohajer · Phase 3 Prototype
+# Mohajer · Phase 3
 
-همسفر مالی، مهاجر — *Mohajer, your financial travel companion*
+Static pages. No build step, no dependencies. Everything runs from plain files.
 
-Three static pages, no build step, no dependencies.
+## What to open
 
 | File | What it is |
 |---|---|
-| `index.html` | Landing page — links to everything below |
-| `wallet-v0.html` | **Prototype A · Digital Dollar Wallet v0** — the thing users test. 5 flows, 22 screens. |
-| `onboarding.html` | Team guide + the full WS0 document, 28 slides |
-| `deck.html` | 9-slide stakeholder deck |
-| `design.html` | Design system reference |
-| `wedge-v02.html` | Earlier wedge prototype (exchange + transfer), kept for comparison |
-| `fonts/` | Radical, 6 weights, woff2 + ttf fallback |
+| `index.html` | Landing page — links to everything |
+| `client-deck.html` | **Client presentation.** 13 slides with the prototype running live inside them |
+| `first-funding-v1.html` | **Prototype under test.** One flow, three variants (P0/P1/P2), two modules |
+| `wallet-v0-3.html` | Wallet prototype — five flows from the WS0 document |
+| `trust-onboarding-v2.html` | Trust workshop output, 22 slides |
+| `onboarding.html` | The WS0 document, visualised, 28 slides |
+| `design.html` | Design system — tokens, type, motion, copy rules |
+| `deck.html` | Earlier stakeholder deck, 9 slides |
 
-**Give test participants the direct app link** (`/wallet-v0.html`), not the landing page — the landing page shows other options and can prime them.
+Archived, kept to show the build path: `wallet-v0-2.html`, `wallet-v0.html`, `wedge-v02.html`, `trust-onboarding.html`.
+
+## Prototype URL parameters
+
+`first-funding-v1.html` accepts:
+
+- `?v=p0` `?v=p1` `?v=p2` — pick the variant
+- `&a=1` `&b=1` — turn on the institutional / human module
+- `&embed=1` — hide the facilitator controls
+
+The client deck uses these to embed live variants. With no query string it opens in P1 with the facilitator panel available.
+
+## For a test session
+
+Give participants the **direct prototype link**, not the landing page:
+
+```
+https://USERNAME.github.io/REPO/first-funding-v1.html
+```
+
+The landing page lists other artefacts and will prime them.
+
+Facilitator controls sit behind the ••• button: variant, modules, failure simulation, moment labels, behaviour log, reset.
 
 ## Publishing to GitHub Pages
 
-```bash
-git init && git add . && git commit -m "Mohajer prototype v0.2"
-```
+Upload the files to the repo, then **Settings → Pages → Deploy from a branch → `main` / `root` → Save**.
 
-Create an empty repo on GitHub, then:
+Two things that silently break it:
 
-```bash
-git remote add origin https://github.com/USERNAME/REPO.git && git branch -M main && git push -u origin main
-```
+- **`fonts/` and `icons/` must be uploaded.** Without the fonts everything falls back to a system face and the design reads wrong.
+- **Paths are case-sensitive on Pages but not on Windows.** A wrong-case filename works locally and 404s once live.
 
-Then in the repo: **Settings → Pages → Source: `Deploy from a branch` → Branch: `main` / `root` → Save.**
-
-Live about a minute later at `https://USERNAME.github.io/REPO/`
-
-- app → `/`
-- deck → `/deck.html`
-- design system → `/design.html`
-
-If you push this folder as a subdirectory instead of the repo root, set Pages to serve from `/docs` and rename the folder to `docs`.
-
-## Notes
-
-- **Everything must be committed, including `fonts/`.** Without it the pages fall back to a system font and the whole design reads wrong.
-- Mock numbers live in one `CONFIG` object near the bottom of `index.html` — market rate, spreads, flat fee, per-route fees. Change them there and every screen updates.
-- The three prototype controls (language, reset, wedge labels) sit under the phone on desktop and collapse into a corner button on mobile, so they never cover the app's own buttons.
+The live prototype embeds in `client-deck.html` need HTTPS — they will not render from a local `file://` copy in some browsers. On GitHub Pages they work normally.

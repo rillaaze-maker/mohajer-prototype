@@ -1,0 +1,969 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>مهاجر · First Funding</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#F4F4F1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="مهاجر">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" href="./icons/icon-192.png">
+<!--
+  MOHAJER · FIRST FUNDING TRUST PROTOTYPE v1
+  Built from Mohajer_Ideation_to_Prototype_Handoff.
+
+  ONE core flow, three variants, two modules.
+    Core flow  ورود → مبلغ → خلاصهٔ قبل از پرداخت → تأیید → وضعیت → موجودی → خروج
+    P0  baseline           — hygiene only, no Control/Trial emphasis
+    P1  control first      — exit preview BEFORE funding, timeline, available/pending
+    P2  control + trial    — P1 plus a tiny real cycle before serious funding
+    Module A  institutional proof   (partner, money flow, responsibility)
+    Module B  human safety net      (a named, identifiable owner)
+
+  Trust hygiene — rate, fee, final amount, ETA, receipt, status, failure
+  message, support access — is IDENTICAL in all three variants by design.
+  Only trust mechanisms vary, so behaviour differences are attributable.
+
+  Everything is simulated and labelled. CONFIG sits at the bottom.
+-->
+<style>
+@font-face{font-family:Radical;src:url('./fonts/Radical-Light.woff2') format('woff2'),url('./fonts/Radical-Light.ttf') format('truetype');font-weight:300;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Regular.woff2') format('woff2'),url('./fonts/Radical-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Medium.woff2') format('woff2'),url('./fonts/Radical-Medium.ttf') format('truetype');font-weight:500;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-SemiBold.woff2') format('woff2'),url('./fonts/Radical-SemiBold.ttf') format('truetype');font-weight:600;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Bold.woff2') format('woff2'),url('./fonts/Radical-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-ExtraBold.woff2') format('woff2'),url('./fonts/Radical-ExtraBold.ttf') format('truetype');font-weight:800;font-display:swap}
+
+:root{
+  --f:Radical,system-ui,sans-serif;
+  --canvas:#F4F4F1;--surface:#FFF;--surface-2:#EDEDE9;
+  --ink:#0D0F12;--ink-2:#6B7076;--ink-3:#A4A9AE;
+  --line:#E4E4DF;--line-2:#EFEFEA;
+  --gold:#D5A45C;--ok:#17936A;--ok-soft:#E7F3EE;
+  --warn:#B4642C;--warn-soft:#FBF1E8;--bad:#C0392B;--bad-soft:#FBEDEB;
+  --blue:#3D6E9E;--blue-soft:#EAF1F7;--vio:#6B4E96;--vio-soft:#F1ECF8;
+  --dark:linear-gradient(168deg,#1E232B 0%,#0D0F12 52%,#161B21 100%);
+  --r-sm:12px;--r-md:16px;--r-lg:22px;--r-xl:28px;
+  --spring:cubic-bezier(.16,1,.3,1);--swift:cubic-bezier(.4,0,.2,1);
+  --sh:0 1px 2px rgba(13,15,18,.04),0 10px 30px -16px rgba(13,15,18,.14);
+  --sh-d:0 2px 6px rgba(13,15,18,.10),0 24px 48px -22px rgba(13,15,18,.55);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+body{font-family:var(--f);background:radial-gradient(900px 600px at 50% 0%,#FBFBF9,#E9E9E4 70%,#E2E2DC);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;padding:24px 16px;color:var(--ink);-webkit-font-smoothing:antialiased}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+
+.stage{position:relative;flex:none}
+.phone{width:390px;height:844px;position:absolute;top:0;left:0;background:var(--canvas);
+  border-radius:46px;transform-origin:top left;overflow:hidden;
+  box-shadow:0 0 0 10px #101317,0 0 0 11.5px #303740,0 30px 70px -30px rgba(13,15,18,.55)}
+.notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:110px;height:30px;background:#101317;border-radius:99px;z-index:60}
+.statusbar{position:absolute;top:0;inset-inline:0;height:52px;z-index:55;display:flex;align-items:center;
+  justify-content:space-between;padding:0 30px;font:600 13px/1 var(--f);pointer-events:none}
+.statusbar .sig{display:flex;gap:4px;align-items:flex-end;opacity:.9}
+.statusbar .sig i{display:block;width:3px;background:currentColor;border-radius:2px}
+.testflag{position:absolute;top:0;inset-inline-start:0;z-index:56;background:var(--gold);color:#fff;
+  font-size:8.5px;font-weight:700;letter-spacing:.06em;padding:2px 9px;border-end-end-radius:8px}
+
+/* variant + module gating — the whole point of the prototype */
+[data-variant="p0"] .v-p1,[data-variant="p0"] .v-p2{display:none!important}
+[data-variant="p1"] .v-p2{display:none!important}
+[data-mod-a="off"] .mod-a{display:none!important}
+[data-mod-b="off"] .mod-b{display:none!important}
+
+.viewport{position:absolute;inset:0;overflow:hidden}
+.screen{position:absolute;inset:0;padding:58px 20px 20px;display:flex;flex-direction:column;background:var(--canvas);
+  opacity:0;visibility:hidden;pointer-events:none;transform:translateX(-22px) scale(.985);
+  transition:opacity .3s var(--swift),transform .5s var(--spring),visibility .5s;overflow:hidden}
+.screen.active{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.screen.leaving{transform:translateX(14px) scale(.985);opacity:0}
+.screen>*:not(.scroll){flex:none}
+.scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;margin:0 -20px;padding:0 20px}
+.scroll::-webkit-scrollbar{display:none}
+
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:16px;min-height:38px}
+.back{width:38px;height:38px;border-radius:50%;border:none;background:var(--surface);display:grid;place-items:center;
+  cursor:pointer;flex:none;box-shadow:0 1px 2px rgba(13,15,18,.05);transition:.22s var(--spring)}
+.back:active{transform:scale(.9)}
+.back svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;transform:scaleX(-1)}
+.nav h2{font-size:17px;font-weight:600;letter-spacing:-.015em}
+.nav .step{margin-inline-start:auto;font-size:11.5px;font-weight:500;color:var(--ink-3)}
+
+h1{font-size:25px;font-weight:600;letter-spacing:-.028em;line-height:1.32}
+.lead{font-size:14px;line-height:1.7;color:var(--ink-2)}
+.tiny{font-size:11.5px;line-height:1.6;color:var(--ink-3)}
+.sec{font-size:12.5px;font-weight:600;color:var(--ink-3);margin:18px 0 8px}
+
+.btn{width:100%;border:none;cursor:pointer;font-family:inherit;height:54px;border-radius:var(--r-md);
+  font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform .2s var(--spring),background .2s,opacity .3s var(--swift)}
+.btn:active{transform:scale(.972)}
+.btn-primary{background:var(--ink);color:#fff;box-shadow:0 8px 22px -10px rgba(13,15,18,.6)}
+.btn-primary:disabled{background:var(--line);color:var(--ink-3);box-shadow:none;cursor:not-allowed}
+.btn-soft{background:var(--surface);color:var(--ink);box-shadow:var(--sh)}
+.btn-ghost{background:none;color:var(--ink-2);height:44px;font-weight:500;font-size:13.5px}
+.cta-slot{margin-top:10px;transition:opacity .35s var(--swift),transform .5s var(--spring)}
+.cta-slot.hidden{opacity:0;transform:translateY(16px);pointer-events:none}
+
+.card{background:var(--surface);border-radius:var(--r-lg);padding:18px;box-shadow:var(--sh)}
+.dark-card{background:var(--dark);border-radius:var(--r-xl);color:#fff;position:relative;overflow:hidden;box-shadow:var(--sh-d)}
+.dark-card::after{content:'';position:absolute;inset-inline-end:-140px;top:-180px;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(213,164,92,.16),rgba(213,164,92,.05) 45%,transparent 70%);pointer-events:none}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0}
+.row+.row{border-top:1px solid var(--line-2)}
+.row .k{font-size:13px;color:var(--ink-2);flex:1}
+.row .v{font-size:13px;font-weight:500;text-align:end}
+.row.total .k{font-weight:600;color:var(--ink);font-size:14px}
+.row.total .v{font-weight:700;font-size:16px}
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:5px 10px;font-size:11px;font-weight:500;line-height:1}
+.b-ok{background:var(--ok-soft);color:var(--ok)}
+.b-warn{background:var(--warn-soft);color:var(--warn)}
+.b-bad{background:var(--bad-soft);color:var(--bad)}
+.b-quiet{background:var(--surface-2);color:var(--ink-2)}
+.b-blue{background:var(--blue-soft);color:var(--blue)}
+.b-vio{background:var(--vio-soft);color:var(--vio)}
+.b-dark{background:rgba(255,255,255,.10);color:rgba(255,255,255,.72)}
+
+/* amount */
+.amt{text-align:center;padding:8px 0}
+.amt .cur{font-size:12px;color:var(--ink-3);font-weight:500}
+.amt .v{font-size:38px;font-weight:700;letter-spacing:-.04em;line-height:1.12;min-height:46px}
+.amt .v.zero{color:var(--line)}
+.amt .sub{font-size:13px;color:var(--ink-2);margin-top:4px}
+.caret{display:inline-block;width:2px;height:.76em;background:var(--gold);vertical-align:-.05em;
+  margin-inline-start:3px;animation:blink 1.05s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:auto}
+.key{height:54px;border:none;background:none;border-radius:18px;font-family:inherit;font-size:22px;
+  font-weight:500;color:var(--ink);cursor:pointer;position:relative;overflow:hidden;transition:transform .16s var(--spring)}
+.key::before{content:'';position:absolute;inset:0;background:var(--ink);opacity:0;border-radius:inherit;transition:opacity .3s var(--swift)}
+.key:active::before{opacity:.07;transition:opacity .04s}
+.key:active{transform:scale(.9)}
+.key svg{width:20px;height:20px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto;position:relative}
+.presets{display:flex;gap:7px;margin-top:12px}
+.preset{flex:1;height:38px;border-radius:99px;border:none;background:var(--surface);font-family:inherit;
+  font-size:12.5px;font-weight:500;color:var(--ink-2);cursor:pointer;box-shadow:0 1px 2px rgba(13,15,18,.05);transition:.22s var(--spring)}
+.preset:active{transform:scale(.94)}
+.preset.trial{background:var(--ink);color:#fff;flex:1.6}
+
+/* trust blocks */
+.tblock{border-radius:var(--r-md);padding:15px;margin-top:12px}
+.tblock .h{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;margin-bottom:9px}
+.tblock .h svg{width:16px;height:16px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.tblock p{font-size:12px;line-height:1.7;color:var(--ink-2)}
+.tblock.exit{background:var(--ok-soft)}
+.tblock.exit .h{color:var(--ok)} .tblock.exit .h svg{stroke:var(--ok)}
+.tblock.inst{background:var(--blue-soft)}
+.tblock.inst .h{color:var(--blue)} .tblock.inst .h svg{stroke:var(--blue)}
+.tblock.human{background:var(--vio-soft)}
+.tblock.human .h{color:var(--vio)} .tblock.human .h svg{stroke:var(--vio)}
+.tblock button{background:none;border:none;font-family:inherit;font-size:12px;font-weight:600;
+  cursor:pointer;padding:0;text-decoration:underline;margin-top:8px}
+.tblock.exit button{color:var(--ok)}
+.tblock.inst button{color:var(--blue)}
+.tblock.human button{color:var(--vio)}
+
+/* human card */
+.human{display:flex;align-items:center;gap:12px}
+.human .av{width:44px;height:44px;border-radius:50%;background:var(--vio-soft);color:var(--vio);
+  display:grid;place-items:center;font-size:16px;font-weight:700;flex:none}
+.human .m .n{font-size:14px;font-weight:600}
+.human .m .r{font-size:11.5px;color:var(--ink-2);margin-top:2px}
+
+/* timeline (control) */
+.tl{margin-top:4px}
+.tli{display:flex;gap:12px;padding-bottom:16px;position:relative}
+.tli:last-child{padding-bottom:0}
+.tli::before{content:'';position:absolute;inset-inline-start:9.5px;top:21px;bottom:-2px;width:1.5px;background:var(--line)}
+.tli:last-child::before{display:none}
+.tli .dot{width:20px;height:20px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;flex:none;z-index:1}
+.tli .dot svg{width:10px;height:10px;fill:none;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;stroke:var(--ink-3)}
+.tli.done .dot{background:var(--ok-soft)} .tli.done .dot svg{stroke:var(--ok)}
+.tli.now .dot{background:var(--warn-soft)} .tli.now .dot svg{stroke:var(--warn)}
+.tli .t{font-size:13px;font-weight:500;line-height:1.45}
+.tli .d{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.tli.pendingx .t{color:var(--ink-3)}
+
+/* balance */
+.bal{padding:22px 20px 20px}
+.bal .lab{font-size:12px;color:rgba(255,255,255,.5);position:relative}
+.bal .tot{font-size:40px;font-weight:700;letter-spacing:-.04em;margin-top:7px;position:relative;line-height:1.05}
+.bal .tot::first-letter{color:var(--gold)}
+.split{display:flex;gap:8px;margin-top:16px;position:relative}
+.split .s{flex:1;background:rgba(255,255,255,.07);border-radius:var(--r-sm);padding:10px 11px}
+.split .s .l{font-size:10px;color:rgba(255,255,255,.48)}
+.split .s .v{font-size:15px;font-weight:600;margin-top:3px;letter-spacing:-.02em}
+
+/* status disc */
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 6px}
+.disc{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;margin-bottom:18px}
+.disc.ok{background:var(--ok-soft)}.disc.pend{background:var(--warn-soft)}.disc.bad{background:var(--bad-soft)}
+.disc svg{width:33px;height:33px;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.disc.ok svg{stroke:var(--ok)}.disc.pend svg{stroke:var(--warn)}.disc.bad svg{stroke:var(--bad)}
+.disc.ok svg path{stroke-dasharray:42;stroke-dashoffset:42}
+.screen.active .disc.ok svg path{animation:draw .6s .25s var(--spring) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.screen.active .disc{animation:pop .6s var(--spring)}
+@keyframes pop{0%{transform:scale(.5);opacity:0}62%{transform:scale(1.07)}100%{transform:scale(1);opacity:1}}
+.disc.pend svg{animation:spin 1.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.big-amt{font-size:32px;font-weight:700;letter-spacing:-.04em}
+
+.note{display:flex;gap:10px;align-items:flex-start;padding:13px 15px;background:var(--surface-2);border-radius:var(--r-md);margin-top:12px}
+.note.warn{background:var(--warn-soft)}.note.bad{background:var(--bad-soft)}
+.note svg{width:15px;height:15px;fill:none;stroke-width:1.9;flex:none;margin-top:1px;stroke:var(--ink-2)}
+.note.warn svg{stroke:var(--warn)}.note.bad svg{stroke:var(--bad)}
+.note p{font-size:11.5px;color:var(--ink-2);line-height:1.7}
+.note.warn p{color:var(--warn)}.note.bad p{color:var(--bad)}
+.note b{color:var(--ink);font-weight:600}
+.note.warn b,.note.bad b{color:inherit}
+
+.opt{width:100%;display:flex;align-items:center;gap:12px;padding:15px;background:var(--surface);
+  border:1.5px solid transparent;border-radius:var(--r-md);cursor:pointer;font-family:inherit;
+  text-align:start;box-shadow:var(--sh);transition:.24s var(--spring)}
+.opt+.opt{margin-top:8px}
+.opt .ic{width:38px;height:38px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;flex:none}
+.opt .ic svg{width:17px;height:17px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.opt .m{flex:1;min-width:0}
+.opt .m .t{font-size:13.5px;font-weight:600}
+.opt .m .d{font-size:11.5px;color:var(--ink-3);margin-top:2px;line-height:1.5}
+
+/* moment label */
+.moment{position:absolute;top:calc(env(safe-area-inset-top,0px) + 30px);inset-inline-end:16px;z-index:57;
+  font-size:9px;font-weight:700;letter-spacing:.05em;background:var(--ink);color:#fff;
+  padding:3px 8px;border-radius:99px;opacity:0;transition:.3s var(--swift);pointer-events:none}
+.moment.on{opacity:.88}
+
+/* sheet */
+.sheet-bg{position:absolute;inset:0;background:rgba(13,15,18,.42);z-index:70;opacity:0;visibility:hidden;
+  transition:.3s var(--swift);backdrop-filter:blur(3px)}
+.sheet-bg.on{opacity:1;visibility:visible}
+.sheet{position:absolute;inset-inline:0;bottom:0;z-index:71;background:var(--surface);
+  border-radius:var(--r-xl) var(--r-xl) 0 0;padding:12px 20px 26px;transform:translateY(101%);
+  transition:transform .45s var(--spring);max-height:84%;overflow-y:auto}
+.sheet.on{transform:none}
+.sheet::-webkit-scrollbar{display:none}
+.grip{width:38px;height:4px;border-radius:99px;background:var(--line);margin:0 auto 16px}
+.sheet h3{font-size:17px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px}
+.sheet textarea{width:100%;height:200px;border-radius:12px;border:1px solid var(--line);padding:11px;
+  font-family:ui-monospace,Menlo,monospace;font-size:10.5px;line-height:1.6;color:var(--ink);
+  background:var(--surface-2);resize:none;direction:ltr}
+
+/* facilitator */
+.chrome{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:430px}
+.chip{font:500 11.5px/1 var(--f);background:rgba(255,255,255,.72);border:1px solid rgba(13,15,18,.07);
+  color:var(--ink-2);padding:7px 12px;border-radius:99px;cursor:pointer;backdrop-filter:blur(8px);
+  transition:.22s var(--swift);white-space:nowrap}
+.chip:hover{background:#fff;color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.va[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#fff}
+.chip.danger[aria-pressed=true]{background:var(--bad);border-color:var(--bad)}
+.hint{font:500 11px/1 var(--f);color:var(--ink-3);height:12px}
+.dev-fab{display:none}
+/* embedded in the client deck: no facilitator chrome, no device bezel */
+body.embedded .chrome,body.embedded .hint,body.embedded .dev-fab{display:none!important}
+body.embedded{padding:0;gap:0;background:var(--canvas)}
+body.embedded .phone{box-shadow:none;border-radius:0}
+body.embedded .notch{display:none}
+
+@media(max-width:768px){
+  html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  body{padding:0;gap:0;display:block;background:var(--canvas)}
+  .stage{width:100%;height:100dvh}
+  .phone{position:fixed;inset:0;width:100%;height:100dvh;border-radius:0;box-shadow:none;transform:none!important}
+  .notch,.statusbar,.hint{display:none}
+  .screen{padding-top:calc(env(safe-area-inset-top,0px) + 42px);
+          padding-bottom:calc(env(safe-area-inset-bottom,0px) + 14px);padding-inline:18px}
+  .scroll{margin-inline:-18px;padding-inline:18px}
+  .cta-slot{margin-top:9px}
+  .sheet{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 22px)}
+  .testflag{top:calc(env(safe-area-inset-top,0px) + 12px);inset-inline-start:auto;inset-inline-end:18px;
+    font-size:8.5px;padding:3px 9px;border-radius:99px;opacity:.85}
+  .moment{top:calc(env(safe-area-inset-top,0px) + 12px);inset-inline-end:auto;inset-inline-start:52px}
+  .dev-fab{display:grid;place-items:center;position:fixed;z-index:120;
+    top:calc(env(safe-area-inset-top,0px) + 6px);inset-inline-start:14px;
+    width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;
+    background:rgba(13,15,18,.07);backdrop-filter:blur(8px);transition:.24s var(--spring)}
+  .dev-fab span{width:3px;height:3px;border-radius:50%;background:var(--ink-2);box-shadow:0 -5px 0 var(--ink-2),0 5px 0 var(--ink-2)}
+  .dev-fab[aria-expanded=true]{background:var(--ink);transform:rotate(90deg)}
+  .dev-fab[aria-expanded=true] span{background:#fff;box-shadow:0 -5px 0 #fff,0 5px 0 #fff}
+  .chrome{position:fixed;z-index:119;top:calc(env(safe-area-inset-top,0px) + 44px);inset-inline-start:14px;
+    flex-direction:column;align-items:flex-start;gap:6px;max-width:none;
+    opacity:0;visibility:hidden;transform:translateY(-8px);transition:.26s var(--spring)}
+  .chrome.open{opacity:1;visibility:visible;transform:none}
+  .chip{background:rgba(255,255,255,.96);box-shadow:0 4px 14px -6px rgba(13,15,18,.3)}
+  input,textarea{-webkit-user-select:text;user-select:text}
+}
+@media(max-width:768px) and (max-height:750px){
+  .screen{padding-top:calc(env(safe-area-inset-top,0px) + 36px)}
+  .key{height:48px;font-size:20px}
+  .amt .v{font-size:32px;min-height:38px}
+  .btn{height:50px}
+  .bal .tot{font-size:33px}
+  .disc{width:64px;height:64px;margin-bottom:14px}
+  .disc svg{width:28px;height:28px}
+}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+<div class="phone" id="phone" data-variant="p1" data-mod-a="off" data-mod-b="off">
+  <div class="notch"></div>
+  <div class="testflag">داده آزمایشی</div>
+  <div class="moment" id="moment"></div>
+  <div class="statusbar">
+    <span class="num" id="clock">9:41</span>
+    <span class="sig"><i style="height:5px"></i><i style="height:7px"></i><i style="height:9px"></i><i style="height:11px"></i></span>
+  </div>
+
+  <div class="viewport">
+
+  <!-- ═══ 01 ENTRY ═══ -->
+  <section class="screen active" data-screen="entry" data-moment="">
+    <div class="scroll">
+      <div style="height:10px"></div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:24px">
+        <div style="width:31px;height:31px;border-radius:10px;background:var(--ink);display:grid;place-items:center">
+          <svg viewBox="0 0 49.33 39.99" width="17" height="17" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg>
+        </div>
+        <div style="font-size:17px;font-weight:600;letter-spacing:-.02em">مهاجر</div>
+      </div>
+
+      <h1>ریال را به دلار تبدیل کنید<br>و هر وقت خواستید برگردانید.</h1>
+      <p class="lead" style="margin-top:12px">نرخ و کارمزد قبل از پرداخت مشخص است. موجودی دلاری‌تان را می‌بینید و هر لحظه می‌توانید آن را به ریال برگردانید.</p>
+
+      <!-- P1/P2 · Trust Moment 02 lives here: exit is offered BEFORE any money moves -->
+      <div class="tblock exit v-p1">
+        <div class="h">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+          قبل از اینکه پولی وارد کنید
+        </div>
+        <p>می‌توانید همین حالا ببینید خروج از مهاجر چطور کار می‌کند — چقدر طول می‌کشد، چقدر کارمزد دارد و چه چیزی لازم است.</p>
+        <button onclick="openExitPreview('entry')">پیش‌نمایش خروج ←</button>
+      </div>
+
+      <!-- Module A -->
+      <div class="tblock inst mod-a">
+        <div class="h">
+          <svg viewBox="0 0 24 24"><path d="M3.5 10.5L12 4.5l8.5 6"/><path d="M5.5 10v9h13v-9"/><path d="M10 19v-5.2h4V19"/></svg>
+          پول کجا نگه‌داری می‌شود؟
+        </div>
+        <p>مسیر پول، نقش هر بازیگر و اینکه در صورت خطا مسئولیت با کیست.</p>
+        <button onclick="openSheet('inst')">مشاهدهٔ ساختار ←</button>
+      </div>
+
+      <!-- Module B -->
+      <div class="tblock human mod-b">
+        <div class="human">
+          <div class="av">ن</div>
+          <div class="m">
+            <div class="n">نازنین محمدی</div>
+            <div class="r">مسئول اولین تراکنش شما · پاسخ‌گو تا پایان</div>
+          </div>
+        </div>
+        <button onclick="openSheet('human')">گفت‌وگو با نازنین ←</button>
+      </div>
+
+      <div class="note">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <p>این یک نسخهٔ آزمایشی است. هیچ پول واقعی جابه‌جا نمی‌شود.</p>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="startFunding()">شروع</button>
+  </section>
+
+  <!-- ═══ 02 AMOUNT ═══ -->
+  <section class="screen" data-screen="amount" data-moment="۰۱ · قبل از Funding">
+    <div class="nav">
+      <button class="back" onclick="go('entry')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2>مبلغ</h2><span class="step num">۱/۳</span>
+    </div>
+    <div class="amt">
+      <div class="cur">مبلغ به تومان</div>
+      <div class="v num zero" id="a-val">0<span class="caret"></span></div>
+      <div class="sub num" id="a-out">دریافتی تقریبی $0.00</div>
+    </div>
+
+    <!-- P2 · the trial nudge -->
+    <div class="v-p2" id="trial-nudge">
+      <div class="tblock exit" style="margin-top:8px">
+        <div class="h"><svg viewBox="0 0 24 24"><circle cx="15.5" cy="12" r="5.8"/><circle cx="5.5" cy="12" r="2.4"/></svg>
+          اول با مبلغ کم امتحان کنید</div>
+        <p>یک دور کامل را با ۵ دلار برو: تبدیل، دیدن موجودی، و برگرداندن به ریال. بعد تصمیم بگیر چقدر وارد کنی.</p>
+      </div>
+    </div>
+
+    <div class="presets">
+      <button class="preset trial v-p2" onclick="setTrial()">۵ دلار · آزمایشی</button>
+      <button class="preset num" onclick="setAmt(20000000)">۲۰ م</button>
+      <button class="preset num" onclick="setAmt(50000000)">۵۰ م</button>
+      <button class="preset num" onclick="setAmt(100000000)">۱۰۰ م</button>
+    </div>
+
+    <div class="keypad">
+      <button class="key num" onclick="key('1')">1</button><button class="key num" onclick="key('2')">2</button><button class="key num" onclick="key('3')">3</button>
+      <button class="key num" onclick="key('4')">4</button><button class="key num" onclick="key('5')">5</button><button class="key num" onclick="key('6')">6</button>
+      <button class="key num" onclick="key('7')">7</button><button class="key num" onclick="key('8')">8</button><button class="key num" onclick="key('9')">9</button>
+      <button class="key num" onclick="key('000')">000</button><button class="key num" onclick="key('0')">0</button>
+      <button class="key" onclick="key('del')"><svg viewBox="0 0 24 24"><path d="M20 6H9l-5 6 5 6h11a1 1 0 001-1V7a1 1 0 00-1-1z"/><path d="M17 10l-4 4M13 10l4 4"/></svg></button>
+    </div>
+    <div class="cta-slot hidden" id="a-cta"><button class="btn btn-primary" onclick="toSummary()">ادامه</button></div>
+  </section>
+
+  <!-- ═══ 03 SUMMARY · before you pay ═══ -->
+  <section class="screen" data-screen="summary" data-moment="۰۱+۰۳ · قبل از پرداخت">
+    <div class="nav">
+      <button class="back" onclick="go('amount')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2>قبل از پرداخت</h2><span class="step num">۲/۳</span>
+    </div>
+    <div class="scroll">
+      <!-- HYGIENE · identical in all three variants -->
+      <div class="card" style="padding:4px 18px">
+        <div class="row"><span class="k">می‌پردازید</span><span class="v num" id="s-pay">۰ تومان</span></div>
+        <div class="row"><span class="k">نرخ تبدیل</span><span class="v num" id="s-rate">۰</span></div>
+        <div class="row"><span class="k" id="s-fee-k">کارمزد</span><span class="v num" id="s-fee">$1.50</span></div>
+        <div class="row"><span class="k">زمان تقریبی</span><span class="v">کمتر از ۵ دقیقه</span></div>
+        <div class="row total"><span class="k">دریافت می‌کنید</span><span class="v num" id="s-net">$0.00</span></div>
+      </div>
+
+      <!-- P1/P2 · Trust Moment 02 -->
+      <div class="tblock exit v-p1">
+        <div class="h">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+          اگر بخواهید برگردانید
+        </div>
+        <p>همین مبلغ را هر لحظه می‌توانید به ریال برگردانید. <b class="num" id="s-exit-net">۰</b> تومان به حساب بانکی‌تان واریز می‌شود، تا پایان روز کاری بعد.</p>
+        <button onclick="openExitPreview('summary')">جزئیات کامل خروج ←</button>
+      </div>
+
+      <div class="tblock inst mod-a">
+        <div class="h">
+          <svg viewBox="0 0 24 24"><path d="M3.5 10.5L12 4.5l8.5 6"/><path d="M5.5 10v9h13v-9"/><path d="M10 19v-5.2h4V19"/></svg>
+          چه کسی پول را نگه می‌دارد
+        </div>
+        <p>تبدیل توسط شریک تسویه انجام می‌شود و موجودی دلاری نزد شریک نگهدارنده می‌ماند — جدا از حساب‌های عملیاتی مهاجر.</p>
+        <button onclick="openSheet('inst')">مسیر پول و مسئولیت ←</button>
+      </div>
+
+      <div class="tblock human mod-b">
+        <div class="human">
+          <div class="av">ن</div>
+          <div class="m"><div class="n">نازنین محمدی</div><div class="r">اگر چیزی مبهم بود، قبل از پرداخت بپرسید</div></div>
+        </div>
+        <button onclick="openSheet('human')">گفت‌وگو ←</button>
+      </div>
+
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="go('confirm')">ادامه</button>
+  </section>
+
+  <!-- ═══ 04 CONFIRM ═══ -->
+  <section class="screen" data-screen="confirm" data-moment="۰۳ · دقیقاً چه چیزی را قبول می‌کنم">
+    <div class="nav">
+      <button class="back" onclick="go('summary')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2>تأیید</h2><span class="step num">۳/۳</span>
+    </div>
+    <div class="scroll">
+      <div class="dark-card" style="padding:22px 20px">
+        <div style="font-size:12px;color:rgba(255,255,255,.5);position:relative">دریافت می‌کنید</div>
+        <div class="num" style="font-size:36px;font-weight:700;letter-spacing:-.04em;margin-top:6px;position:relative" id="c-net">$0.00</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.42);margin-top:6px;position:relative" class="num" id="c-pay">در برابر ۰ تومان</div>
+      </div>
+
+      <div class="card" style="margin-top:12px;padding:4px 18px">
+        <div class="row"><span class="k">از کارت</span><span class="v num">۶۲۱۹ ****</span></div>
+        <div class="row"><span class="k">کارمزد</span><span class="v num" id="c-fee">$1.50</span></div>
+        <div class="row"><span class="k">زمان تقریبی</span><span class="v">کمتر از ۵ دقیقه</span></div>
+        <div class="row"><span class="k">قابل برگشت</span><span class="v" style="color:var(--ok)">بله، هر زمان</span></div>
+      </div>
+
+      <div class="tblock human mod-b">
+        <div class="human">
+          <div class="av">ن</div>
+          <div class="m"><div class="n">نازنین محمدی</div><div class="r">اگر این تراکنش مشکلی پیدا کند، پیگیری با اوست</div></div>
+        </div>
+      </div>
+
+      <div class="note">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <p>با تأیید، مبلغ از کارت شما کسر و به دلار تبدیل می‌شود. <b>هیچ قفل زمانی وجود ندارد.</b></p>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="doFund()">تأیید و پرداخت</button>
+    <button class="btn btn-ghost" onclick="go('amount')">تغییر مبلغ</button>
+  </section>
+
+  <!-- ═══ 05 STATE ═══ -->
+  <section class="screen" data-screen="state" data-moment="۰۴ · پولم الان کجاست">
+    <div class="nav" id="st-nav" style="visibility:hidden"><span></span></div>
+
+    <!-- P0 · plain -->
+    <div class="center v-p0-only" id="st-simple">
+      <div class="disc pend" id="st-disc"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9"/></svg></div>
+      <div class="big-amt num" id="st-amt">$0.00</div>
+      <p class="lead" style="margin-top:8px" id="st-msg">در حال انجام…</p>
+      <div style="margin-top:12px" id="st-badge"><span class="badge b-warn">در انتظار</span></div>
+      <div id="st-note" style="width:100%"></div>
+    </div>
+
+    <!-- P1/P2 · the money is visible at every step -->
+    <div class="scroll v-p1" id="st-rich">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <span class="num" style="font-size:22px;font-weight:700;letter-spacing:-.03em" id="st-r-amt">$0.00</span>
+          <span id="st-r-badge"><span class="badge b-warn">در انتظار</span></span>
+        </div>
+        <div class="tl" id="st-tl"></div>
+      </div>
+      <div id="st-r-note"></div>
+      <div style="height:12px"></div>
+    </div>
+
+    <div id="st-actions"></div>
+  </section>
+
+  <!-- ═══ 06 BALANCE ═══ -->
+  <section class="screen" data-screen="balance" data-moment="۰۴ · موجودی و اختیار">
+    <div class="nav">
+      <span style="font-size:17px;font-weight:600;letter-spacing:-.015em">موجودی شما</span>
+      <button class="back" style="margin-inline-start:auto;transform:none" onclick="openSheet('log')" aria-label="راهنما">
+        <svg viewBox="0 0 24 24" style="transform:none"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+      </button>
+    </div>
+    <div class="scroll">
+      <div class="dark-card bal">
+        <div class="lab">موجودی دلاری</div>
+        <div class="tot num" id="b-total">$0.00</div>
+        <div class="split v-p1">
+          <div class="s"><div class="l">قابل استفاده</div><div class="v num" id="b-avail">$0</div></div>
+          <div class="s"><div class="l">در انتظار</div><div class="v num" id="b-pend">$0</div></div>
+        </div>
+      </div>
+
+      <!-- P2 · the trial has closed a full loop -->
+      <div class="v-p2" id="trial-done" style="display:none">
+        <div class="tblock exit" style="margin-top:12px">
+          <div class="h"><svg viewBox="0 0 24 24"><path d="M5 13l4 4 10-10"/></svg> یک دور کامل را تمام کردید</div>
+          <p>وارد کردید، تبدیل شد، دیدید، و برگرداندید — همه با ۵ دلار. حالا اگر خواستید مبلغ واقعی وارد کنید.</p>
+        </div>
+      </div>
+
+      <div class="sec">با این موجودی چه می‌توانید بکنید</div>
+      <button class="opt" onclick="startExit()">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
+        <div class="m"><div class="t">برگرداندن به ریال</div><div class="d">به حساب بانکی تأییدشدهٔ خودتان</div></div>
+      </button>
+      <button class="opt" onclick="go('amount')">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+        <div class="m"><div class="t">افزودن مبلغ بیشتر</div><div class="d">همان مسیر، هر مبلغی</div></div>
+      </button>
+
+      <div class="tblock human mod-b" style="margin-top:14px">
+        <div class="human">
+          <div class="av">ن</div>
+          <div class="m"><div class="n">نازنین محمدی</div><div class="r">پاسخ‌گو · معمولاً زیر ۱۵ دقیقه</div></div>
+        </div>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+  </section>
+
+  <!-- ═══ 07 EXIT AMOUNT ═══ -->
+  <section class="screen" data-screen="exit" data-moment="۰۵ · خروج">
+    <div class="nav">
+      <button class="back" onclick="go('balance')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2>برگرداندن به ریال</h2>
+    </div>
+    <div class="amt">
+      <div class="cur">مبلغ به دلار</div>
+      <div class="v num zero" id="e-val">$0<span class="caret"></span></div>
+      <div class="sub num" id="e-out">≈ ۰ تومان</div>
+    </div>
+    <div class="presets">
+      <button class="preset" onclick="exitAll()">همهٔ موجودی</button>
+    </div>
+    <div class="keypad">
+      <button class="key num" onclick="eKey('1')">1</button><button class="key num" onclick="eKey('2')">2</button><button class="key num" onclick="eKey('3')">3</button>
+      <button class="key num" onclick="eKey('4')">4</button><button class="key num" onclick="eKey('5')">5</button><button class="key num" onclick="eKey('6')">6</button>
+      <button class="key num" onclick="eKey('7')">7</button><button class="key num" onclick="eKey('8')">8</button><button class="key num" onclick="eKey('9')">9</button>
+      <button class="key num" onclick="eKey('00')">00</button><button class="key num" onclick="eKey('0')">0</button>
+      <button class="key" onclick="eKey('del')"><svg viewBox="0 0 24 24"><path d="M20 6H9l-5 6 5 6h11a1 1 0 001-1V7a1 1 0 00-1-1z"/><path d="M17 10l-4 4M13 10l4 4"/></svg></button>
+    </div>
+    <div class="cta-slot hidden" id="e-cta"><button class="btn btn-primary" onclick="doExit()">برگرداندن</button></div>
+  </section>
+
+  <!-- ═══ 08 EXIT DONE ═══ -->
+  <section class="screen" data-screen="exitdone" data-moment="۰۵ · خروج موفق">
+    <div class="center">
+      <div class="disc ok"><svg viewBox="0 0 24 24"><path d="M5 13l4.5 4.5L19 7"/></svg></div>
+      <div class="big-amt num" id="x-amt">۰ تومان</div>
+      <p class="lead" style="margin-top:8px">به حساب بانکی شما واریز شد.</p>
+      <div style="margin-top:12px"><span class="badge b-ok">انجام شد</span></div>
+      <div class="note" style="width:100%;text-align:start">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+        <p id="x-note">پولی که وارد کرده بودید، برگشت. <b>هیچ مبلغی قفل نشد.</b></p>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="afterExit()" id="x-cta">ادامه</button>
+  </section>
+
+  </div><!-- /viewport -->
+
+  <div class="sheet-bg" id="sheet-bg" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheet"><div class="grip"></div><div id="sheet-body"></div></div>
+</div>
+</div>
+
+<button class="dev-fab" id="dev-fab" aria-expanded="false" onclick="toggleDev()" aria-label="کنترل تسهیل‌گر"><span></span></button>
+<div class="hint" id="hint"></div>
+<div class="chrome" id="chrome">
+  <button class="chip va" id="v-p0" onclick="setVariant('p0')">P0 پایه</button>
+  <button class="chip va" id="v-p1" aria-pressed="true" onclick="setVariant('p1')">P1 کنترل</button>
+  <button class="chip va" id="v-p2" onclick="setVariant('p2')">P2 کنترل+آزمایش</button>
+  <button class="chip" id="m-a" onclick="toggleMod('a')">ماژول A نهادی</button>
+  <button class="chip" id="m-b" onclick="toggleMod('b')">ماژول B انسانی</button>
+  <button class="chip danger" id="fail-btn" onclick="toggleFail()">شبیه‌سازی خطا</button>
+  <button class="chip" id="mo-btn" aria-pressed="true" onclick="toggleMoment()">برچسب لحظه</button>
+  <button class="chip" onclick="openSheet('log')">دفترچهٔ رفتار</button>
+  <button class="chip" onclick="resetAll()">↻ شروع دوباره</button>
+</div>
+
+<script>
+/* ════════ CONFIG ════════ */
+const CONFIG={
+  rate:145000, spread:0.009, flatFee:1.50, trialCapUsd:10,
+  exitSpread:0.011, exitFee:2.00,
+  trialUsd:5
+};
+const buyRate =()=>CONFIG.rate*(1+CONFIG.spread);
+const sellRate=()=>CONFIG.rate*(1-CONFIG.exitSpread);
+const isTrial =a=>a>0 && (a/buyRate())<=CONFIG.trialCapUsd;
+const fee     =a=>isTrial(a)?0:CONFIG.flatFee;
+
+const S={variant:'p1',modA:false,modB:false,fail:false,moment:true,exitAll:false,
+         raw:'',eRaw:'',balance:0,pending:0,trialDone:false,fundCount:0,log:[]};
+
+/* ════════ helpers ════════ */
+const FA=['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+const fa=s=>String(s).replace(/\d/g,d=>FA[+d]);
+const grp=n=>Math.round(n).toLocaleString('en-US');
+const toman=n=>fa(grp(n));
+const usd=n=>'$'+(+n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const usd0=n=>'$'+grp(n);
+const $=id=>document.getElementById(id);
+const phone=()=>$('phone');
+
+/* ════════ behaviour log — the handoff asks for signal, not opinion ════════ */
+function log(ev,data){
+  S.log.push({t:new Date().toTimeString().slice(0,8),v:S.variant,
+              a:S.modA?'A':'', b:S.modB?'B':'', ev, data:data===undefined?'':data});
+}
+function logText(){
+  const head=`MOHAJER · FIRST FUNDING · session log\nvariant=${S.variant} modA=${S.modA} modB=${S.modB}\n`+
+             `funds=${S.fundCount} trialDone=${S.trialDone} balance=${usd(S.balance)}\n`+'-'.repeat(46)+'\n';
+  return head+S.log.map(l=>`${l.t}  ${l.v}${l.a}${l.b}  ${l.ev}${l.data!==''?'  '+l.data:''}`).join('\n');
+}
+
+/* ════════ navigation ════════ */
+let current='entry';
+function go(name){
+  const cur=document.querySelector('.screen.active');
+  const nxt=document.querySelector(`[data-screen="${name}"]`);
+  if(!nxt||cur===nxt) return;
+  if(cur){cur.classList.remove('active');cur.classList.add('leaving');
+          setTimeout(()=>cur.classList.remove('leaving'),500)}
+  nxt.classList.add('active');
+  nxt.querySelector('.scroll')?.scrollTo(0,0);
+  current=name; log('screen',name);
+  showMoment(nxt.dataset.moment||'');
+  render();
+}
+function showMoment(t){
+  const el=$('moment');
+  el.textContent=t; el.classList.toggle('on',S.moment&&!!t);
+}
+
+/* ════════ render ════════ */
+function render(){
+  const amt=+S.raw||0, f=fee(amt), gross=amt/buyRate(), net=Math.max(0,gross-f);
+
+  const av=$('a-val');
+  av.innerHTML=(S.raw?toman(+S.raw):'۰')+'<span class="caret"></span>';
+  av.classList.toggle('zero',!S.raw);
+  $('a-out').textContent='دریافتی تقریبی '+usd(net);
+  $('a-cta').classList.toggle('hidden',!(gross>=1));
+
+  $('s-pay').textContent=toman(amt)+' تومان';
+  $('s-rate').textContent=toman(buyRate());
+  $('s-fee').innerHTML=f===0?'<span style="color:var(--ok)">رایگان · آزمایشی</span>':usd(CONFIG.flatFee);
+  $('s-net').textContent=usd(net);
+  $('s-exit-net').textContent=toman(Math.max(0,(net-CONFIG.exitFee))*sellRate());
+  $('c-net').textContent=usd(net);
+  $('c-pay').textContent='در برابر '+toman(amt)+' تومان';
+  $('c-fee').innerHTML=f===0?'<span style="color:var(--ok)">رایگان</span>':usd(CONFIG.flatFee);
+
+  $('b-total').textContent=usd(S.balance);
+  $('b-avail').textContent=usd0(S.balance);
+  $('b-pend').textContent=usd0(S.pending);
+
+  const e=+S.eRaw||0;
+  const ev=$('e-val');
+  ev.innerHTML='$'+(S.eRaw?fa(grp(e)):'۰')+'<span class="caret"></span>';
+  ev.classList.toggle('zero',!S.eRaw);
+  $('e-out').textContent='≈ '+toman(Math.max(0,(e-CONFIG.exitFee))*sellRate())+' تومان';
+  $('e-cta').classList.toggle('hidden',!(e>0&&e<=S.balance));
+
+  $('trial-done').style.display=S.trialDone?'block':'none';
+}
+
+/* ════════ funding ════════ */
+function startFunding(){ log('cta','start'); go('amount'); }
+function key(k){
+  if(k==='del') S.raw=S.raw.slice(0,-1);
+  else if(S.raw.length<13) S.raw=(S.raw==='0'?'':S.raw)+k;
+  render();
+}
+function setAmt(n){ S.raw=String(n); log('preset',toman(n)); render(); }
+function setTrial(){ S.raw=String(Math.ceil(CONFIG.trialUsd*buyRate()/1000)*1000); log('preset','trial $5'); render(); }
+function toSummary(){
+  const amt=+S.raw||0;
+  log('amount_entered', toman(amt)+' تومان ≈ '+usd(amt/buyRate()));
+  go('summary');
+}
+
+const TL=[
+  {t:'مبلغ از کارت شما کسر شد',      d:'لحظه‌ای پیش'},
+  {t:'در حال تبدیل توسط شریک تسویه', d:'معمولاً کمتر از ۵ دقیقه'},
+  {t:'دلار به موجودی شما اضافه شد',  d:'قابل استفاده و قابل برگشت'}
+];
+function drawTL(step,failed){
+  $('st-tl').innerHTML=TL.map((s,i)=>{
+    const cls=failed&&i===step?'':(i<step?'done':i===step?'now':'pendingx');
+    const icon=i<step?'<path d="M5 13l4 4 10-10"/>':'<circle cx="12" cy="12" r="4"/>';
+    return `<div class="tli ${cls}"><div class="dot"><svg viewBox="0 0 24 24">${icon}</svg></div>
+      <div><div class="t">${s.t}</div><div class="d">${s.d}</div></div></div>`;
+  }).join('');
+}
+
+function doFund(){
+  const amt=+S.raw||0, net=Math.max(0,amt/buyRate()-fee(amt));
+  log('confirmed', usd(net));
+  go('state');
+  $('st-amt').textContent=usd(net); $('st-r-amt').textContent=usd(net);
+  $('st-actions').innerHTML=''; $('st-note').innerHTML=''; $('st-r-note').innerHTML='';
+  setState('pend','در حال انجام…','در انتظار'); drawTL(0,false);
+  S.pending=net; render();
+
+  setTimeout(()=>{ drawTL(1,false); },900);
+  setTimeout(()=>{
+    S.pending=0;
+    if(S.fail){
+      log('failed','fund');
+      setState('bad','پرداخت از کارت انجام نشد.','ناموفق'); drawTL(1,true);
+      const n=`<div class="note bad" style="text-align:start"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+        <p>بانک تراکنش را تأیید نکرد. <b>مبلغی از حساب شما کسر نشده است.</b></p></div>`+
+        (S.modB?`<div class="tblock human"><div class="human"><div class="av">ن</div>
+          <div class="m"><div class="n">نازنین محمدی</div><div class="r">این مورد به او ارجاع شد · پیگیری فعال</div></div></div>
+          <button onclick="openSheet('human')">گفت‌وگو با نازنین ←</button></div>`:'');
+      $('st-note').innerHTML=n; $('st-r-note').innerHTML=n;
+      $('st-actions').innerHTML=`<button class="btn btn-primary" onclick="go('summary')">تلاش دوباره</button>
+        <button class="btn btn-ghost" onclick="openSheet('human')">تماس با پشتیبانی</button>`;
+      render(); return;
+    }
+    S.balance+=net; S.fundCount++;
+    log('funded', usd(net)+'  total='+usd(S.balance));
+    setState('ok','به موجودی دلاری شما اضافه شد.','انجام شد'); drawTL(3,false);
+    $('st-actions').innerHTML=`<button class="btn btn-primary" onclick="go('balance')">مشاهدهٔ موجودی</button>`;
+    render();
+  },2100);
+}
+function setState(kind,msg,badge){
+  const ICON={ok:'<path d="M5 13l4.5 4.5L19 7"/>',pend:'<path d="M12 3a9 9 0 109 9"/>',bad:'<path d="M18 6L6 18M6 6l12 12"/>'};
+  const B={ok:'b-ok',pend:'b-warn',bad:'b-bad'};
+  const d=$('st-disc'); d.className='disc '+kind; d.innerHTML=`<svg viewBox="0 0 24 24">${ICON[kind]}</svg>`;
+  $('st-msg').textContent=msg;
+  $('st-badge').innerHTML=`<span class="badge ${B[kind]}">${badge}</span>`;
+  $('st-r-badge').innerHTML=`<span class="badge ${B[kind]}">${badge}</span>`;
+}
+
+/* ════════ exit ════════ */
+function startExit(){ S.eRaw=''; S.exitAll=false; log('exit_started'); render(); go('exit'); }
+function eKey(k){
+  S.exitAll=false;
+  if(k==='del') S.eRaw=S.eRaw.slice(0,-1);
+  else if(S.eRaw.length<7) S.eRaw=(S.eRaw==='0'?'':S.eRaw)+k;
+  render();
+}
+/* "all of it" must leave exactly zero. Flooring the display value would strand
+   a fraction of a cent, which quietly contradicts the no-lock promise. */
+function exitAll(){ S.exitAll=true; S.eRaw=String(Math.floor(S.balance)); log('preset','exit all'); render(); }
+function doExit(){
+  const e=S.exitAll?S.balance:(+S.eRaw||0), net=Math.max(0,(e-CONFIG.exitFee))*sellRate();
+  S.balance=Math.max(0,S.balance-e);
+  if(S.balance<0.01) S.balance=0;
+  log('exited', usd(e)+' → '+toman(net)+' تومان'+(S.exitAll?' (all)':''));
+  $('x-amt').textContent=toman(net)+' تومان';
+  const wasTrial=!S.trialDone && S.variant==='p2' && S.fundCount===1;
+  if(wasTrial){ S.trialDone=true; log('trial_complete'); }
+  $('x-note').innerHTML = wasTrial
+    ? 'یک دور کامل تمام شد: وارد کردید، تبدیل شد، دیدید و برگرداندید. <b>هیچ مبلغی قفل نشد.</b>'
+    : 'پولی که وارد کرده بودید، برگشت. <b>هیچ مبلغی قفل نشد.</b>';
+  $('x-cta').textContent = wasTrial ? 'حالا مبلغ واقعی وارد کنید' : 'ادامه';
+  go('exitdone'); render();
+}
+function afterExit(){
+  if(S.trialDone && S.balance<1){ S.raw=''; log('cta','fund_after_trial'); go('amount'); }
+  else go('balance');
+}
+
+/* ════════ exit preview — Trust Moment 02 ════════ */
+function openExitPreview(from){
+  log('exit_preview_opened', from);
+  const amt=+S.raw||0, net=Math.max(0,amt/buyRate()-fee(amt));
+  const back=Math.max(0,(net-CONFIG.exitFee))*sellRate();
+  $('sheet-body').innerHTML=`
+    <h3>اگر بخواهید خارج شوید</h3>
+    <p class="lead" style="margin-bottom:10px">هر لحظه می‌توانید موجودی دلاری را به ریال برگردانید. هیچ قفل زمانی، جریمه یا حداقل مدتی وجود ندارد.</p>
+    <div class="row"><span class="k">چه زمانی؟</span><span class="v">هر لحظه، بدون محدودیت</span></div>
+    <div class="row"><span class="k">چقدر طول می‌کشد؟</span><span class="v">تا پایان روز کاری بعد</span></div>
+    <div class="row"><span class="k">کارمزد خروج</span><span class="v num">${usd(CONFIG.exitFee)}</span></div>
+    <div class="row"><span class="k">به کجا واریز می‌شود؟</span><span class="v">حساب بانکی به نام خودتان</span></div>
+    <div class="row"><span class="k">چه چیزی لازم است؟</span><span class="v">فقط شمارهٔ شبای تأییدشده</span></div>
+    ${amt>0?`<div class="row total"><span class="k">برای همین مبلغ</span><span class="v num">${toman(back)} تومان</span></div>`:''}
+    <div class="note" style="margin-top:12px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+      <p>حداقل مبلغ برای خروج وجود ندارد. می‌توانید کل موجودی را یک‌جا برگردانید.</p></div>
+    <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet()">فهمیدم</button>`;
+  openSheetRaw();
+}
+
+/* ════════ sheets ════════ */
+function openSheet(kind){
+  let h='';
+  if(kind==='inst'){
+    log('module_opened','A');
+    h=`<h3>پول کجا می‌رود؟</h3>
+      <p class="lead" style="margin-bottom:10px">چهار نقش جدا. هیچ‌کدام همان دیگری نیست.</p>
+      <div class="row"><span class="k">تبدیل ریال به دلار</span><span class="v">شریک تسویهٔ ریالی</span></div>
+      <div class="row"><span class="k">نگهداری موجودی دلاری</span><span class="v">شریک نگهدارنده</span></div>
+      <div class="row"><span class="k">واریز هنگام خروج</span><span class="v">همان شریک تسویه</span></div>
+      <div class="row"><span class="k">تجربه، پیگیری و پشتیبانی</span><span class="v">مهاجر</span></div>
+      <div class="sec" style="margin-top:14px">اگر چیزی خطا بخورد</div>
+      <div class="row"><span class="k">پرداخت ناموفق</span><span class="v">مبلغ کسر نمی‌شود</span></div>
+      <div class="row"><span class="k">تبدیل ناموفق</span><span class="v">بازگشت کامل مبلغ</span></div>
+      <div class="row"><span class="k">مسئول پیگیری</span><span class="v">مهاجر، تا نتیجه</span></div>
+      <div class="note warn" style="margin-top:12px"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+        <p><b>هنوز نهایی نشده.</b> شریک نگهدارنده و مسیر تسویه در حال بررسی‌اند. نام‌ها در این نسخه نمایشی‌اند و هیچ قراردادی اعلام نمی‌شود.</p></div>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet()">بستن</button>`;
+  }
+  else if(kind==='human'){
+    log('module_opened','B');
+    h=`<h3>نازنین محمدی</h3>
+      <div class="human" style="margin-bottom:12px">
+        <div class="av">ن</div>
+        <div class="m"><div class="n">مسئول اولین تراکنش شما</div><div class="r">مهاجر · تیم عملیات</div></div>
+      </div>
+      <div class="row"><span class="k">زمان پاسخ</span><span class="v">معمولاً زیر ۱۵ دقیقه</span></div>
+      <div class="row"><span class="k">روزهای تعطیل</span><span class="v">فعال</span></div>
+      <div class="row"><span class="k">اگر پاسخ نداد</span><span class="v">ارجاع به سرپرست عملیات</span></div>
+      <div class="note" style="margin-top:12px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <p>تا تعیین تکلیف تراکنش، همین فرد پیگیر آن است. شماره پیگیری در رسید ثبت می‌شود.</p></div>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet()">گفت‌وگو</button>
+      <button class="btn btn-ghost" onclick="closeSheet()">بستن</button>`;
+  }
+  else if(kind==='log'){
+    h=`<h3>دفترچهٔ رفتار</h3>
+      <p class="lead" style="margin-bottom:10px">هر رویداد با نسخه و ماژول فعال ثبت شده. متن را کپی کنید و در یادداشت جلسه بگذارید.</p>
+      <textarea readonly id="log-ta">${logText().replace(/</g,'&lt;')}</textarea>
+      <button class="btn btn-soft" style="margin-top:10px" onclick="copyLog()">کپی</button>
+      <button class="btn btn-ghost" onclick="closeSheet()">بستن</button>`;
+  }
+  $('sheet-body').innerHTML=h; openSheetRaw();
+}
+function openSheetRaw(){ $('sheet-bg').classList.add('on'); $('sheet').classList.add('on'); }
+function closeSheet(){ $('sheet-bg').classList.remove('on'); $('sheet').classList.remove('on'); }
+function copyLog(){
+  const ta=$('log-ta'); ta.select();
+  try{document.execCommand('copy')}catch(e){}
+  ta.blur();
+}
+
+/* ════════ facilitator ════════ */
+function setVariant(v){
+  S.variant=v; phone().dataset.variant=v;
+  ['p0','p1','p2'].forEach(k=>$('v-'+k).setAttribute('aria-pressed',k===v));
+  /* P0 shows the plain status block, P1/P2 the timeline */
+  document.querySelectorAll('.v-p0-only').forEach(el=>el.style.display=(v==='p0')?'':'none');
+  log('variant',v); render();
+}
+function toggleMod(m){
+  if(m==='a'){S.modA=!S.modA; phone().dataset.modA=S.modA?'on':'off'; $('m-a').setAttribute('aria-pressed',S.modA);}
+  else{S.modB=!S.modB; phone().dataset.modB=S.modB?'on':'off'; $('m-b').setAttribute('aria-pressed',S.modB);}
+  log('module_'+m, (m==='a'?S.modA:S.modB)?'on':'off');
+}
+function toggleFail(){ S.fail=!S.fail; $('fail-btn').setAttribute('aria-pressed',S.fail);
+  $('hint').textContent=S.fail?'حالت خطا روشن است':''; log('failmode',S.fail?'on':'off'); }
+function toggleMoment(){ S.moment=!S.moment; $('mo-btn').setAttribute('aria-pressed',S.moment);
+  showMoment(document.querySelector('.screen.active').dataset.moment||''); }
+function resetAll(){
+  Object.assign(S,{raw:'',eRaw:'',balance:0,pending:0,trialDone:false,fundCount:0,log:[]});
+  log('reset'); go('entry'); render();
+}
+function toggleDev(){
+  const f=$('dev-fab'), c=$('chrome');
+  const open=f.getAttribute('aria-expanded')!=='true';
+  f.setAttribute('aria-expanded',open); c.classList.toggle('open',open);
+}
+
+/* ════════ layout ════════ */
+const MOBILE=()=>matchMedia('(max-width:768px)').matches;
+function fitPhone(){
+  const st=$('stage'), ph=$('phone');
+  if(MOBILE()){ ph.style.transform=''; st.style.width=''; st.style.height=''; return; }
+  const vv=window.visualViewport;
+  const vw=Math.round(vv?vv.width:innerWidth), vh=Math.round(vv?vv.height:innerHeight);
+  const s=Math.max(.35,Math.min((vw-40)/390,(vh-150)/844,1));
+  ph.style.transform=`scale(${s})`;
+  st.style.width=(390*s)+'px'; st.style.height=(844*s)+'px';
+}
+addEventListener('resize',fitPhone);
+addEventListener('orientationchange',()=>setTimeout(fitPhone,150));
+window.visualViewport?.addEventListener('resize',fitPhone);
+['gesturestart','gesturechange','gestureend'].forEach(ev=>
+  document.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
+let lastTap=0;
+document.addEventListener('touchend',e=>{
+  const now=Date.now();
+  if(now-lastTap<=320 && e.touches.length===0) e.preventDefault();
+  lastTap=now;
+},{passive:false});
+document.addEventListener('touchmove',e=>{ if(e.touches.length>1) e.preventDefault(); },{passive:false});
+
+/* ── embedding ──────────────────────────────────────────────────────
+   ?v=p0|p1|p2   choose the variant
+   ?a=1 &b=1     turn the modules on
+   ?embed=1      hide the facilitator controls (for the client deck)
+   Everything still works with no query string at all. */
+(function boot(){
+  const q=new URLSearchParams(location.search);
+  const v=q.get('v');
+  $('clock').textContent=fa('9:41');
+  setVariant(['p0','p1','p2'].includes(v)?v:'p1');
+  if(q.get('a')==='1') toggleMod('a');
+  if(q.get('b')==='1') toggleMod('b');
+  if(q.get('embed')==='1'){
+    document.body.classList.add('embedded');
+    S.moment=false; showMoment('');
+  }
+  render(); fitPhone(); log('session_start');
+})();
+</script>
+</body>
+</html>

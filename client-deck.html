@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مهاجر · فاز سوم · ارائه</title>
+<meta name="theme-color" content="#0B0D10">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" href="./icons/icon-192.png">
+<style>
+@font-face{font-family:Radical;src:url('./fonts/Radical-Light.woff2') format('woff2'),url('./fonts/Radical-Light.ttf') format('truetype');font-weight:300;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Regular.woff2') format('woff2'),url('./fonts/Radical-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Medium.woff2') format('woff2'),url('./fonts/Radical-Medium.ttf') format('truetype');font-weight:500;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-SemiBold.woff2') format('woff2'),url('./fonts/Radical-SemiBold.ttf') format('truetype');font-weight:600;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-Bold.woff2') format('woff2'),url('./fonts/Radical-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+@font-face{font-family:Radical;src:url('./fonts/Radical-ExtraBold.woff2') format('woff2'),url('./fonts/Radical-ExtraBold.ttf') format('truetype');font-weight:800;font-display:swap}
+
+:root{
+  --f:Radical,system-ui,sans-serif;
+  --gold:#D5A45C;--ok:#3FBF8F;--bad:#E0705A;--warn:#D98A52;--blue:#6FA8DC;--vio:#A98BD0;
+  --w1:#fff;--w2:rgba(255,255,255,.70);--w3:rgba(255,255,255,.44);
+  --surf:rgba(255,255,255,.055);--surf2:rgba(255,255,255,.10);--brd:rgba(255,255,255,.11);
+  --spring:cubic-bezier(.16,1,.3,1);--swift:cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--f);color:var(--w1);background:#0B0D10;-webkit-font-smoothing:antialiased;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(1000px 660px at 82% -12%,rgba(213,164,92,.14),transparent 62%),
+             radial-gradient(760px 520px at 4% 112%,rgba(63,191,143,.06),transparent 60%),
+             linear-gradient(168deg,#1A1F26,#0B0D10 55%,#12161B)}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.en{direction:ltr;unicode-bidi:isolate;display:inline-block}
+
+.deck{position:fixed;inset:0;z-index:1}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:62px 5vw 74px;opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateY(14px);transition:opacity .38s var(--swift),transform .58s var(--spring),visibility .58s;
+  overflow-y:auto;overscroll-behavior:contain;align-items:center}
+.slide::-webkit-scrollbar{display:none}
+.slide.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.slide>*{width:100%;max-width:1120px;flex:none}
+.slide.narrow>*{max-width:860px}
+.slide .in{opacity:0;transform:translateY(13px);transition:opacity .46s var(--swift),transform .62s var(--spring)}
+.slide.on .in{opacity:1;transform:none}
+.slide.on .in:nth-child(1){transition-delay:.05s}.slide.on .in:nth-child(2){transition-delay:.11s}
+.slide.on .in:nth-child(3){transition-delay:.17s}.slide.on .in:nth-child(4){transition-delay:.23s}
+.slide.on .in:nth-child(5){transition-delay:.29s}
+
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.15em;color:var(--gold);margin-bottom:14px}
+h1{font-size:clamp(30px,5.2vw,62px);font-weight:700;letter-spacing:-.038em;line-height:1.12}
+h2{font-size:clamp(21px,3vw,36px);font-weight:600;letter-spacing:-.03em;line-height:1.28;margin-bottom:6px}
+.lead{font-size:clamp(13px,1.4vw,16px);color:var(--w2);max-width:62ch;margin-top:11px}
+.sub{font-size:clamp(11.5px,1.2vw,13.5px);color:var(--w3);margin-top:10px}
+.hero{font-size:clamp(20px,3.2vw,38px);font-weight:600;letter-spacing:-.028em;line-height:1.45;max-width:22ch}
+.hero b{color:var(--gold);font-weight:700}
+b{font-weight:600}
+
+.pill{display:inline-flex;align-items:center;gap:7px;background:var(--surf2);border-radius:99px;padding:6px 13px;font-size:11.5px;color:var(--w2);font-weight:500}
+.pill .d{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+
+.cards{display:grid;gap:11px}
+.c2{grid-template-columns:repeat(2,1fr)}.c3{grid-template-columns:repeat(3,1fr)}
+.c4{grid-template-columns:repeat(4,1fr)}.c5{grid-template-columns:repeat(5,1fr)}.c6{grid-template-columns:repeat(6,1fr)}
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:16px}
+.card .n{font-size:10px;font-weight:700;letter-spacing:.11em;color:var(--gold);margin-bottom:9px}
+.card h3{font-size:clamp(13.5px,1.55vw,16px);font-weight:600;letter-spacing:-.018em;line-height:1.4}
+.card p{font-size:12px;color:var(--w3);line-height:1.6;margin-top:6px}
+.card.lit{background:linear-gradient(160deg,rgba(213,164,92,.15),rgba(213,164,92,.03));border-color:rgba(213,164,92,.3)}
+.card.good{border-color:rgba(63,191,143,.32);background:linear-gradient(160deg,rgba(63,191,143,.10),transparent)}
+
+/* ── the live prototype, in a device ── */
+.phones{display:flex;gap:clamp(14px,2.4vw,34px);align-items:flex-start;justify-content:center;flex-wrap:wrap}
+.dev{display:flex;flex-direction:column;align-items:center;gap:11px}
+.dev .frame{position:relative;border-radius:34px;padding:8px;background:#101317;
+  box-shadow:0 0 0 1.5px #303740,0 26px 60px -26px rgba(0,0,0,.85);flex:none}
+/* The prototype renders at its true 390×844 and is scaled down visually, so its
+   own mobile layout never runs at a cramped width. The shell clips to the
+   scaled box; JS picks the scale from the viewport height. */
+.dev .shell{overflow:hidden;border-radius:26px;background:#F4F4F1}
+.dev iframe{display:block;border:none;width:390px;height:844px;transform-origin:top left;background:#F4F4F1}
+.dev.big .shell{border-radius:32px}
+.dev .cap{text-align:center}
+.dev .cap .t{font-size:13.5px;font-weight:600;letter-spacing:-.015em}
+.dev .cap .d{font-size:11px;color:var(--w3);margin-top:3px;line-height:1.5}
+.dev .badge{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:3px 10px;
+  font-size:9.5px;font-weight:700;letter-spacing:.06em;margin-bottom:6px}
+.dev.b0 .badge{background:rgba(255,255,255,.09);color:var(--w3)}
+.dev.b1 .badge{background:rgba(213,164,92,.18);color:var(--gold)}
+.dev.b2 .badge{background:rgba(63,191,143,.16);color:var(--ok)}
+.dev.big .frame{border-radius:40px;padding:9px}
+.dev.big iframe{border-radius:32px}
+.livetag{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--ok);font-weight:500}
+.livetag i{width:7px;height:7px;border-radius:50%;background:var(--ok);position:relative}
+.livetag i::after{content:'';position:absolute;inset:0;border-radius:50%;background:var(--ok);animation:ping 2s var(--swift) infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.55}70%,100%{transform:scale(2.6);opacity:0}}
+
+.sideby{display:grid;grid-template-columns:1fr auto;gap:clamp(18px,3vw,44px);align-items:center}
+@media(max-width:900px){.sideby{grid-template-columns:1fr}}
+
+/* barriers */
+.bx{background:var(--surf);border:1px solid var(--brd);border-radius:14px;padding:14px}
+.bx .code{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.1em}
+.bx .t{font-size:13px;font-weight:600;margin-top:6px;letter-spacing:-.015em}
+.bx .q{font-size:11px;color:var(--w3);margin-top:5px;line-height:1.5;font-style:italic}
+.bx.core{border-color:rgba(213,164,92,.42);background:linear-gradient(160deg,rgba(213,164,92,.15),transparent)}
+
+/* the strategy line */
+.strategy{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+.stp{flex:1;min-width:130px;border-radius:14px;padding:15px 13px;border:1px solid var(--brd);background:var(--surf)}
+.stp .k{font-size:9.5px;font-weight:700;letter-spacing:.11em}
+.stp .t{font-size:13.5px;font-weight:600;margin-top:7px;letter-spacing:-.015em;line-height:1.35}
+.stp .d{font-size:11px;color:var(--w3);margin-top:5px;line-height:1.5}
+.stp.a{border-color:rgba(213,164,92,.36);background:linear-gradient(160deg,rgba(213,164,92,.14),transparent)} .stp.a .k{color:var(--gold)}
+.stp.b{border-color:rgba(63,191,143,.32)} .stp.b .k{color:var(--ok)}
+.stp.c{border-color:rgba(111,168,220,.3)} .stp.c .k{color:var(--blue)}
+.stp.d{border-color:rgba(169,139,208,.3)} .stp.d .k{color:var(--vio)}
+
+/* moments strip */
+.moments{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.mo{background:var(--surf);border:1px solid var(--brd);border-radius:14px;padding:13px 11px;text-align:center}
+.mo .n{font-size:9.5px;font-weight:700;color:var(--gold);letter-spacing:.09em}
+.mo .t{font-size:12px;font-weight:600;margin-top:6px;line-height:1.35}
+.mo .q{font-size:10px;color:var(--w3);margin-top:4px;line-height:1.45}
+.mo.hot{border-color:rgba(213,164,92,.4);background:linear-gradient(160deg,rgba(213,164,92,.15),transparent)}
+
+/* artefact list */
+.arts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.art{background:var(--surf);border:1px solid var(--brd);border-radius:15px;padding:15px;
+  display:flex;gap:12px;align-items:flex-start;text-decoration:none;color:#fff;transition:.24s var(--spring)}
+.art:hover{border-color:var(--gold);transform:translateY(-3px)}
+.art .ic{width:34px;height:34px;border-radius:11px;background:var(--surf2);display:grid;place-items:center;flex:none;font-size:15px}
+.art .t{font-size:13px;font-weight:600;letter-spacing:-.015em}
+.art .d{font-size:11px;color:var(--w3);margin-top:3px;line-height:1.5}
+
+/* design tokens strip */
+.tok{display:flex;gap:9px;flex-wrap:wrap}
+.sw{border-radius:12px;overflow:hidden;border:1px solid var(--brd);width:96px}
+.sw .c{height:52px}
+.sw .m{padding:7px 9px;background:var(--surf)}
+.sw .nm{font-size:10.5px;font-weight:600}
+.sw .hx{font-size:9.5px;color:var(--w3);margin-top:1px}
+
+.callout{background:linear-gradient(150deg,rgba(213,164,92,.13),rgba(213,164,92,.02));
+  border:1px solid rgba(213,164,92,.28);border-radius:17px;padding:18px}
+.callout .k{font-size:10px;font-weight:700;letter-spacing:.11em;color:var(--gold);margin-bottom:9px}
+.callout p{font-size:13px;color:var(--w2);line-height:1.75}
+.callout p+p{margin-top:8px}
+.callout b{color:#fff}
+.callout.ok{background:linear-gradient(150deg,rgba(63,191,143,.12),transparent);border-color:rgba(63,191,143,.3)}
+.callout.ok .k{color:var(--ok)}
+
+.steps{display:flex;flex-direction:column}
+.st{display:flex;gap:13px;padding:9px 0;border-bottom:1px solid var(--brd);align-items:flex-start}
+.st:last-child{border-bottom:none}
+.st .i{font-size:11px;font-weight:700;color:var(--gold);flex:none;width:26px;line-height:1.75}
+.st .t{font-size:clamp(13.5px,1.6vw,16px);font-weight:600;letter-spacing:-.018em;line-height:1.4}
+.st .d{font-size:12px;color:var(--w3);line-height:1.6;margin-top:3px}
+
+.bar{position:fixed;bottom:0;inset-inline:0;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;z-index:10;gap:14px}
+.dots-nav{display:flex;gap:5px;flex-wrap:wrap;flex:1}
+.dots-nav button{width:6px;height:6px;border-radius:50%;border:none;background:rgba(255,255,255,.18);cursor:pointer;padding:0;transition:.3s var(--spring)}
+.dots-nav button[aria-current=true]{background:var(--gold);width:20px;border-radius:99px}
+.arrows{display:flex;gap:8px;flex:none}
+.arrows button{width:38px;height:38px;border-radius:50%;border:1px solid var(--brd);background:var(--surf);cursor:pointer;display:grid;place-items:center;transition:.24s var(--spring)}
+.arrows button:hover:not(:disabled){background:#fff}
+.arrows button:hover:not(:disabled) svg{stroke:#0B0D10}
+.arrows button:disabled{opacity:.25;cursor:default}
+.arrows svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s;transform:scaleX(-1)}
+.brandbar{position:fixed;top:0;inset-inline:0;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;z-index:10;font-size:11.5px;color:var(--w3);gap:12px}
+.brandbar .lg{display:flex;align-items:center;gap:9px;color:#fff;font-weight:600;font-size:14.5px;flex:none}
+.brandbar .mk{width:25px;height:25px;border-radius:8px;background:rgba(255,255,255,.10);display:grid;place-items:center}
+.prog{position:fixed;top:0;inset-inline-start:0;height:2px;background:var(--gold);z-index:11;transition:width .5s var(--spring)}
+
+@media(max-width:900px){
+  .c3,.c2,.c4,.c5,.c6,.arts{grid-template-columns:repeat(2,1fr)}
+  .moments{grid-template-columns:repeat(2,1fr)}
+  .slide{justify-content:flex-start;padding-top:72px}
+  .strategy{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<div class="prog" id="prog"></div>
+<div class="brandbar">
+  <div class="lg"><div class="mk"><svg viewBox="0 0 49.33 39.99" width="14" height="14" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></div>مهاجر</div>
+  <div style="flex:1;text-align:center;color:var(--gold);font-weight:600;letter-spacing:.07em">فاز سوم · ارائه</div>
+  <div class="num" id="counter" style="flex:none">1 / 13</div>
+</div>
+
+<div class="deck" id="deck">
+
+<!-- 1 · TITLE -->
+<section class="slide narrow" style="align-items:flex-start">
+  <div class="in"><div class="pill"><span class="d"></span>فاز سوم · طراحی و اعتبارسنجی</div></div>
+  <h1 class="in" style="margin-top:20px">پروتوتایپ<br>و منطق پشت آن</h1>
+  <p class="lead in">آنچه در این فاز ساخته شد، چرا این‌طور ساخته شد، و در مرحلهٔ بعد دقیقاً چه چیزی را از کاربر یاد می‌گیریم.</p>
+  <div class="sub in">پروتوتایپ‌ها در همین ارائه زنده‌اند — می‌توانید مستقیم داخل اسلاید با آن‌ها کار کنید.</div>
+</section>
+
+<!-- 2 · WHAT WE BUILT -->
+<section class="slide">
+  <div class="eyebrow in">خروجی فاز سوم</div>
+  <h2 class="in" style="margin-bottom:14px">آنچه تحویل داده می‌شود</h2>
+  <div class="arts in">
+    <a class="art" href="./first-funding-v1.html" target="_blank"><div class="ic">◆</div>
+      <div><div class="t">پروتوتایپ First Funding</div><div class="d">یک مسیر، سه نسخهٔ قابل مقایسه، دو ماژول</div></div></a>
+    <a class="art" href="./wallet-v0-3.html" target="_blank"><div class="ic">◇</div>
+      <div><div class="t">پروتوتایپ کیف پول</div><div class="d">پنج Flow کامل بر اساس سند WS0</div></div></a>
+    <a class="art" href="./design.html" target="_blank"><div class="ic">◑</div>
+      <div><div class="t">دیزاین سیستم</div><div class="d">توکن، تایپوگرافی، موشن و قواعد نگارش</div></div></a>
+    <a class="art" href="./onboarding.html" target="_blank"><div class="ic">◈</div>
+      <div><div class="t">سند WS0، تصویری</div><div class="d">هفت بخش سند، قابل خواندن در ۲۸ صفحه</div></div></a>
+    <a class="art" href="./trust-onboarding-v2.html" target="_blank"><div class="ic">◎</div>
+      <div><div class="t">خروجی کارگاه اعتماد</div><div class="d">از مانع تا مکانیزم تا فرضیهٔ قابل تست</div></div></a>
+    <a class="art" href="./index.html" target="_blank"><div class="ic">▤</div>
+      <div><div class="t">صفحهٔ فرود</div><div class="d">همهٔ نسخه‌ها، از جمله بایگانی مسیر ساخت</div></div></a>
+  </div>
+  <div class="callout in" style="margin-top:16px">
+    <p>همهٔ این‌ها <b>روی وب و قابل تعامل‌اند</b> — نه فایل تصویر و نه اسلاید ثابت. روی موبایل مثل یک اپ واقعی باز می‌شوند.</p>
+  </div>
+</section>
+
+<!-- 3 · THE QUESTION -->
+<section class="slide narrow" style="align-items:flex-start">
+  <div class="eyebrow in">سؤال این مرحله</div>
+  <div class="hero in">چطور کاربری که ما را نمی‌شناسد،<br>حاضر می‌شود <b>اولین پول واقعی‌اش</b><br>را وارد کند؟</div>
+  <div class="callout in" style="margin-top:22px">
+    <div class="k">چرا این سؤال، و نه «آیا محصول را دوست دارند؟»</div>
+    <p>محصول تا وقتی پول وارد نشود، وجود ندارد. هر فیچر دیگری — انتقال، خرید اشتراک، پس‌انداز هدف‌دار — بعد از این لحظه معنا پیدا می‌کند.</p>
+    <p>پس پروتوتایپ این مرحله <b>عمداً باریک است</b>: فقط همین یک لحظه را می‌سنجد.</p>
+  </div>
+</section>
+
+<!-- 4 · BARRIERS -->
+<section class="slide">
+  <div class="eyebrow in">آنچه از کاربران شنیدیم</div>
+  <h2 class="in" style="margin-bottom:6px">«اعتماد» یک کلمهٔ کلی نیست — شش مانع مشخص است</h2>
+  <p class="lead in" style="margin-bottom:14px">قبل از هر ایده‌ای پرسیدیم «چه چیزی جلویت را می‌گیرد؟». جواب‌ها مانع بودند، نه راه‌حل.</p>
+  <div class="cards c6 in">
+    <div class="bx"><div class="code">B1</div><div class="t">واقعی بودن دارایی</div><div class="q">«این دلار واقعاً هست؟»</div></div>
+    <div class="bx"><div class="code">B2</div><div class="t">ریسک بلوکه‌شدن</div><div class="q">«پولم گیر نمی‌کند؟»</div></div>
+    <div class="bx"><div class="code">B3</div><div class="t">خروج</div><div class="q">«هر وقت بخواهم می‌توانم خارج شوم؟»</div></div>
+    <div class="bx"><div class="code">B4</div><div class="t">شفافیت هزینه</div><div class="q">«آخرش چقدر می‌دهم؟»</div></div>
+    <div class="bx core"><div class="code">B5 · عمیق‌ترین</div><div class="t">از دست دادن کنترل</div><div class="q">«اختیار هنوز دست خودم است؟»</div></div>
+    <div class="bx"><div class="code">B6</div><div class="t">مشروعیت</div><div class="q">«چرا شما را جدی بگیرم؟»</div></div>
+  </div>
+  <div class="callout in" style="margin-top:16px">
+    <div class="k">یافتهٔ تعیین‌کننده</div>
+    <p>مسئله فقط ترس از کلاهبرداری نیست. کاربر نمی‌خواهد <b>اختیار</b> دارایی‌اش را واگذار کند. اگر مسئله کلاهبرداری بود، جوابش «اعتبار بیشتر» بود؛ چون مسئله اختیار است، جوابش <b>تجربه‌ای است که اختیار را نشان بدهد</b>.</p>
+  </div>
+</section>
+
+<!-- 5 · STRATEGY -->
+<section class="slide narrow">
+  <div class="eyebrow in" style="align-self:flex-start">جهت طراحی</div>
+  <div class="in" style="font-size:clamp(15px,2.4vw,27px);font-weight:600;letter-spacing:-.025em;line-height:1.9;color:#fff;align-self:flex-start">
+    <span style="color:var(--gold)">نشانم بده</span> ←
+    <span style="color:var(--ok)">بگذار امتحان کنم</span> ←
+    <span style="color:var(--gold)">بگذار خارج شوم</span> ←
+    <span style="color:var(--blue)">بگو کی پشتش است</span> ←
+    <span style="color:var(--vio)">اگر خراب شد باش</span>
+  </div>
+  <div class="strategy in" style="margin-top:24px">
+    <div class="stp a"><div class="k">هسته</div><div class="t">کنترل</div><div class="d">پولت را وارد می‌کنی، نه اختیارت را.</div></div>
+    <div class="stp b"><div class="k">ورود</div><div class="t">تجربهٔ پلکانی</div><div class="d">اول کوچک امتحان کن، بعد زیاد کن.</div></div>
+    <div class="stp c"><div class="k">اعتبار</div><div class="t">پشتوانهٔ قابل ردیابی</div><div class="d">شریک، مسیر پول و مسئولیت روشن.</div></div>
+    <div class="stp d"><div class="k">تور ایمنی</div><div class="t">لایهٔ انسانی</div><div class="d">در خطا، یک آدم مشخص هست.</div></div>
+  </div>
+  <div class="sub in" style="margin-top:16px;align-self:flex-start">این یک <b style="color:#fff">فرضیهٔ کاری</b> است. مرحلهٔ بعد آن را تأیید یا رد می‌کند.</div>
+</section>
+
+<!-- 6 · LIVE PROTOTYPE -->
+<section class="slide" data-frames="1">
+  <div class="eyebrow in" style="align-self:flex-start">پروتوتایپ · زنده</div>
+  <div class="sideby in">
+    <div>
+      <h2 style="margin-bottom:10px">همین حالا امتحانش کنید</h2>
+      <p class="lead">این یک تصویر نیست. پروتوتایپ واقعی داخل همین اسلاید در حال اجراست — می‌توانید مبلغ وارد کنید، نرخ را ببینید، تأیید کنید و پول را برگردانید.</p>
+      <div class="livetag" style="margin-top:14px"><i></i> در حال اجرا</div>
+      <div class="callout" style="margin-top:16px">
+        <div class="k">مسیر ثابت است، نسخه‌ها متفاوت</div>
+        <p>هفت مرحله: ورود ← مبلغ ← خلاصهٔ قبل از پرداخت ← تأیید ← وضعیت ← موجودی ← خروج.</p>
+        <p>نرخ، کارمزد، مبلغ نهایی و زمان در <b>همهٔ نسخه‌ها یکسان</b> است. فقط مکانیزم اعتماد عوض می‌شود — تا بفهمیم تفاوت رفتار از کجاست.</p>
+      </div>
+    </div>
+    <div class="dev big b1">
+      <span class="badge">P1 · کنترل</span>
+      <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p1&embed=1" title="پروتوتایپ"></iframe></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · THREE VARIANTS -->
+<section class="slide" data-frames="1">
+  <div class="eyebrow in" style="align-self:flex-start">سه نسخه، کنار هم</div>
+  <h2 class="in" style="align-self:flex-start;margin-bottom:14px">یک محصول، سه پاسخ به یک سؤال</h2>
+  <div class="phones in">
+    <div class="dev trio b0">
+      <span class="badge">P0 · پایه</span>
+      <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p0&embed=1" title="P0"></iframe></div></div>
+      <div class="cap"><div class="t">فقط کارکرد</div><div class="d">نرخ و کارمزد شفاف،<br>بدون تأکید ویژه</div></div>
+    </div>
+    <div class="dev trio b1">
+      <span class="badge">P1 · کنترل</span>
+      <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p1&embed=1" title="P1"></iframe></div></div>
+      <div class="cap"><div class="t">خروج، قبل از ورود</div><div class="d">مسیر بازگشت را پیش از<br>پرداخت نشان می‌دهد</div></div>
+    </div>
+    <div class="dev trio b2">
+      <span class="badge">P2 · کنترل + آزمایش</span>
+      <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p2&embed=1" title="P2"></iframe></div></div>
+      <div class="cap"><div class="t">اول با ۵ دلار</div><div class="d">یک دور کامل بی‌ریسک،<br>بعد مبلغ واقعی</div></div>
+    </div>
+  </div>
+  <div class="sub in" style="margin-top:14px">هر سه زنده‌اند. تفاوتشان را روی صفحهٔ «قبل از پرداخت» مقایسه کنید.</div>
+</section>
+
+<!-- 8 · THE DIFFERENTIATOR -->
+<section class="slide narrow">
+  <div class="eyebrow in" style="align-self:flex-start">تصمیم طراحی کلیدی</div>
+  <div class="hero in" style="align-self:flex-start">مسیر <b>خروج</b> را پیش از<br>ورود پول نشان می‌دهیم.</div>
+  <div class="cards c2 in" style="margin-top:22px">
+    <div class="card"><div class="n">غریزهٔ رایج</div><h3>در لحظهٔ جذب، از رفتن حرف نزن</h3>
+      <p>اکثر محصولات مالی مسیر خروج را پنهان یا سخت می‌کنند تا کاربر بماند.</p></div>
+    <div class="card lit"><div class="n">تصمیم ما</div><h3>دقیقاً برعکس</h3>
+      <p>کاربر پیش از پرداخت می‌بیند چقدر طول می‌کشد، چه کارمزدی دارد و چه چیزی لازم است. چون مانع اصلی «گیر افتادن» است، نه «نبودن فیچر».</p></div>
+  </div>
+  <div class="callout ok in" style="margin-top:16px">
+    <p>این تنها تفاوت <b>P0</b> و <b>P1</b> است. اگر رفتار کاربر بین این دو نسخه عوض شود، فرضیهٔ ما تأیید شده — و اگر عوض نشود، این را هم به‌روشنی می‌فهمیم.</p>
+  </div>
+</section>
+
+<!-- 9 · FIVE MOMENTS -->
+<section class="slide">
+  <div class="eyebrow in" style="align-self:flex-start">پنج لحظه‌ای که اعتماد ساخته یا شکسته می‌شود</div>
+  <h2 class="in" style="align-self:flex-start;margin-bottom:14px">هر صفحه به یکی از این‌ها پاسخ می‌دهد</h2>
+  <div class="moments in">
+    <div class="mo"><div class="n">۰۱</div><div class="t">قبل از پرداخت</div><div class="q">اگر وارد کنم چه می‌شود؟</div></div>
+    <div class="mo hot"><div class="n">۰۲</div><div class="t">پیش‌نمایش خروج</div><div class="q">اگر بخواهم برگردم چه؟</div></div>
+    <div class="mo"><div class="n">۰۳</div><div class="t">تأیید</div><div class="q">چه چیزی را قبول می‌کنم؟</div></div>
+    <div class="mo"><div class="n">۰۴</div><div class="t">وضعیت تراکنش</div><div class="q">پولم الان کجاست؟</div></div>
+    <div class="mo hot"><div class="n">۰۵</div><div class="t">خروج موفق</div><div class="q">وعده اثبات شد؟</div></div>
+  </div>
+  <div class="cards c2 in" style="margin-top:16px">
+    <div class="card good"><div class="n" style="color:var(--ok)">ماژول A</div><h3>پشتوانهٔ قابل ردیابی</h3>
+      <p>مسیر پول، نقش هر شریک، و اینکه در خطا مسئولیت با کیست. با برچسب صریح «هنوز نهایی نشده» — هیچ ادعای تأییدنشده‌ای نمایش داده نمی‌شود.</p></div>
+    <div class="card"><div class="n" style="color:var(--vio)">ماژول B</div><h3>مسئولِ نام‌دار</h3>
+      <p>یک فرد مشخص، نه «پشتیبانی ۲۴ ساعته». در لحظهٔ خطا، کاربر می‌داند چه کسی پیگیر است.</p></div>
+  </div>
+</section>
+
+<!-- 10 · DESIGN PRINCIPLES -->
+<section class="slide">
+  <div class="eyebrow in" style="align-self:flex-start">اصول طراحی</div>
+  <h2 class="in" style="align-self:flex-start;margin-bottom:14px">پنج قاعده‌ای که در همهٔ صفحه‌ها رعایت شده</h2>
+  <div class="cards c5 in">
+    <div class="card lit"><div class="n">۰۱</div><h3>هیچ وعدهٔ تأییدنشده</h3><p>هر چیزی که هنوز قطعی نیست، برچسب «در حال بررسی» دارد.</p></div>
+    <div class="card"><div class="n">۰۲</div><h3>عدد قبل از تأیید</h3><p>نرخ، کارمزد، مبلغ نهایی و زمان — همیشه پیش از تصمیم.</p></div>
+    <div class="card"><div class="n">۰۳</div><h3>بدون واژهٔ فنی</h3><p>هیچ اصطلاح کریپتویی برای تکمیل هیچ مسیری لازم نیست.</p></div>
+    <div class="card"><div class="n">۰۴</div><h3>خطا هرگز شاعرانه نیست</h3><p>در لحظهٔ نگرانی، جملهٔ صریح — بعد راه‌حل.</p></div>
+    <div class="card"><div class="n">۰۵</div><h3>هر مسیر یک راه بازگشت</h3><p>هر Flow حالت موفق، در انتظار و خطا دارد. پول همیشه برمی‌گردد.</p></div>
+  </div>
+  <div class="in" style="margin-top:18px">
+    <div class="sub" style="margin-bottom:9px">زبان بصری · یک خانوادهٔ حروف، یک رنگ لهجه</div>
+    <div class="tok">
+      <div class="sw"><div class="c" style="background:#0D0F12"></div><div class="m"><div class="nm">ink</div><div class="hx num">#0D0F12</div></div></div>
+      <div class="sw"><div class="c" style="background:#D5A45C"></div><div class="m"><div class="nm">gold</div><div class="hx num">#D5A45C</div></div></div>
+      <div class="sw"><div class="c" style="background:#17936A"></div><div class="m"><div class="nm">ok</div><div class="hx num">#17936A</div></div></div>
+      <div class="sw"><div class="c" style="background:#F4F4F1"></div><div class="m"><div class="nm">canvas</div><div class="hx num">#F4F4F1</div></div></div>
+      <div class="sw"><div class="c" style="background:linear-gradient(168deg,#1E232B,#0D0F12 52%,#161B21)"></div><div class="m"><div class="nm">کارت اصلی</div><div class="hx">gradient</div></div></div>
+      <div class="sw" style="width:auto;flex:1;min-width:150px"><div class="c" style="display:grid;place-items:center;background:var(--surf)">
+        <span style="font-size:24px;font-weight:700;letter-spacing:-.03em">آ ب پ <span class="num">۱۲۳</span></span></div>
+        <div class="m"><div class="nm">Radical</div><div class="hx">شش وزن · فارسی و لاتین در یک خانواده</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 · WHAT WE LEARN -->
+<section class="slide narrow">
+  <div class="eyebrow in" style="align-self:flex-start">مرحلهٔ بعد</div>
+  <h2 class="in" style="align-self:flex-start;margin-bottom:12px">چه چیزی را اندازه می‌گیریم</h2>
+  <div class="steps in">
+    <div class="st"><span class="i num">۰۱</span><div><div class="t">مبلغی که حاضر است امتحان کند</div>
+      <div class="d">اولین عددی که خودش می‌گوید — نه عددی که ما پیشنهاد می‌دهیم.</div></div></div>
+    <div class="st"><span class="i num">۰۲</span><div><div class="t">مبلغ بعد از تجربهٔ اول</div>
+      <div class="d">آیا اعتماد از ۵ دلار به مبلغ واقعی منتقل می‌شود؟</div></div></div>
+    <div class="st"><span class="i num">۰۳</span><div><div class="t">نقطه‌ای که متوقف می‌شود</div>
+      <div class="d">کجای مسیر مکث می‌کند و چه چیزی را لازم دارد ببیند.</div></div></div>
+    <div class="st"><span class="i num">۰۴</span><div><div class="t">واکنش به کارمزد، شریک و مسیر خروج</div>
+      <div class="d">کدام‌یک واقعاً تصمیم را عوض می‌کند.</div></div></div>
+  </div>
+  <div class="cards c2 in" style="margin-top:16px">
+    <div class="card"><div class="n" style="color:var(--bad)">آنچه گزارش نمی‌کنیم</div><h3>«کاربران خوششان آمد»</h3><p>نظر، رفتار نیست.</p></div>
+    <div class="card good"><div class="n" style="color:var(--ok)">آنچه گزارش می‌کنیم</div><h3>«در نسخهٔ پایه ادامه نداد؛ بعد از دیدن مسیر خروج، وارد مرحلهٔ انتخاب مبلغ شد.»</h3></div>
+  </div>
+</section>
+
+<!-- 12 · OUTPUT -->
+<section class="slide narrow">
+  <div class="eyebrow in" style="align-self:flex-start">خروجی مرحلهٔ بعد</div>
+  <h2 class="in" style="align-self:flex-start;margin-bottom:6px">معماری اعتماد · نسخهٔ ۱</h2>
+  <p class="lead in" style="align-self:flex-start;margin-bottom:16px">بعد از تست، هر مکانیزم یکی از این وضعیت‌ها را می‌گیرد — و همین می‌شود پایهٔ تصمیم‌های محصول و شراکت.</p>
+  <div class="cards c5 in">
+    <div class="card lit"><h3>Core</h3><p>بدون آن معماری ناقص است</p></div>
+    <div class="card"><h3>Supporting</h3><p>بهترش می‌کند، محرک اصلی نیست</p></div>
+    <div class="card"><h3>Conditional</h3><p>فقط برای مبلغ یا سگمنت خاص</p></div>
+    <div class="card"><h3>Unproven</h3><p>شواهد کافی نداریم</p></div>
+    <div class="card"><h3>Rejected</h3><p>شواهد حمایتش نمی‌کند</p></div>
+  </div>
+  <div class="callout in" style="margin-top:18px">
+    <div class="k">و اگر هیچ مکانیزمی رفتار را عوض نکرد</div>
+    <p>این هم یک نتیجهٔ معتبر است. در آن حالت مانع اصلی جای دیگری است — ارزش پیشنهادی، ریسک حقوقی، مسیر تأمین یا نیاز بازار — و <b>راهش افزودن فیچر اعتماد بیشتر نیست</b>.</p>
+  </div>
+</section>
+
+<!-- 13 · DECISIONS -->
+<section class="slide narrow">
+  <div class="eyebrow in" style="align-self:flex-start">آنچه از شما می‌خواهیم</div>
+  <h2 class="in" style="align-self:flex-start;margin-bottom:14px">سه تصمیم</h2>
+  <div class="steps in">
+    <div class="st"><span class="i num">۰۱</span><div><div class="t">شریک نگهدارنده و مسیر تسویه</div>
+      <div class="d">ماژول «پشتوانه» تا وقتی شریک قطعی نشود، فقط به‌صورت مفهوم تست می‌شود. هر عددی که به کاربر نشان دهیم باید واقعاً قابل اجرا باشد.</div></div></div>
+    <div class="st"><span class="i num">۰۲</span><div><div class="t">تعهد پشتیبانی انسانی</div>
+      <div class="d">اگر «مسئولِ نام‌دار» مکانیزم برنده باشد، باید بدانیم از نظر هزینه و مقیاس تا کجا قابل ارائه است.</div></div></div>
+    <div class="st"><span class="i num">۰۳</span><div><div class="t">دسترسی به شرکت‌کننده</div>
+      <div class="d">۳ تا ۵ نفر با پروفایل مشخص. کیفیت نمونه از تعداد آن مهم‌تر است.</div></div></div>
+  </div>
+  <div class="callout ok in" style="margin-top:20px">
+    <div class="k">جمع‌بندی</div>
+    <p>پروتوتایپ آماده است و منطق پشت هر صفحه مستند شده. مرحلهٔ بعد <b>ساختن بیشتر نیست — یاد گرفتن است</b>: چه چیزی واقعاً باعث می‌شود کاربر اولین پولش را وارد کند.</p>
+  </div>
+</section>
+
+</div>
+
+<div class="bar">
+  <div class="dots-nav" id="dots"></div>
+  <div class="arrows">
+    <button id="prev" onclick="move(-1)" aria-label="قبلی"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button id="next" onclick="move(1)" aria-label="بعدی"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let i=0;
+const dots=document.getElementById('dots');
+slides.forEach((s,n)=>{
+  const b=document.createElement('button');b.onclick=()=>show(n);
+  b.setAttribute('aria-current',n===0);b.title='صفحهٔ '+(n+1);
+  dots.appendChild(b);
+});
+
+/* Devices are scaled to the viewport so a projector or a laptop both work. */
+function fitDevices(){
+  const vh=innerHeight, vw=innerWidth;
+  const big  = Math.min(0.82, (vh-290)/844, (vw*0.34)/390);
+  const trio = Math.min(0.62, (vh-395)/844, (vw*0.26)/390);
+  document.querySelectorAll('.dev').forEach(d=>{
+    const k=Math.max(.28, d.classList.contains('big')?big:trio);
+    const sh=d.querySelector('.shell'), fr=d.querySelector('iframe');
+    sh.style.width=(390*k)+'px'; sh.style.height=(844*k)+'px';
+    fr.style.transform=`scale(${k})`;
+  });
+}
+addEventListener('resize',fitDevices);
+
+/* iframes load only when their slide is first shown — three prototypes
+   booting at once on slide 1 would make the whole deck feel slow. */
+function loadFrames(s){
+  s.querySelectorAll('iframe[data-src]').forEach(f=>{
+    f.src=f.dataset.src; f.removeAttribute('data-src');
+  });
+}
+function show(n){
+  i=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,k)=>{s.classList.toggle('on',k===i); if(k===i) s.scrollTo(0,0)});
+  loadFrames(slides[i]); fitDevices();
+  /* warm the next slide's frames so a live demo never shows a blank device */
+  if(slides[i+1]) loadFrames(slides[i+1]);
+  [...dots.children].forEach((d,k)=>d.setAttribute('aria-current',k===i));
+  document.getElementById('counter').textContent=`${i+1} / ${slides.length}`;
+  document.getElementById('prog').style.width=((i+1)/slides.length*100)+'%';
+  document.getElementById('prev').disabled=i===0;
+  document.getElementById('next').disabled=i===slides.length-1;
+}
+const move=d=>show(i+d);
+addEventListener('keydown',e=>{
+  if(e.target.tagName==='IFRAME') return;
+  if(e.key==='ArrowRight') move(-1);
+  else if(e.key==='ArrowLeft') move(1);
+  else if(e.key===' '||e.key==='PageDown'){e.preventDefault();move(1)}
+  else if(e.key==='PageUp'){e.preventDefault();move(-1)}
+  else if(e.key==='Home') show(0);
+  else if(e.key==='End') show(slides.length-1);
+  else if(e.key==='f'||e.key==='F'){
+    document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
+  }
+});
+/* swipe, but never when the gesture starts inside a live prototype */
+let x0=null,y0=null;
+addEventListener('touchstart',e=>{
+  if(e.target.closest('.dev')) {x0=null;return}
+  x0=e.touches[0].clientX;y0=e.touches[0].clientY;
+},{passive:true});
+addEventListener('touchend',e=>{
+  if(x0===null) return;
+  const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0;
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5) move(dx<0?-1:1);
+  x0=y0=null;
+},{passive:true});
+fitDevices(); show(0);
+</script>
+</body>
+</html>
