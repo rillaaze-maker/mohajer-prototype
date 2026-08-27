@@ -41,6 +41,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .slide.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
 .slide>*{width:100%;max-width:1120px;flex:none}
 .slide.narrow>*{max-width:860px}
+.slide.tight{padding-top:52px;padding-bottom:58px}
 .slide .in{opacity:0;transform:translateY(13px);transition:opacity .46s var(--swift),transform .62s var(--spring)}
 .slide.on .in{opacity:1;transform:none}
 .slide.on .in:nth-child(1){transition-delay:.05s}.slide.on .in:nth-child(2){transition-delay:.11s}
@@ -74,11 +75,12 @@ b{font-weight:600}
 .dev{display:flex;flex-direction:column;align-items:center;gap:11px}
 .dev .frame{position:relative;border-radius:34px;padding:8px;background:#101317;
   box-shadow:0 0 0 1.5px #303740,0 26px 60px -26px rgba(0,0,0,.85);flex:none}
-/* The prototype renders at its true 390×844 and is scaled down visually, so its
-   own mobile layout never runs at a cramped width. The shell clips to the
-   scaled box; JS picks the scale from the viewport height. */
-.dev .shell{overflow:hidden;border-radius:26px;background:#F4F4F1}
-.dev iframe{display:block;border:none;width:390px;height:844px;transform-origin:top left;background:#F4F4F1}
+/* No CSS transform on the frame. A scaled iframe is the fragile part — some
+   browsers fail to composite it, which is exactly what went wrong. The frame
+   is instead given a real phone width (320px, a size the prototype already
+   supports) and a height from the viewport. Nothing is scaled. */
+.dev .shell{border-radius:26px;background:#F4F4F1;overflow:hidden;line-height:0}
+.dev iframe{display:block;border:none;width:320px;background:#F4F4F1}
 .dev.big .shell{border-radius:32px}
 .dev.duo{gap:8px}
 .dev.duo .shell{border-radius:28px}
@@ -116,16 +118,19 @@ b{font-weight:600}
 .bx .q{font-size:11px;color:var(--w3);margin-top:5px;line-height:1.5;font-style:italic}
 .bx.core{border-color:rgba(213,164,92,.42);background:linear-gradient(160deg,rgba(213,164,92,.15),transparent)}
 
-/* the strategy line */
-.strategy{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
-.stp{flex:1;min-width:130px;border-radius:14px;padding:15px 13px;border:1px solid var(--brd);background:var(--surf)}
-.stp .k{font-size:9.5px;font-weight:700;letter-spacing:.11em}
-.stp .t{font-size:13.5px;font-weight:600;margin-top:7px;letter-spacing:-.015em;line-height:1.35}
-.stp .d{font-size:11px;color:var(--w3);margin-top:5px;line-height:1.5}
-.stp.a{border-color:rgba(213,164,92,.36);background:linear-gradient(160deg,rgba(213,164,92,.14),transparent)} .stp.a .k{color:var(--gold)}
-.stp.b{border-color:rgba(63,191,143,.32)} .stp.b .k{color:var(--ok)}
-.stp.c{border-color:rgba(111,168,220,.3)} .stp.c .k{color:var(--blue)}
-.stp.d{border-color:rgba(169,139,208,.3)} .stp.d .k{color:var(--vio)}
+/* the five-step ladder */
+.ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.rung{border-radius:15px;padding:16px 14px;border:1px solid var(--brd);background:var(--surf);
+  position:relative;display:flex;flex-direction:column}
+.rung .n{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--w3)}
+.rung .say{font-size:clamp(14px,1.65vw,17px);font-weight:700;letter-spacing:-.02em;margin-top:9px;line-height:1.3}
+.rung .role{font-size:9.5px;font-weight:700;letter-spacing:.06em;margin-top:9px}
+.rung .how{font-size:11.5px;color:var(--w3);line-height:1.55;margin-top:8px}
+.rung.core{border-color:rgba(213,164,92,.42);background:linear-gradient(165deg,rgba(213,164,92,.16),transparent)}
+.rung.core .n,.rung.core .role{color:var(--gold)}
+.rung.entry{border-color:rgba(63,191,143,.3)} .rung.entry .role{color:var(--ok)}
+.rung.cred{border-color:rgba(111,168,220,.28)} .rung.cred .role{color:var(--blue)}
+.rung.safe{border-color:rgba(169,139,208,.28)} .rung.safe .role{color:var(--vio)}
 
 /* moments strip */
 .moments{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
@@ -186,6 +191,7 @@ b{font-weight:600}
 @media(max-width:900px){
   .c3,.c2,.c4,.c5,.c6,.arts{grid-template-columns:repeat(2,1fr)}
   .moments{grid-template-columns:repeat(2,1fr)}
+  .ladder{grid-template-columns:repeat(2,1fr)}
   .slide{justify-content:flex-start;padding-top:72px}
   .strategy{flex-direction:column}
 }
@@ -264,22 +270,47 @@ b{font-weight:600}
 </section>
 
 <!-- 5 · STRATEGY -->
-<section class="slide narrow">
+<section class="slide">
   <div class="eyebrow in" style="align-self:flex-start">جهت طراحی</div>
-  <div class="in" style="font-size:clamp(15px,2.4vw,27px);font-weight:600;letter-spacing:-.025em;line-height:1.9;color:#fff;align-self:flex-start">
-    <span style="color:var(--gold)">نشانم بده</span> ←
-    <span style="color:var(--ok)">بگذار امتحان کنم</span> ←
-    <span style="color:var(--gold)">بگذار خارج شوم</span> ←
-    <span style="color:var(--blue)">بگو کی پشتش است</span> ←
-    <span style="color:var(--vio)">اگر خراب شد باش</span>
+  <h2 class="in" style="align-self:flex-start;margin-bottom:4px">اعتماد را در پنج قدم می‌سازیم</h2>
+  <p class="lead in" style="align-self:flex-start;margin-bottom:18px">ترتیبش هم مهم است. هر قدم، پیش‌شرط قدم بعدی است.</p>
+
+  <div class="ladder in">
+    <div class="rung core">
+      <div class="n num">۰۱</div>
+      <div class="say">نشانم بده</div>
+      <div class="role">کنترل · هسته</div>
+      <div class="how">قبل از هر پرداختی، عدد و مسیر روشن است.</div>
+    </div>
+    <div class="rung entry">
+      <div class="n num">۰۲</div>
+      <div class="say">بگذار امتحان کنم</div>
+      <div class="role">تجربهٔ پلکانی · ورود</div>
+      <div class="how">با ۵ دلار، نه با کل پس‌انداز.</div>
+    </div>
+    <div class="rung core">
+      <div class="n num">۰۳</div>
+      <div class="say">بگذار خارج شوم</div>
+      <div class="role">کنترل · هسته</div>
+      <div class="how">مسیر بازگشت، پیش از ورود پول.</div>
+    </div>
+    <div class="rung cred">
+      <div class="n num">۰۴</div>
+      <div class="say">بگو کی پشتش است</div>
+      <div class="role">پشتوانه · اعتبار</div>
+      <div class="how">شریک، مسیر پول و مسئولیت.</div>
+    </div>
+    <div class="rung safe">
+      <div class="n num">۰۵</div>
+      <div class="say">اگر خراب شد باش</div>
+      <div class="role">لایهٔ انسانی · تور ایمنی</div>
+      <div class="how">یک آدم مشخص، نه یک شمارهٔ عمومی.</div>
+    </div>
   </div>
-  <div class="strategy in" style="margin-top:24px">
-    <div class="stp a"><div class="k">هسته</div><div class="t">کنترل</div><div class="d">پولت را وارد می‌کنی، نه اختیارت را.</div></div>
-    <div class="stp b"><div class="k">ورود</div><div class="t">تجربهٔ پلکانی</div><div class="d">اول کوچک امتحان کن، بعد زیاد کن.</div></div>
-    <div class="stp c"><div class="k">اعتبار</div><div class="t">پشتوانهٔ قابل ردیابی</div><div class="d">شریک، مسیر پول و مسئولیت روشن.</div></div>
-    <div class="stp d"><div class="k">تور ایمنی</div><div class="t">لایهٔ انسانی</div><div class="d">در خطا، یک آدم مشخص هست.</div></div>
+
+  <div class="callout in" style="margin-top:18px">
+    <p><b>هستهٔ استراتژی، قدم ۱ و ۳ است:</b> کنترل. بقیه پشتیبانِ آن‌اند. این یک <b>فرضیهٔ کاری</b> است — مرحلهٔ بعد تأیید یا ردش می‌کند.</p>
   </div>
-  <div class="sub in" style="margin-top:16px;align-self:flex-start">این یک <b style="color:#fff">فرضیهٔ کاری</b> است. مرحلهٔ بعد آن را تأیید یا رد می‌کند.</div>
 </section>
 
 <!-- 6 · LIVE PROTOTYPE -->
@@ -304,24 +335,22 @@ b{font-weight:600}
 </section>
 
 <!-- 7 · P0 vs P1, at the screen that differs -->
-<section class="slide" data-frames="1">
-  <div class="eyebrow in" style="align-self:flex-start">همان صفحه، در دو نسخه</div>
-  <h2 class="in" style="align-self:flex-start;margin-bottom:12px">تفاوت، یک بلوک است</h2>
+<section class="slide tight" data-frames="1">
+  <div class="eyebrow in" style="align-self:flex-start">همان صفحه، همان مبلغ، دو نسخه</div>
+  <h2 class="in" style="align-self:flex-start;margin-bottom:10px">تفاوت، یک بلوک است</h2>
   <div class="phones in">
     <div class="dev duo b0">
       <span class="badge">P0 · پایه</span>
       <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p0&amp;embed=1&amp;s=summary&amp;amt=100000000" title="P0"></iframe></div></div>
-      <div class="cap"><div class="t">فقط عددها</div><div class="d">کاربر نمی‌داند چطور برمی‌گردد</div></div>
+      <div class="cap"><div class="t">فقط عددها — کاربر نمی‌داند چطور برمی‌گردد</div></div>
     </div>
     <div class="dev duo b1">
       <span class="badge">P1 · کنترل</span>
       <div class="frame"><div class="shell"><iframe data-src="./first-funding-v1.html?v=p1&amp;embed=1&amp;s=summary&amp;amt=100000000" title="P1"></iframe></div></div>
-      <div class="cap"><div class="t">همان عددها + مسیر بازگشت</div><div class="d">پیش از پرداخت می‌بیند چطور خارج می‌شود</div></div>
+      <div class="cap"><div class="t">همان عددها + مسیر بازگشت، پیش از پرداخت</div></div>
     </div>
   </div>
-  <div class="callout in" style="margin-top:14px">
-    <p>هر دو، صفحهٔ «قبل از پرداخت» با مبلغ یکسان‌اند — نرخ، کارمزد و مبلغ نهایی مو‌به‌مو یکی. تنها متغیر، بلوک سبزِ «اگر بخواهید برگردانید» است. اگر رفتار عوض شود، علتش <b>فقط همین</b> است.</p>
-  </div>
+  <div class="sub in" style="align-self:flex-start;margin-top:10px">نرخ، کارمزد و مبلغ نهایی مو‌به‌مو یکی است. تنها متغیر، بلوک سبزِ «اگر بخواهید برگردانید» است.</div>
 </section>
 
 <!-- 8 · THE DIFFERENTIATOR -->
@@ -462,14 +491,14 @@ slides.forEach((s,n)=>{
 
 /* Devices are scaled to the viewport so a projector or a laptop both work. */
 function fitDevices(){
-  const vh=innerHeight, vw=innerWidth;
-  const big = Math.min(0.86, (vh-290)/844, (vw*0.36)/390);
-  const duo = Math.min(0.74, (vh-400)/844, (vw*0.34)/390);
+  const vh=innerHeight;
+  const bigH = Math.max(430, Math.min(700, vh-250));
+  const duoH = Math.max(400, Math.min(600, vh-312));
   document.querySelectorAll('.dev').forEach(d=>{
-    const k=Math.max(.30, d.classList.contains('big')?big:duo);
+    const h=Math.round(d.classList.contains('big')?bigH:duoH);
     const sh=d.querySelector('.shell'), fr=d.querySelector('iframe');
-    sh.style.width=(390*k)+'px'; sh.style.height=(844*k)+'px';
-    fr.style.transform=`scale(${k})`;
+    sh.style.width='320px'; sh.style.height=h+'px';
+    fr.style.height=h+'px';
   });
 }
 addEventListener('resize',fitDevices);
@@ -479,6 +508,14 @@ addEventListener('resize',fitDevices);
 function loadFrames(s){
   s.querySelectorAll('iframe[data-src]').forEach(f=>{
     const url=f.dataset.src;
+    if(/[?&]s=summary/.test(url)){
+      f.addEventListener('load',()=>{
+        try{
+          const sc=f.contentDocument.querySelector('.screen.active .scroll');
+          if(sc) sc.scrollTop=sc.scrollHeight;   // same offset in both frames
+        }catch(e){}
+      },{once:true});
+    }
     f.src=url; f.removeAttribute('data-src');
     /* Opened as a local file, Chrome gives each file its own opaque origin and
        the frame comes back empty. Rather than a blank device, offer a way in. */
