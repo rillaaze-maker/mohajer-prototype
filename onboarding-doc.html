@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مهاجر · راهنمای فاز ۳ و سند WS0</title>
+<style>
+@font-face{font-family:Dana;src:url('./fonts/Dana-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-DemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-ExtraBold.woff2') format('woff2');font-weight:800;font-display:swap}
+
+
+:root{
+  --f:Dana,system-ui,sans-serif;
+  --gold:#D5A45C;--ok:#3FBF8F;--bad:#E0705A;--warn:#D98A52;--blue:#6FA8DC;
+  --w1:#fff;--w2:rgba(255,255,255,.68);--w3:rgba(255,255,255,.42);
+  --surf:rgba(255,255,255,.055);--surf2:rgba(255,255,255,.10);--brd:rgba(255,255,255,.11);
+  --spring:cubic-bezier(.16,1,.3,1);--swift:cubic-bezier(.4,0,.2,1);
+  --W:880px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--f);color:var(--w1);background:#0B0D10;-webkit-font-smoothing:antialiased;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(900px 600px at 80% -10%,rgba(213,164,92,.13),transparent 62%),
+             radial-gradient(700px 500px at 5% 110%,rgba(63,191,143,.06),transparent 60%),
+             linear-gradient(168deg,#1A1F26,#0B0D10 55%,#12161B)}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.en{direction:ltr;unicode-bidi:isolate;display:inline-block}
+
+.deck{position:fixed;inset:0;z-index:1}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:68px 6vw 80px;opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateY(16px);transition:opacity .38s var(--swift),transform .58s var(--spring),visibility .58s;
+  overflow-y:auto;overscroll-behavior:contain;align-items:flex-start}
+.slide::-webkit-scrollbar{display:none}
+.slide.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+/* every block is width-capped so lines never stretch across a wide monitor */
+.slide>*{width:100%;max-width:var(--W);flex:none}
+.slide .in{opacity:0;transform:translateY(14px);transition:opacity .48s var(--swift),transform .64s var(--spring)}
+.slide.on .in{opacity:1;transform:none}
+.slide.on .in:nth-child(1){transition-delay:.05s}.slide.on .in:nth-child(2){transition-delay:.11s}
+.slide.on .in:nth-child(3){transition-delay:.17s}.slide.on .in:nth-child(4){transition-delay:.23s}
+.slide.on .in:nth-child(5){transition-delay:.29s}.slide.on .in:nth-child(6){transition-delay:.35s}
+
+.eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.14em;color:var(--gold);margin-bottom:16px}
+h1{font-size:clamp(28px,5vw,54px);font-weight:700;letter-spacing:-.035em;line-height:1.16}
+h2{font-size:clamp(21px,3.2vw,34px);font-weight:600;letter-spacing:-.028em;line-height:1.32;margin-bottom:6px}
+.lead{font-size:clamp(13.5px,1.5vw,16px);color:var(--w2);max-width:56ch;margin-top:12px}
+.sub{font-size:clamp(12px,1.3vw,14px);color:var(--w3);margin-top:10px}
+.hero-line{font-size:clamp(20px,3.2vw,34px);font-weight:600;letter-spacing:-.026em;line-height:1.45;max-width:22ch}
+.hero-line b{color:var(--gold);font-weight:700}
+b{font-weight:600}
+
+.pill{display:inline-flex;align-items:center;gap:7px;background:var(--surf2);border-radius:99px;padding:6px 13px;font-size:11.5px;color:var(--w2);font-weight:500}
+.pill .d{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+
+.cards{display:grid;gap:11px}
+.c2{grid-template-columns:repeat(2,1fr)}.c3{grid-template-columns:repeat(3,1fr)}.c4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:17px}
+.card .n{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--gold);margin-bottom:10px}
+.card h3{font-size:clamp(14px,1.7vw,17px);font-weight:600;letter-spacing:-.018em;line-height:1.4}
+.card p{font-size:12.5px;color:var(--w3);line-height:1.62;margin-top:7px}
+.card.lit{background:linear-gradient(160deg,rgba(213,164,92,.15),rgba(213,164,92,.03));border-color:rgba(213,164,92,.3)}
+.card.good{border-color:rgba(63,191,143,.32);background:linear-gradient(160deg,rgba(63,191,143,.10),transparent)}
+.card.bad{border-color:rgba(224,112,90,.30);background:linear-gradient(160deg,rgba(224,112,90,.09),transparent)}
+
+/* ── list rows (fixed: title and tag never collide) ── */
+.steps{display:flex;flex-direction:column}
+.st{display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--brd);align-items:flex-start}
+.st:last-child{border-bottom:none}
+.st .i{font-size:11.5px;font-weight:700;color:var(--gold);flex:none;width:22px;line-height:1.7;padding-top:1px}
+.st .c{flex:1;min-width:0}
+.st .hd{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.st .t{font-size:clamp(14px,1.7vw,17px);font-weight:600;letter-spacing:-.018em;line-height:1.4}
+.st .d{font-size:12.5px;color:var(--w3);line-height:1.6;margin-top:4px}
+.st.off{opacity:.34}.st.off .i{color:var(--w3)}
+.tag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:99px;background:rgba(255,255,255,.09);color:var(--w3);flex:none;line-height:1.5}
+.tag.g{background:rgba(63,191,143,.16);color:var(--ok)}
+.tag.y{background:rgba(213,164,92,.16);color:var(--gold)}
+.tag.r{background:rgba(224,112,90,.15);color:var(--bad)}
+.tag.b{background:rgba(111,168,220,.15);color:var(--blue)}
+
+/* contents */
+.toc{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.toc button{background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:18px;
+  cursor:pointer;font-family:inherit;text-align:start;color:#fff;transition:.24s var(--spring)}
+.toc button:hover{border-color:var(--gold);transform:translateY(-3px)}
+.toc .k{font-size:10.5px;font-weight:700;letter-spacing:.12em;color:var(--gold)}
+.toc .t{font-size:16px;font-weight:600;margin-top:9px;letter-spacing:-.02em}
+.toc .d{font-size:12px;color:var(--w3);margin-top:6px;line-height:1.55}
+
+/* phases */
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ph{background:var(--surf);border:1px solid var(--brd);border-radius:13px;padding:14px 13px;position:relative}
+.ph.done{opacity:.4}
+.ph.now{border-color:var(--gold);background:linear-gradient(160deg,rgba(213,164,92,.16),transparent);opacity:1}
+.ph .k{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.1em}
+.ph .t{font-size:13.5px;font-weight:600;margin-top:6px}
+.ph .d{font-size:11px;color:var(--w3);margin-top:3px}
+
+/* versus */
+.vs2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vsx{border-radius:16px;padding:20px;border:1px solid var(--brd)}
+.vsx.no{background:linear-gradient(160deg,rgba(224,112,90,.10),transparent);border-color:rgba(224,112,90,.3)}
+.vsx.yes{background:linear-gradient(160deg,rgba(63,191,143,.11),transparent);border-color:rgba(63,191,143,.33)}
+.vsx .h{font-size:10.5px;font-weight:700;letter-spacing:.12em;margin-bottom:12px}
+.vsx.no .h{color:var(--bad)}.vsx.yes .h{color:var(--ok)}
+.vsx p{font-size:13px;line-height:1.7;color:var(--w2)}
+.vsx .big{font-size:clamp(15px,1.9vw,19px);font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1.45}
+
+/* core loop */
+.loop{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}
+.lp{flex:1;min-width:120px;background:var(--surf);border:1px solid var(--brd);border-radius:14px;padding:15px 13px;position:relative}
+.lp .k{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.1em}
+.lp .t{font-size:14px;font-weight:600;margin-top:7px;letter-spacing:-.015em}
+.lp .d{font-size:11px;color:var(--w3);margin-top:4px;line-height:1.5}
+.lp.exit{border-color:rgba(63,191,143,.35);background:linear-gradient(160deg,rgba(63,191,143,.10),transparent)}
+.lp.exit .k{color:var(--ok)}
+
+/* money pot */
+.pot{display:flex;gap:9px}
+.pot .seg{border-radius:15px;padding:16px 15px;border:1px solid var(--brd);flex:1;background:var(--surf)}
+.pot .seg.a{flex:2.2;background:linear-gradient(160deg,rgba(213,164,92,.15),transparent);border-color:rgba(213,164,92,.32)}
+.pot .seg .l{font-size:11px;color:var(--w3)}
+.pot .seg .v{font-size:clamp(16px,2.1vw,22px);font-weight:700;letter-spacing:-.03em;margin-top:5px}
+.pot .seg .n{font-size:11px;color:var(--w3);margin-top:6px;line-height:1.5}
+
+/* three-column scope */
+.scope{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.sc{border-radius:16px;padding:17px;border:1px solid var(--brd);background:var(--surf)}
+.sc.show{border-color:rgba(63,191,143,.32);background:linear-gradient(160deg,rgba(63,191,143,.09),transparent)}
+.sc.sim{border-color:rgba(213,164,92,.28);background:linear-gradient(160deg,rgba(213,164,92,.09),transparent)}
+.sc.out{border-color:rgba(224,112,90,.26);background:linear-gradient(160deg,rgba(224,112,90,.07),transparent)}
+.sc .h{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:4px}
+.sc.show .h{color:var(--ok)}.sc.sim .h{color:var(--gold)}.sc.out .h{color:var(--bad)}
+.sc .sh{font-size:11px;color:var(--w3);margin-bottom:11px}
+.sc ul{list-style:none}
+.sc li{font-size:12px;color:var(--w2);line-height:1.5;padding:4px 0 4px 0;display:flex;gap:7px}
+.sc li::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--w3);flex:none;margin-top:7px}
+
+/* checklist */
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 0}
+.chk .b{width:18px;height:18px;border-radius:6px;background:rgba(63,191,143,.16);color:var(--ok);
+  display:grid;place-items:center;font-size:10px;flex:none;margin-top:2px;font-weight:700}
+.chk.x .b{background:rgba(224,112,90,.15);color:var(--bad)}
+.chk .t{font-size:13.5px;color:var(--w2);line-height:1.6}
+.chk .t b{color:#fff}
+
+/* timeline */
+.tl{display:flex;flex-direction:column}
+.tli{display:flex;gap:14px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--brd)}
+.tli:last-child{border-bottom:none}
+.tli .m{font-size:11.5px;font-weight:700;color:var(--gold);flex:none;width:62px;padding-top:2px}
+.tli .c{flex:1}
+.tli .t{font-size:14px;font-weight:600;letter-spacing:-.015em}
+.tli .d{font-size:12px;color:var(--w3);margin-top:3px;line-height:1.55}
+.tli.core{background:linear-gradient(90deg,rgba(213,164,92,.09),transparent);border-radius:10px;padding-inline:11px}
+
+/* doors */
+.doors{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.door{border-radius:15px;padding:16px 14px;border:1px solid var(--brd);background:var(--surf)}
+.door .t{font-size:14.5px;font-weight:700;letter-spacing:-.01em}
+.door .d{font-size:11px;color:var(--w3);margin-top:6px;line-height:1.55}
+.door.g{border-color:rgba(63,191,143,.3)}.door.g .t{color:var(--ok)}
+.door.y{border-color:rgba(213,164,92,.26)}.door.y .t{color:var(--gold)}
+.door.r{border-color:rgba(224,112,90,.26)}.door.r .t{color:var(--bad)}
+
+.callout{background:linear-gradient(150deg,rgba(213,164,92,.13),rgba(213,164,92,.02));
+  border:1px solid rgba(213,164,92,.28);border-radius:18px;padding:20px}
+.callout .k{font-size:10.5px;font-weight:700;letter-spacing:.12em;color:var(--gold);margin-bottom:10px}
+.callout p{font-size:13.5px;color:var(--w2);line-height:1.75}
+.callout p+p{margin-top:9px}
+.callout b{color:#fff}
+.callout.ok{background:linear-gradient(150deg,rgba(63,191,143,.12),transparent);border-color:rgba(63,191,143,.3)}
+.callout.ok .k{color:var(--ok)}
+
+/* nav */
+.bar{position:fixed;bottom:0;inset-inline:0;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 6vw;z-index:10;gap:14px}
+.dots-nav{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.dots-nav button{width:6px;height:6px;border-radius:50%;border:none;background:rgba(255,255,255,.18);cursor:pointer;padding:0;transition:.3s var(--spring)}
+.dots-nav button[aria-current=true]{background:var(--gold);width:18px;border-radius:99px}
+.dots-nav .gap{width:9px}
+.arrows{display:flex;gap:8px;flex:none}
+.arrows button{width:38px;height:38px;border-radius:50%;border:1px solid var(--brd);background:var(--surf);cursor:pointer;display:grid;place-items:center;transition:.24s var(--spring)}
+.arrows button:hover:not(:disabled){background:#fff}
+.arrows button:hover:not(:disabled) svg{stroke:#0B0D10}
+.arrows button:disabled{opacity:.25;cursor:default}
+.arrows svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s;transform:scaleX(-1)}
+.brandbar{position:fixed;top:0;inset-inline:0;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 6vw;z-index:10;font-size:12px;color:var(--w3);gap:12px}
+.brandbar .lg{display:flex;align-items:center;gap:9px;color:#fff;font-weight:600;font-size:14.5px;flex:none;cursor:pointer}
+.brandbar .mk{width:25px;height:25px;border-radius:8px;background:rgba(255,255,255,.10);display:grid;place-items:center}
+.brandbar .ch{flex:1;text-align:center;color:var(--gold);font-weight:600;font-size:11.5px;letter-spacing:.08em}
+.prog{position:fixed;top:0;inset-inline-start:0;height:2px;background:var(--gold);z-index:11;transition:width .5s var(--spring)}
+
+@media(max-width:880px){
+  .c3,.c2,.c4,.vs2,.toc,.scope{grid-template-columns:1fr}
+  .phases,.doors{grid-template-columns:repeat(2,1fr)}
+  .pot,.loop{flex-direction:column}
+  .slide{justify-content:flex-start;padding-top:80px}
+  .tli .m{width:52px}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL-DOCUMENT MODE
+   The team reads these as reference, not as a talk: one continuous
+   page, whole big picture reachable by scrolling, chapter rail on
+   the side. Everything below overrides the deck layout above.
+   ═══════════════════════════════════════════════════════════════ */
+html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:visible;
+  position:static;scroll-behavior:smooth}
+.deck{position:static;inset:auto}
+.slide{position:static;inset:auto;opacity:1;visibility:visible;pointer-events:auto;
+  transform:none;overflow:visible;min-height:0;justify-content:flex-start;
+  padding:54px 6vw;scroll-margin-top:74px;
+  border-top:1px solid rgba(255,255,255,.07)}
+.slide:first-child{border-top:0;padding-top:104px;min-height:72vh;justify-content:center}
+.slide[data-ch]:not([data-ch=""])::before{
+  content:attr(data-ch);display:block;font-size:10.5px;font-weight:600;
+  letter-spacing:.14em;color:var(--gold);opacity:.75;margin-bottom:22px}
+/* No reveal animation in document mode. This is a reference the team scans and
+   prints, so every line is visible the moment it is on screen — nothing depends
+   on a transition having run. */
+.slide .in,.slide.on .in{opacity:1!important;transform:none!important;transition:none!important}
+
+.prog{position:fixed;top:0;z-index:20}
+.brandbar{background:rgba(11,13,16,.86);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.06)}
+.bar{display:none}
+
+/* chapter rail — the table of contents, always on screen */
+.rail{position:fixed;top:50%;transform:translateY(-50%);inset-inline-end:16px;z-index:15;
+  display:flex;flex-direction:column;gap:2px;max-height:76vh;overflow:auto;
+  padding:10px 8px;border-radius:14px;background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(12px)}
+.rail::-webkit-scrollbar{display:none}
+.rail a{display:flex;align-items:center;gap:9px;padding:6px 9px;border-radius:9px;
+  font-size:11.5px;color:var(--w3);text-decoration:none;white-space:nowrap;
+  transition:.2s var(--swift);max-width:190px;overflow:hidden;text-overflow:ellipsis}
+.rail a i{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.45;flex:none}
+.rail a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.rail a[aria-current=true]{color:var(--gold);background:rgba(213,164,92,.12)}
+.rail a[aria-current=true] i{opacity:1}
+@media(max-width:1180px){.rail{display:none}}
+
+/* back-to-top */
+.totop{position:fixed;inset-inline-start:18px;bottom:18px;z-index:15;width:42px;height:42px;
+  border-radius:50%;border:1px solid rgba(255,255,255,.1);background:rgba(20,24,29,.9);
+  backdrop-filter:blur(10px);color:var(--w2);display:grid;place-items:center;cursor:pointer;
+  opacity:0;pointer-events:none;transition:.25s var(--swift)}
+.totop.on{opacity:1;pointer-events:auto}
+.totop svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+@media print{.rail,.totop,.brandbar,.prog{display:none}
+  .slide{page-break-inside:avoid;padding:24px 0}
+  .slide .in{opacity:1;transform:none}}
+
+</style>
+</head>
+<body>
+
+<div class="prog" id="prog"></div>
+<div class="brandbar">
+  <div class="lg" onclick="show(1)"><div class="mk"><svg viewBox="0 0 49.33 39.99" width="14" height="14" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></div>مهاجر</div>
+  <div class="ch" id="chapter"></div>
+  <div class="num" id="counter" style="flex:none">1 / 27</div>
+</div>
+
+<div class="deck" id="deck">
+
+<!-- ══════ 1 · TITLE ══════ -->
+<section class="slide on" data-ch="">
+  <div class="in"><div class="pill"><span class="d"></span>فاز ۳ · Workstream 0</div></div>
+  <h1 class="in" style="margin-top:20px">قبل از اینکه<br>چیزی بسازیم</h1>
+  <p class="lead in">دو چیز در یک جا: <b>مبانی</b> — تا بفهمی چرا این‌طور کار می‌کنیم — و <b>کل سند WS0</b>، بخش به بخش و خوانا. تا بتوانی ایده بدهی و نقد کنی، نه فقط اجرا کنی.</p>
+  <div class="sub in">یک صفحه، از بالا به پایین · فهرست فصل‌ها کنارِ صفحه است</div>
+</section>
+
+<!-- ══════ 2 · CONTENTS ══════ -->
+<section class="slide" data-ch="فهرست">
+  <div class="eyebrow in">فهرست</div>
+  <h2 class="in" style="margin-bottom:18px">سه فصل</h2>
+  <div class="toc in">
+    <button onclick="show(2)">
+      <div class="k">فصل ۱ · ۸ صفحه</div>
+      <div class="t">مبانی</div>
+      <div class="d">چرا این‌طور کار می‌کنیم. کتاب، وِج، شاهد، کاربر اول، تصمیم.</div>
+    </button>
+    <button onclick="show(10)">
+      <div class="k">فصل ۲ · ۱۵ صفحه</div>
+      <div class="t">سند WS0</div>
+      <div class="d">هر هفت بخش سند، با تصویر. این همان چیزی است که باید کامل بخوانی.</div>
+    </button>
+    <button onclick="show(25)">
+      <div class="k">فصل ۳ · ۲ صفحه</div>
+      <div class="t">تصمیم و قدم بعد</div>
+      <div class="d">سؤال باز تیم، و آنچه می‌سازیم.</div>
+    </button>
+  </div>
+  <div class="callout in" style="margin-top:20px">
+    <p>اگر عجله داری: <b>فصل ۲ را بخوان.</b> فصل ۱ کمکت می‌کند فصل ۲ را بهتر بفهمی، ولی سندِ کاری همان فصل دوم است.</p>
+  </div>
+</section>
+
+<!-- ══════ 3 · WHERE WE ARE ══════ -->
+<section class="slide" data-ch="فصل ۱ · مبانی">
+  <div class="eyebrow in">کجای کار هستیم</div>
+  <h2 class="in">چهار فاز · ما در سومی هستیم</h2>
+  <div class="phases in" style="margin-top:18px">
+    <div class="ph done"><div class="k">فاز ۱</div><div class="t">کشف</div><div class="d">۲۰ مصاحبه، بنچمارک</div></div>
+    <div class="ph done"><div class="k">فاز ۲</div><div class="t">سنتز</div><div class="d">انتخاب سگمنت و وِج</div></div>
+    <div class="ph now"><div class="k">فاز ۳</div><div class="t">ساخت پروتوتایپ</div><div class="d">← الان اینجاییم</div></div>
+    <div class="ph done" style="opacity:.26"><div class="k">فاز ۴</div><div class="t">نقشهٔ اجرا</div><div class="d">مدل عملیاتی و مالی</div></div>
+  </div>
+  <div class="callout in" style="margin-top:18px">
+    <div class="k">Workstream 0 یعنی چه؟</div>
+    <p>یعنی: «قبل از اینکه یک پیکسل بکشی، بنویس دقیقاً می‌خواهی چه چیزی را یاد بگیری.» سند WS0 همین است — و فصل ۲ همین سند را نشانت می‌دهد.</p>
+  </div>
+</section>
+
+<!-- ══════ 4 · THE BOOK ══════ -->
+<section class="slide" data-ch="فصل ۱ · مبانی">
+  <div class="eyebrow in">کتابی که رهبر تیم گفت</div>
+  <h2 class="in" style="margin-bottom:16px">Four Steps to the Epiphany</h2>
+  <div class="vs2 in">
+    <div class="vsx no"><div class="h">راه اشتباه</div>
+      <div class="big">رستوران را کامل می‌سازی</div>
+      <p style="margin-top:10px">دکور، آشپز، منوی ۵۰ غذایی، تابلو. بعد در را باز می‌کنی و می‌بینی کسی نمی‌آید. حالا پولت تمام شده.</p></div>
+    <div class="vsx yes"><div class="h">راه درست</div>
+      <div class="big">یک غذا می‌پزی و به ۵ نفر می‌دهی</div>
+      <p style="margin-top:10px">به صورتشان نگاه می‌کنی. اگر تا آخر خوردند ادامه می‌دهی؛ اگر نه، دستور غذا را عوض می‌کنی — نه رستوران را.</p></div>
+  </div>
+  <p class="sub in" style="margin-top:16px">اسم فنی‌اش: ساختن محصول <b style="color:#fff">موازی</b> با فهمیدن مشتری، نه بعد از او.</p>
+</section>
+
+<!-- ══════ 5 · LEARN NOT SELL ══════ -->
+<section class="slide" data-ch="فصل ۱ · مبانی">
+  <div class="eyebrow in">مهم‌ترین جملهٔ این سند</div>
+  <div class="hero-line in">این پروتوتایپ برای <b>فروختن</b> نیست.<br>برای <b>یاد گرفتن</b> است.</div>
+  <div class="cards c2 in" style="margin-top:26px">
+    <div class="card bad"><div class="n" style="color:var(--bad)">نمی‌خواهیم</div><h3>«قشنگه، خوشم اومد»</h3><p>این جمله هیچ چیزی به ما نمی‌گوید. آدم‌ها مؤدب‌اند.</p></div>
+    <div class="card good"><div class="n" style="color:var(--ok)">می‌خواهیم</div><h3>«من ۵۰ میلیون می‌ذارم، چون…»</h3><p>عدد، دلیل و رفتار. این یعنی شواهد.</p></div>
+  </div>
+</section>
+
+<!-- ══════ 6 · WEDGE ══════ -->
+<section class="slide" data-ch="فصل ۱ · مبانی">
+  <div class="eyebrow in">کلمه‌ای که همه‌جا تکرار می‌شود</div>
+  <h2 class="in">Wedge یعنی چه؟</h2>
+  <p class="lead in">وِج یعنی همان گوه یا نوکِ تیزِ تبر. برای شکافتن یک کندهٔ بزرگ، کل تبر را با هم فرو نمی‌کنی — <b style="color:#fff">فقط نوک نازکش می‌رود تو</b> و بقیه دنبالش می‌آید.</p>
+  <div class="cards c3 in" style="margin-top:22px">
+    <div class="card"><div class="n">۰۱</div><h3>کوچک است</h3><p>یک کار، نه ده کار.</p></div>
+    <div class="card"><div class="n">۰۲</div><h3>درد واقعی دارد</h3><p>دردی که همین حالا هست و قابل اندازه‌گیری است.</p></div>
+    <div class="card"><div class="n">۰۳</div><h3>در را باز می‌کند</h3><p>بعد از جا افتادن، بقیهٔ محصول از همان شکاف وارد می‌شود.</p></div>
+  </div>
+</section>
+
+<!-- ══════ 7 · EVIDENCE ══════ -->
+<section class="slide" data-ch="فصل ۱ · مبانی">
+  <div class="eyebrow in">مهارتی که در تست لازم داری</div>
+  <h2 class="in" style="margin-bottom:18px">شاهد قوی، ضعیف، مخالف</h2>
+  <div class="cards c3 in">
+    <div class="card good"><div class="n" style="color:var(--ok)">شاهد قوی</div><h3>رفتار و عدد</h3>
+      <p>خودش مبلغ می‌گوید · دربارهٔ کارمزد سؤال می‌کند · سرویس واقعی برای خانواده‌اش انتخاب می‌کند · می‌پرسد «پولم کجا نگه‌داری می‌شود؟»</p></div>
+    <div class="card"><div class="n" style="color:var(--warn)">شاهد ضعیف</div><h3>حرفِ مؤدبانه</h3>
+      <p>«جالبه» · «شاید استفاده کنم» · تا آخر Flow می‌رود فقط چون تسک تست است · سرویس‌ها را می‌بیند ولی انتخاب نمی‌کند</p></div>
+    <div class="card bad"><div class="n" style="color:var(--bad)">شاهد مخالف</div><h3>حرفی که فرض ما را رد می‌کند</h3>
+      <p>«این همان صرافی است» · «بدون شناختِ شخصی پول نمی‌گذارم» · «صندوق یعنی پولم قفل شد»</p></div>
+  </div>
+  <div class="callout ok in" style="margin-top:16px">
+    <p>شاهد مخالف <b>بد نیست — طلاست.</b> ارزان‌ترین چیزی است که می‌توانی بخری. یک «نه»ی زودهنگام، شش ماه ساختنِ چیز اشتباه را جلو می‌گیرد.</p>
+  </div>
+</section>
+
+<!-- ══════ 8 · EARLYVANGELIST ══════ -->
+<section class="slide" data-ch="فصل ۱ · مبانی">
+  <div class="eyebrow in">از کتاب · Earlyvangelist</div>
+  <h2 class="in" style="margin-bottom:4px">کاربر اولِ ما چه شکلی است؟</h2>
+  <p class="lead in" style="margin-bottom:12px">محصول اول برای «همه» نیست. برای آدمی است که <b style="color:#fff">هر پنج</b> شرط را دارد:</p>
+  <div class="in">
+    <div class="chk"><span class="b">✓</span><span class="t">یک <b>درد واقعی</b> دارد.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t"><b>می‌داند</b> که این درد را دارد.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">فعالانه <b>دنبال راه‌حل گشته</b> و برایش زمان‌بندی دارد.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">آن‌قدر درد داشته که <b>خودش راه‌حل دست‌سازی</b> سرهم کرده — صراف، دوست، واسطه، فروشندهٔ اکانت.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t"><b>پولش را دارد</b> یا سریع می‌تواند تهیه کند.</span></div>
+  </div>
+  <div class="callout in" style="margin-top:14px">
+    <p>شرط چهارم مهم‌ترین است. <b>اگر طرف هنوز راه‌حل دست‌ساز خودش را نساخته، درد ندارد</b> — فقط مؤدب حرف می‌زند. این دقیقاً یافتهٔ فاز یک بود: «کاربران مسیر دارند، اما سیستم ندارند.»</p>
+  </div>
+</section>
+
+<!-- ══════ 9 · FOUR DOORS ══════ -->
+<section class="slide" data-ch="فصل ۱ · مبانی">
+  <div class="eyebrow in">بعد از ۳ تا ۵ مصاحبه</div>
+  <h2 class="in" style="margin-bottom:16px">چهار در پیش رویت است</h2>
+  <div class="doors in">
+    <div class="door g"><div class="t">Continue</div><div class="d">اکثریت بدون کمک، رفتار هدف را نشان دادند.</div></div>
+    <div class="door y"><div class="t">Revise</div><div class="d">ارزش فهمیده شد، ولی پیام یا Flow مانع بود.</div></div>
+    <div class="door y"><div class="t">Narrow</div><div class="d">فقط یک سگمنت یا Use Case سیگنال داد.</div></div>
+    <div class="door r"><div class="t">Stop / Hold</div><div class="d">اکثریت گفتند «این همان صرافی است».</div></div>
+  </div>
+  <div class="callout in" style="margin-top:18px">
+    <div class="k">«اکثریت» یعنی چند نفر؟</div>
+    <p>با <b>۳</b> مصاحبه یعنی حداقل <b>۲</b> نفر. با <b>۴ یا ۵</b> مصاحبه یعنی حداقل <b>۳</b> نفر. با این تعداد دنبال آمار نیستیم؛ دنبال <b>الگوی رفتاری و مانع بحرانی</b> هستیم.</p>
+  </div>
+</section>
+
+<!-- ══════ 10 · RULES ══════ -->
+<section class="slide" data-ch="فصل ۱ · مبانی">
+  <div class="eyebrow in">موقع تست</div>
+  <h2 class="in" style="margin-bottom:16px">چهار قانونی که شکستنشان تست را خراب می‌کند</h2>
+  <div class="in">
+    <div class="chk x"><span class="b">✕</span><span class="t"><b>قبل از تسک، محصول را توضیح نده.</b> اگر مجبور شدی، همان‌جا یک یافته ثبت کن: محصول خودش را توضیح نمی‌دهد.</span></div>
+    <div class="chk x"><span class="b">✕</span><span class="t"><b>نپرس «دوستش داری؟»</b> بپرس «آخرین باری که این کار را کردی چطور انجامش دادی؟»</span></div>
+    <div class="chk x"><span class="b">✕</span><span class="t"><b>عدد و سرویس را خودت پیشنهاد نده.</b> عددی که او می‌گوید داده است؛ عددی که تو می‌گویی نیست.</span></div>
+    <div class="chk x"><span class="b">✕</span><span class="t"><b>از ایده دفاع نکن.</b> وقتی کسی گیر می‌کند، سکوت کن و نگاه کن. سخت‌ترین بخش کار همین است.</span></div>
+  </div>
+</section>
+
+<!-- ══════ 11 · WS0 OVERVIEW ══════ -->
+<section class="slide" data-ch="فصل ۲ · سند WS0">
+  <div class="eyebrow in">فصل ۲ شروع می‌شود</div>
+  <h1 class="in" style="font-size:clamp(24px,4vw,42px)">سند WS0<br>بخش به بخش</h1>
+  <p class="lead in">هفت بخش. از اینجا تا صفحهٔ ۲۵ همه‌اش همین سند است — همان چیزی که رهبر تیم گفت کامل بخوانی.</p>
+  <div class="steps in" style="margin-top:16px">
+    <div class="st"><span class="i num">۱</span><div class="c"><div class="hd"><span class="t">One-page Frame</span><span class="tag y">تعریف</span></div><div class="d">وِج، مسئله، کاربر هدف، وعده، Aha و Positioning</div></div></div>
+    <div class="st"><span class="i num">۲</span><div class="c"><div class="hd"><span class="t">Wedge &amp; Feature Map</span><span class="tag y">دامنه</span></div><div class="d">مدل موجودی، نقشهٔ قابلیت‌ها، و اینکه چه چیزی ساخته نمی‌شود</div></div></div>
+    <div class="st"><span class="i num">۳</span><div class="c"><div class="hd"><span class="t">Design Brief</span><span class="tag y">طراحی</span></div><div class="d">اصول، معماری، پنج Flow و معیار پذیرش</div></div></div>
+    <div class="st"><span class="i num">۴</span><div class="c"><div class="hd"><span class="t">Riskiest Assumptions</span><span class="tag g">مهم‌ترین</span></div><div class="d">پنج فرضیه و قاعدهٔ تفسیر شواهد</div></div></div>
+    <div class="st"><span class="i num">۵</span><div class="c"><div class="hd"><span class="t">Test Plan</span><span class="tag b">اجرا</span></div><div class="d">نمونه، Screener، ساختار جلسه و قواعد مصاحبه</div></div></div>
+    <div class="st"><span class="i num">۶</span><div class="c"><div class="hd"><span class="t">ارجاع به Workstreamها</span></div><div class="d">سؤال‌هایی که به WS1 تا WS4 پاس داده می‌شوند</div></div></div>
+    <div class="st"><span class="i num">۷</span><div class="c"><div class="hd"><span class="t">Definition of Ready</span></div><div class="d">شرط‌های شروع ساخت</div></div></div>
+  </div>
+</section>
+
+<!-- ══════ 12 · §1 WEDGE + CORE LOOP ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۱">
+  <div class="eyebrow in">بخش ۱ · تعریف عملیاتی وِج</div>
+  <h2 class="in" style="margin-bottom:6px">هسته یک چرخهٔ کامل است</h2>
+  <p class="lead in" style="margin-bottom:16px">نه فقط ابزار خرید دلار، نه فقط ابزار پرداخت. سند این پنج مرحله را کنار هم می‌گذارد:</p>
+  <div class="loop in">
+    <div class="lp"><div class="k">۰۱</div><div class="t">تبدیل</div><div class="d">ریال به دلار دیجیتال</div></div>
+    <div class="lp"><div class="k">۰۲</div><div class="t">نگهداری</div><div class="d">با خیال راحت</div></div>
+    <div class="lp"><div class="k">۰۳</div><div class="t">کنترل و تخصیص</div><div class="d">صندوق‌های هدف</div></div>
+    <div class="lp"><div class="k">۰۴</div><div class="t">استفاده یا انتقال</div><div class="d">اقدام واقعی</div></div>
+    <div class="lp exit"><div class="k">۰۵</div><div class="t">خروج مطمئن</div><div class="d">هر وقت خواستی</div></div>
+  </div>
+  <div class="callout in" style="margin-top:18px">
+    <div class="k">تصمیم محوری سند</div>
+    <p>مهاجر <b>نباید</b> بین «حفظ ارزش» و «استفاده‌پذیری» یکی را انتخاب کند. ارزش وِج دقیقاً در <b>ترکیب</b> این دوتاست: کاربر پول را می‌گذارد تا ارزشش حفظ شود، ولی مطمئن است در آن گیر نمی‌افتد.</p>
+  </div>
+</section>
+
+<!-- ══════ 13 · §1 USER & TRIGGERS ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۱">
+  <div class="eyebrow in">بخش ۱ · کاربر هدف و Triggerها</div>
+  <div class="cards c2 in">
+    <div class="card lit">
+      <div class="n">کاربر هدف</div>
+      <h3>ایرانیِ ۲۵ تا ۵۵ ساله، با درآمد یا پس‌انداز بالاتر از متوسط</h3>
+      <p style="margin-top:10px">کاهش ارزش ریال برایش مسئلهٔ واقعی است · احتمال خرید اشتراک یا اکانت خارجی دارد · شاید قبلاً دلار نقد، طلا یا صرافی را تجربه کرده — ولی <b style="color:#fff">متخصص کریپتو نیست</b> · سادگی و نقدشوندگی را به معامله‌گری ترجیح می‌دهد.</p>
+    </div>
+    <div class="card">
+      <div class="n">شش Trigger</div>
+      <div class="steps" style="margin-top:-4px">
+        <div class="st" style="padding:7px 0"><div class="c"><div class="d" style="margin-top:0;color:var(--w2)">درآمد ریالی رسیده و نگران کاهش ارزشش است</div></div></div>
+        <div class="st" style="padding:7px 0"><div class="c"><div class="d" style="margin-top:0;color:var(--w2)">می‌خواهد ذخیرهٔ دلاری بسازد</div></div></div>
+        <div class="st" style="padding:7px 0"><div class="c"><div class="d" style="margin-top:0;color:var(--w2)">باید برای خانواده دلار بفرستد</div></div></div>
+        <div class="st" style="padding:7px 0"><div class="c"><div class="d" style="margin-top:0;color:var(--w2)">به اشتراک یا اکانت خارجی نیاز دارد</div></div></div>
+        <div class="st" style="padding:7px 0"><div class="c"><div class="d" style="margin-top:0;color:var(--w2)">برنامهٔ سفر، تحصیل یا شرایط اضطراری</div></div></div>
+        <div class="st" style="padding:7px 0"><div class="c"><div class="d" style="margin-top:0;color:var(--w2)">نیاز فوری به ریال و اطمینان از امکان خروج</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="callout in" style="margin-top:16px">
+    <div class="k">Archetypeهای نزدیک از فاز ۱</div>
+    <p>Time-Poor Professional · Lifestyle Buyer · و نسخهٔ اولیهٔ Global Mobility Seeker.</p>
+  </div>
+</section>
+
+<!-- ══════ 14 · §1 PROMISE + AHA ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۱">
+  <div class="eyebrow in">بخش ۱ · وعده و لحظهٔ Aha</div>
+  <div class="callout in" style="margin-bottom:16px">
+    <div class="k">User Promise</div>
+    <p style="font-size:15px;color:#fff;line-height:1.8">«بخشی از پولت را ساده و شفاف به دلار دیجیتال تبدیل کن، با خیال روشن نگه دار و هر وقت لازم شد همان موجودی را انتقال بده، برای هدفت کنار بگذار، با آن اشتراک بخر یا به ریال برگردان — بدون تجربهٔ پیچیدهٔ صرافی و کریپتو.»</p>
+  </div>
+  <div class="cards c4 in">
+    <div class="card"><div class="n">پایهٔ ۱</div><h3>حفظ ارزش</h3><p>کاهش Exposure به ریال</p></div>
+    <div class="card"><div class="n">پایهٔ ۲</div><h3>دسترسی</h3><p>موجودی فقط عدد روی صفحه نیست؛ مسیر خروج دارد</p></div>
+    <div class="card"><div class="n">پایهٔ ۳</div><h3>استفاده‌پذیری</h3><p>چند اقدام محدود اما واقعی از همان Balance</p></div>
+    <div class="card"><div class="n">پایهٔ ۴</div><h3>سادگی و اعتماد</h3><p>نرخ، کارمزد، مسئولیت و محدودیت‌ها روشن‌اند</p></div>
+  </div>
+  <div class="callout ok in" style="margin-top:16px">
+    <div class="k">Aha اصلی — این جمله را باید از زبان کاربر بشنوی</div>
+    <p style="font-size:15px;color:#fff">«پولم به یک موجودی دلاری قابل فهم تبدیل شد؛ هم می‌توانم نگهش دارم و هم <b>می‌دانم همین حالا چطور انتقالش بدهم، خرجش کنم یا پس بگیرم</b>.»</p>
+  </div>
+</section>
+
+<!-- ══════ 15 · §1 POSITIONING ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۱">
+  <div class="eyebrow in">بخش ۱ · Positioning</div>
+  <h2 class="in" style="margin-bottom:16px">چه هستیم، چه نیستیم</h2>
+  <div class="vs2 in">
+    <div class="vsx yes"><div class="h">هستیم</div>
+      <div class="big">حساب دلاری ساده و قابل استفاده برای زندگی واقعی کاربر ایرانی</div></div>
+    <div class="vsx no"><div class="h">نیستیم</div>
+      <div class="big" style="line-height:2">صرافی کریپتو<br>اپ خرید تتر<br>Trading Wallet<br>سوپراپ مالی<br>Private Bank</div></div>
+  </div>
+  <div class="callout in" style="margin-top:16px">
+    <p>اگر کاربر در تست، محصول را با یکی از پنج مورد سمت راست توصیف کرد، <b>همان‌جا یادداشت کن</b> — این مستقیماً فرضیهٔ ۱ را رد می‌کند.</p>
+  </div>
+</section>
+
+<!-- ══════ 16 · §2 MONEY MODEL ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۲">
+  <div class="eyebrow in">بخش ۲ · مدل موجودی</div>
+  <h2 class="in" style="margin-bottom:16px">پول کاربر سه حالت دارد</h2>
+  <div class="pot in">
+    <div class="seg a"><div class="l">Available · آزاد</div><div class="v num">$1,240</div><div class="n">توی جیب. برای انتقال، خرید، ساخت صندوق و برداشت آماده است.</div></div>
+    <div class="seg"><div class="l">In Goals · در صندوق‌ها</div><div class="v num">$600</div><div class="n">تخصیص‌یافته، ولی قابل بازگشت آنی.</div></div>
+    <div class="seg"><div class="l">Pending · در انتظار</div><div class="v num">$150</div><div class="n">در حال تکمیل تبدیل، پرداخت یا برداشت.</div></div>
+  </div>
+  <div class="callout in" style="margin-top:18px">
+    <div class="k">قانون طلایی که نباید بشکند</div>
+    <p>پولِ صندوق <b>قفل نیست</b>. آنی، بدون کارمزد و بدون اصطکاک برمی‌گردد به موجودی آزاد. صندوق در v0 <b>سود، سرمایه‌گذاری، قفل زمانی یا جریمهٔ برداشت ندارد</b>.</p>
+    <p>صندوق پول را فقط <b>در ذهن کاربر</b> جدا می‌کند، نه در دسترسی‌اش. اگر کاربر حس کند پولش قفل شده، فرضیهٔ ۴ رد شده است.</p>
+  </div>
+</section>
+
+<!-- ══════ 17 · §2 CAPABILITY MAP ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۲">
+  <div class="eyebrow in">بخش ۲ · نقشهٔ قابلیت‌ها</div>
+  <h2 class="in" style="margin-bottom:14px">هفت قابلیت، از A تا G</h2>
+  <div class="steps in">
+    <div class="st"><span class="i">A</span><div class="c"><div class="hd"><span class="t">تبدیل ریال به دلار دیجیتال</span><span class="tag g">هسته</span></div><div class="d">Quote با نرخ، کارمزد، مبلغ نهایی و زمان اعتبار · رسید و تاریخچه</div></div></div>
+    <div class="st"><span class="i">B</span><div class="c"><div class="hd"><span class="t">نگهداری و کنترل موجودی</span><span class="tag g">هسته</span></div><div class="d">تفکیک آزاد/صندوق/در انتظار · توضیح Custody و نقش شریک</div></div></div>
+    <div class="st"><span class="i">C</span><div class="c"><div class="hd"><span class="t">انتقال دلار</span><span class="tag g">هسته · Flow الزامی</span></div><div class="d">به کاربر دیگر مهاجر با شماره موبایل · نام تأییدشده · هشدار برگشت‌ناپذیری</div></div></div>
+    <div class="st"><span class="i">D</span><div class="c"><div class="hd"><span class="t">خرید اشتراک و اکانت خارجی</span><span class="tag y">Usability اصلی</span></div><div class="d">دو مدل قابل مقایسه: روی حساب شخصی، یا اکانت آماده/اشتراکی</div></div></div>
+    <div class="st"><span class="i">E</span><div class="c"><div class="hd"><span class="t">صندوق هدف</span><span class="tag b">Retention</span></div><div class="d">ساخت، افزودن، بازگرداندن آنی بدون کارمزد، حذف بدون از دست رفتن پول</div></div></div>
+    <div class="st"><span class="i">F</span><div class="c"><div class="hd"><span class="t">برداشت و تبدیل موجودی</span><span class="tag g">لنگر اعتماد</span></div><div class="d">تبدیل به ریال · <span style="color:var(--bad)">دریافت دلار نقد از v0 ما خارج شده</span></div></div></div>
+    <div class="st"><span class="i">G</span><div class="c"><div class="hd"><span class="t">اعتماد و پشتیبانی</span><span class="tag">Cross-cutting</span></div><div class="d">Fee Breakdown · محل نگهداری · تفکیک مسئولیت مهاجر و شریک · Retry/Cancel/Refund</div></div></div>
+  </div>
+</section>
+
+<!-- ══════ 18 · §2 SCOPE ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۲">
+  <div class="eyebrow in">بخش ۲ · اولویت Featureها</div>
+  <h2 class="in" style="margin-bottom:14px">سه ستون — و ستون سوم مهم‌ترین است</h2>
+  <div class="scope in">
+    <div class="sc show"><div class="h">MUST SHOW</div><div class="sh">در v0 ساخته می‌شود</div>
+      <ul><li>پیام دوگانهٔ حفظ ارزش و استفاده‌پذیری</li><li>Quote تبدیل</li><li>Home و ساختار موجودی</li><li>انتقال داخلی</li><li>اشتراک/اکانت در دو مدل</li><li>صندوق هدف</li><li>برداشت ریالی</li><li>Status، رسید، کارمزد و پشتیبانی</li></ul></div>
+    <div class="sc sim"><div class="h">SIMULATED</div><div class="sh">نمایش داده می‌شود، واقعی نیست</div>
+      <ul><li>نرخ و تبدیل واقعی</li><li>تأمین دلار و Custody</li><li>پرداخت خارجی</li><li>تحویل اکانت</li><li>تسویهٔ انتقال</li><li>واریز بانکی</li><li>Refund و حل خطا</li></ul></div>
+    <div class="sc out"><div class="h">OUT OF SCOPE</div><div class="sh">ساخته نمی‌شود — هر چقدر هم وسوسه‌کننده</div>
+      <ul><li>پول واقعی و اتصال Production</li><li>Trading و نمودار</li><li>Earn، سود و سرمایه‌گذاری</li><li>کارت بین‌المللی</li><li>انتقال مستقیم بلاک‌چین</li><li>دلار نقد</li><li>وام و اعتبار</li><li>ملک، سهام، NFT</li><li>KYC کامل Production</li></ul></div>
+  </div>
+</section>
+
+<!-- ══════ 19 · §3 DESIGN PRINCIPLES ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۳">
+  <div class="eyebrow in">بخش ۳ · اصول طراحی</div>
+  <h2 class="in" style="margin-bottom:12px">هشت قانون طراحی</h2>
+  <div class="in">
+    <div class="chk"><span class="b">✓</span><span class="t">زبان محصول <b>«دلار دیجیتال»</b> و «موجودی دلاری» است — نه Coin، Token، Gas یا Network.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">Home باید <b>هم موجودی و هم Actionها</b> را در یک نگاه نشان دهد.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t"><b>نگهداری، حالت پیش‌فرضِ معتبر است.</b> کاربر برای خرج‌کردن تحت فشار قرار نمی‌گیرد.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">استفاده از موجودی باید <b>انتخابی و هدفمند</b> باشد.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">هر Action قبل از تأیید، <b>مبلغ نهایی، کارمزد، زمان و مسئولیت</b> را نشان می‌دهد.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">صندوق پول را <b>ذهنی</b> جدا می‌کند، نه اینکه دسترسی را سخت کند.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">هیچ Promise عملیاتیِ تأییدنشده به‌صورت قطعی نمایش داده نمی‌شود.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">پشتیبانی انسانی در لحظات پرریسک هست، اما <b>جایگزین وضوح محصول نیست</b>.</span></div>
+  </div>
+</section>
+
+<!-- ══════ 20 · §3 FLOWS ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۳">
+  <div class="eyebrow in">بخش ۳ · معماری و Flowهای الزامی</div>
+  <h2 class="in" style="margin-bottom:6px">پنج بخش، پنج Flow</h2>
+  <p class="lead in" style="margin-bottom:12px">Navigation: خانه · تبدیل · استفاده · صندوق‌ها · فعالیت‌ها</p>
+  <div class="steps in">
+    <div class="st"><span class="i num">۰۱</span><div class="c"><div class="hd"><span class="t">تبدیل و ساخت موجودی</span><span class="tag g">هرگز حذف نمی‌شود</span></div><div class="d">مبلغ ← Quote و مدت اعتبار ← روش پرداخت ← تأیید ← Status ← موجودی و Action بعدی</div></div></div>
+    <div class="st"><span class="i num">۰۲</span><div class="c"><div class="hd"><span class="t">انتقال دلار</span><span class="tag g">هرگز حذف نمی‌شود</span></div><div class="d">شماره موبایل ← نام تأییدشده ← مبلغ ← کارمزد و زمان ← تأیید ← رسید</div></div></div>
+    <div class="st"><span class="i num">۰۳</span><div class="c"><div class="hd"><span class="t">خرید اشتراک یا اکانت</span></div><div class="d">دسته ← مقایسهٔ دو مدل ← قیمت، مدت، محدودیت، پشتیبانی ← پرداخت از موجودی یا صندوق ← تحویل و رسید</div></div></div>
+    <div class="st"><span class="i num">۰۴</span><div class="c"><div class="hd"><span class="t">ساخت صندوق هدف</span><span class="tag">در جلسهٔ ۴۵ دقیقه‌ای کوتاه می‌شود</span></div><div class="d">هدف ← نام، مبلغ، تاریخ ← انتقال از موجودی ← پیشرفت ← <b style="color:var(--ok)">آزمایش بازگرداندن</b></div></div></div>
+    <div class="st"><span class="i num">۰۵</span><div class="c"><div class="hd"><span class="t">برداشت</span><span class="tag r">فقط ریال</span></div><div class="d">مبلغ ← Quote ← حساب بانکی ← ثبت درخواست ← Status و رسید · مسیر Cancel/Retry اگر نرخ تغییر کرد</div></div></div>
+  </div>
+</section>
+
+<!-- ══════ 21 · §3 ACCEPTANCE ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۳">
+  <div class="eyebrow in">بخش ۳ · معیار پذیرش پروتوتایپ</div>
+  <h2 class="in" style="margin-bottom:6px">تا این‌ها درست نباشند، تست شروع نمی‌شود</h2>
+  <p class="lead in" style="margin-bottom:10px">هر هشت مورد در پروتوتایپی که ساختیم بررسی و تأیید شده است.</p>
+  <div class="in">
+    <div class="chk"><span class="b">✓</span><span class="t">کاربر بدون توضیح تسهیل‌گر، <b>پنج Action اصلی</b> را از Home پیدا می‌کند.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">تفاوت موجودی اصلی و صندوق هدف روشن است.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">در تمام Quoteها <b>نرخ، کارمزد، مبلغ نهایی و زمان</b> وجود دارد.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">Flow انتقال حتماً قابل تکمیل است.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">دو مدل خرید اکانت قابل مقایسه‌اند.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">هیچ اصطلاح فنی کریپتو برای تکمیل Flow لازم نیست.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">همهٔ Flowها <b>Success، Pending و حداقل یک Failure</b> دارند.</span></div>
+    <div class="chk"><span class="b">✓</span><span class="t">داده‌ها ساختگی ولی واقع‌نما و <b>دارای برچسب تست</b> هستند.</span></div>
+  </div>
+</section>
+
+<!-- ══════ 22 · §4 HYPOTHESES ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۴">
+  <div class="eyebrow in">بخش ۴ · مهم‌ترین بخش سند</div>
+  <h2 class="in" style="margin-bottom:4px">پنج فرضیهٔ پرریسک</h2>
+  <p class="lead in" style="margin-bottom:12px">هر صفحه‌ای که ساخته می‌شود باید به یکی از این‌ها وصل باشد.</p>
+  <div class="steps in">
+    <div class="st"><span class="i num">۰۱</span><div class="c"><div class="hd"><span class="t">ارزش ترکیبی</span><span class="tag r">ریسک بسیار بالا</span></div><div class="d">کاربر «حفظ ارزش + استفاده و خروج» را یک ارزش یکپارچه می‌فهمد و اسمش را «اپ تتر» نمی‌گذارد.</div></div></div>
+    <div class="st"><span class="i num">۰۲</span><div class="c"><div class="hd"><span class="t">اعتماد به تبدیل و نگهداری</span><span class="tag r">ریسک بسیار بالا</span></div><div class="d">Quote شفاف، توضیح Custody و مسیر خروج، اعتماد اولیه برای نگه‌داشتن Balance می‌سازند.</div></div></div>
+    <div class="st"><span class="i num">۰۳</span><div class="c"><div class="hd"><span class="t">اشتراک و اکانت به‌عنوان Usability</span><span class="tag y">ریسک بالا</span></div><div class="d">این خرید یک Use Case قابل فهم و انگیزه‌بخش برای استفاده از Balance است.</div></div></div>
+    <div class="st"><span class="i num">۰۴</span><div class="c"><div class="hd"><span class="t">صندوق بدون احساس قفل‌شدن</span><span class="tag y">متوسط تا بالا</span></div><div class="d">تفکیک موجودی کنترل می‌سازد — به شرط اینکه بازگشت آنی و بدون مانع باشد.</div></div></div>
+    <div class="st"><span class="i num">۰۵</span><div class="c"><div class="hd"><span class="t">انتقال و برداشت به‌عنوان تضمین نقدشوندگی</span><span class="tag r">ریسک بسیار بالا</span></div><div class="d">مسیر روشن خروج، ترسِ «گیر کردن پول» را به اندازهٔ کافی کم می‌کند.</div></div></div>
+  </div>
+</section>
+
+<!-- ══════ 23 · §4 EVIDENCE RULE ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۴">
+  <div class="eyebrow in">بخش ۴ · قاعدهٔ تفسیر شواهد</div>
+  <h2 class="in" style="margin-bottom:14px">برای هر فرضیه، این سه را جدا ثبت کن</h2>
+  <div class="cards c3 in">
+    <div class="card good"><div class="n" style="color:var(--ok)">رفتار هدف</div><h3>چه چیزی باید ببینی</h3>
+      <p>مثال فرضیهٔ ۲: کاربر مبلغی واقع‌گرایانه وارد کند، Quote را با زبان خودش توضیح دهد و بگوید تحت چه شرایطی پول را نگه می‌دارد.</p></div>
+    <div class="card"><div class="n" style="color:var(--warn)">شاهد ضعیف</div><h3>به‌عنوان مدرک ثبت نکن</h3>
+      <p>تأیید Flow فقط به این دلیل که تست ساختگی است. علاقه به دلار نقد بدون پذیرش حدود و کارمزد.</p></div>
+    <div class="card bad"><div class="n" style="color:var(--bad)">شاهد مخالف</div><h3>فرض ما را رد می‌کند</h3>
+      <p>«بدون شناخت شخصی هیچ مبلغی نمی‌گذارم» · «مسیر خروج را باور نمی‌کنم» · «صندوق یعنی سرمایه‌گذاری و جریمه».</p></div>
+  </div>
+  <div class="callout in" style="margin-top:16px">
+    <div class="k">اثر تصمیم</div>
+    <p>برای هر فرضیه، سند از قبل نوشته که اگر رد شد چه کار می‌کنیم — مثلاً بازنویسی Promise، باریک‌کردن وِج، حذف Use Case، یا تبدیل صندوق به یک Label ساده. <b>این تصمیم‌ها را بعد از تست اختراع نکن؛ از قبل نوشته شده‌اند.</b></p>
+  </div>
+</section>
+
+<!-- ══════ 24 · §5 SAMPLE + SCREENER ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۵">
+  <div class="eyebrow in">بخش ۵ · نمونه و Screener</div>
+  <div class="cards c2 in">
+    <div class="card lit"><div class="n">نمونه</div>
+      <h3>۳ تا ۵ نفر · هر جلسه ۴۵ تا ۶۰ دقیقه</h3>
+      <p style="margin-top:10px">حداقل یک نفر آشنا با استیبل‌کوین یا صرافی دیجیتال · حداقل یک نفر با نیاز دلاری ولی کم‌تجربه در کریپتو · <b style="color:#fff">حداقل دو نفر با احتمال واقعی خرید اشتراک یا اکانت</b> · اگر پنج نفر شد، تنوع جنسیت و وضعیت خانوادگی حفظ شود.</p></div>
+    <div class="card"><div class="n">شرکت‌کنندهٔ مناسب</div>
+      <div style="margin-top:-2px">
+        <div class="chk"><span class="b">✓</span><span class="t" style="font-size:12.5px">ساکن ایران، تقریباً ۲۵ تا ۵۵ ساله</span></div>
+        <div class="chk"><span class="b">✓</span><span class="t" style="font-size:12.5px">نسبت به حفظ ارزش پس‌اندازش حساس است</span></div>
+        <div class="chk"><span class="b">✓</span><span class="t" style="font-size:12.5px">به دلار نقد، طلا یا صرافی فکر کرده یا استفاده کرده</span></div>
+        <div class="chk"><span class="b">✓</span><span class="t" style="font-size:12.5px">احتمال خرید اشتراک یا اکانت خارجی دارد</span></div>
+        <div class="chk"><span class="b">✓</span><span class="t" style="font-size:12.5px">خودش دربارهٔ پولش تصمیم می‌گیرد</span></div>
+        <div class="chk x"><span class="b">✕</span><span class="t" style="font-size:12.5px">عضو تیم، فعال حرفه‌ای کریپتو یا فروشندهٔ ارز/اکانت <b>نیست</b></span></div>
+      </div></div>
+  </div>
+</section>
+
+<!-- ══════ 25 · §5 SESSION TIMELINE ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۵">
+  <div class="eyebrow in">بخش ۵ · ساختار جلسه</div>
+  <h2 class="in" style="margin-bottom:12px">۶۰ دقیقه، دقیقه به دقیقه</h2>
+  <div class="tl in">
+    <div class="tli"><span class="m num">۰–۷</span><div class="c"><div class="t">Context رفتاری</div><div class="d">آخرین تجربهٔ حفظ ارزش · آخرین نیاز به اشتراک · مسیر و واسطه‌های فعلی</div></div></div>
+    <div class="tli"><span class="m num">۷–۱۲</span><div class="c"><div class="t">فهم مفهوم</div><div class="d">صفحهٔ معرفی <b>بدون هیچ توضیحی</b> · «این محصول چیست و برای کیست؟»</div></div></div>
+    <div class="tli core"><span class="m num">۱۲–۲۲</span><div class="c"><div class="t">Flow تبدیل</div><div class="d">توجه به نرخ، کارمزد، زمان و Custody · سؤال کلیدی: «اگر واقعی بود چه مبلغی را امتحان می‌کردی و چرا؟»</div></div></div>
+    <div class="tli core"><span class="m num">۲۲–۳۰</span><div class="c"><div class="t">Flow انتقال</div><div class="d">کشف گیرنده، تأیید نام، کارمزد و رسید</div></div></div>
+    <div class="tli"><span class="m num">۳۰–۴۰</span><div class="c"><div class="t">Flow اشتراک/اکانت</div><div class="d">مقایسهٔ دو مدل · Trade-off قیمت، مالکیت، پایداری و پشتیبانی</div></div></div>
+    <div class="tli"><span class="m num">۴۰–۴۷</span><div class="c"><div class="t">Flow صندوق</div><div class="d">بساز، بعد <b>بخشی را برگردان</b> · بررسی حس Lock</div></div></div>
+    <div class="tli"><span class="m num">۴۷–۵۵</span><div class="c"><div class="t">Flow برداشت</div><div class="d">واکنش به کارمزد، زمان، شریک و احراز هویت</div></div></div>
+    <div class="tli"><span class="m num">۵۵–۶۰</span><div class="c"><div class="t">جمع‌بندی</div><div class="d">ارزش اصلی از زبان کاربر · مهم‌ترین مانع اعتماد · اولین Action واقعی · Continue یا Not-yet</div></div></div>
+  </div>
+  <div class="callout in" style="margin-top:14px">
+    <p>در جلسهٔ ۴۵ دقیقه‌ای: Flow صندوق کوتاه می‌شود و ترتیب اشتراک/برداشت بین افراد جابه‌جا می‌شود. <b>تبدیل و انتقال هرگز حذف نمی‌شوند.</b></p>
+  </div>
+</section>
+
+<!-- ══════ 26 · §6+7 ══════ -->
+<section class="slide" data-ch="WS0 · بخش ۶ و ۷">
+  <div class="eyebrow in">بخش ۶ و ۷</div>
+  <h2 class="in" style="margin-bottom:14px">چه چیزی به فازهای بعد پاس داده می‌شود</h2>
+  <div class="cards c4 in">
+    <div class="card"><div class="n">WS1 · تجربه</div><p style="margin-top:0">آیا موجودی و صندوق یک Mental Model واحد دارند؟ Moments of Truth کجاست؟</p></div>
+    <div class="card"><div class="n">WS2 · Blueprint</div><p style="margin-top:0">مسئول Quote، تأمین، تحویل و Refund کیست؟ در Failure چه Fallbackی هست؟</p></div>
+    <div class="card"><div class="n">WS3 · شرکا</div><p style="margin-top:0">چه Partnerهایی تبدیل، Custody و اکانت را پوشش می‌دهند؟ انتقال داخلی روی چه Ledgerی است؟</p></div>
+    <div class="card"><div class="n">WS4 · Gate</div><p style="margin-top:0">کدام Action باعث نگه‌داشتن Balance می‌شود؟ کارمزد قابل قبول چقدر است؟</p></div>
+  </div>
+  <div class="callout ok in" style="margin-top:18px">
+    <div class="k">Definition of Ready — شرط شروع ساخت</div>
+    <p>Frame دوگانه مورد توافق باشد · پنج Flow و ترتیبشان روشن باشد · Featureهای Show/Simulate/Out مشخص باشند · پنج فرضیه به Test Card وصل باشند · ۳ تا ۵ شرکت‌کننده قابل جذب باشند · <b>Baseline با شواهد قابل اصلاح بماند</b>.</p>
+  </div>
+</section>
+
+<!-- ══════ 27 · OPEN QUESTION ══════ -->
+<section class="slide" data-ch="فصل ۳ · تصمیم">
+  <div class="eyebrow in">سؤال بازِ تیم</div>
+  <h2 class="in" style="margin-bottom:6px">خرید اشتراک/اکانت بیاید یا نه؟</h2>
+  <p class="lead in" style="margin-bottom:16px">نظر من: <b style="color:var(--ok)">حتماً بیاید.</b> این تنها چیزی است که ثابت می‌کند ما اپ تتر نیستیم.</p>
+  <div class="cards c3 in">
+    <div class="card good"><div class="n" style="color:var(--ok)">دلیل ۱</div><h3>بدون آن، فرضیهٔ ۱ خودبه‌خود رد می‌شود</h3><p>اگر برداری، v0 می‌شود تبدیل + انتقال + صندوق + برداشت — یعنی دقیقاً یک صرافی با برچسب پس‌انداز.</p></div>
+    <div class="card good"><div class="n" style="color:var(--ok)">دلیل ۲</div><h3>ساده‌ترین و پرتکرارترین سناریوست</h3><p>خروجی جلسهٔ ایده‌پردازی هم همین را اول گذاشته: «پرتکرار و ساده».</p></div>
+    <div class="card good"><div class="n" style="color:var(--ok)">دلیل ۳</div><h3>ساختنش ارزان است</h3><p>برای پروتوتایپ کلیک‌پذیر هیچ Partner واقعی لازم نیست.</p></div>
+  </div>
+  <div class="callout in" style="margin-top:16px">
+    <div class="k">اما یک شرط</div>
+    <p><b>مارکت‌پلیس نسازیم.</b> جست‌وجو و ده‌ها سرویس نمی‌خواهیم؛ <b>یک دسته، سه سرویس</b> کافی است. چیزی که تست می‌شود مقایسهٔ <b>دو مدل</b> است: «روی حساب خودم» در برابر «اکانت آماده».</p>
+  </div>
+</section>
+
+<!-- ══════ 28 · NEXT ══════ -->
+<section class="slide" data-ch="فصل ۳ · تصمیم">
+  <div class="eyebrow in">قدم بعدی</div>
+  <h2 class="in" style="margin-bottom:14px">پروتوتایپ ساخته شده است</h2>
+  <div class="cards c2 in">
+    <div class="card lit"><div class="n">فایل جدید</div><h3>wallet-v0.html</h3>
+      <p>۲۲ صفحه · پنج Flow · مدل سه‌حالتهٔ موجودی · دو مدل اکانت · صندوق با بازگشت آنی · برداشت ریالی · و برای هر Flow یک مسیر خطا که از پنل تسهیل‌گر روشن می‌شود.</p></div>
+    <div class="card"><div class="n">دست‌نخورده</div><h3>پروتوتایپ قبلی</h3>
+      <p>نسخهٔ قبلی سر جایش است تا بتوانی هر دو را کنار هم ببینی.</p></div>
+  </div>
+  <div class="callout in" style="margin-top:18px">
+    <div class="k">یادت باشد</div>
+    <p>هر صفحه‌ای که می‌سازیم باید به یکی از آن <b>پنج فرضیه</b> وصل باشد. اگر صفحه‌ای به هیچ فرضیه‌ای وصل نیست، <b>نباید ساخته شود</b> — هر چقدر هم قشنگ باشد.</p>
+  </div>
+</section>
+
+</div>
+
+<nav class="rail" id="rail" aria-label="فهرست"></nav>
+<button class="totop" id="totop" aria-label="بازگشت به بالا"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+
+<script>
+/* Scroll-document navigation.
+   show(n) is kept because slides link to each other with it — here it scrolls
+   instead of switching. */
+const slides=[...document.querySelectorAll('.slide')];
+const rail=document.getElementById('rail');
+const prog=document.getElementById('prog');
+const chapEl=document.getElementById('chapter');
+const countEl=document.getElementById('counter');
+
+function show(n){
+  const s=slides[Math.max(0,Math.min(slides.length-1,n))];
+  if(s) s.scrollIntoView({behavior:'smooth',block:'start'});
+}
+/* one rail entry per chapter start, not per section */
+const chapters=[];
+slides.forEach((s,n)=>{
+  const ch=s.dataset.ch||'';
+  if(ch && (chapters.length===0 || chapters[chapters.length-1].ch!==ch)) chapters.push({ch,n,s});
+});
+rail.innerHTML=chapters.map(c=>
+  `<a href="#" data-n="${c.n}" title="${c.ch}"><i></i>${c.ch}</a>`).join('');
+rail.querySelectorAll('a').forEach(a=>a.onclick=e=>{e.preventDefault();show(+a.dataset.n)});
+
+const totop=document.getElementById('totop');
+totop.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+
+/* progress + which chapter am I in */
+let ticking=false;
+function onScroll(){
+  if(ticking) return; ticking=true;
+  requestAnimationFrame(()=>{
+    const y=scrollY, h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(h>0?Math.min(100,y/h*100):0)+'%';
+    totop.classList.toggle('on',y>600);
+    let cur=slides[0], idx=0;
+    slides.forEach((s,n)=>{ if(s.getBoundingClientRect().top<=innerHeight*0.34){cur=s;idx=n} });
+    chapEl.textContent=cur.dataset.ch||'';
+    countEl.textContent=(idx+1)+' / '+slides.length;
+    let ci=-1; chapters.forEach((c,k)=>{ if(c.n<=idx) ci=k });
+    rail.querySelectorAll('a').forEach((a,k)=>a.setAttribute('aria-current',k===ci));
+    ticking=false;
+  });
+}
+addEventListener('scroll',onScroll,{passive:true});
+addEventListener('resize',onScroll);
+onScroll();
+</script>
+</body>
+</html>

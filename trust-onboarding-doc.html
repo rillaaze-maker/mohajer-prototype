@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مهاجر · از کارگاه اعتماد تا پروتوتایپ</title>
+<meta name="theme-color" content="#0B0D10">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" href="./icons/icon-192.png">
+<style>
+@font-face{font-family:Dana;src:url('./fonts/Dana-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-DemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-ExtraBold.woff2') format('woff2');font-weight:800;font-display:swap}
+
+
+:root{
+  --f:Dana,system-ui,sans-serif;
+  --gold:#D5A45C;--ok:#3FBF8F;--bad:#E0705A;--warn:#D98A52;--blue:#6FA8DC;--vio:#A98BD0;
+  --w1:#fff;--w2:rgba(255,255,255,.68);--w3:rgba(255,255,255,.42);
+  --surf:rgba(255,255,255,.055);--surf2:rgba(255,255,255,.10);--brd:rgba(255,255,255,.11);
+  --spring:cubic-bezier(.16,1,.3,1);--swift:cubic-bezier(.4,0,.2,1);
+  --W:900px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--f);color:var(--w1);background:#0B0D10;-webkit-font-smoothing:antialiased;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(900px 600px at 80% -10%,rgba(213,164,92,.13),transparent 62%),
+             radial-gradient(700px 500px at 5% 110%,rgba(63,191,143,.06),transparent 60%),
+             linear-gradient(168deg,#1A1F26,#0B0D10 55%,#12161B)}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.en{direction:ltr;unicode-bidi:isolate;display:inline-block}
+
+.deck{position:fixed;inset:0;z-index:1}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:66px 5.5vw 78px;opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateY(16px);transition:opacity .38s var(--swift),transform .58s var(--spring),visibility .58s;
+  overflow-y:auto;overscroll-behavior:contain;align-items:flex-start}
+.slide::-webkit-scrollbar{display:none}
+.slide.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.slide>*{width:100%;max-width:var(--W);flex:none}
+.slide .in{opacity:0;transform:translateY(14px);transition:opacity .48s var(--swift),transform .64s var(--spring)}
+.slide.on .in{opacity:1;transform:none}
+.slide.on .in:nth-child(1){transition-delay:.05s}.slide.on .in:nth-child(2){transition-delay:.11s}
+.slide.on .in:nth-child(3){transition-delay:.17s}.slide.on .in:nth-child(4){transition-delay:.23s}
+.slide.on .in:nth-child(5){transition-delay:.29s}.slide.on .in:nth-child(6){transition-delay:.35s}
+
+.eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.14em;color:var(--gold);margin-bottom:15px}
+h1{font-size:clamp(27px,4.8vw,52px);font-weight:700;letter-spacing:-.035em;line-height:1.16}
+h2{font-size:clamp(20px,3vw,32px);font-weight:600;letter-spacing:-.028em;line-height:1.32;margin-bottom:6px}
+.lead{font-size:clamp(13px,1.45vw,15.5px);color:var(--w2);max-width:58ch;margin-top:11px}
+.sub{font-size:clamp(11.5px,1.25vw,13.5px);color:var(--w3);margin-top:10px}
+.hero-line{font-size:clamp(19px,3vw,32px);font-weight:600;letter-spacing:-.026em;line-height:1.5;max-width:26ch}
+.hero-line b{color:var(--gold);font-weight:700}
+b{font-weight:600}
+
+.pill{display:inline-flex;align-items:center;gap:7px;background:var(--surf2);border-radius:99px;padding:6px 13px;font-size:11.5px;color:var(--w2);font-weight:500}
+.pill .d{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+
+.cards{display:grid;gap:10px}
+.c2{grid-template-columns:repeat(2,1fr)}.c3{grid-template-columns:repeat(3,1fr)}
+.c4{grid-template-columns:repeat(4,1fr)}.c5{grid-template-columns:repeat(5,1fr)}
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:15px;padding:16px}
+.card .n{font-size:10px;font-weight:700;letter-spacing:.11em;color:var(--gold);margin-bottom:9px}
+.card h3{font-size:clamp(13.5px,1.6vw,16px);font-weight:600;letter-spacing:-.018em;line-height:1.4}
+.card p{font-size:12px;color:var(--w3);line-height:1.6;margin-top:6px}
+.card.lit{background:linear-gradient(160deg,rgba(213,164,92,.15),rgba(213,164,92,.03));border-color:rgba(213,164,92,.3)}
+.card.good{border-color:rgba(63,191,143,.32);background:linear-gradient(160deg,rgba(63,191,143,.10),transparent)}
+.card.bad{border-color:rgba(224,112,90,.30);background:linear-gradient(160deg,rgba(224,112,90,.09),transparent)}
+
+.steps{display:flex;flex-direction:column}
+.st{display:flex;gap:13px;padding:8px 0;border-bottom:1px solid var(--brd);align-items:flex-start}
+.st:last-child{border-bottom:none}
+.st .i{font-size:11px;font-weight:700;color:var(--gold);flex:none;width:26px;line-height:1.75;padding-top:1px}
+.st .c{flex:1;min-width:0}
+.st .hd{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.st .t{font-size:clamp(13.5px,1.6vw,16px);font-weight:600;letter-spacing:-.018em;line-height:1.4}
+.st .d{font-size:12px;color:var(--w3);line-height:1.6;margin-top:3px}
+.tag{font-size:9.5px;font-weight:600;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.09);color:var(--w3);flex:none;line-height:1.5}
+.tag.g{background:rgba(63,191,143,.16);color:var(--ok)}
+.tag.y{background:rgba(213,164,92,.16);color:var(--gold)}
+.tag.r{background:rgba(224,112,90,.15);color:var(--bad)}
+.tag.b{background:rgba(111,168,220,.15);color:var(--blue)}
+.tag.v{background:rgba(169,139,208,.16);color:var(--vio)}
+
+.toc{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.toc button{background:var(--surf);border:1px solid var(--brd);border-radius:15px;padding:16px;
+  cursor:pointer;font-family:inherit;text-align:start;color:#fff;transition:.24s var(--spring)}
+.toc button:hover{border-color:var(--gold);transform:translateY(-3px)}
+.toc .k{font-size:9.5px;font-weight:700;letter-spacing:.11em;color:var(--gold)}
+.toc .t{font-size:14.5px;font-weight:600;margin-top:7px;letter-spacing:-.02em}
+.toc .d{font-size:11.5px;color:var(--w3);margin-top:5px;line-height:1.5}
+
+.vs2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.vsx{border-radius:15px;padding:18px;border:1px solid var(--brd)}
+.vsx.no{background:linear-gradient(160deg,rgba(224,112,90,.10),transparent);border-color:rgba(224,112,90,.3)}
+.vsx.yes{background:linear-gradient(160deg,rgba(63,191,143,.11),transparent);border-color:rgba(63,191,143,.33)}
+.vsx .h{font-size:10px;font-weight:700;letter-spacing:.11em;margin-bottom:11px}
+.vsx.no .h{color:var(--bad)}.vsx.yes .h{color:var(--ok)}
+.vsx .big{font-size:clamp(14px,1.8vw,18px);font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1.65}
+.vsx p{font-size:12.5px;line-height:1.7;color:var(--w2);margin-top:9px}
+
+/* chain */
+.chain{display:flex;align-items:stretch;gap:6px;flex-wrap:wrap}
+.ch{flex:1;min-width:96px;background:var(--surf);border:1px solid var(--brd);border-radius:13px;padding:12px 10px;text-align:center}
+.ch .k{font-size:9.5px;font-weight:700;color:var(--gold);letter-spacing:.09em}
+.ch .t{font-size:12px;font-weight:600;margin-top:6px;line-height:1.35}
+.ch.done{opacity:.55}
+.ch.now{border-color:var(--gold);background:linear-gradient(160deg,rgba(213,164,92,.16),transparent);opacity:1}
+
+/* barrier / mechanism grid */
+.bx{background:var(--surf);border:1px solid var(--brd);border-radius:14px;padding:14px}
+.bx .code{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.1em}
+.bx .t{font-size:13.5px;font-weight:600;margin-top:6px;letter-spacing:-.015em}
+.bx .q{font-size:11.5px;color:var(--w3);margin-top:6px;line-height:1.55;font-style:italic}
+.bx.core{border-color:rgba(213,164,92,.4);background:linear-gradient(160deg,rgba(213,164,92,.15),transparent)}
+
+/* role strip */
+.roles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.role{border-radius:15px;padding:16px;border:1px solid var(--brd);background:var(--surf)}
+.role .r{font-size:9.5px;font-weight:700;letter-spacing:.12em;margin-bottom:8px}
+.role.core{border-color:rgba(213,164,92,.42);background:linear-gradient(160deg,rgba(213,164,92,.17),transparent)}
+.role.core .r{color:var(--gold)}
+.role.entry{border-color:rgba(63,191,143,.34)}.role.entry .r{color:var(--ok)}
+.role.cred{border-color:rgba(111,168,220,.3)}.role.cred .r{color:var(--blue)}
+.role.safe{border-color:rgba(169,139,208,.3)}.role.safe .r{color:var(--vio)}
+.role .t{font-size:14.5px;font-weight:600;letter-spacing:-.02em}
+.role .d{font-size:11.5px;color:var(--w3);margin-top:6px;line-height:1.55}
+
+/* variant table */
+.vt{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.vcard{border-radius:16px;padding:17px;border:1px solid var(--brd);background:var(--surf)}
+.vcard .code{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--w3)}
+.vcard.p1{border-color:rgba(213,164,92,.4);background:linear-gradient(160deg,rgba(213,164,92,.14),transparent)}
+.vcard.p1 .code{color:var(--gold)}
+.vcard.p2{border-color:rgba(63,191,143,.33);background:linear-gradient(160deg,rgba(63,191,143,.1),transparent)}
+.vcard.p2 .code{color:var(--ok)}
+.vcard .t{font-size:16px;font-weight:600;margin-top:7px;letter-spacing:-.02em}
+.vcard ul{list-style:none;margin-top:10px}
+.vcard li{font-size:11.5px;color:var(--w2);line-height:1.55;padding:3px 0;display:flex;gap:7px}
+.vcard li::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--w3);flex:none;margin-top:7px}
+
+/* moments */
+.moments{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.mo{background:var(--surf);border:1px solid var(--brd);border-radius:14px;padding:14px 11px;text-align:center}
+.mo .n{font-size:9.5px;font-weight:700;color:var(--gold);letter-spacing:.09em}
+.mo .t{font-size:12.5px;font-weight:600;margin-top:7px;line-height:1.35}
+.mo .q{font-size:10.5px;color:var(--w3);margin-top:5px;line-height:1.45}
+
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 0}
+.chk .b{width:18px;height:18px;border-radius:6px;background:rgba(63,191,143,.16);color:var(--ok);
+  display:grid;place-items:center;font-size:10px;flex:none;margin-top:2px;font-weight:700}
+.chk.x .b{background:rgba(224,112,90,.15);color:var(--bad)}
+.chk.q .b{background:rgba(213,164,92,.16);color:var(--gold)}
+.chk .t{font-size:13px;color:var(--w2);line-height:1.6}
+.chk .t b{color:#fff}
+
+.quote{background:var(--surf);border-inline-start:2.5px solid var(--gold);border-radius:0 14px 14px 0;padding:15px 17px}
+.quote p{font-size:14px;color:var(--w1);line-height:1.85}
+.quote .who{font-size:11px;color:var(--w3);margin-top:8px}
+
+.callout{background:linear-gradient(150deg,rgba(213,164,92,.13),rgba(213,164,92,.02));
+  border:1px solid rgba(213,164,92,.28);border-radius:17px;padding:18px}
+.callout .k{font-size:10px;font-weight:700;letter-spacing:.11em;color:var(--gold);margin-bottom:9px}
+.callout p{font-size:13px;color:var(--w2);line-height:1.75}
+.callout p+p{margin-top:8px}
+.callout b{color:#fff}
+.callout.ok{background:linear-gradient(150deg,rgba(63,191,143,.12),transparent);border-color:rgba(63,191,143,.3)}
+.callout.ok .k{color:var(--ok)}
+.callout.warn{background:linear-gradient(150deg,rgba(224,112,90,.10),transparent);border-color:rgba(224,112,90,.28)}
+.callout.warn .k{color:var(--bad)}
+
+.bar{position:fixed;bottom:0;inset-inline:0;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 5.5vw;z-index:10;gap:14px}
+.dots-nav{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.dots-nav button{width:6px;height:6px;border-radius:50%;border:none;background:rgba(255,255,255,.18);cursor:pointer;padding:0;transition:.3s var(--spring)}
+.dots-nav button[aria-current=true]{background:var(--gold);width:18px;border-radius:99px}
+.dots-nav .gap{width:9px}
+.arrows{display:flex;gap:8px;flex:none}
+.arrows button{width:38px;height:38px;border-radius:50%;border:1px solid var(--brd);background:var(--surf);cursor:pointer;display:grid;place-items:center;transition:.24s var(--spring)}
+.arrows button:hover:not(:disabled){background:#fff}
+.arrows button:hover:not(:disabled) svg{stroke:#0B0D10}
+.arrows button:disabled{opacity:.25;cursor:default}
+.arrows svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s;transform:scaleX(-1)}
+.brandbar{position:fixed;top:0;inset-inline:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 5.5vw;z-index:10;font-size:12px;color:var(--w3);gap:12px}
+.brandbar .lg{display:flex;align-items:center;gap:9px;color:#fff;font-weight:600;font-size:14.5px;flex:none;cursor:pointer}
+.brandbar .mk{width:25px;height:25px;border-radius:8px;background:rgba(255,255,255,.10);display:grid;place-items:center}
+.brandbar .ch2{flex:1;text-align:center;color:var(--gold);font-weight:600;font-size:11px;letter-spacing:.07em}
+.prog{position:fixed;top:0;inset-inline-start:0;height:2px;background:var(--gold);z-index:11;transition:width .5s var(--spring)}
+
+@media(max-width:900px){
+  .c3,.c2,.c4,.c5,.vs2,.toc,.vt{grid-template-columns:1fr}
+  .roles,.moments{grid-template-columns:repeat(2,1fr)}
+  .slide{justify-content:flex-start;padding-top:78px}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL-DOCUMENT MODE
+   The team reads these as reference, not as a talk: one continuous
+   page, whole big picture reachable by scrolling, chapter rail on
+   the side. Everything below overrides the deck layout above.
+   ═══════════════════════════════════════════════════════════════ */
+html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:visible;
+  position:static;scroll-behavior:smooth}
+.deck{position:static;inset:auto}
+.slide{position:static;inset:auto;opacity:1;visibility:visible;pointer-events:auto;
+  transform:none;overflow:visible;min-height:0;justify-content:flex-start;
+  padding:54px 6vw;scroll-margin-top:74px;
+  border-top:1px solid rgba(255,255,255,.07)}
+.slide:first-child{border-top:0;padding-top:104px;min-height:72vh;justify-content:center}
+.slide[data-ch]:not([data-ch=""])::before{
+  content:attr(data-ch);display:block;font-size:10.5px;font-weight:600;
+  letter-spacing:.14em;color:var(--gold);opacity:.75;margin-bottom:22px}
+/* No reveal animation in document mode. This is a reference the team scans and
+   prints, so every line is visible the moment it is on screen — nothing depends
+   on a transition having run. */
+.slide .in,.slide.on .in{opacity:1!important;transform:none!important;transition:none!important}
+
+.prog{position:fixed;top:0;z-index:20}
+.brandbar{background:rgba(11,13,16,.86);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.06)}
+.bar{display:none}
+
+/* chapter rail — the table of contents, always on screen */
+.rail{position:fixed;top:50%;transform:translateY(-50%);inset-inline-end:16px;z-index:15;
+  display:flex;flex-direction:column;gap:2px;max-height:76vh;overflow:auto;
+  padding:10px 8px;border-radius:14px;background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(12px)}
+.rail::-webkit-scrollbar{display:none}
+.rail a{display:flex;align-items:center;gap:9px;padding:6px 9px;border-radius:9px;
+  font-size:11.5px;color:var(--w3);text-decoration:none;white-space:nowrap;
+  transition:.2s var(--swift);max-width:190px;overflow:hidden;text-overflow:ellipsis}
+.rail a i{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.45;flex:none}
+.rail a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.rail a[aria-current=true]{color:var(--gold);background:rgba(213,164,92,.12)}
+.rail a[aria-current=true] i{opacity:1}
+@media(max-width:1180px){.rail{display:none}}
+
+/* back-to-top */
+.totop{position:fixed;inset-inline-start:18px;bottom:18px;z-index:15;width:42px;height:42px;
+  border-radius:50%;border:1px solid rgba(255,255,255,.1);background:rgba(20,24,29,.9);
+  backdrop-filter:blur(10px);color:var(--w2);display:grid;place-items:center;cursor:pointer;
+  opacity:0;pointer-events:none;transition:.25s var(--swift)}
+.totop.on{opacity:1;pointer-events:auto}
+.totop svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+@media print{.rail,.totop,.brandbar,.prog{display:none}
+  .slide{page-break-inside:avoid;padding:24px 0}
+  .slide .in{opacity:1;transform:none}}
+
+</style>
+</head>
+<body>
+
+<div class="prog" id="prog"></div>
+<div class="brandbar">
+  <div class="lg" onclick="show(1)"><div class="mk"><svg viewBox="0 0 49.33 39.99" width="14" height="14" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></div>مهاجر</div>
+  <div class="ch2" id="chapter"></div>
+  <div class="num" id="counter" style="flex:none">1 / 22</div>
+</div>
+
+<div class="deck" id="deck">
+
+<!-- 1 -->
+<section class="slide on" data-ch="">
+  <div class="in"><div class="pill"><span class="d"></span>خروجی کارگاه اعتماد · نسخهٔ ۲</div></div>
+  <h1 class="in" style="margin-top:18px">اولین پول</h1>
+  <p class="lead in">تیم خروجی کارگاه را تحویل داد. این بار فقط ایده نیست — یک زنجیرهٔ کامل از مانع تا فرضیه تا پیشنهاد پروتوتایپ است، و <b style="color:#fff">دامنهٔ پروتوتایپ را عوض می‌کند</b>.</p>
+  <div class="sub in">یک صفحه، از بالا به پایین · فهرست فصل‌ها کنارِ صفحه است</div>
+</section>
+
+<!-- 2 · CONTENTS -->
+<section class="slide" data-ch="فهرست">
+  <div class="eyebrow in">فهرست</div>
+  <h2 class="in" style="margin-bottom:15px">شش فصل</h2>
+  <div class="toc in">
+    <button onclick="show(2)"><div class="k">فصل ۱ · ۲ صفحه</div><div class="t">سؤال عوض شد</div><div class="d">دیگر «اعتماد» کلی نیست؛ First Funding است.</div></button>
+    <button onclick="show(4)"><div class="k">فصل ۲ · ۳ صفحه</div><div class="t">کجا می‌شکند</div><div class="d">Cold Read و شش مانع مشخص.</div></button>
+    <button onclick="show(7)"><div class="k">فصل ۳ · ۲ صفحه</div><div class="t">از ایده به مکانیزم</div><div class="d">شش مکانیزم، و چیزی که مکانیزم نیست.</div></button>
+    <button onclick="show(9)"><div class="k">فصل ۴ · ۳ صفحه</div><div class="t">چهار کانسپت و همگرایی</div><div class="d">جهت کاری: Control-led Progressive Trust.</div></button>
+    <button onclick="show(12)"><div class="k">فصل ۵ · ۶ صفحه</div><div class="t">برای پروتوتایپ</div><div class="d">Core Flow، سه Variant، دو Module، پنج لحظه.</div></button>
+    <button onclick="show(18)"><div class="k">فصل ۶ · ۴ صفحه</div><div class="t">یادگیری</div><div class="d">چه چیزی را ثبت کنیم و خروجی چه باشد.</div></button>
+  </div>
+  <div class="callout in" style="margin-top:18px">
+    <p>اگر وقت ندارید: <b>فصل ۵</b>. آنجاست که سند دقیقاً می‌گوید چه چیزی ساخته شود.</p>
+  </div>
+</section>
+
+<!-- 3 · THE QUESTION -->
+<section class="slide" data-ch="فصل ۱ · سؤال">
+  <div class="eyebrow in">سؤال محوری کارگاه</div>
+  <div class="hero-line in">چطور کاربری که مهاجر را<br>هنوز نمی‌شناسد، حاضر می‌شود<br><b>اولین پول واقعی‌اش</b> را وارد کند؟</div>
+  <p class="lead in" style="margin-top:18px">اسم این مسئله در پروژه: <b style="color:#fff" class="en">First Funding Trust</b>.</p>
+  <div class="callout warn in" style="margin-top:16px">
+    <div class="k">این دامنهٔ پروتوتایپ را عوض می‌کند</div>
+    <p>سند WS0 پنج Flow را تست می‌کرد: تبدیل، انتقال، اشتراک، شاخه، برداشت. این سند می‌گوید سؤال پروتوتایپ بعدی <b>فقط یک چیز</b> است: چرا کاربر اولین بار پول می‌گذارد؟</p>
+    <p>یعنی چیزهایی مثل اشتراک و اکانت، صندوق هدف و اکوسیستم انتقال، فعلاً <b>لازم نیست پروتوتایپ شوند</b>. سند خودش این را در بخش ۱۵ نوشته است.</p>
+  </div>
+</section>
+
+<!-- 4 · THE CHAIN -->
+<section class="slide" data-ch="فصل ۱ · سؤال">
+  <div class="eyebrow in">قانون طلایی این سند</div>
+  <h2 class="in" style="margin-bottom:14px">Idea ← Feature ممنوع</h2>
+  <div class="vs2 in">
+    <div class="vsx no"><div class="h">اگر مستقیم می‌رفتیم سراغ فیچر</div>
+      <div class="big">محصول شلوغ می‌شد</div>
+      <p>دفتر فیزیکی، بانک، Face ID، هدیه، VIP Support، Glass Box، Referral — همه در یک سطح ریخته می‌شدند توی Backlog.</p></div>
+    <div class="vsx yes"><div class="h">کاری که تیم کرد</div>
+      <div class="big">از ایده به منطقِ اعتماد رفت</div>
+      <p>اول Evidence از Idea جدا شد؛ بعد Mechanism، بعد Concept، بعد Hypothesis. پروتوتایپ فقط چیزی را تست می‌کند که سؤال مشخص دارد.</p></div>
+  </div>
+  <div class="chain in" style="margin-top:18px">
+    <div class="ch done"><div class="k">۰۱</div><div class="t">Evidence<br>vs Ideas</div></div>
+    <div class="ch done"><div class="k">۰۲</div><div class="t">Trust<br>Mechanisms</div></div>
+    <div class="ch done"><div class="k">۰۳</div><div class="t">Trust<br>Concepts</div></div>
+    <div class="ch done"><div class="k">۰۴</div><div class="t">Convergence</div></div>
+    <div class="ch now"><div class="k">۰۵</div><div class="t">Prototype<br>Variants</div></div>
+    <div class="ch done"><div class="k">۰۶</div><div class="t">Validation</div></div>
+    <div class="ch done"><div class="k">۰۷</div><div class="t">Trust<br>Architecture v1</div></div>
+  </div>
+  <div class="sub in" style="margin-top:12px">مرحلهٔ ۵ کارِ ماست. مرحلهٔ ۷ فقط بعد از شواهد کاربر ساخته می‌شود.</div>
+</section>
+
+<!-- 5 · COLD READ -->
+<section class="slide" data-ch="فصل ۲ · کجا می‌شکند">
+  <div class="eyebrow in">Cold Read · قبل از هر ایده‌ای</div>
+  <h2 class="in" style="margin-bottom:6px">اول پرسیدند «چه چیزی جلویت را می‌گیرد؟»</h2>
+  <div class="quote in" style="margin:14px 0">
+    <p>«یک سرویس جدید می‌گوید ریالت را وارد کن و به موجودی دلاری تبدیلش کن. چه چیزی باعث می‌شود پولت را واریز <b>نکنی</b>؟»</p>
+    <div class="who">سؤال Cold Read، پیش از شروع ایده‌پردازی</div>
+  </div>
+  <p class="lead in">این ترتیب مهم است. اگر اول ایده بگیری، جواب‌ها راه‌حل‌اند. اگر اول این را بپرسی، جواب‌ها <b style="color:#fff">مانع</b> هستند — و مانع، چیزی است که واقعاً وجود دارد.</p>
+  <div class="callout ok in" style="margin-top:16px">
+    <div class="k">تفاوت مانع و ایده</div>
+    <p>«دفتر فیزیکی داشته باشیم» یک ایده است. «نمی‌دانم اگر مشکلی پیش بیاید با چه کسی طرفم» یک مانع است. از یک مانع، ده ایده درمی‌آید؛ از یک ایده، هیچ مانعی درنمی‌آید.</p>
+  </div>
+</section>
+
+<!-- 6 · SIX BARRIERS -->
+<section class="slide" data-ch="فصل ۲ · کجا می‌شکند">
+  <div class="eyebrow in">خروجی Cold Read</div>
+  <h2 class="in" style="margin-bottom:14px">«اعتماد» شکسته شد به شش مانع مشخص</h2>
+  <div class="cards c3 in">
+    <div class="bx"><div class="code">B1</div><div class="t">واقعی بودن دارایی</div><div class="q">«این دلار واقعاً وجود دارد یا فقط عددی روی صفحه است؟»</div></div>
+    <div class="bx"><div class="code">B2</div><div class="t">ریسک بلوکه‌شدن</div><div class="q">«اگر Partner یا تحریم مشکل بسازد، پولم گیر نمی‌کند؟»</div></div>
+    <div class="bx"><div class="code">B3</div><div class="t">خروج و نقدشوندگی</div><div class="q">«هر وقت بخواهم می‌توانم خارج شوم؟»</div></div>
+    <div class="bx"><div class="code">B4</div><div class="t">شفافیت هزینه</div><div class="q">«آخرش دقیقاً چقدر هزینه می‌دهم؟»</div></div>
+    <div class="bx core"><div class="code">B5 · عمیق‌ترین</div><div class="t">از دست دادن کنترل</div><div class="q">«بعد از ورود پول، اختیار هنوز دست خودم است؟»</div></div>
+    <div class="bx"><div class="code">B6</div><div class="t">مشروعیت قبل از تجربه</div><div class="q">«چرا اصلاً قبل از تجربه شما را جدی بگیرم؟»</div></div>
+  </div>
+</section>
+
+<!-- 7 · DEEPEST INSIGHT -->
+<section class="slide" data-ch="فصل ۲ · کجا می‌شکند">
+  <div class="eyebrow in">عمیق‌ترین برداشت جلسه</div>
+  <div class="hero-line in">مسئله فقط ترس از <b>کلاهبرداری</b> نیست.</div>
+  <p class="lead in" style="margin-top:16px;font-size:clamp(14px,1.7vw,18px);color:#fff">کاربر نمی‌خواهد <b style="color:var(--gold)">اختیار</b> دارایی‌اش را به یک سیستم ناشناخته واگذار کند.</p>
+  <div class="callout in" style="margin-top:20px">
+    <div class="k">چرا این مهم است</div>
+    <p>اگر مسئله فقط کلاهبرداری بود، جوابش «اعتبار بیشتر» بود: بانک، مجوز، تبلیغ. اما اگر مسئله <b>از دست دادن اختیار</b> است، اعتبار بیشتر آن را حل نمی‌کند — فقط تجربه‌ای که اختیار را نشان بدهد حلش می‌کند.</p>
+    <p>به همین دلیل تیم <b>Control</b> را به‌عنوان فرضیهٔ هسته انتخاب کرد، نه Institutional Anchor را.</p>
+  </div>
+  <div class="callout ok in" style="margin-top:12px">
+    <p>یک نکتهٔ جانبی از جلسه: اعتماد به بلوبانک از راه بانک سامان ساخته شد. یعنی <b class="en">Borrowed Trust</b> در شروع رابطه واقعاً کار می‌کند — ولی تیم آن را لایهٔ اعتبار گذاشت، نه هسته.</p>
+  </div>
+</section>
+
+<!-- 8 · MECHANISMS -->
+<section class="slide" data-ch="فصل ۳ · مکانیزم">
+  <div class="eyebrow in">مرحلهٔ دوم سنتز</div>
+  <h2 class="in" style="margin-bottom:14px">شش مکانیزم — منطقِ ساختِ اعتماد</h2>
+  <div class="cards c3 in">
+    <div class="bx"><div class="code">M1</div><div class="t">لنگر نهادی</div><div class="q">بانک، صرافی، Partner، دفتر، تأیید معتبر</div></div>
+    <div class="bx"><div class="code">M2</div><div class="t">اثباتِ دیدنی</div><div class="q">Glass Box، رسید، سابقه، مسیر پول</div></div>
+    <div class="bx core"><div class="code">M3 · هسته</div><div class="t">کنترل و بازگشت‌پذیری</div><div class="q">Exit، Status، Available/Pending، Fee</div></div>
+    <div class="bx"><div class="code">M4</div><div class="t">تعهد پلکانی</div><div class="q">مبلغ خرد، Trial، یک Cycle کوچک</div></div>
+    <div class="bx"><div class="code">M5</div><div class="t">تور ایمنی انسانی</div><div class="q">Referral، پشتیبان، مالکِ مشخصِ مسئله</div></div>
+    <div class="bx"><div class="code">M6</div><div class="t">صلاحیت و اعتبار بازار</div><div class="q">محتوا، تحلیل، Review، Honest Flaw</div></div>
+  </div>
+  <div class="callout warn in" style="margin-top:16px">
+    <div class="k">چیزی که مکانیزم اعتماد نیست</div>
+    <p><b>Face ID و 2FA</b> استراتژی اعتماد نیستند — <b class="en">Hygiene Factor</b> هستند. باید باشند، ولی نبودشان مشکل می‌سازد و بودشان مزیت نمی‌سازد. اینها را با Trust Strategy قاطی نکنیم.</p>
+  </div>
+</section>
+
+<!-- 9 · STICKY TO MECHANISM -->
+<section class="slide" data-ch="فصل ۳ · مکانیزم">
+  <div class="eyebrow in">چرا این مرحله جلسه را نجات داد</div>
+  <h2 class="in" style="margin-bottom:14px">چند ایدهٔ متفاوت، یک سؤال واحد بودند</h2>
+  <div class="cards c4 in" style="margin-bottom:14px">
+    <div class="card"><h3>تراکنش ۱ دلاری</h3></div>
+    <div class="card"><h3>هدیهٔ اولیه</h3></div>
+    <div class="card"><h3>حذف حداقل مبلغ</h3></div>
+    <div class="card"><h3>تجربهٔ کامل و خروج</h3></div>
+  </div>
+  <div class="callout in">
+    <div class="k">↓ همه در واقع یک چیز می‌پرسیدند</div>
+    <p style="font-size:15px;color:#fff"><b class="en">M4 · Progressive Commitment</b> — «قبل از ریسک جدی، می‌توانم خیلی کوچک امتحان کنم؟»</p>
+    <p>به‌جای انتخاب یکی از Stickyها، منطق مشترکشان نگه داشته شد. شکل ظاهری‌اش (هدیه؟ مبلغ خرد؟) بعداً می‌تواند عوض شود — سؤال ثابت می‌ماند.</p>
+  </div>
+  <div class="callout ok in" style="margin-top:12px">
+    <p>این کار جلوی تبدیل‌شدن جلسه به یک <b>Backlog فیچر</b> را گرفت. برای ما مهم است چون همان اشتباهی است که در جلسهٔ قبلی نزدیک بود بکنیم.</p>
+  </div>
+</section>
+
+<!-- 10 · FOUR CONCEPTS -->
+<section class="slide" data-ch="فصل ۴ · کانسپت">
+  <div class="eyebrow in">مرحلهٔ سوم سنتز</div>
+  <h2 class="in" style="margin-bottom:6px">چهار پاسخ منسجم به یک سؤال</h2>
+  <p class="lead in" style="margin-bottom:14px">هر کانسپت یک راه کامل برای جواب دادن به «چرا اولین پول را وارد کنم؟» است — نه یک فیچر.</p>
+  <div class="cards c2 in">
+    <div class="card good"><div class="n" style="color:var(--ok)">کانسپت ۱ · <span class="en">Proof Before Money</span></div>
+      <h3>«اول خودت امتحان کن، بعد پول جدی بسپار.»</h3>
+      <p>M4 + M2 · تجربهٔ خود کاربر لنگر است. ریسک: اعتماد به مبلغ خرد لزوماً به مبلغ بزرگ منتقل نمی‌شود.</p></div>
+    <div class="card"><div class="n" style="color:var(--blue)">کانسپت ۲ · <span class="en">Backed &amp; Traceable</span></div>
+      <h3>«بدان پولت کجا می‌رود و چه کسی پشتش ایستاده.»</h3>
+      <p>M1 + M2 + M6 · Partner، مسیر پول، مسئولیت. ریسک: وابستگی بالا به Partner واقعی.</p></div>
+    <div class="card lit"><div class="n">کانسپت ۳ · <span class="en">Control Stays With You</span></div>
+      <h3>«پولت را وارد می‌کنی، نه اختیارت را.»</h3>
+      <p>M3 · Exit قبل از ورود، Available/Pending، Fee و Failure دیدنی. فرضیهٔ عمیق: Loss of Control شاید مانع اصلی باشد.</p></div>
+    <div class="card"><div class="n" style="color:var(--vio)">کانسپت ۴ · <span class="en">Human Trust Bridge</span></div>
+      <h3>«در اولین تصمیم مالی مهم، تنها با یک اپ طرف نیستی.»</h3>
+      <p>M5 · انسان مسئولِ نام‌دار در لحظهٔ تردید. ریسک: Cost-to-Serve و وابستگی دائمی.</p></div>
+  </div>
+</section>
+
+<!-- 11 · CONVERGENCE -->
+<section class="slide" data-ch="فصل ۴ · کانسپت">
+  <div class="eyebrow in">مرحلهٔ چهارم · همگرایی</div>
+  <h2 class="in" style="margin-bottom:6px">رأی‌گیری نکردند — به هرکدام نقش دادند</h2>
+  <p class="lead in" style="margin-bottom:14px">این ظریف‌ترین تصمیم سند است. چهار کانسپت رقیب هم نیستند؛ لایه‌های یک معماری‌اند.</p>
+  <div class="roles in">
+    <div class="role core"><div class="r">CORE · هسته</div><div class="t">Control</div><div class="d">کاربر بعد از Funding هنوز اختیار، دید و مسیر خروج دارد.</div></div>
+    <div class="role entry"><div class="r">ENTRY · ورود</div><div class="t">Progressive Trial</div><div class="d">راه اثبات وعده: اول کوچک تجربه کن.</div></div>
+    <div class="role cred"><div class="r">CREDIBILITY · اعتبار</div><div class="t">Institutional Proof</div><div class="d">جواب «شما کی هستید؟» با Partner و مسئولیت.</div></div>
+    <div class="role safe"><div class="r">SAFETY · تور ایمنی</div><div class="t">Human Layer</div><div class="d">در تردید و خطا، یک آدم واقعی هست.</div></div>
+  </div>
+  <div class="callout in" style="margin-top:16px">
+    <div class="k">جهت کاری فعلی</div>
+    <p style="font-size:16px;color:#fff"><b class="en">Control-led Progressive Trust</b></p>
+    <p>یک <b>Working Hypothesis</b> است، نه نتیجهٔ قطعی. سند صریح می‌گوید باید اجازه داشته باشد با شواهد تغییر کند.</p>
+  </div>
+</section>
+
+<!-- 12 · ONE SENTENCE -->
+<section class="slide" data-ch="فصل ۴ · کانسپت">
+  <div class="eyebrow in">کل استراتژی در یک خط</div>
+  <div class="in" style="font-size:clamp(17px,2.6vw,29px);font-weight:600;letter-spacing:-.025em;line-height:1.85;color:#fff">
+    <span style="color:var(--gold)">Show me</span> →
+    <span style="color:var(--ok)">Let me try</span> →
+    <span style="color:var(--gold)">Let me exit</span> →
+    <span style="color:var(--blue)">Show me who's behind it</span> →
+    <span style="color:var(--vio)">Be there if it fails</span>
+  </div>
+  <div class="cards c5 in" style="margin-top:26px">
+    <div class="card"><h3>نشانم بده</h3><p>قبل از پول، بفهمم چه خبر است</p></div>
+    <div class="card good"><h3>بگذار امتحان کنم</h3><p>با ریسک نزدیک صفر</p></div>
+    <div class="card lit"><h3>بگذار خارج شوم</h3><p>و این را قبل از ورود ببینم</p></div>
+    <div class="card"><h3>بگو کی پشتش است</h3><p>Partner و مسئولیت</p></div>
+    <div class="card"><h3>اگر خراب شد باش</h3><p>یک آدم مشخص</p></div>
+  </div>
+  <div class="sub in" style="margin-top:16px">اگر فقط یک جمله از این سند یادت بماند، همین باشد. ترتیبش هم مهم است.</div>
+</section>
+
+<!-- 13 · CORE FLOW -->
+<section class="slide" data-ch="فصل ۵ · پروتوتایپ">
+  <div class="eyebrow in">مرحلهٔ پنجم · پیشنهاد پروتوتایپ</div>
+  <h2 class="in" style="margin-bottom:6px">یک Core Flow ثابت، نه سه محصول جدا</h2>
+  <p class="lead in" style="margin-bottom:16px">سند صریح می‌گوید سه Flow کامل نسازیم. یک مسیر بسازیم و Trust Strategy را روی آن Variant کنیم.</p>
+  <div class="chain in">
+    <div class="ch"><div class="k">۰۱</div><div class="t">ورود</div></div>
+    <div class="ch"><div class="k">۰۲</div><div class="t">مبلغ Funding</div></div>
+    <div class="ch now"><div class="k">۰۳</div><div class="t">خلاصه قبل از پرداخت</div></div>
+    <div class="ch"><div class="k">۰۴</div><div class="t">تأیید</div></div>
+    <div class="ch now"><div class="k">۰۵</div><div class="t">وضعیت تراکنش</div></div>
+    <div class="ch"><div class="k">۰۶</div><div class="t">موجودی دلاری</div></div>
+    <div class="ch now"><div class="k">۰۷</div><div class="t">خروج / استفاده</div></div>
+  </div>
+  <div class="callout in" style="margin-top:18px">
+    <div class="k">چرا ثابت ماندنش مهم است</div>
+    <p>اگر مسیر بین نسخه‌ها فرق کند، نمی‌فهمیم تفاوت رفتار از <b>مکانیزم اعتماد</b> بود یا از <b>UX بهتر</b>. هدف تست، مقایسهٔ مکانیزم‌هاست؛ نه مقایسهٔ رابط خوب و بد.</p>
+  </div>
+</section>
+
+<!-- 14 · HYGIENE -->
+<section class="slide" data-ch="فصل ۵ · پروتوتایپ">
+  <div class="eyebrow in">Trust Hygiene</div>
+  <h2 class="in" style="margin-bottom:6px">این‌ها در همهٔ نسخه‌ها یکسان می‌مانند</h2>
+  <p class="lead in" style="margin-bottom:14px">اینها متغیر تست نیستند. اگر در یک نسخه ضعیف باشند، نتیجه بی‌معنا می‌شود.</p>
+  <div class="cards c3 in">
+    <div class="card"><h3>نرخ</h3></div>
+    <div class="card"><h3>کارمزد</h3></div>
+    <div class="card"><h3>مبلغ نهایی</h3></div>
+    <div class="card"><h3>زمان تقریبی</h3></div>
+    <div class="card"><h3>رسید</h3></div>
+    <div class="card"><h3>وضعیت تراکنش</h3></div>
+    <div class="card"><h3>امنیت پایه</h3></div>
+    <div class="card"><h3>پیام خطا</h3></div>
+    <div class="card"><h3>دسترسی به پشتیبانی</h3></div>
+  </div>
+  <div class="callout ok in" style="margin-top:16px">
+    <p>خبر خوب: <b>همهٔ اینها از قبل در پروتوتایپ ما هست.</b> یعنی پایهٔ Hygiene آماده است و می‌توانیم مستقیم برویم سراغ ساختن Variantها.</p>
+  </div>
+</section>
+
+<!-- 15 · VARIANTS -->
+<section class="slide" data-ch="فصل ۵ · پروتوتایپ">
+  <div class="eyebrow in">سه نسخه برای مقایسه</div>
+  <h2 class="in" style="margin-bottom:14px">P0 · P1 · P2</h2>
+  <div class="vt in">
+    <div class="vcard"><div class="code">P0 · BASELINE</div><div class="t">پایهٔ کارکردی</div>
+      <ul><li>ورود پول ← تبدیل ← موجودی دلاری</li><li>Hygiene خوب و ثابت</li><li>بدون برجسته‌سازی Control یا Trial</li><li>نقش: خط مبنا برای مقایسه</li></ul></div>
+    <div class="vcard p1"><div class="code">P1 · CORE TEST</div><div class="t">Control First</div>
+      <ul><li>Exit <b>قبل از</b> ورود پول دیده می‌شود</li><li>Available / Pending روشن</li><li>Timeline و وضعیت لحظه‌ای</li><li>مسیر خطا دیدنی</li><li>تست مستقیم H1</li></ul></div>
+    <div class="vcard p2"><div class="code">P2 · CORE + ENTRY</div><div class="t">Control + Trial</div>
+      <ul><li>همان P1</li><li>+ یک Cycle با مبلغ خیلی کم قبل از Funding جدی</li><li>مبلغ کوچک ← تبدیل ← موجودی ← برداشت ← «تمام شد» ← افزایش</li><li>تست H2 و Trust Scaling</li></ul></div>
+  </div>
+  <div class="callout in" style="margin-top:16px">
+    <div class="k">یک تصمیم ظریف در سند</div>
+    <p>برای Trial، <b>مبلغ کوچک از پول خود کاربر</b> ترجیح داده شده به هدیه — چون Skin in the Game می‌سازد. هدیه، اعتمادِ رایگان می‌سنجد؛ پول خود کاربر، اعتمادِ واقعی.</p>
+  </div>
+</section>
+
+<!-- 16 · MODULES -->
+<section class="slide" data-ch="فصل ۵ · پروتوتایپ">
+  <div class="eyebrow in">دو ماژول روشن/خاموش‌شدنی</div>
+  <h2 class="in" style="margin-bottom:14px">نه دو محصول جدا</h2>
+  <div class="vs2 in">
+    <div class="vsx" style="border-color:rgba(111,168,220,.3)"><div class="h" style="color:var(--blue)">ماژول A · <span class="en">Institutional Proof</span></div>
+      <div class="big">Partner کیست و در خطا مسئولیت با کیست؟</div>
+      <p>مسیر پول · نقش هر بازیگر · چه چیزی قابل Verify است.</p>
+      <p style="color:var(--bad)"><b>هشدار سند:</b> Partner، Custody و Funding Rail هنوز نهایی نشده‌اند — پس نباید ادعای ساختگی نمایش داده شود.</p></div>
+    <div class="vsx" style="border-color:rgba(169,139,208,.3)"><div class="h" style="color:var(--vio)">ماژول B · <span class="en">Human Safety Net</span></div>
+      <div class="big">در لحظهٔ خطا، یک آدمِ نام‌دار</div>
+      <p>نام یک فرد مشخص · پیگیری تراکنش · Chat/Call · مالکیت روشن.</p>
+      <p style="color:#fff"><b>برداشت اصلی:</b> <span class="en">Identifiable human ownership</span> — نه «پشتیبانی ۲۴ ساعته» به‌صورت کلی.</p></div>
+  </div>
+  <div class="callout in" style="margin-top:16px">
+    <p>ماژول بودنشان یعنی می‌شود در جلسه روشن و خاموششان کرد و <b>همان کاربر</b> را با و بدون آن دید. این خیلی قوی‌تر از مقایسهٔ دو گروه مختلف است.</p>
+  </div>
+</section>
+
+<!-- 17 · MOMENTS -->
+<section class="slide" data-ch="فصل ۵ · پروتوتایپ">
+  <div class="eyebrow in">پنج لحظهٔ اعتماد</div>
+  <h2 class="in" style="margin-bottom:6px">این‌ها «صفحه» نیستند</h2>
+  <p class="lead in" style="margin-bottom:14px">لحظه‌هایی‌اند که باید یادگیری بسازند. ممکن است یک صفحه دو لحظه داشته باشد یا یک لحظه در دو صفحه پخش شود.</p>
+  <div class="moments in">
+    <div class="mo"><div class="n">۰۱</div><div class="t">قبل از Funding</div><div class="q">اگر وارد کنم دقیقاً چه می‌شود؟</div></div>
+    <div class="mo"><div class="n">۰۲</div><div class="t">پیش‌نمایش خروج</div><div class="q">اگر بخواهم خارج شوم چه می‌شود؟</div></div>
+    <div class="mo"><div class="n">۰۳</div><div class="t">تأیید</div><div class="q">دقیقاً چه چیزی را قبول می‌کنم؟</div></div>
+    <div class="mo"><div class="n">۰۴</div><div class="t">وضعیت تراکنش</div><div class="q">پولم الان کجاست؟</div></div>
+    <div class="mo"><div class="n">۰۵</div><div class="t">خروج موفق</div><div class="q">وعدهٔ بازگشت‌پذیری اثبات شد؟</div></div>
+  </div>
+  <div class="callout ok in" style="margin-top:16px">
+    <div class="k">لحظهٔ ۰۲ عجیب‌ترین و مهم‌ترین است</div>
+    <p><b>پیش‌نمایش خروج، قبل از ورود پول.</b> غریزهٔ طراحی می‌گوید در لحظهٔ جذب، از رفتن حرف نزن. این سند دقیقاً برعکسش را می‌گوید — و همان چیزی است که P1 را از P0 جدا می‌کند.</p>
+  </div>
+</section>
+
+<!-- 18 · HYPOTHESES -->
+<section class="slide" data-ch="فصل ۵ · پروتوتایپ">
+  <div class="eyebrow in">چهار فرضیه</div>
+  <h2 class="in" style="margin-bottom:12px">هر صفحه باید بگوید کدام را تست می‌کند</h2>
+  <div class="steps in">
+    <div class="st"><span class="i">H1</span><div class="c"><div class="hd"><span class="t">Control</span><span class="tag y">هسته</span></div>
+      <div class="d">اگر کاربر قبل از Funding، خروج و وضعیت و بازگشت‌پذیری را ببیند، willingness to fund بالا می‌رود؟</div></div></div>
+    <div class="st"><span class="i">H2</span><div class="c"><div class="hd"><span class="t">Progressive Commitment</span><span class="tag g">ورود</span></div>
+      <div class="d">اگر یک Cycle کم‌ریسک را تجربه کند، اعتماد به مبلغ بزرگ‌تر منتقل می‌شود؟</div></div></div>
+    <div class="st"><span class="i">H3</span><div class="c"><div class="hd"><span class="t">Institutional Proof</span><span class="tag b">اعتبار</span></div>
+      <div class="d">Partner و Money Flow واقعاً تردید را کم می‌کنند، یا فقط حرفه‌ای به نظر می‌رسند؟</div></div></div>
+    <div class="st"><span class="i">H4</span><div class="c"><div class="hd"><span class="t">Human Safety Net</span><span class="tag v">تور ایمنی</span></div>
+      <div class="d">آدمِ نام‌دار در First Funding یا خطا، واقعاً رفتار را عوض می‌کند؟</div></div></div>
+  </div>
+  <div class="callout warn in" style="margin-top:16px">
+    <p>سؤال H3 را دقیق بخوان: «یا فقط حرفه‌ای به نظر می‌رسند؟» — سند دارد به خودش شک می‌کند. این نشانهٔ یک سند سالم است.</p>
+  </div>
+</section>
+
+<!-- 19 · VALIDATION -->
+<section class="slide" data-ch="فصل ۶ · یادگیری">
+  <div class="eyebrow in">سه سطح یادگیری</div>
+  <h2 class="in" style="margin-bottom:14px">فقط سطح سوم واقعاً می‌شمارد</h2>
+  <div class="cards c3 in">
+    <div class="card"><div class="n">سطح ۱</div><h3>فهم</h3><p>می‌فهمد مهاجر چه می‌کند، پول کجا می‌رود، خروج چگونه است؟</p></div>
+    <div class="card"><div class="n">سطح ۲</div><h3>اعتماد ادراک‌شده</h3><p>کدام بخش خیالش را راحت کرد و کدام مانع هنوز زنده است؟</p></div>
+    <div class="card lit"><div class="n">سطح ۳ · مهم‌ترین</div><h3>تمایل به اقدام</h3><p>بعد از دیدن مکانیزم، حاضر است چه کاری بکند و چه مبلغی را جلو ببرد؟</p></div>
+  </div>
+  <div class="vs2 in" style="margin-top:16px">
+    <div class="vsx no"><div class="h">خروجی ضعیف</div><div class="big">«کاربران کانسپت Control را دوست داشتند.»</div></div>
+    <div class="vsx yes"><div class="h">خروجی قوی</div><div class="big">«در Baseline حاضر به ادامه نبود، اما بعد از دیدن پیش‌نمایش خروج وارد مرحلهٔ انتخاب مبلغ شد.»</div></div>
+  </div>
+</section>
+
+<!-- 20 · SIGNALS -->
+<section class="slide" data-ch="فصل ۶ · یادگیری">
+  <div class="eyebrow in">چه چیزی را ثبت کنیم</div>
+  <h2 class="in" style="margin-bottom:12px">یازده سیگنال رفتاری</h2>
+  <div class="cards c3 in">
+    <div class="card"><h3>اولین سؤالش قبل از Funding</h3></div>
+    <div class="card lit"><h3>نقطه‌ای که متوقف می‌شود</h3></div>
+    <div class="card"><h3>چیزی که لازم دارد Verify کند</h3></div>
+    <div class="card lit"><h3>مبلغی که حاضر است تست کند</h3></div>
+    <div class="card lit"><h3>مبلغ بعد از Trial</h3></div>
+    <div class="card"><h3>واکنش به خروج</h3></div>
+    <div class="card"><h3>واکنش به کارمزد</h3></div>
+    <div class="card"><h3>واکنش به Partner</h3></div>
+    <div class="card"><h3>نیاز یا بی‌نیازی به پشتیبان انسانی</h3></div>
+    <div class="card"><h3>رفتار در سناریوی خطا</h3></div>
+    <div class="card"><h3>دلیل نهایی برای ادامه یا «نه»</h3></div>
+  </div>
+  <div class="callout in" style="margin-top:16px">
+    <div class="k">سه‌تای طلایی</div>
+    <p>«مبلغی که حاضر است تست کند»، «مبلغ بعد از Trial» و «نقطه‌ای که متوقف می‌شود» — این سه عدد، تنها چیزهایی هستند که <b>Trust Scaling</b> را نشان می‌دهند. بقیه توضیح‌اند.</p>
+  </div>
+</section>
+
+<!-- 21 · SCALING + STATUS -->
+<section class="slide" data-ch="فصل ۶ · یادگیری">
+  <div class="eyebrow in">سؤالی که سند اصرار دارد ببینیم</div>
+  <div class="hero-line in">چه چیزی <b>۵ دلار</b> را به<br><b>۵۰۰</b> یا <b>۵۰۰۰</b> تبدیل می‌کند؟</div>
+  <p class="lead in" style="margin-top:16px"><b class="en">Try → Trusted</b> یک فرض ساده است و باید تست شود. ممکن است کاربر مبلغ خرد را راحت بپذیرد، مبلغ متوسط را هم، اما برای مبلغ بزرگ به Partner یا History یا انسان نیاز داشته باشد.</p>
+  <div class="callout in" style="margin-top:18px">
+    <div class="k">بعد از تست، هر مکانیزم یک وضعیت می‌گیرد</div>
+    <p><b>Core</b> بدون آن معماری ناقص است · <b>Supporting</b> بهترش می‌کند ولی محرک اصلی نیست · <b>Conditional</b> فقط برای مبلغ یا سگمنت خاص · <b>Unproven</b> شواهد کافی نداریم · <b>Rejected</b> شواهد حمایتش نمی‌کند.</p>
+  </div>
+  <div class="callout warn in" style="margin-top:12px">
+    <div class="k">و اگر هیچ‌کدام رفتار را عوض نکرد</div>
+    <p>سند این را هم پیش‌بینی کرده: ممکن است مانع اصلی اصلاً اعتماد نباشد — بلکه Value Proposition، ریسک حقوقی، Funding Rail یا نیاز بازار باشد. <b>در آن حالت نباید فقط Trust Feature بیشتری اضافه کنیم.</b></p>
+  </div>
+</section>
+
+<!-- 22 · NEXT -->
+<section class="slide" data-ch="فصل ۶ · یادگیری">
+  <div class="eyebrow in">قدم بعدی</div>
+  <h2 class="in" style="margin-bottom:12px">چه می‌سازیم</h2>
+  <div class="cards c2 in">
+    <div class="card lit"><div class="n">می‌سازیم</div><h3>پروتوتایپ First Funding</h3>
+      <p>یک Core Flow ثابت · سه Variant قابل جابه‌جایی در جلسه · دو ماژول روشن/خاموش · پنج لحظهٔ اعتماد برچسب‌خورده · و یک دفترچهٔ ثبت رفتار برای تسهیل‌گر.</p></div>
+    <div class="card"><div class="n">دست نمی‌زنیم</div><h3>پروتوتایپ‌های قبلی</h3>
+      <p>v0، v0.2 و v0.3 سر جایشان می‌مانند. این یک ابزار متفاوت است، نه نسخهٔ بعدی همان ابزار.</p></div>
+  </div>
+  <div class="callout ok in" style="margin-top:16px">
+    <div class="k">آنچه فعلاً پروتوتایپ نمی‌شود</div>
+    <p>پورتفولیو · مشاورهٔ مالی · تحلیل بازار · چنددارایی · KYC کامل · پروفایل · تنظیمات پیچیدهٔ امنیت · کل اکوسیستم انتقال · یکپارچگی واقعی Partner.</p>
+    <p>سند خودش این فهرست را نوشته. سؤال این پروتوتایپ <b>فقط First Funding Trust</b> است.</p>
+  </div>
+</section>
+
+</div>
+
+<nav class="rail" id="rail" aria-label="فهرست"></nav>
+<button class="totop" id="totop" aria-label="بازگشت به بالا"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+
+<script>
+/* Scroll-document navigation.
+   show(n) is kept because slides link to each other with it — here it scrolls
+   instead of switching. */
+const slides=[...document.querySelectorAll('.slide')];
+const rail=document.getElementById('rail');
+const prog=document.getElementById('prog');
+const chapEl=document.getElementById('chapter');
+const countEl=document.getElementById('counter');
+
+function show(n){
+  const s=slides[Math.max(0,Math.min(slides.length-1,n))];
+  if(s) s.scrollIntoView({behavior:'smooth',block:'start'});
+}
+/* one rail entry per chapter start, not per section */
+const chapters=[];
+slides.forEach((s,n)=>{
+  const ch=s.dataset.ch||'';
+  if(ch && (chapters.length===0 || chapters[chapters.length-1].ch!==ch)) chapters.push({ch,n,s});
+});
+rail.innerHTML=chapters.map(c=>
+  `<a href="#" data-n="${c.n}" title="${c.ch}"><i></i>${c.ch}</a>`).join('');
+rail.querySelectorAll('a').forEach(a=>a.onclick=e=>{e.preventDefault();show(+a.dataset.n)});
+
+const totop=document.getElementById('totop');
+totop.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+
+/* progress + which chapter am I in */
+let ticking=false;
+function onScroll(){
+  if(ticking) return; ticking=true;
+  requestAnimationFrame(()=>{
+    const y=scrollY, h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(h>0?Math.min(100,y/h*100):0)+'%';
+    totop.classList.toggle('on',y>600);
+    let cur=slides[0], idx=0;
+    slides.forEach((s,n)=>{ if(s.getBoundingClientRect().top<=innerHeight*0.34){cur=s;idx=n} });
+    chapEl.textContent=cur.dataset.ch||'';
+    countEl.textContent=(idx+1)+' / '+slides.length;
+    let ci=-1; chapters.forEach((c,k)=>{ if(c.n<=idx) ci=k });
+    rail.querySelectorAll('a').forEach((a,k)=>a.setAttribute('aria-current',k===ci));
+    ticking=false;
+  });
+}
+addEventListener('scroll',onScroll,{passive:true});
+addEventListener('resize',onScroll);
+onScroll();
+</script>
+</body>
+</html>

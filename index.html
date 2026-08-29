@@ -8,15 +8,16 @@
 <link rel="apple-touch-icon" href="./icons/icon-180.png">
 <link rel="icon" href="./icons/icon-192.png">
 <style>
-@font-face{font-family:Radical;src:url('./fonts/Radical-Light.woff2') format('woff2'),url('./fonts/Radical-Light.ttf') format('truetype');font-weight:300;font-display:swap}
-@font-face{font-family:Radical;src:url('./fonts/Radical-Regular.woff2') format('woff2'),url('./fonts/Radical-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
-@font-face{font-family:Radical;src:url('./fonts/Radical-Medium.woff2') format('woff2'),url('./fonts/Radical-Medium.ttf') format('truetype');font-weight:500;font-display:swap}
-@font-face{font-family:Radical;src:url('./fonts/Radical-SemiBold.woff2') format('woff2'),url('./fonts/Radical-SemiBold.ttf') format('truetype');font-weight:600;font-display:swap}
-@font-face{font-family:Radical;src:url('./fonts/Radical-Bold.woff2') format('woff2'),url('./fonts/Radical-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
-@font-face{font-family:Radical;src:url('./fonts/Radical-ExtraBold.woff2') format('woff2'),url('./fonts/Radical-ExtraBold.ttf') format('truetype');font-weight:800;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-DemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-ExtraBold.woff2') format('woff2');font-weight:800;font-display:swap}
+
 
 :root{
-  --f:Radical,system-ui,sans-serif;
+  --f:Dana,system-ui,sans-serif;
   --gold:#D5A45C;--ok:#3FBF8F;
   --w1:#fff;--w2:rgba(255,255,255,.68);--w3:rgba(255,255,255,.42);
   --surf:rgba(255,255,255,.055);--brd:rgba(255,255,255,.11);
@@ -83,19 +84,27 @@ footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--brd);font-siz
   <p class="lead">پروتوتایپ کلیک‌پذیر، راهنمای تیم و سند WS0. همه‌چیز آزمایشی است — هیچ پول واقعی جابه‌جا نمی‌شود.</p>
 
   <div class="sec">برای تست کاربر</div>
-  <a class="item main" href="./first-funding-v1.html">
+  <a class="item main" href="./wallet-v1.html">
     <div class="ic">◆</div>
     <div class="m">
-      <div class="t">First Funding <span class="tag y">v1</span></div>
-      <div class="d">یک Core Flow ثابت با سه نسخهٔ قابل جابه‌جایی (P0 / P1 / P2) و دو ماژول روشن‌وخاموش‌شدنی. تست فقط یک چیز: چرا کاربر اولین پول را وارد می‌کند.</div>
+      <div class="t">آشیانه <span class="tag y">v1 · پروتوتایپ اصلی</span></div>
+      <div class="d">تجربهٔ کامل محصول: تبدیل، انتقال، اشتراک، شاخه و برداشت — به‌همراه «نمای کلی» که کل سرویس را یک‌جا نشان می‌دهد. <b>تست کاربر روی همین نسخه انجام می‌شود</b>، چون برداشت کاربر از کلِ محصول است که به پرداخت منجر می‌شود.</div>
     </div>
     <div class="go">←</div>
   </a>
-  <a class="item" href="./wallet-v0-3.html">
+  <a class="item arch" href="./wallet-v0-3.html">
     <div class="ic">◇</div>
     <div class="m">
-      <div class="t">آشیانه <span class="tag">v0.3 — پنج Flow کامل</span></div>
-      <div class="d">پروتوتایپ WS0 با واژگان آشیانه. برای تست تجربهٔ کامل، نه First Funding.</div>
+      <div class="t">آشیانه <span class="tag">v0.3 — نسخهٔ پیشین</span></div>
+      <div class="d">پیش از بازطراحی بخش شاخه‌ها و افزودن نمای کلی.</div>
+    </div>
+    <div class="go">←</div>
+  </a>
+  <a class="item arch" href="./first-funding-v1.html">
+    <div class="ic">◈</div>
+    <div class="m">
+      <div class="t">First Funding <span class="tag">مرجع مکانیزم‌ها</span></div>
+      <div class="d">سه نسخهٔ P0 / P1 / P2 برای مقایسهٔ مکانیزم‌های اعتماد. دیگر artefact تست نیست — برای مرجع نگه داشته شده.</div>
     </div>
     <div class="go">←</div>
   </a>
@@ -111,19 +120,35 @@ footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--brd);font-siz
   </a>
 
   <div class="sec">برای تیم</div>
-  <a class="item" href="./onboarding.html">
+  <a class="item" href="./onboarding-doc.html">
     <div class="ic">◈</div>
     <div class="m">
-      <div class="t">راهنمای فاز ۳ و سند WS0 <span class="tag g">۲۸ صفحه</span></div>
-      <div class="d">مبانی، و کل سند WS0 بخش به بخش با تصویر.</div>
+      <div class="t">راهنمای فاز ۳ و سند WS0 <span class="tag g">یک صفحه · اسکرول</span></div>
+      <div class="d">مبانی، و کل سند WS0 بخش به بخش. از بالا تا پایین در یک صفحه، با فهرست فصل‌ها کنارِ متن.</div>
     </div>
     <div class="go">←</div>
   </a>
-  <a class="item" href="./trust-onboarding-v2.html">
+  <a class="item" href="./trust-onboarding-doc.html">
     <div class="ic">◎</div>
     <div class="m">
-      <div class="t">از کارگاه اعتماد تا پروتوتایپ <span class="tag g">۲۲ صفحه · جدید</span></div>
+      <div class="t">از کارگاه اعتماد تا پروتوتایپ <span class="tag g">یک صفحه · اسکرول</span></div>
       <div class="d">خروجی رسمی تیم: شش مانع، شش مکانیزم، چهار کانسپت، و سه Variant پیشنهادی برای پروتوتایپ.</div>
+    </div>
+    <div class="go">←</div>
+  </a>
+  <a class="item arch" href="./onboarding.html">
+    <div class="ic">▤</div>
+    <div class="m">
+      <div class="t">راهنمای فاز ۳ <span class="tag">نسخهٔ اسلایدی</span></div>
+      <div class="d">همان محتوا، برای ارائهٔ شفاهی.</div>
+    </div>
+    <div class="go">←</div>
+  </a>
+  <a class="item arch" href="./trust-onboarding-v2.html">
+    <div class="ic">▤</div>
+    <div class="m">
+      <div class="t">کارگاه اعتماد <span class="tag">نسخهٔ اسلایدی</span></div>
+      <div class="d">همان محتوا، برای ارائهٔ شفاهی.</div>
     </div>
     <div class="go">←</div>
   </a>
