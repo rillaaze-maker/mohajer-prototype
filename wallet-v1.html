@@ -338,7 +338,7 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 .typecard .m{flex:1;min-width:0}
 .typecard .t{font-size:14.5px;font-weight:600;letter-spacing:-.015em}
 .typecard .d{font-size:12px;color:var(--ink-2);margin-top:5px;line-height:1.65}
-.typecard .lim{display:inline-block;font-size:11px;color:var(--ink-3);margin-top:6px}
+.typecard .lim{display:inline-block;font-size:11px;color:var(--ink-2);margin-top:6px}
 .tc-goal .ic{background:var(--warn-soft)} .tc-goal .ic svg{stroke:var(--warn)}
 .tc-spend .ic{background:var(--ok-soft)}  .tc-spend .ic svg{stroke:var(--ok)}
 .tc-family .ic{background:#EAF1F7}        .tc-family .ic svg{stroke:#3D6E9E}
@@ -360,7 +360,7 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 .unit-hint svg{width:12px;height:12px;opacity:.8}
 
 /* live network pulse — deliberately not a button */
-.livepulse{display:flex;align-items:center;gap:9px;margin-top:12px;padding:0 3px;
+.livepulse{display:flex;align-items:center;gap:9px;margin-top:11px;padding:0 3px;
   font-size:11.5px;color:var(--ink-3);user-select:none}
 .live-dot{width:7px;height:7px;border-radius:50%;background:#D9484A;flex:none;position:relative}
 .live-dot::after{content:'';position:absolute;inset:0;border-radius:50%;background:#D9484A;
@@ -375,7 +375,7 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 
 /* one bold action, then four quiet ones */
 .home-foot{flex:none;padding-top:6px}
-.quickrow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.quickrow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
 .quick{background:none;border:none;font-family:inherit;cursor:pointer;color:var(--ink-2);
   display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 2px;font-size:11px;
   font-weight:500;border-radius:14px;transition:.2s var(--spring)}
@@ -514,6 +514,63 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
   .btn{height:47px;font-size:14.5px}
   .bal-card .tot{font-size:30px}
 }
+/* Button elements take `color:buttontext` (black) from the user agent unless
+   told otherwise. Every component below is a <button> that was relying on that
+   accident. Setting it explicitly is a no-op in the light theme and the whole
+   fix in the dark one. .btn is excluded — its modifiers set their own colour. */
+.opt,.typecard,.support,.goal,.act,.livebar,.back,.model{color:inherit}
+
+/* ══════════════════════════════════════════════════════════════════
+   DARK THEME
+   Only tokens are redefined — no component rule is duplicated, so the
+   two themes cannot drift apart. Rules:
+   · Gold still only ever sits on near-black (design decision 10), which
+     dark mode satisfies everywhere by construction.
+   · The hero card must stay distinguishable from the canvas, so in dark
+     it lifts ABOVE the background instead of dropping below it, and
+     carries a hairline edge rather than a shadow.
+   · The primary button inverts: on a dark canvas an ink-black button
+     disappears, so it becomes light-on-dark.
+   · Status tints are rebuilt from scratch, not alpha-composited, so
+     text on them keeps its contrast.
+   ══════════════════════════════════════════════════════════════════ */
+:root[data-theme="dark"]{
+  --canvas:#0C0E11;--surface:#15181D;--surface-2:#1E222941;
+  --ink:#F2F3F4;--ink-2:#9AA1A9;--ink-3:#848C95;  /* 5.22:1 on --surface */
+  --line:#252A31;--line-2:#1C2026;
+  --gold:#E0B375;--ok:#4FBF95;--ok-soft:#12271F;
+  --warn:#D89152;--warn-soft:#2A1E12;--bad:#E4695C;--bad-soft:#2C1614;
+  --dark:linear-gradient(168deg,#232A33 0%,#141920 52%,#1C232B 100%);
+  --sh:0 1px 2px rgba(0,0,0,.4),0 10px 30px -16px rgba(0,0,0,.7);
+  --sh-d:0 2px 6px rgba(0,0,0,.5),0 24px 48px -22px rgba(0,0,0,.8);
+}
+:root[data-theme="dark"] body{
+  background:radial-gradient(900px 600px at 50% 0%,#181C22,#0C0E11 70%,#08090B)}
+:root[data-theme="dark"] .surface-2{background:#1E2229}
+/* --surface-2 carries alpha above so :active states read on both; give the
+   solid fills that need it an opaque value */
+:root[data-theme="dark"] .honest,
+:root[data-theme="dark"] .alloc{background:#1B1F25}
+:root[data-theme="dark"] .dark-card{border:1px solid rgba(255,255,255,.07)}
+:root[data-theme="dark"] .tabbar{background:rgba(18,21,25,.94);border-top-color:var(--line)}
+:root[data-theme="dark"] .btn-primary{background:#F2F3F4;color:#0C0E11;
+  box-shadow:0 8px 22px -12px rgba(0,0,0,.9)}
+:root[data-theme="dark"] .btn-primary:disabled{background:#2A2F36;color:#6C737B}
+:root[data-theme="dark"] .preset.trial{background:var(--ink);color:#0C0E11}
+:root[data-theme="dark"] .quick .qi svg{stroke:var(--ink)}
+:root[data-theme="dark"] .typecard{background:var(--surface)}
+:root[data-theme="dark"] .typecard[aria-pressed=true]{border-color:var(--gold)}
+:root[data-theme="dark"] .tc-family .ic{background:#152029}
+:root[data-theme="dark"] .chip{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.09);
+  color:var(--ink-2)}
+:root[data-theme="dark"] .chip:hover{background:rgba(255,255,255,.12);color:var(--ink)}
+:root[data-theme="dark"] .chip[aria-pressed=true]{background:var(--ink);color:#0C0E11;border-color:var(--ink)}
+:root[data-theme="dark"] .phone{box-shadow:0 0 0 10px #2A3038,0 0 0 11.5px #3A424C,
+  0 30px 70px -30px rgba(0,0,0,.9)}
+:root[data-theme="dark"] .dev-fab span,
+:root[data-theme="dark"] .dev-fab span::before,
+:root[data-theme="dark"] .dev-fab span::after{background:var(--ink)}
+
 </style>
 </head>
 <body>
@@ -584,12 +641,19 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
         </div>
       </button>
 
-      <!-- ambient, not a control: the network is busy whether or not you act -->
-      <div class="livepulse">
-        <span class="live-dot"></span>
-        <span class="lp-txt"><b class="num" id="lp-count">۱٬۲۴۷</b> تبدیل امروز</span>
-        <span class="spark" id="lp-spark"></span>
-        <span class="lp-sup"><span class="pulse"></span>پشتیبانی فعال</span>
+      <div class="quickrow">
+        <button class="quick" onclick="startTransfer()">
+          <span class="qi"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
+          <span data-lex="qSend">انتقال</span></button>
+        <button class="quick" onclick="go('subs')">
+          <span class="qi"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18"/></svg></span>
+          <span>اشتراک</span></button>
+        <button class="quick" onclick="go('goals')">
+          <span class="qi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <span data-lex="qGoal">شاخه</span></button>
+        <button class="quick" onclick="startWithdraw()">
+          <span class="qi"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></span>
+          <span data-lex="qOut">برداشت</span></button>
       </div>
 
       <div id="home-empty">
@@ -605,19 +669,12 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 
     <div class="home-foot">
       <button class="btn btn-primary" onclick="go('convert')" data-lex="homeCta">تبدیل به دلار</button>
-      <div class="quickrow">
-        <button class="quick" onclick="startTransfer()">
-          <span class="qi"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
-          <span data-lex="qSend">انتقال</span></button>
-        <button class="quick" onclick="go('subs')">
-          <span class="qi"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18"/></svg></span>
-          <span>اشتراک</span></button>
-        <button class="quick" onclick="go('goals')">
-          <span class="qi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span>
-          <span data-lex="qGoal">شاخه</span></button>
-        <button class="quick" onclick="startWithdraw()">
-          <span class="qi"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></span>
-          <span data-lex="qOut">برداشت</span></button>
+      <!-- ambient, not a control: the network is busy whether or not you act -->
+      <div class="livepulse">
+        <span class="live-dot"></span>
+        <span class="lp-txt"><b class="num" id="lp-count">۱٬۲۴۷</b> تبدیل امروز</span>
+        <span class="spark" id="lp-spark"></span>
+        <span class="lp-sup"><span class="pulse"></span>پشتیبانی فعال</span>
       </div>
     </div>
     <div class="tabbar" id="tabbar"></div>
@@ -1198,6 +1255,7 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
   <button class="chip" onclick="seed()">+ موجودی $2,000</button>
   <button class="chip danger" id="fail-btn" aria-pressed="false" onclick="toggleFail()">شبیه‌سازی خطا</button>
   <button class="chip" id="lex-btn" aria-pressed="false" onclick="toggleLex()">واژگان: استاندارد</button>
+  <button class="chip" id="theme-btn" aria-pressed="false" onclick="toggleTheme()">حالت: روشن</button>
   <button class="chip" onclick="go('intro')">صفحهٔ معرفی</button>
 </div>
 
@@ -1616,7 +1674,7 @@ function renderDash(){
     `<button class="opt" onclick="${a.go}">
        <div class="ic"><svg viewBox="0 0 24 24">${a.ic}</svg></div>
        <div class="m"><div class="t">${a.t}</div><div class="d">${a.d}</div>
-         <div class="d" style="color:var(--ink-3);margin-top:3px">${a.f}</div></div></button>`).join('');
+         <div class="d" style="color:var(--ink-2);margin-top:3px">${a.f}</div></div></button>`).join('');
 
   $('d-rate').textContent=fa(buyRate().toLocaleString('en-US'))+' تومان';
   $('d-fee').textContent=fa((CONFIG.buySpread*100).toFixed(1))+'٪ + $'+CONFIG.buyFlatFee.toFixed(2);
@@ -1887,6 +1945,10 @@ const LEX={
     introP:'ریال را با نرخ و کارمزد شفاف به دلار تبدیل کنید. دلار در آشیانه می‌نشیند و هر وقت لازم شد، از همان‌جا انتقال می‌دهید، اشتراک می‌خرید، روی شاخه‌ای کنار می‌گذارید یا به ریال برمی‌گردانید.'
   }
 };
+S.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',e=>{
+  if(!S.themePinned){ S.theme=e.matches?'dark':'light'; applyTheme(); }
+});
 S.lex='nest';   // the Nest identity is the default; the toggle keeps the old wording for comparison
 const L=k=>LEX[S.lex][k];
 
@@ -1901,6 +1963,20 @@ function applyLex(){
   renderGoals(); render();
 }
 function toggleLex(){ S.lex = S.lex==='std' ? 'nest' : 'std'; applyLex(); }
+
+/* ════════ theme ════════
+   Follows the phone's own setting by default — a tester opening this on a
+   phone in dark mode should see the dark app, not a white flash. The
+   facilitator can pin either theme to compare them side by side. */
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme',S.theme);
+  const b=$('theme-btn');
+  if(b){ b.textContent='حالت: '+(S.theme==='dark'?'تاریک':'روشن');
+         b.setAttribute('aria-pressed',S.theme==='dark'); }
+  const m=document.querySelector('meta[name="theme-color"]');
+  if(m) m.setAttribute('content',S.theme==='dark'?'#0C0E11':'#F4F4F1');
+}
+function toggleTheme(){ S.themePinned=true; S.theme = S.theme==='dark' ? 'light' : 'dark'; applyTheme(); }
 
 /* ════════ facilitator ════════ */
 function resetAll(){
@@ -1971,7 +2047,7 @@ setInterval(()=>{
   tickSpark(); render();
 },3200);
 
-buildTabs(); $('clock').textContent=fa('9:41'); applyLex(); buildSpark(); render(); fitPhone();
+buildTabs(); $('clock').textContent=fa('9:41'); applyTheme(); applyLex(); buildSpark(); render(); fitPhone();
 </script>
 </body>
 </html>
