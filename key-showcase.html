@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>کلید مهاجر · معرفی برای تیم</title>
+<style>
+@font-face{font-family:Dana;src:url('./fonts/Dana-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-DemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+
+:root{
+  --f:Dana,system-ui,sans-serif;
+  --ink:#0D0F12;--ink-2:#5C636B;--ink-3:#8A9099;
+  --line:#E4E4DF;--line-2:#F0F0EC;
+  --paper:#fff;--soft:#F6F6F3;
+  --gold:#B98431;--gold-soft:#FBF3E6;
+  --ok:#127A55;--ok-soft:#E8F4EF;
+  --bad:#B3372B;--bad-soft:#FBEDEB;
+  --dark:linear-gradient(168deg,#1E232B 0%,#0D0F12 52%,#161B21 100%);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f);color:var(--ink);background:#E9E9E4;
+  -webkit-font-smoothing:antialiased;line-height:1.7;font-size:12.5px}
+
+/* Each .page is one A4 sheet. Print with margins set to None / Default and
+   "Background graphics" ON, then Save as PDF. */
+.page{width:210mm;min-height:297mm;background:var(--paper);margin:14px auto;
+  padding:19mm 17mm;position:relative;box-shadow:0 4px 24px rgba(0,0,0,.16);
+  display:flex;flex-direction:column}
+.page + .page{margin-top:22px}
+
+.hdr{display:flex;align-items:center;gap:9px;padding-bottom:10px;
+  border-bottom:1px solid var(--line);margin-bottom:15px;flex:none}
+.hdr .mk{width:23px;height:23px;border-radius:7px;background:var(--ink);
+  display:grid;place-items:center;flex:none}
+.hdr .nm{font-weight:600;font-size:12.5px;letter-spacing:-.01em}
+.hdr .rt{margin-inline-start:auto;font-size:10.5px;color:var(--ink-3)}
+.ftr{margin-top:auto;padding-top:9px;border-top:1px solid var(--line-2);
+  font-size:9.5px;color:var(--ink-3);display:flex;justify-content:space-between}
+
+h1{font-size:33px;font-weight:700;letter-spacing:-.035em;line-height:1.2}
+h2{font-size:19px;font-weight:600;letter-spacing:-.026em;margin-bottom:9px}
+h3{font-size:13.5px;font-weight:600;letter-spacing:-.014em}
+.kicker{font-size:10.5px;font-weight:600;letter-spacing:.13em;color:var(--gold);
+  margin-bottom:11px}
+.lead{font-size:14px;color:var(--ink-2);line-height:1.8;max-width:60ch}
+.sec{font-size:10px;font-weight:600;letter-spacing:.11em;color:var(--ink-3);
+  text-transform:uppercase;margin:17px 0 8px}
+p{margin-bottom:9px}
+b{font-weight:600}
+.tiny{font-size:11px;color:var(--ink-3);line-height:1.7}
+
+.grid{display:grid;gap:9px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.card{border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:var(--paper)}
+.card.soft{background:var(--soft);border-color:transparent}
+.card h3{margin-bottom:5px}
+.card p{font-size:12px;color:var(--ink-2);margin:0;line-height:1.7}
+
+.hero{background:var(--dark);border-radius:14px;padding:26px;color:#fff;
+  display:flex;align-items:center;gap:26px}
+.hero img{width:168px;height:auto;flex:none;
+  filter:drop-shadow(0 14px 22px rgba(0,0,0,.6))}
+.hero .m{flex:1}
+.hero h2{color:#fff;font-size:22px;margin-bottom:8px}
+.hero p{color:rgba(255,255,255,.66);font-size:12.5px;margin:0;line-height:1.8}
+.hero .price{display:inline-block;margin-top:12px;background:rgba(213,164,92,.18);
+  color:#E7BE7E;border-radius:99px;padding:5px 13px;font-size:11.5px;font-weight:600}
+
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:start;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600;padding:8px 9px;border-bottom:1.5px solid var(--line)}
+td{padding:7px 9px;border-bottom:1px solid var(--line-2);vertical-align:top;line-height:1.6}
+tr:last-child td{border-bottom:none}
+td.y{color:var(--ok);font-weight:600}
+td.n{color:var(--bad);font-weight:600}
+
+.steps{counter-reset:st;display:grid;gap:8px}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step::before{counter-increment:st;content:counter(st);width:25px;height:25px;flex:none;
+  border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;
+  font-size:11.5px;font-weight:700;margin-top:1px}
+.step .m{flex:1}
+.step .m b{display:block;margin-bottom:2px;font-size:13px}
+.step .m span{font-size:12px;color:var(--ink-2);line-height:1.7}
+
+.note{display:flex;gap:9px;padding:11px 13px;border-radius:10px;font-size:11.5px;
+  line-height:1.7;margin-top:9px}
+.note .i{width:16px;flex:none;font-weight:700;text-align:center}
+.note.warn{background:var(--bad-soft);color:#7A2A21}
+.note.ok{background:var(--ok-soft);color:#0B5A3E}
+.note.gold{background:var(--gold-soft);color:#7A5518}
+.note b{font-weight:700}
+
+.quote{border-inline-start:3px solid var(--gold);padding:4px 14px;margin:14px 0;
+  font-size:14px;line-height:1.8;color:var(--ink)}
+
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px}
+.shot{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--soft)}
+.shot .cap{padding:8px 10px;font-size:10.5px;color:var(--ink-2);border-top:1px solid var(--line-2);
+  background:var(--paper)}
+.shot .ph{aspect-ratio:4/3;background:var(--dark);display:grid;place-items:center;
+  color:rgba(255,255,255,.4);font-size:10.5px;padding:10px;text-align:center;line-height:1.7}
+
+.tagrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.tag{border:1px solid var(--line);border-radius:99px;padding:4px 10px;font-size:10.5px;
+  color:var(--ink-2)}
+.tag.g{background:var(--gold-soft);border-color:transparent;color:#7A5518;font-weight:600}
+
+.printbar{position:fixed;inset-inline-start:16px;bottom:16px;z-index:9;
+  background:var(--ink);color:#fff;border:none;border-radius:99px;padding:11px 18px;
+  font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;
+  box-shadow:0 8px 22px rgba(0,0,0,.3)}
+.hint-print{position:fixed;inset-inline-start:16px;bottom:60px;z-index:9;
+  background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 13px;
+  font-size:11px;color:var(--ink-2);max-width:250px;line-height:1.7;
+  box-shadow:0 8px 22px rgba(0,0,0,.12)}
+
+@media print{
+  body{background:#fff}
+  .page{margin:0;box-shadow:none;page-break-after:always;width:auto;min-height:auto;
+    padding:14mm 13mm}
+  .page:last-child{page-break-after:auto}
+  .printbar,.hint-print{display:none}
+  @page{size:A4;margin:6mm}
+}
+@media(max-width:840px){
+  .page{width:auto;min-height:0;padding:22px 18px}
+  .hero{flex-direction:column;text-align:center}
+  .g2,.g3,.shots{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ PAGE 1 ══════════════ -->
+<section class="page">
+  <div class="hdr">
+    <span class="mk"><svg viewBox="0 0 49.33 39.99" width="12" height="12" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></span>
+    <span class="nm">مهاجر</span>
+    <span class="rt">معرفی داخلی · فاز ۳ · شهریور ۱۴۰۵</span>
+  </div>
+
+  <div class="kicker">لنگر اعتماد · گزینهٔ دوم</div>
+  <h1>کلید مهاجر</h1>
+  <p class="lead" style="margin-top:12px">
+    یک دستگاه فیزیکی که کلید دارایی کاربر را خودش می‌سازد و نگه می‌دارد.
+    از لحظه‌ای که فعال می‌شود، برداشت از آن دارایی به تصمیم ما وابسته نیست —
+    چون کلیدش اصلاً دست ما نیست.
+  </p>
+
+  <div class="hero" style="margin-top:20px">
+    <img src="./mohajer-key.png" alt="کلید مهاجر">
+    <div class="m">
+      <h2>کلید، نه حساب.</h2>
+      <p>دستگاه در اولین روشن‌شدن، کلید را داخل خودش تولید می‌کند. آن کلید هیچ‌وقت
+        از دستگاه بیرون نمی‌آید — نه به موبایل کاربر، نه به سرور ما. هر برداشت باید
+        روی همین دستگاه تأیید شود.</p>
+      <span class="price">قیمت پیشنهادی: $49 · ارسال رایگان</span>
+    </div>
+  </div>
+
+  <div class="sec">چرا این را می‌سازیم</div>
+  <p class="lead" style="font-size:13.5px">
+    راند اول تست یک چیز را روشن گفت: کاربر بدون اتصال محصول به یک <b>نهاد یا شیء
+    واقعی</b>، حاضر به ریسک نبود. «دیجیتال بودن» به‌تنهایی اعتماد نساخت و هیچ فیچری
+    آن‌قدر جذاب نبود که ریسک را توجیه کند.
+  </p>
+  <div class="quote">
+    «نیاز داشتن به یه بنگاهی وصل بشه محصول تا از روی اون اعتماد کنند.»
+    <span class="tiny" style="display:block;margin-top:5px">— جمع‌بندی راند اول</span>
+  </div>
+  <p class="lead" style="font-size:13.5px">
+    تحویل فیزیکی طلا یک جواب به این مسئله است. کلید مهاجر جواب دوم است، و
+    <b>ادعای متفاوتی</b> می‌کند. برای همین هر دو را داریم و هر دو را جدا تست می‌کنیم.
+  </p>
+
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card soft">
+      <h3>تحویل طلا می‌گوید</h3>
+      <p>«می‌توانی بیرونش بکشی.» خروج ممکن است، ولی هنوز از مسیر ما رد می‌شود.</p>
+    </div>
+    <div class="card soft">
+      <h3>کلید مهاجر می‌گوید</h3>
+      <p>«اصلاً نمی‌توانیم برش داریم.» نگهداری از ابتدا دست کاربر است، نه ما.</p>
+    </div>
+  </div>
+
+  <div class="ftr"><span>کلید مهاجر · معرفی داخلی</span><span>۱ / ۳</span></div>
+</section>
+
+<!-- ══════════════ PAGE 2 ══════════════ -->
+<section class="page">
+  <div class="hdr">
+    <span class="mk"><svg viewBox="0 0 49.33 39.99" width="12" height="12" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></span>
+    <span class="nm">مهاجر</span>
+    <span class="rt">کلید مهاجر · چطور کار می‌کند</span>
+  </div>
+
+  <h2>چطور کار می‌کند</h2>
+  <div class="steps" style="margin-top:12px">
+    <div class="step"><div class="m"><b>سفارش از داخل اپ</b>
+      <span>کاربر از تب «تحویل فیزیکی» سفارش می‌دهد. فقط بهای دستگاه ($49) کسر می‌شود؛
+      مبلغی که برای انتقال کنار می‌گذارد تا لحظهٔ فعال‌سازی در آشیانه‌اش می‌ماند.</span></div></div>
+    <div class="step"><div class="m"><b>ارسال</b>
+      <span>۵ تا ۷ روز کاری. کد فعال‌سازی همان لحظهٔ سفارش در اپ نمایش داده می‌شود.</span></div></div>
+    <div class="step"><div class="m"><b>اولین روشن‌شدن</b>
+      <span>دستگاه کلید را داخل خودش می‌سازد و <b>دوازده کلمهٔ بازیابی</b> نشان می‌دهد.
+      کاربر آن‌ها را روی کاغذ می‌نویسد. ما هیچ نسخه‌ای از این کلمات نداریم.</span></div></div>
+    <div class="step"><div class="m"><b>انتقال دارایی</b>
+      <span>مبلغ کنارگذاشته به کلید منتقل می‌شود. از این به بعد هر برداشت باید روی
+      خودِ دستگاه تأیید شود.</span></div></div>
+  </div>
+
+  <div class="sec">نگهداری: قبل و بعد</div>
+  <table>
+    <thead><tr><th>موضوع</th><th>صرافی‌های رایج</th><th>کلید مهاجر</th></tr></thead>
+    <tbody>
+      <tr><td>کلید دارایی دست کیست</td><td class="n">شرکت</td><td class="y">کاربر</td></tr>
+      <tr><td>برداشت نیاز به تأیید شرکت دارد</td><td class="n">دارد</td><td class="y">ندارد</td></tr>
+      <tr><td>اگر شرکت تعطیل شود</td><td class="n">دارایی در خطر است</td><td class="y">دارایی دست کاربر می‌ماند</td></tr>
+      <tr><td>اگر شرکت حساب را ببندد</td><td class="n">دسترسی قطع می‌شود</td><td class="y">اثری ندارد</td></tr>
+      <tr><td>اگر کاربر همه‌چیز را گم کند</td><td>شرکت بازیابی می‌کند</td><td class="n">هیچ‌کس نمی‌تواند بازیابی کند</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note warn">
+    <span class="i">!</span>
+    <span><b>ردیف آخر عمداً آنجاست.</b> نگهداری کامل یعنی مسئولیت کامل — و این جمله
+      در خودِ پروتوتایپ هم روی صفحه هست. محصولی که فقط روی خوبِ self-custody را بفروشد،
+      همان‌جایی است که یک کاربر دقیق ما را گیر می‌اندازد. در اپ هم نوشته‌ایم که
+      <b>مهاجر هرگز آن دوازده کلمه را نمی‌پرسد</b> — متداول‌ترین مسیر کلاهبرداری
+      علیه این دستهٔ محصول.</span>
+  </div>
+
+  <div class="sec">مشخصات پیشنهادی</div>
+  <div class="grid g3">
+    <div class="card"><h3>قیمت</h3><p>$49 · ارسال رایگان</p></div>
+    <div class="card"><h3>تحویل</h3><p>۵ تا ۷ روز کاری</p></div>
+    <div class="card"><h3>اتصال</h3><p>USB-C · بدون نیاز به باتری</p></div>
+    <div class="card"><h3>بازیابی</h3><p>۱۲ کلمه، استاندارد رایج</p></div>
+    <div class="card"><h3>تأیید برداشت</h3><p>لمس فیزیکی روی دستگاه</p></div>
+    <div class="card"><h3>وضعیت</h3><p><b>در حال بررسی</b> — تأمین‌کننده نهایی نشده</p></div>
+  </div>
+
+  <div class="ftr"><span>کلید مهاجر · معرفی داخلی</span><span>۲ / ۳</span></div>
+</section>
+
+<!-- ══════════════ PAGE 3 ══════════════ -->
+<section class="page">
+  <div class="hdr">
+    <span class="mk"><svg viewBox="0 0 49.33 39.99" width="12" height="12" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></span>
+    <span class="nm">مهاجر</span>
+    <span class="rt">کلید مهاجر · در پروتوتایپ و در تست</span>
+  </div>
+
+  <h2>کجای اپ است</h2>
+  <p class="lead" style="font-size:13.5px">
+    تب <b>تحویل فیزیکی</b> (جایگزین تب فعالیت‌ها شد) دو راه خروج را کنار هم می‌گذارد.
+    فعالیت‌ها از «نمای کلی» در دسترس است.
+  </p>
+  <div class="shots">
+    <div class="shot"><div class="ph">تحویل فیزیکی<br>دو گزینه کنار هم</div>
+      <div class="cap">۱ · انتخاب مسیر</div></div>
+    <div class="shot"><div class="ph">کلید مهاجر<br>تصویر محصول، جدول نگهداری، هشدار صادقانه</div>
+      <div class="cap">۲ · معرفی محصول</div></div>
+    <div class="shot"><div class="ph">سفارش و کد فعال‌سازی<br>فقط $49 کسر می‌شود</div>
+      <div class="cap">۳ · سفارش</div></div>
+  </div>
+  <p class="tiny" style="margin-top:8px">مسیر واقعی در پروتوتایپ: <b>تحویل فیزیکی ← کلید مهاجر</b>.</p>
+
+  <div class="sec">چه چیزی را تست می‌کنیم</div>
+  <div class="card soft">
+    <h3>فرضیه</h3>
+    <p style="margin-top:5px">اگر نگهداری دارایی به‌شکل یک <b>شیء فیزیکی در دست کاربر</b>
+      درآید، مانع اعتماد آن‌قدر پایین می‌آید که کاربر حاضر شود اولین پول را وارد کند —
+      حتی وقتی نام شریک هنوز اعلام نشده است.</p>
+    <div class="tagrow">
+      <span class="tag g">لنگر اعتماد</span>
+      <span class="tag">قابل روشن/خاموش در پنل تسهیل‌گر</span>
+      <span class="tag">مقایسه‌پذیر با «تحویل طلا»</span>
+    </div>
+  </div>
+
+  <div class="note ok" style="margin-top:12px">
+    <span class="i">✓</span>
+    <span><b>روش تست:</b> این گزینه یک variant است. جلسه را یک‌بار با آن و یک‌بار بدون آن
+      اجرا کنید تا تفاوت رفتار به خودِ مکانیزم نسبت داده شود، نه به کیفیت کلی اپ.</span>
+  </div>
+
+  <div class="sec">سؤال‌هایی که باید در جلسه بپرسیم</div>
+  <div class="grid g2">
+    <div class="card"><p>«الان که این را دیدی، پولت را کجا نگه‌داری‌شده می‌دانی؟»</p></div>
+    <div class="card"><p>«اگر فردا مهاجر تعطیل شود، چه فکری می‌کنی؟»</p></div>
+    <div class="card"><p>«آن هشدار دربارهٔ دوازده کلمه را چطور خواندی؟»</p></div>
+    <div class="card"><p>«اگر واقعی بود، $49 می‌دادی؟ چه چیزی تصمیمت را عوض می‌کند؟»</p></div>
+  </div>
+  <div class="note warn" style="margin-top:14px">
+    <span class="i">!</span>
+    <span><b>یادآوری برای ارائه:</b> تأمین‌کنندهٔ دستگاه هنوز نهایی نشده. در هر جایی که
+      این را نشان می‌دهیم — داخل اپ و بیرون آن — باید <b>«در حال بررسی»</b> بماند تا قرارداد
+      قطعی شود.</span>
+  </div>
+
+  <div class="ftr"><span>کلید مهاجر · معرفی داخلی</span><span>۳ / ۳</span></div>
+</section>
+
+<button class="printbar" onclick="window.print()">ذخیره به‌صورت PDF</button>
+<div class="hint-print">برای PDF: دکمه را بزنید، در پنجرهٔ چاپ
+  <b>Destination = Save as PDF</b> و <b>Background graphics</b> را روشن کنید.</div>
+
+</body>
+</html>

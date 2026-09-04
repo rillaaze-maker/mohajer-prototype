@@ -1179,8 +1179,12 @@ button,input,select,textarea{color:inherit}
       </button>
       <div class="faq" id="d-faq"></div>
 
-      <div class="sec" data-lex="dashRecent">آخرین فعالیت‌ها</div>
-      <div id="d-tx"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="sec" data-lex="dashRecent" style="margin-bottom:0">آخرین فعالیت‌ها</div>
+        <button style="border:none;background:none;font-family:inherit;color:var(--ink-2);
+          font-size:11.5px;font-weight:500;padding:4px 0;cursor:pointer" onclick="go('activity')">همه</button>
+      </div>
+      <div id="d-tx" style="margin-top:8px"></div>
       <div style="height:14px"></div>
     </div>
     <div class="tabbar" id="tabbar3"></div>
@@ -1293,11 +1297,8 @@ button,input,select,textarea{color:inherit}
 
 
   <!-- ═══ PHYSICAL · pick a way out ═══ -->
-  <section class="screen" data-screen="p-choose">
-    <div class="nav">
-      <button class="back" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <h2>تحویل فیزیکی</h2>
-    </div>
+  <section class="screen tabbed" data-screen="p-choose">
+    <div style="font-size:17.5px;font-weight:600;letter-spacing:-.02em;margin-bottom:12px">تحویل فیزیکی</div>
     <div class="scroll">
       <p class="tiny" style="margin:-2px 0 14px;line-height:1.8">
         دو راه برای اینکه دارایی‌ات از دست ما خارج شود و کاملاً دست خودت بیفتد.</p>
@@ -1331,6 +1332,7 @@ button,input,select,textarea{color:inherit}
       </div>
       <div style="height:12px"></div>
     </div>
+    <div class="tabbar" id="tabbar5"></div>
   </section>
 
   <!-- ═══ KEY · what it is ═══ -->
@@ -1809,7 +1811,7 @@ button,input,select,textarea{color:inherit}
       </button>
       <div style="height:14px"></div>
     </div>
-    <div class="tabbar" id="tabbar5"></div>
+    <div class="tabbar" id="tabbar6"></div>
   </section>
 
   <!-- ═══ 21 RECEIPT ═══ -->
@@ -1932,10 +1934,13 @@ const TABS=[
   {s:'convert', t:'تبدیل',     d:'M7 10h13l-3-3M17 14H4l3 3'},
   {s:'use',     t:'نمای کلی',  d:'M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 8h6V4h-6z'},
   {s:'invest',  t:'سرمایه‌گذاری', d:'M4 19V9M10 19V5M16 19v-7M22 19h-20'},
-  {s:'activity',t:'فعالیت‌ها', d:'M12 3a9 9 0 109 9M12 7v5l3 2'}
+  /* فعالیت‌ها left the tab bar: the dashboard already shows recent activity and
+     links to the full list, while تحویل فیزیکی is the claim this round exists
+     to test and belongs one tap from anywhere. */
+  {s:'p-choose',t:'تحویل فیزیکی', d:'M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11zM12 12.6a2.6 2.6 0 100-5.2 2.6 2.6 0 000 5.2z'}
 ];
 function buildTabs(){
-  ['tabbar','tabbar2','tabbar3','tabbar4','tabbar5'].forEach(id=>{
+  ['tabbar','tabbar2','tabbar3','tabbar4','tabbar5','tabbar6'].forEach(id=>{
     const el=$(id); if(!el) return;
     el.innerHTML=TABS.map(t=>
       `<button class="tab" data-tab="${t.s}" onclick="go('${t.s}')">
