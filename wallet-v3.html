@@ -7,6 +7,8 @@
 
 <!-- installable: on a phone, Share → Add to Home Screen gives a real standalone app -->
 <link rel="manifest" href="./manifest.json">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<meta name="app-version" content="v3.4">
 <meta name="theme-color" content="#F4F4F1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -416,6 +418,77 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
   font-weight:500;color:var(--ink-2);padding:7px;border-radius:8px;cursor:pointer}
 .rangepick button[aria-pressed=true]{background:var(--ink);color:var(--canvas)}
 
+/* ── کلید مهاجر · hardware self-custody device ────────────────────
+   The second trust anchor, and a different kind of claim from the gold
+   counter. Gold says "you can take it out". The key says "we cannot take
+   it at all" — the private key is generated on the device, never leaves
+   it, and Mohajer never holds a copy.
+
+   The honest cost of that is stated on every screen: if the recovery words
+   are lost, nobody can restore the balance — not us, not anyone. A product
+   that offers self-custody without saying this is selling the upside only,
+   and in a trust test that omission is exactly what a careful participant
+   would catch us on. */
+.keycard{width:100%;text-align:start;font-family:inherit;color:inherit;cursor:pointer;
+  border:1.5px solid transparent;border-radius:var(--r-lg);padding:16px;
+  background:var(--surface);box-shadow:var(--sh);display:flex;gap:13px;align-items:flex-start;
+  transition:.24s var(--spring)}
+.keycard+.keycard{margin-top:10px}
+.keycard:active{transform:scale(.985)}
+.keycard .ic{width:46px;height:46px;border-radius:14px;flex:none;display:grid;place-items:center}
+.keycard .ic svg{width:23px;height:23px;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.keycard.k-gold .ic{background:var(--warn-soft)} .keycard.k-gold .ic svg{stroke:var(--warn)}
+.keycard.k-dev .ic{background:var(--brand-soft,#EDF0FF)} .keycard.k-dev .ic svg{stroke:#3D5AFE}
+:root[data-theme="dark"] .keycard.k-dev .ic{background:#1A1F3D}
+:root[data-theme="dark"] .keycard.k-dev .ic svg{stroke:#7C8FFF}
+.keycard .m{flex:1;min-width:0;display:block}
+.keycard .t{display:block;font-size:14.5px;font-weight:600;letter-spacing:-.015em;line-height:1.5}
+.keycard .d{display:block;font-size:12px;color:var(--ink-2);margin-top:5px;line-height:1.7}
+.keycard .lim{display:block;font-size:11px;color:var(--ink-3);margin-top:8px}
+
+/* The device is a real product shot — and it is a black object, which on a
+   near-black canvas would simply vanish. Product photography solves this with
+   a backlight; here that is a soft gold radial behind it plus a grounded
+   contact shadow, so it reads as an object sitting on a surface rather than a
+   cut-out floating in the dark. */
+.devframe{background:linear-gradient(168deg,var(--surface-2),var(--surface));
+  border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh);
+  padding:14px 16px 12px;position:relative;overflow:hidden}
+.devframe::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 70% at 50% 0%,rgba(255,255,255,.05),transparent 62%)}
+.devcap{display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--line-2);padding-top:10px;margin-top:6px;position:relative}
+.devcap .n{font-size:12.5px;font-weight:600}
+.devcap .p{font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.devstage{position:relative;display:grid;place-items:center;padding:6px 0 2px;isolation:isolate}
+.devstage .glow{position:absolute;width:74%;max-width:250px;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(213,164,92,.14),rgba(213,164,92,.05) 45%,transparent 68%);
+  z-index:-1}
+:root[data-theme="dark"] .devstage .glow{
+  background:radial-gradient(circle,rgba(213,164,92,.22),rgba(213,164,92,.07) 45%,transparent 70%)}
+.devstage .plinth{position:absolute;bottom:16px;width:46%;max-width:150px;height:14px;
+  border-radius:50%;background:rgba(0,0,0,.42);filter:blur(9px);z-index:-1}
+:root[data-theme="dark"] .devstage .plinth{background:rgba(0,0,0,.7)}
+.devimg{width:min(210px,60%);height:auto;display:block;
+  filter:drop-shadow(0 14px 22px rgba(13,15,18,.42));
+  animation:devhover 7s var(--swift) infinite}
+:root[data-theme="dark"] .devimg{filter:drop-shadow(0 16px 26px rgba(0,0,0,.75))}
+@keyframes devhover{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.devimg.sm{width:74px;animation:none;filter:drop-shadow(0 6px 10px rgba(13,15,18,.4))}
+@media(prefers-reduced-motion:reduce){.devimg{animation:none}}
+.custody{display:flex;gap:10px;align-items:flex-start;padding:14px 15px;border-radius:var(--r-md);
+  background:var(--surface-2);margin-top:10px}
+.custody svg{width:16px;height:16px;flex:none;margin-top:2px;fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round}
+.custody p{font-size:12.5px;line-height:1.75;color:var(--ink-2)}
+.custody b{color:var(--ink)}
+.custody.who{background:var(--ok-soft)} .custody.who svg{stroke:var(--ok)}
+.custody.risk{background:var(--bad-soft)} .custody.risk svg{stroke:var(--bad)}
+.words{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.words span{background:var(--surface-2);border-radius:9px;padding:8px 6px;font-size:11.5px;
+  text-align:center;font-weight:500}
+.words span i{display:block;font-style:normal;font-size:9.5px;color:var(--ink-3);margin-bottom:2px}
+
 /* ── physical delivery map ────────────────────────────────────────
    Hand-drawn SVG rather than a maps SDK. Three reasons, in order:
    Google Maps needs a billable API key; tile services are unreliable or
@@ -800,13 +873,13 @@ button,input,select,textarea{color:inherit}
       </div>
 
       <h1 data-lex="introH">آشیانه‌ای که هر وقت بخواهید<br>می‌توانید از آن پر بکشید.</h1>
-      <p class="lead" style="margin-top:12px" data-lex="introP">ریال را با نرخ و کارمزد شفاف به دلار تبدیل کنید. دلار در آشیانه می‌نشیند و هر وقت لازم شد، از همان‌جا انتقال می‌دهید، اشتراک می‌خرید، روی شاخه‌ای کنار می‌گذارید یا به ریال برمی‌گردانید.</p>
+      <p class="lead" style="margin-top:12px" data-lex="introP">تومان را با نرخ و کارمزد شفاف به دلار تبدیل می‌کنی. دلار در آشیانه می‌نشیند و هر وقت لازم شد از همان‌جا انتقال می‌دهی، در لانه‌ای سرمایه‌گذاری می‌کنی، طلا تحویل می‌گیری یا به تومان برمی‌گردانی.</p>
 
       <div class="card" style="margin-top:20px;padding:6px 18px">
         <div class="row"><span class="k">تبدیل با نرخ شفاف</span><span class="v" style="color:var(--ok)">✓</span></div>
         <div class="row"><span class="k">انتقال به دیگران</span><span class="v" style="color:var(--ok)">✓</span></div>
         <div class="row"><span class="k">سرمایه‌گذاری در ترکیبی از دلار، طلا و رمزارز</span><span class="v" style="color:var(--ok)">✓</span></div>
-        <div class="row"><span class="k">تحویل فیزیکی اسکناس از صرافی</span><span class="v" style="color:var(--ok)">✓</span></div>
+        <div class="row"><span class="k">تحویل فیزیکی طلا از صرافی</span><span class="v" style="color:var(--ok)">✓</span></div>
         <div class="row"><span class="k">برگرداندن به تومان، هر وقت بخواهید</span><span class="v" style="color:var(--ok)">✓</span></div>
       </div>
 
@@ -935,7 +1008,7 @@ button,input,select,textarea{color:inherit}
         <button class="quick" onclick="go('invest')">
           <span class="qi"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19h-20"/></svg></span>
           <span>سرمایه‌گذاری</span></button>
-        <button class="quick" onclick="openPhysical()" id="q-phys">
+        <button class="quick" onclick="go('p-choose')" id="q-phys">
           <span class="qi"><svg viewBox="0 0 24 24"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
           <span>تحویل فیزیکی</span></button>
         <button class="quick" onclick="setDir('out')">
@@ -1219,16 +1292,196 @@ button,input,select,textarea{color:inherit}
 
 
 
-  <!-- ═══ PHYSICAL · nearby exchanges ═══ -->
-  <section class="screen" data-screen="p-map">
+  <!-- ═══ PHYSICAL · pick a way out ═══ -->
+  <section class="screen" data-screen="p-choose">
     <div class="nav">
-      <button class="back" onclick="go('use')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="back" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
       <h2>تحویل فیزیکی</h2>
     </div>
     <div class="scroll">
+      <p class="tiny" style="margin:-2px 0 14px;line-height:1.8">
+        دو راه برای اینکه دارایی‌ات از دست ما خارج شود و کاملاً دست خودت بیفتد.</p>
+
+      <button class="keycard k-gold" onclick="openPhysical()">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 8l3-4h10l3 4-8 12z"/><path d="M4 8h16M9 4l3 16M15 4l-3 16"/></svg></span>
+        <span class="m">
+          <span class="t">تحویل طلای فیزیکی</span>
+          <span class="d">بخشی از موجودی‌ات را به طلای ۱۸ عیار تبدیل کن و از یک صرافی طرف قرارداد تحویل بگیر.</span>
+          <span class="lim">حضوری · با کد یک‌بارمصرف · کسر در لحظهٔ تحویل</span>
+        </span>
+      </button>
+
+      <button class="keycard k-dev" onclick="go('k-intro')">
+        <span class="ic"><svg viewBox="0 0 24 24">
+          <rect x="6.5" y="2" width="11" height="17" rx="3.2"/>
+          <circle cx="12" cy="5.9" r="1.5"/>
+          <circle cx="12" cy="12.2" r="2.9"/>
+          <path d="M10 19v2.2h4V19"/>
+        </svg></span>
+        <span class="m">
+          <span class="t">کلید مهاجر</span>
+          <span class="d">یک دستگاه کوچک که کلید دارایی‌ات را خودش می‌سازد و نگه می‌دارد. برایت پست می‌کنیم.</span>
+          <span class="lim">نگهداری کامل دست خودت · بدون دسترسی ما</span>
+        </span>
+      </button>
+
+      <div class="custody who" style="margin-top:14px">
+        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/></svg>
+        <p>هر دو راه یک چیز را ثابت می‌کنند: <b>خروج دارایی‌ات به اجازهٔ ما نیاز ندارد.</b></p>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+  </section>
+
+  <!-- ═══ KEY · what it is ═══ -->
+  <section class="screen" data-screen="k-intro">
+    <div class="nav">
+      <button class="back" onclick="go('p-choose')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2>کلید مهاجر</h2>
+    </div>
+    <div class="scroll">
+      <div class="devframe">
+        <div class="devstage">
+          <span class="glow" aria-hidden="true"></span>
+          <span class="plinth" aria-hidden="true"></span>
+          <img class="devimg" src="./mohajer-key.png" width="500" height="500"
+               alt="کلید مهاجر — دستگاه کوچک مشکی با دکمهٔ طلایی و اتصال USB-C">
+        </div>
+        <div class="devcap">
+          <span class="n">کلید مهاجر</span>
+          <span class="p num">$49</span>
+        </div>
+      </div>
+
+      <h2 style="font-size:19px;letter-spacing:-.025em;margin-top:14px">کلید، نه حساب.</h2>
+      <p class="lead" style="font-size:13.5px;margin-top:8px">
+        این دستگاه وقتی روشن می‌شود، کلید دارایی‌ات را <b>خودش داخل خودش می‌سازد</b>.
+        آن کلید هیچ‌وقت از دستگاه بیرون نمی‌آید — نه به موبایلت، نه به سرور ما.
+        از آن به بعد، هر برداشتی باید روی همین دستگاه تأیید شود.
+      </p>
+
+      <div class="sec">یعنی چه</div>
+      <div class="card" style="padding:4px 16px">
+        <div class="row"><span class="k">کلید کجاست</span><span class="v">فقط داخل دستگاه</span></div>
+        <div class="row"><span class="k">مهاجر کپی دارد؟</span><span class="v" style="color:var(--ok)">ندارد</span></div>
+        <div class="row"><span class="k">اگر مهاجر تعطیل شود</span><span class="v" style="color:var(--ok)">دارایی‌ات دست خودت است</span></div>
+        <div class="row"><span class="k">اگر دستگاه گم شود</span><span class="v">با ۱۲ کلمهٔ بازیابی برمی‌گردد</span></div>
+        <div class="row"><span class="k">قیمت</span><span class="v num">$49</span></div>
+        <div class="row"><span class="k">ارسال</span><span class="v">۵ تا ۷ روز کاری</span></div>
+      </div>
+
+      <div class="sec">۱۲ کلمه‌ای که فقط تو می‌بینی</div>
+      <p class="tiny" style="line-height:1.8">هنگام راه‌اندازی، دستگاه دوازده کلمه نشان می‌دهد.
+        این‌ها نسخهٔ پشتیبان کلید تو هستند. روی کاغذ بنویس و جایی امن نگه دار.</p>
+      <div class="words" aria-hidden="true">
+        <span><i>۱</i>لنگر</span><span><i>۲</i>باران</span><span><i>۳</i>کوچ</span>
+        <span><i>۴</i>سنجد</span><span><i>۵</i>آذرخش</span><span><i>۶</i>پرواز</span>
+      </div>
+      <p class="tiny" style="margin-top:8px">…و شش کلمهٔ دیگر روی خود دستگاه.</p>
+
+      <div class="custody risk">
+        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+        <p><b>روی دیگر سکه را هم بدان:</b> اگر هم دستگاه و هم آن دوازده کلمه را از دست بدهی،
+          <b>هیچ‌کس نمی‌تواند دارایی را برگرداند</b> — نه ما، نه هیچ‌کس دیگر.
+          نگهداری کامل یعنی مسئولیت کامل.</p>
+      </div>
+
+      <div class="custody">
+        <svg viewBox="0 0 24 24" style="stroke:var(--ink-2)"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <p>مهاجر <b>هرگز</b> این دوازده کلمه را از تو نمی‌پرسد. هر کسی که پرسید — حتی با نام ما — کلاهبردار است.</p>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="go('k-order')">سفارش کلید مهاجر · $49</button>
+  </section>
+
+  <!-- ═══ KEY · order ═══ -->
+  <section class="screen" data-screen="k-order">
+    <div class="nav">
+      <button class="back" onclick="go('k-intro')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2>سفارش کلید</h2><span class="step num">۲/۲</span>
+    </div>
+    <div class="scroll">
+      <div class="field"><label>نشانی تحویل</label>
+        <input id="ko-addr" class="input" value="تهران، خیابان ولیعصر، کوچهٔ بیستم، پلاک ۱۴"></div>
+      <div class="field"><label>شمارهٔ تماس</label>
+        <input id="ko-tel" class="input num" inputmode="tel" value="۰۹۱۲ ۳۴۵ ۶۷۸۹"></div>
+
+      <div class="sec">چقدر از دارایی‌ات روی کلید برود؟</div>
+      <div class="field">
+        <input id="ko-amt" class="input num" inputmode="decimal" value="500" oninput="koCheck()">
+        <p class="hint">می‌توانی خالی بگذاری و بعداً منتقل کنی. انتقال در لحظهٔ فعال‌سازی انجام می‌شود، نه حالا.</p>
+      </div>
+      <div id="ko-warn"></div>
+
+      <div class="card" style="padding:4px 16px">
+        <div class="row"><span class="k">قیمت دستگاه</span><span class="v num">$49.00</span></div>
+        <div class="row"><span class="k">ارسال</span><span class="v" style="color:var(--ok)">رایگان</span></div>
+        <div class="row"><span class="k">منتقل می‌شود به کلید</span><span class="v num" id="ko-move">—</span></div>
+        <div class="row"><span class="k">الان کسر می‌شود</span><span class="v num">$49.00</span></div>
+      </div>
+
+      <div class="custody who">
+        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/></svg>
+        <p>مبلغی که برای کلید کنار می‌گذاری تا <b>لحظهٔ فعال‌سازی</b> در آشیانه‌ات می‌ماند
+          و هر وقت خواستی می‌توانی منصرف شوی.</p>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" id="ko-cta" onclick="doKeyOrder()">ثبت سفارش</button>
+  </section>
+
+  <!-- ═══ KEY · ordered ═══ -->
+  <section class="screen" data-screen="k-status">
+    <div class="nav">
+      <button class="back" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2>سفارش ثبت شد</h2>
+    </div>
+    <div class="scroll" style="text-align:center">
+      <div class="devstage" style="padding:0 0 2px">
+        <span class="glow" aria-hidden="true"></span>
+        <img class="devimg sm" src="./mohajer-key.png" width="500" height="500" alt="">
+      </div>
+      <p class="lead" style="margin-top:6px">کلید مهاجر در راه توست.</p>
+
+      <div class="dark-card" style="padding:22px 20px;margin-top:14px">
+        <div style="font-size:12px;color:rgba(255,255,255,.55);position:relative">کد فعال‌سازی</div>
+        <div class="num" id="ks-code" style="font-size:31px;font-weight:700;letter-spacing:.14em;
+          margin-top:8px;position:relative;color:var(--gold)">— — — — — —</div>
+        <div style="font-size:11.5px;color:rgba(255,255,255,.5);margin-top:9px;position:relative">
+          موقع راه‌اندازی دستگاه وارد کن</div>
+      </div>
+
+      <div class="card" style="margin-top:12px;padding:4px 16px;text-align:start">
+        <div class="row"><span class="k">تحویل تخمینی</span><span class="v" id="ks-eta">—</span></div>
+        <div class="row"><span class="k">نشانی</span><span class="v" id="ks-addr" style="max-width:58%">—</span></div>
+        <div class="row"><span class="k">منتقل می‌شود در فعال‌سازی</span><span class="v num" id="ks-move">—</span></div>
+        <div class="row"><span class="k">وضعیت مبلغ</span><span class="v">فعلاً در آشیانه</span></div>
+      </div>
+
+      <div class="custody risk" style="text-align:start">
+        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+        <p>وقتی دستگاه رسید، دوازده کلمه را روی کاغذ بنویس. <b>عکس نگیر و در پیام‌رسان نفرست.</b>
+          هر کسی آن کلمه‌ها را داشته باشد، دارایی را دارد.</p>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <div>
+      <button class="btn btn-primary" onclick="showReceipt(S.activity[0])">مشاهدهٔ رسید</button>
+      <button class="btn btn-ghost" onclick="cancelKey()">لغو سفارش</button>
+    </div>
+  </section>
+
+  <!-- ═══ PHYSICAL · nearby exchanges ═══ -->
+  <section class="screen" data-screen="p-map">
+    <div class="nav">
+      <button class="back" onclick="go('p-choose')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2>تحویل طلا</h2>
+    </div>
+    <div class="scroll">
       <p class="tiny" style="margin:-2px 0 12px;line-height:1.75">
-        دلار دیجیتالتان را به اسکناس تبدیل کنید و از یکی از صرافی‌های طرف قرارداد
-        تحویل بگیرید. مبلغ تا زمان تحویل در حساب خودتان می‌ماند.</p>
+        بخشی از موجودی دلاری‌ات را به <b>طلای ۱۸ عیار</b> تبدیل کن و از یکی از
+        صرافی‌های طرف قرارداد، فیزیکی تحویل بگیر. مبلغ تا لحظهٔ تحویل در حساب خودت می‌ماند.</p>
 
       <div class="mapwrap" id="p-mapwrap">
         <div class="maploading" id="p-loading">
@@ -1242,7 +1495,7 @@ button,input,select,textarea{color:inherit}
       <div class="note" style="margin-top:12px">
         <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/></svg>
         <p>این صرافی‌ها طرف قرارداد مهاجرند و <b>پول را از قبل نمی‌گیرند</b>.
-          مبلغ فقط در لحظهٔ تحویل و با کد شما آزاد می‌شود.</p>
+          مبلغ فقط در لحظهٔ تحویلِ طلا و با کد تو آزاد می‌شود.</p>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -1262,7 +1515,7 @@ button,input,select,textarea{color:inherit}
       <div class="card" style="margin-top:12px;padding:4px 16px">
         <div class="row"><span class="k">فاصله</span><span class="v num" id="ps-dist">—</span></div>
         <div class="row"><span class="k">ساعت کاری</span><span class="v" id="ps-hours">—</span></div>
-        <div class="row"><span class="k">سقف تحویل نقدی</span><span class="v num" id="ps-cap">—</span></div>
+        <div class="row"><span class="k">موجودی طلای این شعبه</span><span class="v num" id="ps-cap">—</span></div>
         <div class="row"><span class="k">وضعیت</span><span class="v" id="ps-open">—</span></div>
       </div>
 
@@ -1298,17 +1551,26 @@ button,input,select,textarea{color:inherit}
   <section class="screen" data-screen="p-amt">
     <div class="nav">
       <button class="back" onclick="go('p-shop')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <h2>مبلغ تحویل</h2><span class="step num">۲/۳</span>
+      <h2>مقدار طلا</h2><span class="step num">۲/۳</span>
     </div>
     <div class="scroll">
-      <div class="field"><label>چقدر اسکناس تحویل بگیرید؟ · دلار</label>
-        <input id="pa-amt" class="input num" inputmode="decimal" value="200" oninput="paCheck()"></div>
+      <div class="note" style="margin:-2px 0 12px">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <p>چیزی که تحویل می‌گیری <b>طلای ۱۸ عیار</b> است، نه اسکناس.
+          معادل دلاری‌اش از موجودی تو کم می‌شود.</p>
+      </div>
+      <div class="field"><label>چند گرم طلا تحویل می‌گیری؟</label>
+        <input id="pa-amt" class="input num" inputmode="decimal" value="3" oninput="paCheck()"></div>
+      <div class="card" style="padding:4px 16px;margin-bottom:10px">
+        <div class="row"><span class="k">نرخ هر گرم امروز</span><span class="v num" id="pa-rate">—</span></div>
+        <div class="row"><span class="k">ارزش طلا</span><span class="v num" id="pa-gold">—</span></div>
+      </div>
       <div id="pa-warn"></div>
       <div class="sec">زمان مراجعه</div>
       <div id="pa-slots"></div>
       <div class="card" style="padding:4px 16px;margin-top:10px">
-        <div class="row"><span class="k">کارمزد تحویل حضوری</span><span class="v num">$۱٫۵۰</span></div>
-        <div class="row"><span class="k">از حساب شما کم می‌شود</span><span class="v num" id="pa-total">—</span></div>
+        <div class="row"><span class="k">کارمزد تحویل حضوری</span><span class="v num">$2.50</span></div>
+        <div class="row"><span class="k">از حساب تو کم می‌شود</span><span class="v num" id="pa-total">—</span></div>
         <div class="row"><span class="k">زمان کسر</span><span class="v">لحظهٔ تحویل</span></div>
       </div>
       <div style="height:12px"></div>
@@ -1332,14 +1594,14 @@ button,input,select,textarea{color:inherit}
       </div>
       <div class="card" style="margin-top:12px;padding:4px 16px;text-align:start">
         <div class="row"><span class="k">صرافی</span><span class="v" id="pc-shop">—</span></div>
-        <div class="row"><span class="k">مبلغ</span><span class="v num" id="pc-amt">—</span></div>
+        <div class="row"><span class="k">تحویل می‌گیری</span><span class="v num" id="pc-amt">—</span></div>
         <div class="row"><span class="k">زمان</span><span class="v" id="pc-slot">—</span></div>
         <div class="row"><span class="k">اعتبار کد</span><span class="v">۲۴ ساعت</span></div>
       </div>
       <div class="note" style="margin-top:12px;text-align:start">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-        <p><b>هنوز چیزی از حسابتان کم نشده.</b> مبلغ در لحظه‌ای که کد را بدهید و اسکناس را بگیرید کسر می‌شود.
-          اگر نروید، درخواست خودش باطل می‌شود.</p>
+        <p><b>هنوز چیزی از حسابت کم نشده.</b> مبلغ در همان لحظه‌ای کسر می‌شود که کد را بدهی و
+          طلا را تحویل بگیری. اگر نروی، درخواست خودش باطل می‌شود.</p>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -1395,7 +1657,7 @@ button,input,select,textarea{color:inherit}
       <div class="card" style="padding:4px 16px">
         <div class="row"><span class="k">نوسان</span><span class="v" id="nd-vol"></span></div>
         <div class="row"><span class="k">بازهٔ یک سال گذشته</span><span class="v num" id="nd-year"></span></div>
-        <div class="row"><span class="k">حداقل مبلغ</span><span class="v num">$۱۰</span></div>
+        <div class="row"><span class="k">حداقل مبلغ</span><span class="v num">$10</span></div>
         <div class="row"><span class="k">قفل زمانی</span><span class="v" style="color:var(--ok)">ندارد</span></div>
         <div class="row"><span class="k">کارمزد ورود</span><span class="v num">۰٫۵٪</span></div>
       </div>
@@ -1602,7 +1864,10 @@ button,input,select,textarea{color:inherit}
 <script>
 /* ════════ CONFIG — every mock number lives here ════════ */
 const CONFIG={
-  buyRate:145000, buySpread:0.009, buyFlatFee:1.50,   // Rial → dollar
+  buyRate:145000, buySpread:0.009, buyFlatFee:1.50,   // Toman → dollar
+  /* Physical delivery is GOLD, not cash. Kept as one rate so every screen
+     quotes the same number, and so grams and dollars stay reconcilable. */
+  goldUsdPerGram:64, goldCarat:'۱۸ عیار', goldDeliveryFee:2.50,
   /* Trust anchor 5 · micro-transaction. Any conversion at or below this many
      dollars pays no flat fee, so a first trial costs essentially nothing. */
   trialCapUsd:10,
@@ -1642,7 +1907,7 @@ const CONFIG={
 /* ════════ state ════════ */
 const S={ available:0, pending:0,  activity:[], failMode:false,
           cRaw:'', tRaw:'', wRaw:'', tPhone:'', svc:null, model:'own',
-          payFrom:'main',  nests:[], activeNest:'calm', shop:'s1', slot:0, route:false, physical:null,  quoteTimer:null, seq:4190 };
+          payFrom:'main',  nests:[], activeNest:'calm', key:null, shop:'s1', slot:0, route:false, physical:null,  quoteTimer:null, seq:4190 };
 
 /* ════════ helpers ════════ */
 const FA=['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
@@ -1700,6 +1965,7 @@ function go(name){
   if(name==='invest')   renderNests();
   if(name==='home' && S.pillow && current!=='home'){ S.lifted=false; S.lifting=false; applyPillow(); }
   if(name==='p-amt'){ renderSlots(); paCheck(); }
+  if(name==='k-order') koCheck();
   renderAnchor();
   render();
 }
@@ -1800,7 +2066,7 @@ function doConvert(){
     }
     S.available+=net;
     setStatus('cs','ok',L('convertOk'),'انجام شد','');
-    $('cs-note').innerHTML=`<div class="note" style="text-align:start"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg><p>حالا می‌توانی این موجودی را <b>نگه داری</b>، انتقال بدهی، اشتراک بخری، برای هدفی کنار بگذاری یا به ریال برگردانی.</p></div>`;
+    $('cs-note').innerHTML=`<div class="note" style="text-align:start"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg><p>حالا می‌توانی این موجودی را <b>نگه داری</b>، انتقال بدهی، در یک لانه سرمایه‌گذاری کنی، طلا تحویل بگیری یا به تومان برگردانی.</p></div>`;
     $('cs-actions').innerHTML=`<button class="btn btn-primary" onclick="go('home')">مشاهدهٔ موجودی</button>
       <button class="btn btn-ghost" onclick="showReceipt(S.activity[0])">رسید</button>`;
     addTx({kind:'convert',title:L('txIn'),amount:net,dir:'in',status:'done',
@@ -2029,16 +2295,16 @@ function nestsTotal(){ return S.nests.reduce((a,h)=>a+h.amount,0); }
 const SHOPS = [
   { id:'s1', n:'صرافی پارسیان', x:196, y:82,  km:0.8, min:11,
     addr:'خیابان ولیعصر، نبش کوچهٔ بیستم، پلاک ۱۴۲، طبقهٔ همکف',
-    hours:'۹:۰۰ تا ۱۹:۰۰ · جمعه‌ها تعطیل', cap:5000, since:'۳ سال همکاری', open:true },
+    hours:'۹:۰۰ تا ۱۹:۰۰ · جمعه‌ها تعطیل', capG:120, since:'۳ سال همکاری', open:true },
   { id:'s2', n:'صرافی آرین', x:112, y:150, km:1.6, min:19,
     addr:'میدان فردوسی، ضلع جنوبی، ساختمان نگین، واحد ۳',
-    hours:'۱۰:۰۰ تا ۱۸:۰۰ · همه‌روزه', cap:12000, since:'۵ سال همکاری', open:true },
+    hours:'۱۰:۰۰ تا ۱۸:۰۰ · همه‌روزه', capG:400, since:'۵ سال همکاری', open:true },
   { id:'s3', n:'صرافی مهرگان', x:255, y:170, km:2.4, min:26,
     addr:'خیابان شریعتی، بالاتر از پل سیدخندان، پلاک ۸۹۰',
-    hours:'۹:۳۰ تا ۱۷:۳۰ · پنجشنبه تا ۱۳:۰۰', cap:3000, since:'۱ سال همکاری', open:false },
+    hours:'۹:۳۰ تا ۱۷:۳۰ · پنجشنبه تا ۱۳:۰۰', capG:60, since:'۱ سال همکاری', open:false },
   { id:'s4', n:'صرافی کاسپین', x:70,  y:60,  km:3.1, min:33,
     addr:'بلوار کشاورز، روبه‌روی پارک لاله، پلاک ۲۱',
-    hours:'۸:۳۰ تا ۲۰:۰۰ · همه‌روزه', cap:20000, since:'۴ سال همکاری', open:true }
+    hours:'۸:۳۰ تا ۲۰:۰۰ · همه‌روزه', capG:750, since:'۴ سال همکاری', open:true }
 ];
 const ME = { x:165, y:120 };
 const SLOTS = ['امروز · ۱۴:۰۰ تا ۱۶:۰۰','امروز · ۱۶:۰۰ تا ۱۸:۰۰',
@@ -2123,7 +2389,7 @@ function openShop(id){
   $('ps-name').textContent = t.n;
   $('ps-dist').textContent = fa(t.km.toFixed(1)) + ' کیلومتر · ' + fa(t.min) + ' دقیقه پیاده';
   $('ps-hours').textContent = t.hours;
-  $('ps-cap').textContent = '$' + grp(t.cap);
+  $('ps-cap').textContent = fa(t.capG) + ' گرم';
   $('ps-open').innerHTML = t.open
     ? '<span style="color:var(--ok)">الان باز است</span>'
     : '<span style="color:var(--ink-3)">الان بسته است</span>';
@@ -2151,16 +2417,55 @@ function toggleRoute(){
   }
 }
 
-function paCheck(){
-  const a = parseFloat($('pa-amt').value) || 0, t = shop(S.shop), fee = 1.5;
-  const over = a > S.available, cap = a > t.cap;
-  $('pa-total').textContent = usd(a + fee);
-  $('pa-warn').innerHTML = over
-    ? '<div class="note bad"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>موجودی آزاد شما '+usd(S.available)+' است.</p></div>'
-    : cap
-    ? '<div class="note warn"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>سقف تحویل نقدی این صرافی $'+grp(t.cap)+' است. مبلغ کمتری بگذارید یا صرافی دیگری انتخاب کنید.</p></div>'
+/* Everything is quoted in grams first and dollars second, so nobody can walk
+   away from this screen thinking they ordered banknotes. */
+const goldUsd = g => g * CONFIG.goldUsdPerGram;
+/* ── کلید مهاجر ─────────────────────────────────────────────────── */
+const KEY_PRICE = 49;
+function koCheck(){
+  const move = parseFloat($('ko-amt').value) || 0;
+  const need = KEY_PRICE + move;
+  const over = need > S.available;
+  $('ko-move').textContent = move > 0 ? usd(move) : '—';
+  $('ko-warn').innerHTML = over
+    ? '<div class="note bad"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>موجودی آزاد تو '+usd(S.available)+' است. دستگاه '+usd(KEY_PRICE)+' و مبلغ کنارگذاشته '+usd(move)+' می‌شود.</p></div>'
     : '';
-  $('pa-cta').disabled = over || cap || a < 20;
+  $('ko-cta').disabled = over;
+}
+function doKeyOrder(){
+  const move = parseFloat($('ko-amt').value) || 0;
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  S.key = { move, code, addr:$('ko-addr').value.trim(), status:'shipping' };
+  S.available -= KEY_PRICE;               // only the device is charged now
+  $('ks-code').textContent = fa(code.split('').join(' '));
+  $('ks-eta').textContent = '۵ تا ۷ روز کاری';
+  $('ks-addr').textContent = S.key.addr;
+  $('ks-move').textContent = move > 0 ? usd(move) : 'بدون انتقال اولیه';
+  addTx({ kind:'key', title:'سفارش کلید مهاجر', amount:KEY_PRICE, dir:'out', status:'done',
+    rows:[['دستگاه','کلید مهاجر'],['قیمت',usd(KEY_PRICE)],['ارسال','رایگان · ۵ تا ۷ روز کاری'],
+          ['انتقال در فعال‌سازی', move>0?usd(move):'—'],['کد فعال‌سازی',fa(code)],
+          ['نگهداری کلید','فقط روی دستگاه']] });
+  render(); go('k-status');
+}
+function cancelKey(){
+  if (S.key) { S.available += KEY_PRICE; S.key = null;
+    if (S.activity[0] && S.activity[0].kind === 'key') S.activity[0].status = 'cancelled'; }
+  render(); go('home');
+}
+
+function paCheck(){
+  const g = parseFloat($('pa-amt').value) || 0, t = shop(S.shop);
+  const fee = CONFIG.goldDeliveryFee, val = goldUsd(g), total = val + fee;
+  const over = total > S.available, cap = g > t.capG;
+  $('pa-rate').textContent = usd(CONFIG.goldUsdPerGram);
+  $('pa-gold').textContent = usd(val);
+  $('pa-total').textContent = usd(total);
+  $('pa-warn').innerHTML = over
+    ? '<div class="note bad"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>موجودی آزاد تو '+usd(S.available)+' است و این سفارش '+usd(total)+' می‌شود.</p></div>'
+    : cap
+    ? '<div class="note warn"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>موجودی طلای این شعبه '+fa(t.capG)+' گرم است. مقدار کمتری بگذار یا صرافی دیگری انتخاب کن.</p></div>'
+    : '';
+  $('pa-cta').disabled = over || cap || g < 1;
 }
 
 function renderSlots(){
@@ -2172,15 +2477,18 @@ function renderSlots(){
 }
 
 function doPhysical(){
-  const a = parseFloat($('pa-amt').value) || 0, t = shop(S.shop);
-  S.physical = { shop:t.id, amount:a, slot:SLOTS[S.slot], code:String(Math.floor(1000+Math.random()*9000)) };
+  const g = parseFloat($('pa-amt').value) || 0, t = shop(S.shop);
+  const val = goldUsd(g), total = val + CONFIG.goldDeliveryFee;
+  S.physical = { shop:t.id, grams:g, amount:total, slot:SLOTS[S.slot],
+                 code:String(Math.floor(1000+Math.random()*9000)) };
   $('pc-code').textContent = fa(S.physical.code.split('').join(' '));
   $('pc-shop').textContent = t.n;
-  $('pc-amt').textContent = usd(a);
+  $('pc-amt').textContent = fa(g) + ' گرم طلای ' + CONFIG.goldCarat;
   $('pc-slot').textContent = S.physical.slot;
-  addTx({ kind:'physical', title:'تحویل فیزیکی · '+t.n, amount:a, dir:'out', status:'pending',
-    rows:[['صرافی',t.n],['زمان',S.physical.slot],['کد',fa(S.physical.code)],
-          ['وضعیت','در انتظار مراجعه'],['کسر مبلغ','لحظهٔ تحویل']] });
+  addTx({ kind:'physical', title:'تحویل طلا · '+t.n, amount:total, dir:'out', status:'pending',
+    rows:[['تحویل', fa(g)+' گرم طلای '+CONFIG.goldCarat],['صرافی',t.n],
+          ['نرخ هر گرم',usd(CONFIG.goldUsdPerGram)],['کارمزد تحویل',usd(CONFIG.goldDeliveryFee)],
+          ['زمان',S.physical.slot],['کد',fa(S.physical.code)],['کسر مبلغ','لحظهٔ تحویل']] });
   render(); go('p-status');
 }
 function cancelPhysical(){
@@ -2202,8 +2510,8 @@ const DASH_ACTIONS=[
   {t:'سرمایه‌گذاری در یک لانه', d:'ترکیبی از دلار، طلا و رمزارز — نه فقط یکی.',
    f:'سه سطح ریسک · بدون قفل زمانی', go:"go('invest')",
    ic:'<path d="M4 19V9M10 19V5M16 19v-7M22 19h-20"/>'},
-  {t:'تحویل فیزیکی اسکناس', d:'از یکی از صرافی‌های طرف قرارداد، با کد یک‌بارمصرف.',
-   f:'کسر مبلغ فقط در لحظهٔ تحویل', go:'openPhysical()',
+  {t:'تحویل فیزیکی طلا', d:'طلای ۱۸ عیار، از یکی از صرافی‌های طرف قرارداد، با کد یک‌بارمصرف.',
+   f:'کسر مبلغ فقط در لحظهٔ تحویل', go:"go('p-choose')",
    ic:'<path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>'},
   {t:'برداشت و تبدیل به تومان', d:'به حساب بانکی تأییدشدهٔ خودتان.',
    f:'بدون قفل زمانی', go:'startWithdraw()',
@@ -2311,7 +2619,7 @@ function renderAnchor(){
   });
 }
 /* Physical delivery is the strongest claim in this build — that the balance
-   can leave as banknotes from a real counter. It ships as a variant so a
+   can leave as physical gold from a real counter. It ships as a variant so a
    session can be run with and without it and the difference attributed. */
 /* The lift is one-way per visit on purpose: covering it again would turn the
    gesture into a toy. Leaving home and returning re-covers it, which is what
@@ -2477,9 +2785,9 @@ function openSheet(kind,data){
       <div class="note" style="text-align:start">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
         <p><b>دو راه خروج همیشه باز است:</b> برگرداندن به تومان روی حساب بانکی خودتان،
-          یا <b>تحویل گرفتن اسکناس</b> از یک صرافی طرف قرارداد. هیچ‌کدام به اجازهٔ ما نیاز ندارد.</p>
+          یا <b>تحویل گرفتن طلای فیزیکی</b> از یک صرافی طرف قرارداد. هیچ‌کدام به اجازهٔ ما نیاز ندارد.</p>
       </div>
-      <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet();openPhysical()">دیدن صرافی‌های نزدیک</button>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet();go('p-choose')">دیدن صرافی‌های نزدیک</button>
       <button class="btn btn-ghost" onclick="closeSheet()">بستن</button>`;
   }
   else if(kind==='proof'){
@@ -2510,7 +2818,7 @@ function openSheet(kind,data){
     h=`<h3>لانه چیست؟</h3>
       <p class="lead" style="margin-bottom:10px">به‌جای اینکه همهٔ پولتان را روی یک دارایی بگذارید،
         هر لانه ترکیبی از چند دارایی است. اگر یکی افت کند، بقیه کل ضرر را روی دوش شما نمی‌گذارند.</p>
-      <div class="row"><span class="k">کمترین مبلغ</span><span class="v num">$۱۰</span></div>
+      <div class="row"><span class="k">کمترین مبلغ</span><span class="v num">$10</span></div>
       <div class="row"><span class="k">کارمزد ورود</span><span class="v num">۰٫۵٪</span></div>
       <div class="row"><span class="k">قفل زمانی</span><span class="v" style="color:var(--ok)">ندارد</span></div>
       <div class="row"><span class="k">سود تضمینی</span><span class="v" style="color:var(--warn)">ندارد</span></div>
@@ -2525,7 +2833,7 @@ function openSheet(kind,data){
   else if(kind==='shopCall'){
     const t=shop(S.shop);
     h=`<h3>${t.n}</h3>
-      <p class="lead" style="margin-bottom:10px">پیش از رفتن می‌توانید موجودی اسکناس را بپرسید.</p>
+      <p class="lead" style="margin-bottom:10px">پیش از رفتن می‌توانی موجودی طلای شعبه را بپرسی.</p>
       <div class="row"><span class="k">تلفن</span><span class="v num">۰۲۱ ۸۸ ۴۵ ۲۲ ۱۰</span></div>
       <div class="row"><span class="k">ساعت کاری</span><span class="v">${t.hours}</span></div>
       <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet()">بستن</button>`;
@@ -2553,7 +2861,7 @@ function guard(){
   if(S.available>0) return true;
   openSheet('custody');
   $('sheet-body').innerHTML=`<h3>اول باید موجودی داشته باشی</h3>
-    <p class="lead" style="margin-bottom:12px">برای انتقال، خرید اشتراک یا برداشت، اول بخشی از ریال را به دلار دیجیتال تبدیل کن.</p>
+    <p class="lead" style="margin-bottom:12px">برای انتقال، سرمایه‌گذاری یا تحویل طلا، اول بخشی از تومان را به دلار دیجیتال تبدیل کن.</p>
     <button class="btn btn-primary" onclick="closeSheet();go('convert')">رفتن به تبدیل</button>
     <button class="btn btn-ghost" onclick="closeSheet()">بستن</button>`;
   return false;
@@ -2612,7 +2920,7 @@ const LEX={
     pillowSub:'کلید دست خودت است. تا برنداری، حتی روی همین صفحه هم نشان داده نمی‌شود.',
     pillowTap:'بالش را بردار',
     nestWord:'لانه', nestsMine:'لانه‌های شما',
-    eggLine:'<svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 4.5 6.4 4.5 9a4.5 4.5 0 01-9 0c0-2.6 1.5-5.4 4.5-9z"/><path d="M3 20h18"/></svg><p><b>همهٔ تخم‌مرغ‌هایت را توی یک سبد نگذار.</b> هر لانه ترکیبی از چند دارایی است، نه یکی. اگر یکی افت کند، بقیه کل ضرر را نمی‌گذارند روی دوشت.</p>',
+    eggLine:'<svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 4.5 6.4 4.5 9a4.5 4.5 0 01-9 0c0-2.6 1.5-5.4 4.5-9z"/><path d="M3 20h18"/></svg><p><b>همهٔ تخم‌مرغ‌هایت را توی یک سبد نگذار.</b> هر لانه ترکیبی از چند دارایی است، نه یکی — اگر یکی افت کند، بقیه جلوی ضرر را می‌گیرند.</p>',
     dashTotal:'ارزش کل', dashBranches:'لانه‌های شما', dashCan:'کارهایی که می‌توانید انجام دهید',
     dashState:'وضعیت', dashRate:'نرخ خرید امروز', dashFee:'کارمزد تبدیل',
     dashCustody:'نگهداری دارایی', dashLock:'قفل زمانی', dashRecent:'آخرین فعالیت‌ها',
@@ -2622,7 +2930,7 @@ const LEX={
     txIn:'نشستن دلار در آشیانه', txOutTo:'پر کشیدن به سوی سارا رضایی',
     goalAddTitle:'گذاشتن روی شاخه', goalRelTitle:'برگرداندن به آشیانه',
     introH:'آشیانه‌ای که هر وقت بخواهید<br>می‌توانید از آن پر بکشید.',
-    introP:'تومان را با نرخ و کارمزد شفاف به دلار تبدیل کنید. دلار در آشیانه می‌نشیند و هر وقت لازم شد از همان‌جا انتقال می‌دهید، در لانه‌ای سرمایه‌گذاری می‌کنید، اسکناس تحویل می‌گیرید یا به تومان برمی‌گردانید.'
+    introP:'تومان را با نرخ و کارمزد شفاف به دلار تبدیل کنید. دلار در آشیانه می‌نشیند و هر وقت لازم شد از همان‌جا انتقال می‌دهید، در لانه‌ای سرمایه‌گذاری می‌کنید، طلا تحویل می‌گیرید یا به تومان برمی‌گردانید.'
   }
 };
 S.anchor=false; S.phys=true; S.pulse=false; S.pillow=false; S.lifted=false; S.lifting=false; S.faqOpened=new Set();
