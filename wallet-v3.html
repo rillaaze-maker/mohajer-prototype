@@ -1168,11 +1168,15 @@ button,input,select,textarea{color:inherit}
       <div class="card" style="padding:4px 16px">
         <div class="row"><span class="k" data-lex="dashRate">نرخ خرید امروز</span><span class="v num" id="d-rate">—</span></div>
         <div class="row"><span class="k" data-lex="dashFee">کارمزد تبدیل</span><span class="v num" id="d-fee">—</span></div>
-        <div class="row"><span class="k" data-lex="dashCustody">نگهداری دارایی</span><span class="v">کیف‌ چندامضایی · گزارش ماهانه</span></div>
+        <div class="row"><span class="k" data-lex="dashCustody"></span><span class="v" data-lex="dashCustodyV"></span></div>
         <div class="row"><span class="k" data-lex="dashLock">قفل زمانی</span><span class="v" style="color:var(--ok)">ندارد</span></div>
       </div>
 
       <div class="sec">سؤال و پاسخ</div>
+      <div class="note ok" style="margin-top:10px">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+        <p data-lex="yoursLine"></p>
+      </div>
       <button class="support" onclick="openSheet('support')">
         <div class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3.5-7.1"/><path d="M12 12h.01M8 12h.01M16 12h.01"/></svg></div>
         <div class="m"><div class="t">پشتیبان انسانی</div><div class="d">برای پرداخت، انتقال و برداشت · معمولاً زیر ۱۵ دقیقه</div></div>
@@ -1515,9 +1519,9 @@ button,input,select,textarea{color:inherit}
       </div>
 
       <div class="card" style="margin-top:12px;padding:4px 16px">
-        <div class="row"><span class="k">فاصله</span><span class="v num" id="ps-dist">—</span></div>
+        <div class="row"><span class="k">فاصله</span><span class="v" id="ps-dist">—</span></div>
         <div class="row"><span class="k">ساعت کاری</span><span class="v" id="ps-hours">—</span></div>
-        <div class="row"><span class="k">موجودی طلای این شعبه</span><span class="v num" id="ps-cap">—</span></div>
+        <div class="row"><span class="k">موجودی طلای این شعبه</span><span class="v" id="ps-cap">—</span></div>
         <div class="row"><span class="k">وضعیت</span><span class="v" id="ps-open">—</span></div>
       </div>
 
@@ -1596,7 +1600,7 @@ button,input,select,textarea{color:inherit}
       </div>
       <div class="card" style="margin-top:12px;padding:4px 16px;text-align:start">
         <div class="row"><span class="k">صرافی</span><span class="v" id="pc-shop">—</span></div>
-        <div class="row"><span class="k">تحویل می‌گیری</span><span class="v num" id="pc-amt">—</span></div>
+        <div class="row"><span class="k">تحویل می‌گیری</span><span class="v" id="pc-amt">—</span></div>
         <div class="row"><span class="k">زمان</span><span class="v" id="pc-slot">—</span></div>
         <div class="row"><span class="k">اعتبار کد</span><span class="v">۲۴ ساعت</span></div>
       </div>
@@ -1624,8 +1628,7 @@ button,input,select,textarea{color:inherit}
       <div id="nest-list"></div>
       <div class="note" style="margin-top:12px">
         <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
-        <p>اعداد گذشته فقط برای نشان‌دادن رفتار هر لانه‌اند و <b>تضمین آینده نیستند</b>.
-          ارزش این دارایی‌ها می‌تواند کم هم بشود.</p>
+        <p data-lex="investDisclaim"></p>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -1636,7 +1639,7 @@ button,input,select,textarea{color:inherit}
   <section class="screen" data-screen="n-detail">
     <div class="nav">
       <button class="back" onclick="go('invest')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <h2 id="nd-title">لانه</h2>
+      <h2 id="nd-title"></h2>
     </div>
     <div class="scroll">
       <div class="chartbox">
@@ -1648,7 +1651,7 @@ button,input,select,textarea{color:inherit}
         <div class="rangepick" id="nd-range"></div>
       </div>
 
-      <div class="sec">این لانه از چه ساخته شده</div>
+      <div class="sec" data-lex="mixTitle"></div>
       <div class="card">
         <div class="mixbar" id="nd-mix"></div>
         <div id="nd-key"></div>
@@ -1669,7 +1672,7 @@ button,input,select,textarea{color:inherit}
       </div>
       <div style="height:12px"></div>
     </div>
-    <button class="btn btn-primary" onclick="goBuy()">گذاشتن در این لانه</button>
+    <button class="btn btn-primary" onclick="goBuy()" data-lex="investCta"></button>
   </section>
 
   <!-- ═══ INVEST · done ═══ -->
@@ -1681,7 +1684,7 @@ button,input,select,textarea{color:inherit}
       <div style="margin-top:14px" id="ns-badge"><span class="badge b-ok">انجام شد</span></div>
       <div style="width:100%">
         <div class="card" style="margin-top:16px;padding:4px 16px;text-align:start">
-          <div class="row"><span class="k" id="ns-word">لانه</span><span class="v" id="ns-nest">—</span></div>
+          <div class="row"><span class="k" id="ns-word"></span><span class="v" id="ns-nest">—</span></div>
           <div class="row"><span class="k">کارمزد ورود</span><span class="v num" id="ns-fee">—</span></div>
           <div class="row"><span class="k">ارزش فعلی این سبد</span><span class="v num" id="ns-now">—</span></div>
           <div class="row"><span class="k">قفل زمانی</span><span class="v" style="color:var(--ok)">ندارد</span></div>
@@ -1707,17 +1710,16 @@ button,input,select,textarea{color:inherit}
       <h2 id="na-title">مبلغ</h2>
     </div>
     <div class="scroll">
-      <div class="field"><label>چقدر در این لانه بگذارید؟ · دلار</label>
+      <div class="field"><label data-lex="investAmt"></label>
         <input id="na-amt" class="input num" inputmode="decimal" value="100" oninput="naCheck()"></div>
       <div id="na-warn"></div>
       <div class="card" style="padding:4px 16px;margin-top:4px">
         <div class="row"><span class="k">کارمزد ورود</span><span class="v num" id="na-fee">—</span></div>
-        <div class="row"><span class="k">وارد لانه می‌شود</span><span class="v num" id="na-net">—</span></div>
+        <div class="row"><span class="k" data-lex="investNet"></span><span class="v num" id="na-net">—</span></div>
       </div>
       <div class="note" style="margin-top:12px">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-        <p>هر وقت بخواهید می‌توانید بیرون بکشید. قفل زمانی و جریمه‌ای وجود ندارد؛
-          فقط ارزش لانه در همان روز محاسبه می‌شود.</p>
+        <p data-lex="investExit"></p>
       </div>
     </div>
     <button class="btn btn-primary" id="na-cta" onclick="doNest()">تأیید</button>
@@ -2236,10 +2238,10 @@ function openNest(id){
   $('nd-vol').textContent=n.vol;
   $('nd-year').textContent=n.year;
   $('nd-warn').innerHTML = n.riskLv>=3
-    ? '<b>این لانه می‌تواند به‌شدت افت کند.</b> فقط مبلغی بگذارید که اگر نصف شود، برنامه‌تان به هم نریزد.'
+    ? '<b>این '+L('nestWord')+' می‌تواند به‌شدت افت کند.</b> فقط مبلغی بگذار که اگر نصف شود، برنامه‌ات به هم نریزد.'
     : n.riskLv===2
-    ? '<b>ارزش این لانه بالا و پایین می‌شود.</b> برای پولی که ماه بعد لازمتان می‌شود مناسب نیست.'
-    : '<b>کم‌نوسان یعنی بی‌نوسان نیست.</b> ارزش این لانه هم می‌تواند کم شود.';
+    ? '<b>ارزش این '+L('nestWord')+' بالا و پایین می‌شود.</b> برای پولی که ماه بعد لازمت می‌شود مناسب نیست.'
+    : '<b>کم‌نوسان یعنی بی‌نوسان نیست.</b> ارزش این '+L('nestWord')+' هم می‌تواند کم شود.';
   $('nd-range').innerHTML=RANGES.map(r=>
     '<button aria-pressed="'+(r[0]===ndRange)+'" onclick="setRange('+r[0]+')">'+r[1]+'</button>').join('');
   $('nd-rangelab').textContent=RANGES.find(r=>r[0]===ndRange)[1]+' گذشته';
@@ -2392,9 +2394,9 @@ function pickShop(id){
 function openShop(id){
   const t = shop(id); S.shop = id; S.route = false;
   $('ps-name').textContent = t.n;
-  $('ps-dist').textContent = fa(t.km.toFixed(1)) + ' کیلومتر · ' + fa(t.min) + ' دقیقه پیاده';
+  $('ps-dist').innerHTML = '<span class="num">' + fa(t.km.toFixed(1)) + '</span> کیلومتر · <span class="num">' + fa(t.min) + '</span> دقیقه پیاده';
   $('ps-hours').textContent = t.hours;
-  $('ps-cap').textContent = fa(t.capG) + ' گرم';
+  $('ps-cap').innerHTML = '<span class="num">' + fa(t.capG) + '</span> گرم';
   $('ps-open').innerHTML = t.open
     ? '<span style="color:var(--ok)">الان باز است</span>'
     : '<span style="color:var(--ink-3)">الان بسته است</span>';
@@ -2488,10 +2490,10 @@ function doPhysical(){
                  code:String(Math.floor(1000+Math.random()*9000)) };
   $('pc-code').textContent = fa(S.physical.code.split('').join(' '));
   $('pc-shop').textContent = t.n;
-  $('pc-amt').textContent = fa(g) + ' گرم طلای ' + CONFIG.goldCarat;
+  $('pc-amt').innerHTML = '<span class="num">' + fa(g) + '</span> گرم طلای ' + CONFIG.goldCarat;
   $('pc-slot').textContent = S.physical.slot;
   addTx({ kind:'physical', title:'تحویل طلا · '+t.n, amount:total, dir:'out', status:'pending',
-    rows:[['تحویل', fa(g)+' گرم طلای '+CONFIG.goldCarat],['صرافی',t.n],
+    rows:[['تحویل', fa(g)+' گرم طلای '+CONFIG.goldCarat+' '],['صرافی',t.n],
           ['نرخ هر گرم',usd(CONFIG.goldUsdPerGram)],['کارمزد تحویل',usd(CONFIG.goldDeliveryFee)],
           ['زمان',S.physical.slot],['کد',fa(S.physical.code)],['کسر مبلغ','لحظهٔ تحویل']] });
   render(); go('p-status');
@@ -2512,7 +2514,7 @@ const DASH_ACTIONS=[
   {t:'انتقال به کاربر دیگر', d:'با شمارهٔ موبایل. نام گیرنده پیش از ارسال نشان داده می‌شود.',
    f:'بدون کارمزد بین کاربران مهاجر', go:'startTransfer()',
    ic:'<path d="M12 19V5M5 12l7-7 7 7"/>'},
-  {t:'سرمایه‌گذاری در یک لانه', d:'ترکیبی از دلار، طلا و رمزارز — نه فقط یکی.',
+  {t:'سرمایه‌گذاری', d:'ترکیبی از دلار، طلا و رمزارز — نه فقط یکی.',
    f:'سه سطح ریسک · بدون قفل زمانی', go:"go('invest')",
    ic:'<path d="M4 19V9M10 19V5M16 19v-7M22 19h-20"/>'},
   {t:'تحویل فیزیکی طلا', d:'طلای ۱۸ عیار، از یکی از صرافی‌های طرف قرارداد، با کد یک‌بارمصرف.',
@@ -2544,10 +2546,10 @@ function renderDash(){
             <div class="d">${n.risk} · <span class="num">${usd(h.amount)}</span></div></div></button>`}).join('')
     : `<button class="opt" onclick="go('invest')">
          <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19h-20"/></svg></div>
-         <div class="m"><div class="t">هنوز در لانه‌ای نگذاشته‌اید</div>
-           <div class="d">همهٔ تخم‌مرغ‌هایتان را توی یک سبد نگذارید — سه ترکیب آماده هست.</div></div></button>`;
+         <div class="m"><div class="t">${L('investEmpty')}</div>
+           <div class="d">سه ترکیب آماده هست، با سه سطح ریسک.</div></div></button>`;
 
-  $('d-actions').innerHTML=DASH_ACTIONS.filter(a=>S.phys||a.go!=='openPhysical()').map(a=>
+  $('d-actions').innerHTML=DASH_ACTIONS.filter(a=>S.phys||a.go!=="go('p-choose')").map(a=>
     `<button class="opt" onclick="${a.go}">
        <div class="ic"><svg viewBox="0 0 24 24">${a.ic}</svg></div>
        <div class="m"><div class="t">${a.t}</div><div class="d">${a.d}</div>
@@ -2567,7 +2569,7 @@ function startWithdraw(){ if(!guard()) return; S.wRaw=''; render(); go('w-amt');
    cannot stand behind yet says so in the row itself. */
 const ANCHOR=[
   {k:'ثبت شرکت',        v:'ثبت‌شده در ایران',            ok:true},
-  {k:'نگهداری دارایی',  v:'کیف چندامضایی · گزارش ماهانه', ok:true},
+  {k:'پولت کجا نگه داشته می‌شود', v:'جدا از حساب‌های ما', ok:true},
   {k:'پشتیبان مسئول',   v:'یک نفر مشخص، با نام',          ok:true},
   {k:'صرافی طرف قرارداد',v:'در حال بررسی',               ok:false},
   {k:'دفتر حضوری',      v:'در حال بررسی',                ok:false},
@@ -2589,30 +2591,35 @@ function anchorHTML(){
    close the specific gaps that stopped people. */
 const FAQ=[
  {q:'پولم دقیقاً کجاست و دست کیست؟',
-  a:'معادل دلاری پول شما نزد شریک نگهدارنده در کیف چندامضایی نگهداری می‌شود — یعنی هیچ‌کس به‌تنهایی نمی‌تواند آن را جابه‌جا کند. گزارش موجودی ماهانه در دسترس شماست. <span class="rev">انتخاب شریک هنوز نهایی نشده</span> و تا آن زمان نامی اعلام نمی‌کنیم.'},
+  a:'معادل دلاری پولت جدا از حساب‌های خودِ مهاجر نگه داشته می‌شود و برای جابه‌جایی‌اش امضای بیش از یک نفر لازم است — یعنی هیچ‌کس به‌تنهایی نمی‌تواند به آن دست بزند. <b>برای برداشتنش هم لازم نیست به ما اعتماد کنی؛ دسترسی‌اش دست خودت است.</b> <span class="rev">انتخاب شریک نگهدارنده هنوز نهایی نشده</span> و تا آن زمان نامی اعلام نمی‌کنیم.'},
  {q:'اگر مهاجر نبود، پول من چه می‌شود؟',
-  a:'دارایی جدا از حساب‌های عملیاتی مهاجر نگهداری می‌شود و برداشت آن به ادامهٔ کار ما وابسته نیست. <span class="rev">جزئیات حقوقی این تفکیک در حال بررسی است</span> و وقتی نهایی شد، همین‌جا اعلام می‌شود.'},
+  a:'پول تو در حساب‌های عملیاتی ما نیست، پس به ادامهٔ کار ما وابسته نیست. اگر می‌خواهی این را کامل از دست ما خارج کنی، دو راه داری: <b>طلا را فیزیکی تحویل بگیر</b>، یا <b>کلید مهاجر</b> را سفارش بده که کلید دارایی را خودش نگه می‌دارد. <span class="rev">جزئیات حقوقی این تفکیک در حال بررسی است.</span>'},
  {q:'هر وقت بخواهم می‌توانم پولم را برگردانم؟',
-  a:'بله. هیچ قفل زمانی و هیچ جریمه‌ای وجود ندارد. برگرداندن دلار به تومان از همان صفحهٔ «تبدیل» انجام می‌شود و مبلغ به حساب بانکی به‌نام خودتان می‌رود. کارمزد فروش پیش از تأیید نمایش داده می‌شود.'},
+  a:'بله. هیچ قفل زمانی و هیچ جریمه‌ای وجود ندارد. برگرداندن دلار به تومان از همان صفحهٔ «تبدیل» انجام می‌شود و مبلغ به حساب بانکی به‌نام خودت می‌رود. کارمزد پیش از تأیید نمایش داده می‌شود.'},
  {q:'«تبدیل» با شارژ حساب فرق دارد؟',
-  a:'هر دو است. تومان از حساب بانکی شما کم می‌شود و <b>معادل دلاری‌اش</b> به موجودی شما اضافه می‌شود — پس هم شارژ است و هم تبدیل ارز. همین صفحه هر دو جهت را انجام می‌دهد: تومان به دلار، و دلار به تومان.'},
- {q:'صندوق‌ها سود می‌دهند؟ اگر نه، به چه درد می‌خورند؟',
-  a:'<b>سود نمی‌دهند.</b> صندوق سپرده نیست؛ کاری که می‌کند جدا نگه داشتن پولِ یک هدف از پولِ روزمره است تا بدانید از کدام جیب دارید برمی‌دارید. ارزش از دلار بودنِ پول می‌آید، نه از سود. پول صندوق هر لحظه و بدون کارمزد به موجودی آزاد برمی‌گردد.'},
+  a:'هر دو است. تومان از حساب بانکی تو کم می‌شود و <b>معادل دلاری‌اش</b> به موجودی‌ات اضافه می‌شود. همان صفحه هر دو جهت را انجام می‌دهد: تومان به دلار، و دلار به تومان.'},
+ {q:'{NP} سود می‌دهند؟ اگر نه، به چه درد می‌خورند؟',
+  a:'<b>سود ثابتی پرداخت نمی‌شود.</b> هر {N} ترکیبی از چند دارایی است — دلار، طلا و رمزارز — و ارزشش با بازار بالا و پایین می‌رود. کاری که می‌کند این است که همهٔ پولت را روی یک چیز نمی‌گذارد، تا اگر یکی افت کرد بقیه جلوی ضرر را بگیرند. <b>ارزشش می‌تواند کم هم بشود.</b>'},
+ {q:'طلا را چطور تحویل می‌گیرم؟',
+  a:'از تب «تحویل فیزیکی»، مقدار طلا را به گرم انتخاب می‌کنی و یکی از صرافی‌های طرف قرارداد را روی نقشه برمی‌داری. یک کد یک‌بارمصرف می‌گیری و حضوری طلای ۱۸ عیار تحویل می‌گیری. <b>تا لحظه‌ای که کد را ندهی، هیچ مبلغی از حسابت کم نمی‌شود.</b>'},
+ {q:'کلید مهاجر چیست و چه فرقی می‌کند؟',
+  a:'یک دستگاه کوچک که کلید دارایی‌ات را <b>خودش داخل خودش می‌سازد</b> و بیرون نمی‌دهد. با آن، دارایی کاملاً دست خودت است و ما حتی اگر بخواهیم هم نمی‌توانیم به آن دست بزنیم. روی دیگرش هم هست: اگر دستگاه و آن دوازده کلمهٔ بازیابی را با هم گم کنی، <b>هیچ‌کس نمی‌تواند برش گرداند</b>.'},
  {q:'کارمزد دقیقاً چقدر است؟',
-  a:'یک درصد کارمزد روی نرخ، به‌علاوهٔ یک کارمزد ثابت. هر دو <b>پیش از تأیید</b> و جداگانه نوشته می‌شوند و نرخ تا زمان تأیید قفل می‌ماند. تراکنش‌های آزمایشی کوچک بدون کارمزد ثابت هستند.'},
+  a:'یک درصد کارمزد روی نرخ تبدیل، به‌علاوهٔ یک کارمزد ثابت. ورود به هر {N} نیم درصد است و تحویل حضوری طلا $2.50. همه <b>پیش از تأیید</b> و جداگانه نوشته می‌شوند و نرخ تا زمان تأیید قفل می‌ماند.'},
  {q:'چقدر طول می‌کشد؟',
-  a:'تبدیل معمولاً کمتر از چند دقیقه. انتقال بین کاربران مهاجر آنی است. برداشت به حساب بانکی تابع ساعت کاری شبکهٔ بانکی است و زمان تقریبی پیش از تأیید نمایش داده می‌شود.'},
+  a:'تبدیل معمولاً کمتر از چند دقیقه. انتقال بین کاربران مهاجر آنی است. برداشت بانکی تابع ساعت کاری شبکهٔ بانکی است و کلید مهاجر ۵ تا ۷ روز کاری پست می‌شود. زمان تقریبی همیشه پیش از تأیید نمایش داده می‌شود.'},
  {q:'اگر تراکنش انجام نشد چه می‌شود؟',
-  a:'مبلغ به موجودی شما برمی‌گردد و وضعیت آن در بخش فعالیت‌ها با دلیل ثبت می‌شود. اگر برگشت نخورد، پشتیبان مشخصی پیگیری می‌کند — نه یک صف پاسخ خودکار.'}
+  a:'مبلغ به موجودی‌ات برمی‌گردد و وضعیتش در بخش فعالیت‌ها با دلیل ثبت می‌شود. اگر برنگشت، یک پشتیبان مشخص پیگیری می‌کند — نه یک صف پاسخ خودکار.'}
 ];
 function renderFAQ(){
   const el=$('d-faq'); if(!el) return;
+  const W=t=>t.split('{NP}').join(L('nestWordPl')).split('{N}').join(L('nestWord'));
   el.innerHTML=FAQ.map((f,i)=>
-    `<details data-i="${i}"><summary><span class="q">${f.q}</span>
+    `<details data-i="${i}"><summary><span class="q">${W(f.q)}</span>
        <svg class="cv" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
-       <div class="a">${f.a}</div></details>`).join('');
+       <div class="a">${W(f.a)}</div></details>`).join('');
   el.querySelectorAll('details').forEach(d=>d.addEventListener('toggle',()=>{
-    if(d.open) S.faqOpened.add(FAQ[+d.dataset.i].q);
+    if(d.open) S.faqOpened.add(W(FAQ[+d.dataset.i].q));
   }));
 }
 /* what a participant chose to open is behavioural evidence, not a page view */
@@ -2809,7 +2816,7 @@ function openSheet(kind,data){
     h=`<h3>پشتوانه و مسئولیت</h3>
       <p class="lead" style="margin-bottom:12px">آنچه امروز قطعی است و آنچه هنوز در حال بررسی است، جدا نوشته شده. هیچ موردی که نهایی نشده باشد اینجا به‌عنوان قطعی نمایش داده نمی‌شود.</p>
       <div class="row"><span class="k">ثبت شرکت</span><span class="v">ثبت‌شده در ایران</span></div>
-      <div class="row"><span class="k">نگهداری دارایی</span><span class="v">کیف چندامضایی</span></div>
+      <div class="row"><span class="k">پولت کجاست</span><span class="v">جدا از حساب‌های ما</span></div>
       <div class="row"><span class="k">گزارش موجودی</span><span class="v">ماهانه، قابل مشاهده</span></div>
       <div class="row"><span class="k">پشتیبان مسئول</span><span class="v">یک نفر مشخص، با نام</span></div>
       <div style="height:10px"></div>
@@ -2820,9 +2827,9 @@ function openSheet(kind,data){
       <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet()">بستن</button>`;
   }
   else if(kind==='nestHelp'){
-    h=`<h3>لانه چیست؟</h3>
-      <p class="lead" style="margin-bottom:10px">به‌جای اینکه همهٔ پولتان را روی یک دارایی بگذارید،
-        هر لانه ترکیبی از چند دارایی است. اگر یکی افت کند، بقیه کل ضرر را روی دوش شما نمی‌گذارند.</p>
+    h=`<h3>${L('nestWord')} چیست؟</h3>
+      <p class="lead" style="margin-bottom:10px">به‌جای اینکه همهٔ پولت را روی یک دارایی بگذاری،
+        هر ${L('nestWord')} ترکیبی از چند دارایی است — اگر یکی افت کند، بقیه جلوی ضرر را می‌گیرند.</p>
       <div class="row"><span class="k">کمترین مبلغ</span><span class="v num">$10</span></div>
       <div class="row"><span class="k">کارمزد ورود</span><span class="v num">۰٫۵٪</span></div>
       <div class="row"><span class="k">قفل زمانی</span><span class="v" style="color:var(--ok)">ندارد</span></div>
@@ -2830,8 +2837,8 @@ function openSheet(kind,data){
       <div style="height:10px"></div>
       <div class="note bad" style="text-align:start">
         <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
-        <p>ارزش لانه می‌تواند <b>کم هم بشود</b>. عددهای گذشته رفتار هر ترکیب را نشان می‌دهند،
-          نه چیزی که قرار است اتفاق بیفتد.</p>
+        <p>ارزش ${L('nestWord')} می‌تواند <b>کم هم بشود</b>. عددهای گذشته رفتار هر ترکیب را
+          نشان می‌دهند، نه چیزی که قرار است اتفاق بیفتد.</p>
       </div>
       <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet()">فهمیدم</button>`;
   }
@@ -2892,14 +2899,21 @@ const LEX={
     goalDel:'حذف صندوق (پول برمی‌گردد)', convertOk:'به موجودی دلاری‌ات اضافه شد.',
     homeEmpty:'هنوز موجودی نداری. با <b>تبدیل</b> شروع کن — بعد از آن بقیهٔ کارها از همین موجودی انجام می‌شود.',
     useAvail:'موجودی آزاد', payFrom:'موجودی آزاد', goalPrefix:'صندوق',
+    investDisclaim:'اعداد گذشته فقط رفتار هر سبد را نشان می‌دهند و <b>تضمین آینده نیستند</b>. ارزش این دارایی‌ها می‌تواند کم هم بشود.',
+    mixTitle:'این سبد از چه ساخته شده', investCta:'سرمایه‌گذاری در این سبد',
+    investAmt:'چه مبلغی در این سبد بگذارید؟ · دلار', investNet:'وارد سبد می‌شود',
+    investExit:'هر وقت بخواهید می‌توانید بیرون بکشید. قفل زمانی و جریمه‌ای وجود ندارد؛ فقط ارزش سبد در همان روز حساب می‌شود.',
+    investEmpty:'هنوز در سبدی سرمایه‌گذاری نکرده‌اید',
+    dashCustody:'پول شما کجاست', dashCustodyV:'جدا از حساب‌های ما', nestWordPl:'سبدها',
+    yoursLine:'برای برداشتن پولتان لازم نیست به ما اعتماد کنید — دسترسی‌اش دست خودتان است.',
     pillowSay:'دارایی شما زیر بالش است.',
     pillowSub:'کلید دست خودتان است. تا برندارید، حتی روی همین صفحه هم نشان داده نمی‌شود.',
     pillowTap:'بالش را بردارید',
     nestWord:'سبد', nestsMine:'سبدهای شما',
     eggLine:'<svg viewBox="0 0 24 24"><path d="M12 3v18M5 8h14M5 16h14"/></svg><p><b>همهٔ پولتان را روی یک دارایی نگذارید.</b> هر سبد ترکیبی از چند دارایی است، نه یکی. اگر یکی افت کند، بقیه کل ضرر را روی دوش شما نمی‌گذارند.</p>',
-    dashTotal:'ارزش کل', dashBranches:'لانه‌های شما', dashCan:'کارهایی که می‌توانید انجام دهید',
+    dashTotal:'ارزش کل', dashBranches:'سبدهای شما', dashCan:'کارهایی که می‌توانید انجام دهید',
     dashState:'وضعیت', dashRate:'نرخ خرید امروز', dashFee:'کارمزد تبدیل',
-    dashCustody:'نگهداری دارایی', dashLock:'قفل زمانی', dashRecent:'آخرین فعالیت‌ها',
+    dashLock:'قفل زمانی', dashRecent:'آخرین فعالیت‌ها',
 
     homeCta:'تبدیل به دلار', qSend:'انتقال', qGoal:'صندوق', qOut:'برداشت',
     useTitle:'نمای کلی', unitAlt:'به تومان', unitBack:'به دلار',
@@ -2909,7 +2923,7 @@ const LEX={
     introP:'تومان را با نرخ و کارمزد شفاف به دلار دیجیتال تبدیل کنید. هر وقت لازم شد از همان موجودی انتقال بدهید، در یک سبد سرمایه‌گذاری کنید، اسکناس تحویل بگیرید یا به تومان برگردانید.'
   },
   nest:{
-    walletLabel:'ارزش آشیانهٔ شما', availLabel:'در آشیانه', goalsLabel:'در لانه‌ها',
+    walletLabel:'ارزش آشیانهٔ شما', availLabel:'در آشیانه', goalsLabel:'در سبدها',
     pendingLabel:'در راه', goalsTab:'سرمایه‌گذاری', goalsTitle:'شاخه‌های هدف',
     goalNew:'شاخهٔ جدید', goalNewCta:'ساخت شاخهٔ جدید', goalEmpty:'هنوز شاخه‌ای نساخته‌اید',
     goalNote:'پولِ روی شاخه <b>قفل نمی‌شود</b>. هر لحظه، آنی و بدون کارمزد به آشیانه برمی‌گردد.',
@@ -2921,6 +2935,13 @@ const LEX={
     goalDel:'حذف شاخه (پول برمی‌گردد)', convertOk:'به آشیانهٔ شما نشست.',
     homeEmpty:'آشیانه هنوز خالی است. با <b>تبدیل</b> شروع کنید — بعد از آن بقیهٔ کارها از همین‌جا انجام می‌شود.',
     useAvail:'در آشیانه', payFrom:'در آشیانه', goalPrefix:'شاخهٔ',
+    investDisclaim:'اعداد گذشته فقط رفتار هر لانه را نشان می‌دهند و <b>تضمین آینده نیستند</b>. ارزش این دارایی‌ها می‌تواند کم هم بشود.',
+    mixTitle:'این لانه از چه ساخته شده', investCta:'سرمایه‌گذاری در این لانه',
+    investAmt:'چه مبلغی در این لانه بگذاری؟ · دلار', investNet:'وارد لانه می‌شود',
+    investExit:'هر وقت بخواهی می‌توانی بیرون بکشی. قفل زمانی و جریمه‌ای وجود ندارد؛ فقط ارزش لانه در همان روز حساب می‌شود.',
+    investEmpty:'هنوز در لانه‌ای سرمایه‌گذاری نکرده‌ای',
+    dashCustody:'پولت کجاست', dashCustodyV:'جدا از حساب‌های ما', nestWordPl:'لانه‌ها',
+    yoursLine:'برای برداشتن پولت لازم نیست به ما اعتماد کنی — دسترسی‌اش دست خودت است.',
     pillowSay:'دارایی‌ات زیر بالشته.',
     pillowSub:'کلید دست خودت است. تا برنداری، حتی روی همین صفحه هم نشان داده نمی‌شود.',
     pillowTap:'بالش را بردار',
@@ -2928,7 +2949,7 @@ const LEX={
     eggLine:'<svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 4.5 6.4 4.5 9a4.5 4.5 0 01-9 0c0-2.6 1.5-5.4 4.5-9z"/><path d="M3 20h18"/></svg><p><b>همهٔ تخم‌مرغ‌هایت را توی یک سبد نگذار.</b> هر لانه ترکیبی از چند دارایی است، نه یکی — اگر یکی افت کند، بقیه جلوی ضرر را می‌گیرند.</p>',
     dashTotal:'ارزش کل', dashBranches:'لانه‌های شما', dashCan:'کارهایی که می‌توانید انجام دهید',
     dashState:'وضعیت', dashRate:'نرخ خرید امروز', dashFee:'کارمزد تبدیل',
-    dashCustody:'نگهداری دارایی', dashLock:'قفل زمانی', dashRecent:'آخرین فعالیت‌ها',
+    dashLock:'قفل زمانی', dashRecent:'آخرین فعالیت‌ها',
 
     homeCta:'تبدیل به دلار', qSend:'انتقال', qGoal:'شاخه', qOut:'برداشت',
     useTitle:'نمای کلی', unitAlt:'به تومان', unitBack:'به دلار',
