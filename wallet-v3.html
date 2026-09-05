@@ -478,6 +478,8 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 @media(prefers-reduced-motion:reduce){.devimg{animation:none}}
 .custody{display:flex;gap:10px;align-items:flex-start;padding:14px 15px;border-radius:var(--r-md);
   background:var(--surface-2);margin-top:10px}
+.custody .ct{font-size:13.5px;font-weight:700;letter-spacing:-.015em;margin-bottom:5px;color:var(--ink)}
+.custody.who .ct{color:var(--ok)}
 .custody svg{width:16px;height:16px;flex:none;margin-top:2px;fill:none;stroke-width:1.8;
   stroke-linecap:round;stroke-linejoin:round}
 .custody p{font-size:12.5px;line-height:1.75;color:var(--ink-2)}
@@ -1173,9 +1175,12 @@ button,input,select,textarea{color:inherit}
       </div>
 
       <div class="sec">سؤال و پاسخ</div>
-      <div class="note ok" style="margin-top:10px">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-        <p data-lex="yoursLine"></p>
+      <div class="custody who">
+        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/></svg>
+        <div>
+          <div class="ct" data-lex="custodyTitle"></div>
+          <p data-lex="custodyWhat"></p>
+        </div>
       </div>
       <button class="support" onclick="openSheet('support')">
         <div class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3.5-7.1"/><path d="M12 12h.01M8 12h.01M16 12h.01"/></svg></div>
@@ -1326,13 +1331,16 @@ button,input,select,textarea{color:inherit}
         <span class="m">
           <span class="t">کلید مهاجر</span>
           <span class="d">یک دستگاه کوچک که کلید دارایی‌ات را خودش می‌سازد و نگه می‌دارد. برایت پست می‌کنیم.</span>
-          <span class="lim">نگهداری کامل دست خودت · بدون دسترسی ما</span>
+          <span class="lim">حضانت کامل دست خودت · بدون دسترسی ما</span>
         </span>
       </button>
 
-      <div class="custody who" style="margin-top:14px">
-        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/></svg>
-        <p>هر دو راه یک چیز را ثابت می‌کنند: <b>خروج دارایی‌ات به اجازهٔ ما نیاز ندارد.</b></p>
+      <div class="custody who">
+        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/></svg>
+        <div>
+          <div class="ct" data-lex="custodyTitle"></div>
+          <p data-lex="custodyWhat"></p>
+        </div>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -1385,11 +1393,19 @@ button,input,select,textarea{color:inherit}
       </div>
       <p class="tiny" style="margin-top:8px">…و شش کلمهٔ دیگر روی خود دستگاه.</p>
 
+      <div class="custody who">
+        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/></svg>
+        <div>
+          <div class="ct" data-lex="custodyTitle"></div>
+          <p data-lex="custodyWhat"></p>
+        </div>
+      </div>
+
       <div class="custody risk">
         <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
         <p><b>روی دیگر سکه را هم بدان:</b> اگر هم دستگاه و هم آن دوازده کلمه را از دست بدهی،
           <b>هیچ‌کس نمی‌تواند دارایی را برگرداند</b> — نه ما، نه هیچ‌کس دیگر.
-          نگهداری کامل یعنی مسئولیت کامل.</p>
+          حضانت کامل یعنی مسئولیت کامل.</p>
       </div>
 
       <div class="custody">
@@ -1502,6 +1518,13 @@ button,input,select,textarea{color:inherit}
         <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/></svg>
         <p>این صرافی‌ها طرف قرارداد مهاجرند و <b>پول را از قبل نمی‌گیرند</b>.
           مبلغ فقط در لحظهٔ تحویلِ طلا و با کد تو آزاد می‌شود.</p>
+      </div>
+      <div class="custody who">
+        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/></svg>
+        <div>
+          <div class="ct" data-lex="custodyTitle"></div>
+          <p data-lex="custodyWhat"></p>
+        </div>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -1911,7 +1934,7 @@ const CONFIG={
 /* ════════ state ════════ */
 const S={ available:0, pending:0,  activity:[], failMode:false,
           cRaw:'', tRaw:'', wRaw:'', tPhone:'', svc:null, model:'own',
-          payFrom:'main',  nests:[], activeNest:'calm', key:null, shop:'s1', slot:0, route:false, physical:null,  quoteTimer:null, seq:4190 };
+          payFrom:'main',  nests:[], activeNest:'calm', key:null, lastBuy:null, shop:'s1', slot:0, route:false, physical:null,  quoteTimer:null, seq:4190 };
 
 /* ════════ helpers ════════ */
 const FA=['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
@@ -2227,7 +2250,15 @@ function renderNests(){
     : '';
 }
 
+/* Filling and navigating were one function, so switching vocabulary mid-session
+   left already-visited nest screens showing the old word. Split, and applyLex
+   now repaints them in place. */
 function openNest(id){
+  fillNest(id);
+  go('n-detail');
+  setTimeout(function(){ drawChart(id,ndRange); },60);
+}
+function fillNest(id){
   S.activeNest=id; const n=nest(id);
   $('nd-title').textContent=nName(n);
   $('na-title').textContent=nName(n);
@@ -2245,8 +2276,12 @@ function openNest(id){
   $('nd-range').innerHTML=RANGES.map(r=>
     '<button aria-pressed="'+(r[0]===ndRange)+'" onclick="setRange('+r[0]+')">'+r[1]+'</button>').join('');
   $('nd-rangelab').textContent=RANGES.find(r=>r[0]===ndRange)[1]+' گذشته';
-  go('n-detail');
-  setTimeout(function(){ drawChart(id,ndRange); },60);
+  const w=$('ns-word'); if(w) w.textContent=L('nestWord');
+  const nn=$('ns-nest'); if(nn && nn.textContent!=='—') nn.textContent=nName(n);
+  /* the confirmation sentence names the basket too */
+  if(S.lastBuy){ const b=nest(S.lastBuy.id);
+    $('ns-nest').textContent=nName(b);
+    $('ns-msg').textContent='مبلغ وارد '+nName(b)+' شد.'; }
 }
 function setRange(m){ ndRange=m; openNest(S.activeNest); }
 function goBuy(){ if(!guard()) return; $('na-amt').value=Math.min(100,Math.floor(S.available))||10; naCheck(); go('n-amt'); }
@@ -2270,13 +2305,14 @@ function doNest(){
   S.available-=a;
   const held=S.nests.find(x=>x.id===n.id);
   if(held) held.amount+=net; else S.nests.push({id:n.id,amount:net});
-  addTx({kind:'nest',title:'گذاشتن در '+nName(n),amount:a,dir:'move',status:'done',
-    rows:[[L('nestWord'),nName(n)],['کارمزد ورود',usd(f)],['وارد سبد شد',usd(net)],['قفل زمانی','ندارد']]});
+  addTx({kind:'nest',nestId:n.id,amount:a,dir:'move',status:'done',
+    rows:[['کارمزد ورود',usd(f)],['مبلغ واردشده',usd(net)],['قفل زمانی','ندارد']]});
   render(); renderNests();
 
   /* Confirmation was missing entirely — the flow just dropped back to the list
      and the user had no idea whether anything happened. */
   $('ns-amt').textContent = usd(net);
+  S.lastBuy = { id:n.id };
   $('ns-msg').textContent = 'مبلغ وارد ' + nName(n) + ' شد.';
   $('ns-word').textContent = L('nestWord');
   $('ns-nest').textContent = nName(n);
@@ -2591,7 +2627,7 @@ function anchorHTML(){
    close the specific gaps that stopped people. */
 const FAQ=[
  {q:'پولم دقیقاً کجاست و دست کیست؟',
-  a:'معادل دلاری پولت جدا از حساب‌های خودِ مهاجر نگه داشته می‌شود و برای جابه‌جایی‌اش امضای بیش از یک نفر لازم است — یعنی هیچ‌کس به‌تنهایی نمی‌تواند به آن دست بزند. <b>برای برداشتنش هم لازم نیست به ما اعتماد کنی؛ دسترسی‌اش دست خودت است.</b> <span class="rev">انتخاب شریک نگهدارنده هنوز نهایی نشده</span> و تا آن زمان نامی اعلام نمی‌کنیم.'},
+  a:'معادل دلاری پولت جدا از حساب‌های خودِ مهاجر نگه داشته می‌شود و برای جابه‌جایی‌اش امضای بیش از یک نفر لازم است — یعنی هیچ‌کس به‌تنهایی نمی‌تواند به آن دست بزند. <b>حضانتش دست خودته</b> — یعنی کلید دسترسی به پول دست خودت است و برای برداشتنش لازم نیست به کسی اعتماد کنی، حتی به ما. <span class="rev">انتخاب شریک نگهدارنده هنوز نهایی نشده</span> و تا آن زمان نامی اعلام نمی‌کنیم.'},
  {q:'اگر مهاجر نبود، پول من چه می‌شود؟',
   a:'پول تو در حساب‌های عملیاتی ما نیست، پس به ادامهٔ کار ما وابسته نیست. اگر می‌خواهی این را کامل از دست ما خارج کنی، دو راه داری: <b>طلا را فیزیکی تحویل بگیر</b>، یا <b>کلید مهاجر</b> را سفارش بده که کلید دارایی را خودش نگه می‌دارد. <span class="rev">جزئیات حقوقی این تفکیک در حال بررسی است.</span>'},
  {q:'هر وقت بخواهم می‌توانم پولم را برگردانم؟',
@@ -2755,12 +2791,17 @@ function setStatus(p,kind,msg,badge){
 const STATUS_TXT={done:['انجام شد','b-ok'],failed:['ناموفق','b-bad'],
                   refunded:['بازپرداخت','b-bad'],cancelled:['لغو شد','b-warn'],pending:['در انتظار','b-warn']};
 function addTx(tx){ tx.id=nextId(); tx.when='همین حالا'; S.activity.unshift(tx); }
+/* Nest rows read from the live lexicon; everything else keeps its own title. */
+function txTitle(t){
+  if(t.kind==='nest' && t.nestId) return 'سرمایه‌گذاری در '+nName(nest(t.nestId));
+  return t.title||'';
+}
 function txRow(t){
   const [txt,cls]=STATUS_TXT[t.status]||STATUS_TXT.done;
   const sign=t.dir==='in'?'+':t.dir==='out'?'−':'';
   return `<button class="tx" onclick="showReceipt(S.activity.find(x=>x.id==='${t.id}'))">
     <div class="ic"><svg viewBox="0 0 24 24"><path d="${t.kind==='convert'?'M7 10h13l-3-3M17 14H4l3 3':t.kind==='transfer'?'M12 19V5M5 12l7-7 7 7':t.kind==='subs'?'M3 7h18v11H3z':t.kind==='goal'?'M12 4a8 8 0 100 16 8 8 0 000-16z':'M12 5v14M5 12l7 7 7-7'}"/></svg></div>
-    <div class="m"><div class="t">${t.title}</div><div class="d">${t.when}</div></div>
+    <div class="m"><div class="t">${txTitle(t)}</div><div class="d">${t.when}</div></div>
     <div class="r"><div class="a num ${t.dir==='in'?'in':''}">${sign}${usd(t.amount)}</div>
       <div class="s"><span class="badge ${cls}" style="padding:3px 7px;font-size:9.5px">${txt}</span></div></div>
   </button>`;
@@ -2786,20 +2827,20 @@ function showReceipt(t){
 function openSheet(kind,data){
   let h='';
   if(kind==='custody'){
-    h=`<h3>دارایی‌ات زیر بالشته</h3>
-      <p class="lead" style="margin-bottom:12px">این شعار نیست، توصیف کاری است که سیستم می‌کند:
-        موجودی شما در استخر مشترکِ ما نمی‌نشیند و برداشتتان به تصمیم ما وابسته نیست.</p>
-      <div class="row"><span class="k">کلید برداشت</span><span class="v">دست شما</span></div>
-      <div class="row"><span class="k">استفاده از موجودی شما برای کار ما</span><span class="v" style="color:var(--ok)">هرگز</span></div>
-      <div class="row"><span class="k">توقف برداشت توسط مهاجر</span><span class="v" style="color:var(--ok)">ممکن نیست</span></div>
+    h=`<h3>${L('custodyTitle')}</h3>
+      <p class="lead" style="margin-bottom:12px">${L('custodyWhat')}</p>
+      <div class="row"><span class="k">${L('dashCustody')}</span><span class="v">${L('dashCustodyV')}</span></div>
+      <div class="row"><span class="k">کلید برداشت</span><span class="v">${L('yoursShort')}</span></div>
+      <div class="row"><span class="k">استفاده از پول تو برای کار ما</span><span class="v" style="color:var(--ok)">هرگز</span></div>
+      <div class="row"><span class="k">جلوگیری ما از برداشت</span><span class="v" style="color:var(--ok)">ممکن نیست</span></div>
       <div class="row"><span class="k">گزارش موجودی</span><span class="v">ماهانه، قابل بررسی</span></div>
       <div style="height:10px"></div>
       <div class="note" style="text-align:start">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-        <p><b>دو راه خروج همیشه باز است:</b> برگرداندن به تومان روی حساب بانکی خودتان،
+        <p><b>دو راه خروج همیشه باز است:</b> برگرداندن به تومان روی حساب بانکی خودت،
           یا <b>تحویل گرفتن طلای فیزیکی</b> از یک صرافی طرف قرارداد. هیچ‌کدام به اجازهٔ ما نیاز ندارد.</p>
       </div>
-      <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet();go('p-choose')">دیدن صرافی‌های نزدیک</button>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet();go('p-choose')">دیدن راه‌های خروج</button>
       <button class="btn btn-ghost" onclick="closeSheet()">بستن</button>`;
   }
   else if(kind==='proof'){
@@ -2899,15 +2940,17 @@ const LEX={
     goalDel:'حذف صندوق (پول برمی‌گردد)', convertOk:'به موجودی دلاری‌ات اضافه شد.',
     homeEmpty:'هنوز موجودی نداری. با <b>تبدیل</b> شروع کن — بعد از آن بقیهٔ کارها از همین موجودی انجام می‌شود.',
     useAvail:'موجودی آزاد', payFrom:'موجودی آزاد', goalPrefix:'صندوق',
+    custodyTitle:'حضانت پولتان دست خودتان است.',
+    custodyWhat:'«حضانت» یعنی کلید دسترسی به پول، دست چه کسی است. اینجا فقط دست خودتان است — برای برداشتن پولتان لازم نیست به هیچ‌کس اعتماد کنید، حتی به ما.',
+    yoursShort:'دست خودتان',
     investDisclaim:'اعداد گذشته فقط رفتار هر سبد را نشان می‌دهند و <b>تضمین آینده نیستند</b>. ارزش این دارایی‌ها می‌تواند کم هم بشود.',
     mixTitle:'این سبد از چه ساخته شده', investCta:'سرمایه‌گذاری در این سبد',
     investAmt:'چه مبلغی در این سبد بگذارید؟ · دلار', investNet:'وارد سبد می‌شود',
     investExit:'هر وقت بخواهید می‌توانید بیرون بکشید. قفل زمانی و جریمه‌ای وجود ندارد؛ فقط ارزش سبد در همان روز حساب می‌شود.',
     investEmpty:'هنوز در سبدی سرمایه‌گذاری نکرده‌اید',
     dashCustody:'پول شما کجاست', dashCustodyV:'جدا از حساب‌های ما', nestWordPl:'سبدها',
-    yoursLine:'برای برداشتن پولتان لازم نیست به ما اعتماد کنید — دسترسی‌اش دست خودتان است.',
     pillowSay:'دارایی شما زیر بالش است.',
-    pillowSub:'کلید دست خودتان است. تا برندارید، حتی روی همین صفحه هم نشان داده نمی‌شود.',
+    pillowSub:'حضانت این پول دست خودتان است. تا بالش را برندارید، حتی روی همین صفحه هم نشان داده نمی‌شود.',
     pillowTap:'بالش را بردارید',
     nestWord:'سبد', nestsMine:'سبدهای شما',
     eggLine:'<svg viewBox="0 0 24 24"><path d="M12 3v18M5 8h14M5 16h14"/></svg><p><b>همهٔ پولتان را روی یک دارایی نگذارید.</b> هر سبد ترکیبی از چند دارایی است، نه یکی. اگر یکی افت کند، بقیه کل ضرر را روی دوش شما نمی‌گذارند.</p>',
@@ -2935,15 +2978,17 @@ const LEX={
     goalDel:'حذف شاخه (پول برمی‌گردد)', convertOk:'به آشیانهٔ شما نشست.',
     homeEmpty:'آشیانه هنوز خالی است. با <b>تبدیل</b> شروع کنید — بعد از آن بقیهٔ کارها از همین‌جا انجام می‌شود.',
     useAvail:'در آشیانه', payFrom:'در آشیانه', goalPrefix:'شاخهٔ',
+    custodyTitle:'حضانت پولت دست خودته.',
+    custodyWhat:'«حضانت» یعنی کلید دسترسی به پول دست کیه. اینجا دست خودته — مثل اینه که پولت واقعاً زیر بالشته، نه پیش ما.',
+    yoursShort:'دست خودت',
     investDisclaim:'اعداد گذشته فقط رفتار هر لانه را نشان می‌دهند و <b>تضمین آینده نیستند</b>. ارزش این دارایی‌ها می‌تواند کم هم بشود.',
     mixTitle:'این لانه از چه ساخته شده', investCta:'سرمایه‌گذاری در این لانه',
     investAmt:'چه مبلغی در این لانه بگذاری؟ · دلار', investNet:'وارد لانه می‌شود',
     investExit:'هر وقت بخواهی می‌توانی بیرون بکشی. قفل زمانی و جریمه‌ای وجود ندارد؛ فقط ارزش لانه در همان روز حساب می‌شود.',
     investEmpty:'هنوز در لانه‌ای سرمایه‌گذاری نکرده‌ای',
     dashCustody:'پولت کجاست', dashCustodyV:'جدا از حساب‌های ما', nestWordPl:'لانه‌ها',
-    yoursLine:'برای برداشتن پولت لازم نیست به ما اعتماد کنی — دسترسی‌اش دست خودت است.',
     pillowSay:'دارایی‌ات زیر بالشته.',
-    pillowSub:'کلید دست خودت است. تا برنداری، حتی روی همین صفحه هم نشان داده نمی‌شود.',
+    pillowSub:'حضانت این پول دست خودته. تا بالش را برنداری، حتی روی همین صفحه هم نشان داده نمی‌شود.',
     pillowTap:'بالش را بردار',
     nestWord:'لانه', nestsMine:'لانه‌های شما',
     eggLine:'<svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 4.5 6.4 4.5 9a4.5 4.5 0 01-9 0c0-2.6 1.5-5.4 4.5-9z"/><path d="M3 20h18"/></svg><p><b>همهٔ تخم‌مرغ‌هایت را توی یک سبد نگذار.</b> هر لانه ترکیبی از چند دارایی است، نه یکی — اگر یکی افت کند، بقیه جلوی ضرر را می‌گیرند.</p>',
@@ -2974,7 +3019,11 @@ function applyLex(){
   document.querySelectorAll('.tab[data-tab="invest"] span').forEach(el=>el.textContent=L('goalsTab'));
   $('lex-btn').textContent = S.lex==='std' ? 'واژگان: استاندارد' : 'واژگان: آشیانه';
   $('lex-btn').setAttribute('aria-pressed', S.lex==='nest');
-  renderNests(); render();
+  renderNests();
+  if(S.activeNest) fillNest(S.activeNest);
+  if($('d-faq') && $('d-faq').children.length) renderFAQ();
+  renderActivity(); renderDash();
+  render();
 }
 function toggleLex(){ S.lex = S.lex==='std' ? 'nest' : 'std'; applyLex(); }
 
