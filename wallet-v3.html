@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>مهاجر · آشیانه v3</title>
+<title>مهاجر · پروتوتایپ v3</title>
 
 <!-- installable: on a phone, Share → Add to Home Screen gives a real standalone app -->
 <link rel="manifest" href="./manifest.json">
@@ -130,8 +130,8 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
   background:radial-gradient(circle,rgba(213,164,92,.16),rgba(213,164,92,.05) 45%,transparent 70%);pointer-events:none}
 .row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0}
 .row+.row{border-top:1px solid var(--line-2)}
-.row .k{font-size:13px;color:var(--ink-2);flex:1}
-.row .v{font-size:13px;font-weight:500;text-align:end}
+.row .k{font-size:13px;color:var(--ink-2);flex:1;min-width:0}
+.row .v{font-size:13px;font-weight:500;text-align:end;min-width:0}
 .row.total .k{font-weight:600;color:var(--ink);font-size:14px}
 .row.total .v{font-weight:700;font-size:16px}
 .badge{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:5px 10px;font-size:11px;font-weight:500;line-height:1}
@@ -214,6 +214,36 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 .field input::placeholder{color:var(--ink-3);font-weight:400}
 
 /* option / choice */
+/* The two claims the idea is made of. They were reachable only three screens
+   deep, which is where the team said they were getting lost; these give them a
+   fixed place at the top of the first two screens a participant ever sees. */
+.vp{display:flex;gap:13px;align-items:flex-start;padding:16px 15px;background:var(--surface);
+  border-radius:var(--r-lg);box-shadow:var(--sh);text-align:start;width:100%;
+  font-family:inherit;color:inherit;border:none;cursor:pointer;transition:.24s var(--spring)}
+.vp+.vp{margin-top:9px}
+.vp:active{transform:scale(.99)}
+.vp .ic{width:42px;height:42px;border-radius:13px;flex:none;display:grid;place-items:center}
+.vp .ic svg{width:21px;height:21px;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.vp.v-key .ic{background:var(--ok-soft)} .vp.v-key .ic svg{stroke:var(--ok)}
+.vp.v-gold .ic{background:var(--warn-soft)} .vp.v-gold .ic svg{stroke:var(--warn)}
+.vp .m{flex:1;min-width:0}
+.vp .t{display:block;font-size:15px;font-weight:700;letter-spacing:-.022em;line-height:1.45}
+.vp .d{display:block;font-size:12.5px;color:var(--ink-2);line-height:1.75;margin-top:5px}
+
+/* the same pair, compressed, for the home screen */
+.vprow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.vpm{background:var(--surface);border:none;border-radius:var(--r-md);padding:13px 12px;
+  text-align:start;font-family:inherit;color:inherit;cursor:pointer;box-shadow:var(--sh);
+  transition:.24s var(--spring)}
+.vpm:active{transform:scale(.98)}
+.vpm .ic{width:30px;height:30px;border-radius:10px;display:grid;place-items:center}
+.vpm .ic svg{width:16px;height:16px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.vpm.v-key .ic{background:var(--ok-soft)} .vpm.v-key .ic svg{stroke:var(--ok)}
+.vpm.v-gold .ic{background:var(--warn-soft)} .vpm.v-gold .ic svg{stroke:var(--warn)}
+.vpm .t{display:block;font-size:12.5px;font-weight:700;letter-spacing:-.018em;
+  line-height:1.5;margin-top:8px}
+.vpm .d{display:block;font-size:11px;color:var(--ink-2);line-height:1.65;margin-top:3px}
+
 .opt{width:100%;display:flex;align-items:center;gap:12px;padding:15px;background:var(--surface);
   border:1.5px solid transparent;border-radius:var(--r-md);cursor:pointer;font-family:inherit;
   text-align:start;box-shadow:var(--sh);transition:.24s var(--spring)}
@@ -414,7 +444,7 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 .chart .fut{fill:none;stroke:var(--ink-3);stroke-width:2;stroke-dasharray:3 4;stroke-linecap:round}
 .chart .cone{fill:var(--ink-3);opacity:.10}
 .rangepick{display:flex;gap:5px;margin-top:12px}
-.rangepick button{flex:1;border:none;background:var(--surface-2);font-family:inherit;font-size:11.5px;
+.rangepick button{flex:1;min-height:40px;border:none;background:var(--surface-2);font-family:inherit;font-size:11.5px;
   font-weight:500;color:var(--ink-2);padding:7px;border-radius:8px;cursor:pointer}
 .rangepick button[aria-pressed=true]{background:var(--ink);color:var(--canvas)}
 
@@ -438,6 +468,23 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 .keycard .ic{width:46px;height:46px;border-radius:14px;flex:none;display:grid;place-items:center}
 .keycard .ic svg{width:23px;height:23px;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .keycard.k-gold .ic{background:var(--warn-soft)} .keycard.k-gold .ic svg{stroke:var(--warn)}
+.keycard.k-base .ic{background:var(--surface-2)} .keycard.k-base .ic svg{stroke:var(--ink-2)}
+.keycard.k-mpc .ic{background:var(--ok-soft)} .keycard.k-mpc .ic svg{stroke:var(--ok)}
+.keycard[disabled]{opacity:1;cursor:default}
+.keycard[disabled]:active{transform:none}
+.keycard .t.cu-hd{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.keycard .t.cu-hd .nm{min-width:0;flex:1}
+/* "which one am I on" has to be answerable at a glance, so the active model
+   takes the accent border and a filled marker while the others read as the
+   action they perform. */
+.cu-state{flex:none;font-size:10.5px;font-weight:600;letter-spacing:0;white-space:nowrap;
+  border-radius:99px;padding:3px 10px;border:1px solid var(--line);color:var(--ink-2)}
+.cu-state::after{content:'‹';margin-inline-start:5px;font-size:12px;opacity:.65}
+.cu-state.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.cu-state.on::after{content:'✓';margin-inline-start:5px;opacity:1;font-size:10px}
+#cu-opts .keycard{border:1.5px solid transparent}
+#cu-opts .keycard.is-on{border-color:var(--ok)}
+#cu-opts .keycard.is-on .t{color:var(--ok)}
 .keycard.k-dev .ic{background:var(--brand-soft,#EDF0FF)} .keycard.k-dev .ic svg{stroke:#3D5AFE}
 :root[data-theme="dark"] .keycard.k-dev .ic{background:#1A1F3D}
 :root[data-theme="dark"] .keycard.k-dev .ic svg{stroke:#7C8FFF}
@@ -477,11 +524,13 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 .devimg.sm{width:74px;animation:none;filter:drop-shadow(0 6px 10px rgba(13,15,18,.4))}
 @media(prefers-reduced-motion:reduce){.devimg{animation:none}}
 .custody{display:flex;gap:10px;align-items:flex-start;padding:14px 15px;border-radius:var(--r-md);
-  background:var(--surface-2);margin-top:10px}
+  background:var(--surface-2);margin-top:10px;text-align:start}
+#ko-warn:not(:empty){margin-top:12px;display:block}
 .custody .ct{font-size:13.5px;font-weight:700;letter-spacing:-.015em;margin-bottom:5px;color:var(--ink)}
 .custody.who .ct{color:var(--ok)}
 .custody svg{width:16px;height:16px;flex:none;margin-top:2px;fill:none;stroke-width:1.8;
-  stroke-linecap:round;stroke-linejoin:round}
+  stroke:var(--ink-2);stroke-linecap:round;stroke-linejoin:round}
+.custody > div{flex:1;min-width:0;text-align:start}
 .custody p{font-size:12.5px;line-height:1.75;color:var(--ink-2)}
 .custody b{color:var(--ink)}
 .custody.who{background:var(--ok-soft)} .custody.who svg{stroke:var(--ok)}
@@ -660,7 +709,7 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 .chip:hover{background:#fff;color:var(--ink)}
 .chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
 .chip.danger[aria-pressed=true]{background:var(--bad);border-color:var(--bad)}
-.hint{font:500 11px/1 var(--f);color:var(--ink-3);height:12px}
+.hint{font:500 11px/1.7 var(--f);color:var(--ink-3);min-height:13px}
 .dev-fab{display:none}
 
 /* ══════════════════════════════════════════════════════════════════
@@ -874,20 +923,30 @@ button,input,select,textarea{color:inherit}
         <div style="font-size:17px;font-weight:600;letter-spacing:-.02em">مهاجر</div>
       </div>
 
-      <h1 data-lex="introH">آشیانه‌ای که هر وقت بخواهید<br>می‌توانید از آن پر بکشید.</h1>
-      <p class="lead" style="margin-top:12px" data-lex="introP">تومان را با نرخ و کارمزد شفاف به دلار تبدیل می‌کنی. دلار در آشیانه می‌نشیند و هر وقت لازم شد از همان‌جا انتقال می‌دهی، در لانه‌ای سرمایه‌گذاری می‌کنی، طلا تحویل می‌گیری یا به تومان برمی‌گردانی.</p>
+      <h1 data-lex="introH"></h1>
+      <p class="lead" style="margin-top:10px" data-lex="introP">مهاجر پیش از هر چیز یک اپلیکیشن کیف پول است و امکانات صرافی را هم در خود دارد. دو کاری که انجام می‌دهد و در جای دیگری کنار هم پیدا نمی‌کنید:</p>
 
-      <div class="card" style="margin-top:20px;padding:6px 18px">
-        <div class="row"><span class="k">تبدیل با نرخ شفاف</span><span class="v" style="color:var(--ok)">✓</span></div>
-        <div class="row"><span class="k">انتقال به دیگران</span><span class="v" style="color:var(--ok)">✓</span></div>
-        <div class="row"><span class="k">سرمایه‌گذاری در ترکیبی از دلار، طلا و رمزارز</span><span class="v" style="color:var(--ok)">✓</span></div>
-        <div class="row"><span class="k">تحویل فیزیکی طلا از صرافی</span><span class="v" style="color:var(--ok)">✓</span></div>
-        <div class="row"><span class="k">برگرداندن به تومان، هر وقت بخواهید</span><span class="v" style="color:var(--ok)">✓</span></div>
+      <div style="height:16px"></div>
+      <div class="vp v-key">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/></svg></span>
+        <span class="m">
+          <span class="t" data-lex="vp1t">پولتان را زیر بالشت خودتان بگذارید.</span>
+          <span class="d" data-lex="vp1d">با کلید سخت‌افزاری مهاجر، کلید دارایی از دسترس ما خارج می‌شود و هیچ برداشتی بدون تأیید شما اجرا نمی‌شود.</span>
+        </span>
       </div>
+      <div class="vp v-gold">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 8l3-4h10l3 4-8 12z"/><path d="M4 8h16M9 4l3 16M15 4l-3 16"/></svg></span>
+        <span class="m">
+          <span class="t" data-lex="vp2t">هر وقت خواستید، دارایی را فیزیکی تحویل بگیرید.</span>
+          <span class="d" data-lex="vp2d">بخشی از موجودی را به طلای ۱۸ عیار تبدیل کنید و حضوری از یک صرافی طرف قرارداد بگیرید.</span>
+        </span>
+      </div>
+
+      <div style="height:4px"></div>
 
       <div class="note" style="margin-top:14px">
         <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/></svg>
-        <p>نگهداری دارایی و اجرای پرداخت‌ها از طریق <b>شرکای دارای مجوز</b> انجام می‌شود. انتخاب شریک <b style="color:var(--warn)">در حال بررسی</b> است و تا نهایی‌شدن، نامی اعلام نمی‌شود. نقش مهاجر و نقش شریک در هر مرحله جداگانه نمایش داده می‌شود.</p>
+        <p>در حالت پایه، کلید دارایی نزد مهاجر و شریک نگهدارندهٔ دارای مجوز است. هر زمان بخواهید می‌توانید آن را به <b>نگهداری شخصی</b> یا <b>کلید چندبخشی</b> تغییر دهید. انتخاب شریک نگهدارنده <b style="color:var(--warn)">در حال بررسی</b> است و تا نهایی‌شدن نامی اعلام نمی‌شود.</p>
       </div>
       <div style="height:14px"></div>
     </div>
@@ -899,7 +958,7 @@ button,input,select,textarea{color:inherit}
     <div class="scroll">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
         <div style="font-size:17.5px;font-weight:600;letter-spacing:-.02em">خانه</div>
-        <button class="back" style="transform:none" onclick="openSheet('custody')" aria-label="راهنما">
+        <button class="back" style="transform:none" onclick="openCustody('home')" aria-label="نگهداری کلید">
           <svg viewBox="0 0 24 24" style="transform:none"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
         </button>
       </div>
@@ -979,7 +1038,7 @@ button,input,select,textarea{color:inherit}
           </div>
           <div class="flipface" id="plain-face">
       <button class="nest-card dark-card" onclick="cycleUnit()">
-        <div class="lab" data-lex="walletLabel">ارزش آشیانهٔ شما</div>
+        <div class="lab" data-lex="walletLabel"></div>
         <div class="tot num" id="h-total">$0.00</div>
         <div class="unit-hint"><span id="h-unit-alt">به تومان</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h13l-3-3M17 14H4l3 3"/></svg>
@@ -994,14 +1053,27 @@ button,input,select,textarea{color:inherit}
         </div>
       </div>
       <div class="pillownote" id="pillownote" data-gone="false" hidden>
-        <div class="say" data-lex="pillowSay">دارایی‌ات زیر بالشته.</div>
-        <div class="sub" data-lex="pillowSub">کلید دست خودت است. تا برنداری، حتی روی همین صفحه هم نشان داده نمی‌شود.</div>
+        <div class="say" data-lex="pillowSay"></div>
+        <div class="sub" data-lex="pillowSub"></div>
         <div class="tap">
           <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
           <span data-lex="pillowTap">بالش را بردار</span>
         </div>
       </div>
 
+
+      <div class="vprow">
+        <button class="vpm v-key" onclick="openCustody('home')">
+          <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/></svg></span>
+          <span class="t" data-lex="vp1s">پولتان زیر بالشت خودتان</span>
+          <span class="d" data-lex="vp1sd">کلید دارایی را خودتان نگه دارید.</span>
+        </button>
+        <button class="vpm v-gold" onclick="openPhysical()">
+          <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 8l3-4h10l3 4-8 12z"/><path d="M4 8h16M9 4l3 16M15 4l-3 16"/></svg></span>
+          <span class="t" data-lex="vp2s">تحویل فیزیکی طلا</span>
+          <span class="d" data-lex="vp2sd">هر وقت خواستید، حضوری بگیرید.</span>
+        </button>
+      </div>
 
       <div class="quickrow">
         <button class="quick" onclick="startTransfer()">
@@ -1058,7 +1130,7 @@ button,input,select,textarea{color:inherit}
     <div class="amt">
       <div class="cur">مبلغ به تومان</div>
       <div class="v num zero" id="c-amt">0<span class="caret"></span></div>
-      <div class="sub num" id="c-out">دریافتی تقریبی $0.00</div>
+      <div class="sub" id="c-out">دریافتی تقریبی <span class="num">$0.00</span></div>
     </div>
     <p class="tiny" style="text-align:center;margin:-4px 0 10px">تومان از حساب بانکی شما کم می‌شود و معادل دلاری‌اش به موجودی شما اضافه می‌شود.</p>
     <div class="presets">
@@ -1086,7 +1158,7 @@ button,input,select,textarea{color:inherit}
     </div>
     <div class="scroll">
       <div class="dark-card quote-head">
-        <div class="l">دریافت می‌کنی</div>
+        <div class="l">دریافت می‌کنید</div>
         <div class="v num" id="q-get">$0.00</div>
         <div class="eta-chip">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
@@ -1110,13 +1182,13 @@ button,input,select,textarea{color:inherit}
       <div class="sec">پرداخت از</div>
       <button class="opt" aria-pressed="true">
         <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/></svg></div>
-        <div class="m"><div class="t">کارت بانکی · ۶۲۱۹ ****</div><div class="d">به نام خودت · تأییدشده</div></div>
+        <div class="m"><div class="t">کارت بانکی · ۶۲۱۹ ****</div><div class="d">به نام خودتان · تأییدشده</div></div>
         <div class="radio"></div>
       </button>
 
       <div class="note">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <p><b>دلار دیجیتال</b> یک واحد دلاری با پشتوانهٔ دلار است که نزد شریک نگهدارندهٔ دارای مجوز نگهداری می‌شود. <button onclick="openSheet('custody')" style="background:none;border:none;font-family:inherit;font-size:11.5px;color:var(--ink);text-decoration:underline;cursor:pointer;padding:0">پولم کجا نگه‌داری می‌شود؟</button></p>
+        <p><b>دلار دیجیتال</b> یک واحد دلاری با پشتوانهٔ دلار است که نزد شریک نگهدارندهٔ دارای مجوز نگهداری می‌شود. <button onclick="openCustody('c-quote')" style="background:none;border:none;font-family:inherit;font-size:11.5px;color:var(--ink);text-decoration:underline;cursor:pointer;padding:8px 0;min-height:40px">کلید این دارایی دست چه کسی است؟</button></p>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -1141,7 +1213,7 @@ button,input,select,textarea{color:inherit}
   <section class="screen tabbed" data-screen="use">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
       <div style="font-size:17.5px;font-weight:600;letter-spacing:-.02em" data-lex="useTitle">نمای کلی</div>
-      <button class="back" style="transform:none" onclick="openSheet('custody')" aria-label="راهنما">
+      <button class="back" style="transform:none" onclick="openCustody('use')" aria-label="نگهداری کلید">
         <svg viewBox="0 0 24 24" style="transform:none"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></button>
     </div>
     <div class="scroll">
@@ -1170,18 +1242,14 @@ button,input,select,textarea{color:inherit}
       <div class="card" style="padding:4px 16px">
         <div class="row"><span class="k" data-lex="dashRate">نرخ خرید امروز</span><span class="v num" id="d-rate">—</span></div>
         <div class="row"><span class="k" data-lex="dashFee">کارمزد تبدیل</span><span class="v num" id="d-fee">—</span></div>
-        <div class="row"><span class="k" data-lex="dashCustody"></span><span class="v" data-lex="dashCustodyV"></span></div>
+        <div class="row"><span class="k">حالت نگهداری کلید</span><span class="v" id="d-custody">—</span></div>
         <div class="row"><span class="k" data-lex="dashLock">قفل زمانی</span><span class="v" style="color:var(--ok)">ندارد</span></div>
       </div>
 
+      <div class="sec">نگهداری کلید</div>
+      <div id="cu-live"></div>
+
       <div class="sec">سؤال و پاسخ</div>
-      <div class="custody who">
-        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/></svg>
-        <div>
-          <div class="ct" data-lex="custodyTitle"></div>
-          <p data-lex="custodyWhat"></p>
-        </div>
-      </div>
       <button class="support" onclick="openSheet('support')">
         <div class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3.5-7.1"/><path d="M12 12h.01M8 12h.01M16 12h.01"/></svg></div>
         <div class="m"><div class="t">پشتیبان انسانی</div><div class="d">برای پرداخت، انتقال و برداشت · معمولاً زیر ۱۵ دقیقه</div></div>
@@ -1191,7 +1259,7 @@ button,input,select,textarea{color:inherit}
       <div style="display:flex;align-items:center;justify-content:space-between">
         <div class="sec" data-lex="dashRecent" style="margin-bottom:0">آخرین فعالیت‌ها</div>
         <button style="border:none;background:none;font-family:inherit;color:var(--ink-2);
-          font-size:11.5px;font-weight:500;padding:4px 0;cursor:pointer" onclick="go('activity')">همه</button>
+          font-size:11.5px;font-weight:500;padding:10px 8px;min-height:40px;cursor:pointer" onclick="go('activity')">همه</button>
       </div>
       <div id="d-tx" style="margin-top:8px"></div>
       <div style="height:14px"></div>
@@ -1240,7 +1308,7 @@ button,input,select,textarea{color:inherit}
     <div class="amt">
       <div class="cur">به سارا رضایی</div>
       <div class="v num zero" id="t-val">$0<span class="caret"></span></div>
-      <div class="sub num" id="t-avail">موجودی آزاد $0.00</div>
+      <div class="sub" id="t-avail">موجودی آزاد <span class="num">$0.00</span></div>
     </div>
     <div class="keypad">
       <button class="key num" onclick="tKey('1')">1</button><button class="key num" onclick="tKey('2')">2</button><button class="key num" onclick="tKey('3')">3</button>
@@ -1310,14 +1378,15 @@ button,input,select,textarea{color:inherit}
     <div style="font-size:17.5px;font-weight:600;letter-spacing:-.02em;margin-bottom:12px">تحویل فیزیکی</div>
     <div class="scroll">
       <p class="tiny" style="margin:-2px 0 14px;line-height:1.8">
-        دو راه برای اینکه دارایی‌ات از دست ما خارج شود و کاملاً دست خودت بیفتد.</p>
+        دو مسیر متفاوت: یکی دارایی را به شکل فیزیکی به شما تحویل می‌دهد،
+        دیگری کلید آن را به‌طور کامل به شما منتقل می‌کند.</p>
 
       <button class="keycard k-gold" onclick="openPhysical()">
         <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 8l3-4h10l3 4-8 12z"/><path d="M4 8h16M9 4l3 16M15 4l-3 16"/></svg></span>
         <span class="m">
           <span class="t">تحویل طلای فیزیکی</span>
-          <span class="d">بخشی از موجودی‌ات را به طلای ۱۸ عیار تبدیل کن و از یک صرافی طرف قرارداد تحویل بگیر.</span>
-          <span class="lim">حضوری · با کد یک‌بارمصرف · کسر در لحظهٔ تحویل</span>
+          <span class="d">بخشی از موجودی خود را به طلای ۱۸ عیار تبدیل کنید و آن را حضوری از یکی از صرافی‌های طرف قرارداد تحویل بگیرید.</span>
+          <span class="lim">حضوری · با کد یک‌بارمصرف · کسر مبلغ در لحظهٔ تحویل</span>
         </span>
       </button>
 
@@ -1330,21 +1399,46 @@ button,input,select,textarea{color:inherit}
         </svg></span>
         <span class="m">
           <span class="t">کلید مهاجر</span>
-          <span class="d">یک دستگاه کوچک که کلید دارایی‌ات را خودش می‌سازد و نگه می‌دارد. برایت پست می‌کنیم.</span>
-          <span class="lim">حضانت کامل دست خودت · بدون دسترسی ما</span>
+          <span class="d">دستگاهی کوچک که کلید خصوصی دارایی شما را داخل خودش تولید و نگهداری می‌کند. برای شما ارسال می‌شود.</span>
+          <span class="lim">پس از فعال‌سازی: نگهداری شخصی · بدون دسترسی مهاجر</span>
         </span>
       </button>
 
-      <div class="custody who">
-        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/></svg>
+      <div class="custody">
+        <svg viewBox="0 0 24 24" style="stroke:var(--ink-2)"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
         <div>
-          <div class="ct" data-lex="custodyTitle"></div>
-          <p data-lex="custodyWhat"></p>
+          <div class="ct">این دو یک کار نمی‌کنند.</div>
+          <p><b>تحویل طلا</b> دارایی را از حساب خارج می‌کند و به دست شما می‌رساند؛ حالت نگهداری کلید تغییری نمی‌کند.
+             <b>کلید مهاجر</b> دارایی را در حساب نگه می‌دارد اما کلید آن را به شما منتقل می‌کند.</p>
         </div>
       </div>
+      <button class="opt" onclick="openCustody('p-choose')" style="margin-top:10px">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2.4"/><path d="M8 10V7.5a4 4 0 018 0V10"/></svg></div>
+        <div class="m"><div class="t">حالت نگهداری کلید شما</div>
+          <div class="d" id="pc-custody">—</div></div></button>
       <div style="height:12px"></div>
     </div>
     <div class="tabbar" id="tabbar5"></div>
+  </section>
+
+  <!-- ═══ CUSTODY · which key model is active ═══ -->
+  <section class="screen" data-screen="custody">
+    <div class="nav">
+      <button class="back" onclick="go(S.cuBack)"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2>نگهداری کلید</h2>
+    </div>
+    <div class="scroll">
+      <p class="lead" style="font-size:13.5px;margin:-2px 0 14px">
+        مهاجر یک اپلیکیشن کیف پول است و سه حالت نگهداری کلید ارائه می‌کند.
+        حالتی که هم‌اکنون روی حساب شما فعال است، همیشه در بالای همین صفحه نوشته می‌شود.
+      </p>
+      <div id="cu-now"></div>
+      <div class="sec">حالت‌های موجود</div>
+      <p class="tiny" style="margin:-4px 0 9px;line-height:1.7">
+        حالت فعلی با نشان سبز مشخص شده است. برای تغییر، روی حالت دیگری بزنید.</p>
+      <div id="cu-opts"></div>
+      <div style="height:12px"></div>
+    </div>
   </section>
 
   <!-- ═══ KEY · what it is ═══ -->
@@ -1369,52 +1463,57 @@ button,input,select,textarea{color:inherit}
 
       <h2 style="font-size:19px;letter-spacing:-.025em;margin-top:14px">کلید، نه حساب.</h2>
       <p class="lead" style="font-size:13.5px;margin-top:8px">
-        این دستگاه وقتی روشن می‌شود، کلید دارایی‌ات را <b>خودش داخل خودش می‌سازد</b>.
-        آن کلید هیچ‌وقت از دستگاه بیرون نمی‌آید — نه به موبایلت، نه به سرور ما.
-        از آن به بعد، هر برداشتی باید روی همین دستگاه تأیید شود.
+        دستگاه در نخستین راه‌اندازی، کلید خصوصی شما را <b>به‌صورت کاملاً ایزوله و آفلاین داخل خودش تولید می‌کند</b>.
+        این کلید در هیچ مرحله‌ای از دستگاه خارج نمی‌شود — نه به گوشی شما و نه به سرورهای مهاجر.
+        از آن پس، هر برداشت تنها با تأیید فیزیکی روی همین دستگاه اجرا می‌شود.
       </p>
 
-      <div class="sec">یعنی چه</div>
+      <div class="sec">پس از فعال‌سازی چه تغییری می‌کند</div>
       <div class="card" style="padding:4px 16px">
-        <div class="row"><span class="k">کلید کجاست</span><span class="v">فقط داخل دستگاه</span></div>
-        <div class="row"><span class="k">مهاجر کپی دارد؟</span><span class="v" style="color:var(--ok)">ندارد</span></div>
-        <div class="row"><span class="k">اگر مهاجر تعطیل شود</span><span class="v" style="color:var(--ok)">دارایی‌ات دست خودت است</span></div>
-        <div class="row"><span class="k">اگر دستگاه گم شود</span><span class="v">با ۱۲ کلمهٔ بازیابی برمی‌گردد</span></div>
-        <div class="row"><span class="k">قیمت</span><span class="v num">$49</span></div>
-        <div class="row"><span class="k">ارسال</span><span class="v">۵ تا ۷ روز کاری</span></div>
+        <div class="row"><span class="k">محل نگهداری کلید خصوصی</span><span class="v">فقط داخل دستگاه</span></div>
+        <div class="row"><span class="k">نسخهٔ کلید نزد مهاجر</span><span class="v" style="color:var(--ok)">وجود ندارد</span></div>
+        <div class="row"><span class="k">اگر مهاجر متوقف شود</span><span class="v" style="color:var(--ok)">دسترسی شما باقی است</span></div>
+        <div class="row"><span class="k">در صورت گم‌شدن دستگاه</span><span class="v">بازیابی با عبارت ۱۲ کلمه‌ای</span></div>
+        <div class="row"><span class="k">قیمت دستگاه</span><span class="v num">$49</span></div>
+        <div class="row"><span class="k">زمان ارسال</span><span class="v">۵ تا ۷ روز کاری</span></div>
       </div>
 
-      <div class="sec">۱۲ کلمه‌ای که فقط تو می‌بینی</div>
-      <p class="tiny" style="line-height:1.8">هنگام راه‌اندازی، دستگاه دوازده کلمه نشان می‌دهد.
-        این‌ها نسخهٔ پشتیبان کلید تو هستند. روی کاغذ بنویس و جایی امن نگه دار.</p>
+      <div class="sec">عبارت بازیابی ۱۲ کلمه‌ای</div>
+      <p class="tiny" style="line-height:1.8">دستگاه هنگام راه‌اندازی دوازده کلمه نمایش می‌دهد.
+        این عبارت تنها نسخهٔ پشتیبان کلید شماست. آن را روی کاغذ بنویسید و در جای امن نگه دارید.</p>
       <div class="words" aria-hidden="true">
         <span><i>۱</i>لنگر</span><span><i>۲</i>باران</span><span><i>۳</i>کوچ</span>
         <span><i>۴</i>سنجد</span><span><i>۵</i>آذرخش</span><span><i>۶</i>پرواز</span>
       </div>
-      <p class="tiny" style="margin-top:8px">…و شش کلمهٔ دیگر روی خود دستگاه.</p>
+      <p class="tiny" style="margin-top:8px">شش کلمهٔ دیگر تنها روی صفحهٔ خود دستگاه نمایش داده می‌شود.</p>
 
       <div class="custody who">
         <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/></svg>
         <div>
-          <div class="ct" data-lex="custodyTitle"></div>
-          <p data-lex="custodyWhat"></p>
+          <div class="ct">پس از فعال‌سازی، حضانت کامل به شما منتقل می‌شود.</div>
+          <p>حضانت یعنی کلید دسترسی به دارایی در اختیار چه کسی است. تا پیش از فعال‌سازی این دستگاه
+            کلید نزد مهاجر است؛ پس از آن، تنها نزد شما.</p>
         </div>
       </div>
 
       <div class="custody risk">
         <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
-        <p><b>روی دیگر سکه را هم بدان:</b> اگر هم دستگاه و هم آن دوازده کلمه را از دست بدهی،
-          <b>هیچ‌کس نمی‌تواند دارایی را برگرداند</b> — نه ما، نه هیچ‌کس دیگر.
-          حضانت کامل یعنی مسئولیت کامل.</p>
+        <div>
+          <div class="ct">آنچه در برابر این کنترل می‌پذیرید</div>
+          <p>با از دست رفتن هم‌زمان دستگاه و عبارت بازیابی، امکان بازگرداندن دسترسی به دارایی وجود ندارد؛
+            این محدودیت ذاتیِ نگهداری شخصی است و مهاجر هم نمی‌تواند آن را جبران کند.
+            اگر ترجیح می‌دهید مسیر بازیابی باقی بماند، <b>کلید چندبخشی (MPC)</b> همین سطح از کنترل را
+            همراه با امکان بازیابی ارائه می‌کند.</p>
+        </div>
       </div>
 
       <div class="custody">
         <svg viewBox="0 0 24 24" style="stroke:var(--ink-2)"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <p>مهاجر <b>هرگز</b> این دوازده کلمه را از تو نمی‌پرسد. هر کسی که پرسید — حتی با نام ما — کلاهبردار است.</p>
+        <p>مهاجر <b>هرگز</b> عبارت بازیابی را از شما درخواست نمی‌کند. هر درخواستی برای این عبارت — حتی با نام مهاجر — کلاهبرداری است.</p>
       </div>
       <div style="height:12px"></div>
     </div>
-    <button class="btn btn-primary" onclick="go('k-order')">سفارش کلید مهاجر · $49</button>
+    <button class="btn btn-primary" onclick="go('k-order')">سفارش کلید مهاجر · <span class="num">$49</span></button>
   </section>
 
   <!-- ═══ KEY · order ═══ -->
@@ -1429,24 +1528,23 @@ button,input,select,textarea{color:inherit}
       <div class="field"><label>شمارهٔ تماس</label>
         <input id="ko-tel" class="input num" inputmode="tel" value="۰۹۱۲ ۳۴۵ ۶۷۸۹"></div>
 
-      <div class="sec">چقدر از دارایی‌ات روی کلید برود؟</div>
-      <div class="field">
+      <div class="field"><label>چه مبلغی روی کلید منتقل شود؟ · دلار</label>
         <input id="ko-amt" class="input num" inputmode="decimal" value="500" oninput="koCheck()">
-        <p class="hint">می‌توانی خالی بگذاری و بعداً منتقل کنی. انتقال در لحظهٔ فعال‌سازی انجام می‌شود، نه حالا.</p>
+        <p class="hint">می‌توانید خالی بگذارید و بعداً انتقال دهید.</p>
       </div>
       <div id="ko-warn"></div>
 
-      <div class="card" style="padding:4px 16px">
+      <div class="card" style="margin-top:14px;padding:4px 16px">
         <div class="row"><span class="k">قیمت دستگاه</span><span class="v num">$49.00</span></div>
         <div class="row"><span class="k">ارسال</span><span class="v" style="color:var(--ok)">رایگان</span></div>
         <div class="row"><span class="k">منتقل می‌شود به کلید</span><span class="v num" id="ko-move">—</span></div>
-        <div class="row"><span class="k">الان کسر می‌شود</span><span class="v num">$49.00</span></div>
+        <div class="row"><span class="k">اکنون کسر می‌شود</span><span class="v num">$49.00</span></div>
       </div>
 
       <div class="custody who">
         <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/></svg>
-        <p>مبلغی که برای کلید کنار می‌گذاری تا <b>لحظهٔ فعال‌سازی</b> در آشیانه‌ات می‌ماند
-          و هر وقت خواستی می‌توانی منصرف شوی.</p>
+        <p>مبلغی که برای انتقال به دستگاه کنار می‌گذارید، تا <b>لحظهٔ فعال‌سازی</b>
+          در موجودی شما باقی می‌ماند و تا آن زمان امکان انصراف وجود دارد.</p>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -1477,19 +1575,31 @@ button,input,select,textarea{color:inherit}
       <div class="card" style="margin-top:12px;padding:4px 16px;text-align:start">
         <div class="row"><span class="k">تحویل تخمینی</span><span class="v" id="ks-eta">—</span></div>
         <div class="row"><span class="k">نشانی</span><span class="v" id="ks-addr" style="max-width:58%">—</span></div>
-        <div class="row"><span class="k">منتقل می‌شود در فعال‌سازی</span><span class="v num" id="ks-move">—</span></div>
-        <div class="row"><span class="k">وضعیت مبلغ</span><span class="v">فعلاً در آشیانه</span></div>
+        <div class="row"><span class="k">منتقل می‌شود در فعال‌سازی</span><span class="v" id="ks-move">—</span></div>
+        <div class="row"><span class="k">وضعیت مبلغ</span><span class="v">تا فعال‌سازی، در موجودی شما</span></div>
+        <div class="row"><span class="k">حالت نگهداری کلید</span><span class="v" id="ks-cu">—</span></div>
+      </div>
+
+      <div class="custody" style="text-align:start">
+        <svg viewBox="0 0 24 24" style="stroke:var(--ink-2)"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <div>
+          <div class="ct">تا فعال‌سازی، حضانت تغییری نکرده است.</div>
+          <p>سفارش دستگاه به‌تنهایی کلید را منتقل نمی‌کند. انتقال حضانت در لحظه‌ای انجام می‌شود
+            که دستگاه به دست شما برسد و آن را راه‌اندازی کنید.</p>
+        </div>
       </div>
 
       <div class="custody risk" style="text-align:start">
         <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
-        <p>وقتی دستگاه رسید، دوازده کلمه را روی کاغذ بنویس. <b>عکس نگیر و در پیام‌رسان نفرست.</b>
-          هر کسی آن کلمه‌ها را داشته باشد، دارایی را دارد.</p>
+        <p>پس از دریافت دستگاه، عبارت دوازده کلمه‌ای را روی کاغذ بنویسید.
+          <b>از آن عکس نگیرید و در هیچ پیام‌رسانی ارسال نکنید.</b>
+          هر کسی که این عبارت را داشته باشد، به دارایی دسترسی کامل دارد.</p>
       </div>
       <div style="height:12px"></div>
     </div>
     <div>
-      <button class="btn btn-primary" onclick="showReceipt(S.activity[0])">مشاهدهٔ رسید</button>
+      <button class="btn btn-primary" onclick="activateKey()">شبیه‌سازی رسیدن و فعال‌سازی دستگاه</button>
+      <button class="btn btn-ghost" onclick="showReceipt(S.activity[0])">مشاهدهٔ رسید</button>
       <button class="btn btn-ghost" onclick="cancelKey()">لغو سفارش</button>
     </div>
   </section>
@@ -1503,7 +1613,7 @@ button,input,select,textarea{color:inherit}
     <div class="scroll">
       <p class="tiny" style="margin:-2px 0 12px;line-height:1.75">
         بخشی از موجودی دلاری‌ات را به <b>طلای ۱۸ عیار</b> تبدیل کن و از یکی از
-        صرافی‌های طرف قرارداد، فیزیکی تحویل بگیر. مبلغ تا لحظهٔ تحویل در حساب خودت می‌ماند.</p>
+        صرافی‌های طرف قرارداد، حضوری تحویل بگیرید. مبلغ تا لحظهٔ تحویل در حساب شما باقی می‌ماند.</p>
 
       <div class="mapwrap" id="p-mapwrap">
         <div class="maploading" id="p-loading">
@@ -1516,15 +1626,8 @@ button,input,select,textarea{color:inherit}
       <div id="p-list"></div>
       <div class="note" style="margin-top:12px">
         <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/></svg>
-        <p>این صرافی‌ها طرف قرارداد مهاجرند و <b>پول را از قبل نمی‌گیرند</b>.
-          مبلغ فقط در لحظهٔ تحویلِ طلا و با کد تو آزاد می‌شود.</p>
-      </div>
-      <div class="custody who">
-        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/></svg>
-        <div>
-          <div class="ct" data-lex="custodyTitle"></div>
-          <p data-lex="custodyWhat"></p>
-        </div>
+        <p>این صرافی‌ها طرف قرارداد مهاجرند و <b>مبلغ را از پیش دریافت نمی‌کنند</b>.
+          کسر از موجودی شما تنها در لحظهٔ تحویل طلا و با ارائهٔ کد یک‌بارمصرف انجام می‌شود.</p>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -1551,8 +1654,8 @@ button,input,select,textarea{color:inherit}
       <div class="sec">آدرس</div>
       <div class="card"><p style="font-size:13px;line-height:1.8" id="ps-addr"></p>
         <div class="chip-row" style="display:flex;gap:7px;margin-top:11px">
-          <button class="btn btn-ghost btn-sm" style="height:34px;font-size:12px" onclick="toggleRoute()" id="ps-routebtn">مسیریابی</button>
-          <button class="btn btn-ghost btn-sm" style="height:34px;font-size:12px" onclick="openSheet('shopCall')">تماس با صرافی</button>
+          <button class="btn btn-ghost btn-sm" style="height:42px;font-size:12px" onclick="toggleRoute()" id="ps-routebtn">مسیریابی</button>
+          <button class="btn btn-ghost btn-sm" style="height:42px;font-size:12px" onclick="openSheet('shopCall')">تماس با صرافی</button>
         </div>
       </div>
 
@@ -1585,10 +1688,10 @@ button,input,select,textarea{color:inherit}
     <div class="scroll">
       <div class="note" style="margin:-2px 0 12px">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <p>چیزی که تحویل می‌گیری <b>طلای ۱۸ عیار</b> است، نه اسکناس.
+        <p>آنچه تحویل می‌گیرید <b>طلای ۱۸ عیار</b> است، نه اسکناس.
           معادل دلاری‌اش از موجودی تو کم می‌شود.</p>
       </div>
-      <div class="field"><label>چند گرم طلا تحویل می‌گیری؟</label>
+      <div class="field"><label>چند گرم طلا تحویل می‌گیرید؟</label>
         <input id="pa-amt" class="input num" inputmode="decimal" value="3" oninput="paCheck()"></div>
       <div class="card" style="padding:4px 16px;margin-bottom:10px">
         <div class="row"><span class="k">نرخ هر گرم امروز</span><span class="v num" id="pa-rate">—</span></div>
@@ -1623,14 +1726,14 @@ button,input,select,textarea{color:inherit}
       </div>
       <div class="card" style="margin-top:12px;padding:4px 16px;text-align:start">
         <div class="row"><span class="k">صرافی</span><span class="v" id="pc-shop">—</span></div>
-        <div class="row"><span class="k">تحویل می‌گیری</span><span class="v" id="pc-amt">—</span></div>
+        <div class="row"><span class="k">تحویل می‌گیرید</span><span class="v" id="pc-amt">—</span></div>
         <div class="row"><span class="k">زمان</span><span class="v" id="pc-slot">—</span></div>
         <div class="row"><span class="k">اعتبار کد</span><span class="v">۲۴ ساعت</span></div>
       </div>
       <div class="note" style="margin-top:12px;text-align:start">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-        <p><b>هنوز چیزی از حسابت کم نشده.</b> مبلغ در همان لحظه‌ای کسر می‌شود که کد را بدهی و
-          طلا را تحویل بگیری. اگر نروی، درخواست خودش باطل می‌شود.</p>
+        <p><b>هنوز مبلغی از حساب شما کسر نشده است.</b> کسر در همان لحظه‌ای انجام می‌شود که کد را ارائه کنید و
+          طلا را تحویل بگیرید. در صورت مراجعه‌نکردن، درخواست به‌طور خودکار باطل می‌شود.</p>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -1718,7 +1821,7 @@ button,input,select,textarea{color:inherit}
         </div>
         <div class="note" style="margin-top:10px;text-align:start">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
-          <p>از حالا ارزش این سبد بالا و پایین می‌شود. هر وقت خواستید می‌توانید
+          <p>از این پس ارزش این سبد بالا و پایین می‌شود. هر وقت خواستید می‌توانید
             بیرون بکشید — بدون جریمه و بدون انتظار.</p>
         </div>
       </div>
@@ -1761,7 +1864,7 @@ button,input,select,textarea{color:inherit}
     <div class="amt">
       <div class="cur">مبلغ به دلار</div>
       <div class="v num zero" id="w-val">$0<span class="caret"></span></div>
-      <div class="sub num" id="w-avail">موجودی آزاد $0.00</div>
+      <div class="sub" id="w-avail">موجودی آزاد <span class="num">$0.00</span></div>
     </div>
     <div class="keypad">
       <button class="key num" onclick="wKey('1')">1</button><button class="key num" onclick="wKey('2')">2</button><button class="key num" onclick="wKey('3')">3</button>
@@ -1781,7 +1884,7 @@ button,input,select,textarea{color:inherit}
     </div>
     <div class="scroll">
       <div class="dark-card quote-head">
-        <div class="l">به حسابت واریز می‌شود</div>
+        <div class="l">به حساب شما واریز می‌شود</div>
         <div class="v num" id="w-get">۰ تومان</div>
         <div class="timer"><span>اعتبار نرخ</span><span class="num" id="w-secs">۹۰</span><span>ثانیه</span><div class="bar"><i id="w-bar"></i></div></div>
       </div>
@@ -1795,12 +1898,12 @@ button,input,select,textarea{color:inherit}
       <div class="sec">واریز به</div>
       <button class="opt" aria-pressed="true">
         <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v9h14v-9"/></svg></div>
-        <div class="m"><div class="t">بانک ملت · ****۴۴۲۱</div><div class="d">به نام خودت · تأییدشده</div></div>
+        <div class="m"><div class="t">بانک ملت · ****۴۴۲۱</div><div class="d">به نام خودتان · تأییدشده</div></div>
         <div class="radio"></div>
       </button>
       <div class="note">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <p>واریز توسط <b>شریک تسویهٔ ریالی</b> انجام می‌شود. اگر نرخ تا زمان تأیید تغییر کند، نرخ جدید به تو نمایش داده می‌شود و می‌توانی لغو کنی.</p>
+        <p>واریز توسط <b>شریک تسویهٔ ریالی</b> انجام می‌شود. اگر نرخ تا زمان تأیید تغییر کند، نرخ جدید به شما نمایش داده می‌شود و امکان لغو دارید.</p>
       </div>
       <div style="height:12px"></div>
     </div>
@@ -1826,7 +1929,7 @@ button,input,select,textarea{color:inherit}
       <div id="a-list"></div>
       <div id="a-empty" class="card" style="text-align:center;padding:26px 18px">
         <div style="font-size:24px;margin-bottom:8px">◷</div>
-        <div style="font-size:14px;font-weight:600">هنوز فعالیتی نداری</div>
+        <div style="font-size:14px;font-weight:600">هنوز فعالیتی ثبت نشده است</div>
         <p class="tiny" style="margin-top:6px">هر تبدیل، انتقال، خرید و برداشت اینجا با رسید ثبت می‌شود.</p>
       </div>
       <div class="sec">پشتیبانی</div>
@@ -1883,6 +1986,7 @@ button,input,select,textarea{color:inherit}
   <button class="chip" id="flag-btn" aria-pressed="false" onclick="toggleFlag()">نشان داده آزمایشی: خاموش</button>
   <button class="chip" id="anchor-btn" aria-pressed="false" onclick="toggleAnchor()">پشتوانهٔ نهادی: خاموش</button>
   <button class="chip" id="phys-btn" aria-pressed="true" onclick="togglePhys()">تحویل فیزیکی: روشن</button>
+  <button class="chip" id="cu-btn" onclick="cycleCustody()">نگهداری: پایه</button>
   <button class="chip" id="pulse-btn" aria-pressed="false" onclick="togglePulse()">نبض زنده: خاموش</button>
   <button class="chip" id="pillow-btn" aria-pressed="false" onclick="togglePillow()">بالش: خاموش</button>
   <button class="chip" onclick="go('intro')">صفحهٔ معرفی</button>
@@ -1934,11 +2038,14 @@ const CONFIG={
 /* ════════ state ════════ */
 const S={ available:0, pending:0,  activity:[], failMode:false,
           cRaw:'', tRaw:'', wRaw:'', tPhone:'', svc:null, model:'own',
+          custody:'basic', cuBack:'use',
           payFrom:'main',  nests:[], activeNest:'calm', key:null, lastBuy:null, shop:'s1', slot:0, route:false, physical:null,  quoteTimer:null, seq:4190 };
 
 /* ════════ helpers ════════ */
 const FA=['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
-const fa=s=>String(s).replace(/\d/g,d=>FA[+d]);
+/* Persian numerals carry Persian separators too: U+066B for the decimal and
+   U+066C for thousands. Latin ones inside a Persian numeral read as a typo. */
+const fa=s=>String(s).replace(/\d/g,d=>FA[+d]).replace(/\./g,'٫').replace(/,/g,'٬');
 const grp=n=>Math.round(n).toLocaleString('en-US');
 const toman=n=>fa(grp(n));
 const usd=n=>'$'+(+n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
@@ -2028,8 +2135,8 @@ function render(){
   $('h-goals').textContent = irr ? toman(nestsTotal()*CONFIG.buyRate) : usd0(nestsTotal());
   $('h-pend').textContent  = irr ? toman(S.pending*CONFIG.buyRate)   : usd0(S.pending);
   if(current==='use') renderDash();
-  $('t-avail').textContent='موجودی آزاد '+usd(S.available);
-  $('w-avail').textContent='موجودی آزاد '+usd(S.available);
+  $('t-avail').innerHTML='موجودی آزاد <span class="num">'+usd(S.available)+'</span>';
+  $('w-avail').innerHTML='موجودی آزاد <span class="num">'+usd(S.available)+'</span>';
   $('home-empty').style.display=S.activity.length?'none':'block';
   $('home-activity').style.display=S.activity.length?'block':'none';
   if(S.activity.length) $('home-tx').innerHTML=S.activity.slice(0,3).map(txRow).join('');
@@ -2038,7 +2145,7 @@ function render(){
   const cAmt=+S.cRaw||0, gross=cAmt/buyRate(), fee=buyFee(cAmt), net=Math.max(0,gross-fee);
   const cd=$('c-amt'); cd.innerHTML=(S.cRaw?toman(+S.cRaw):'۰')+'<span class="caret"></span>';
   cd.classList.toggle('zero',!S.cRaw);
-  $('c-out').textContent='دریافتی تقریبی '+usd(net);
+  $('c-out').innerHTML='دریافتی تقریبی <span class="num">'+usd(net)+'</span>';
   /* the only gate is that the user receives something — no artificial floor */
   $('c-cta').classList.toggle('hidden',!(gross>=1));
   $('q-fee-k').textContent = fee===0 ? 'کارمزد ثابت' : 'کارمزد ثابت';
@@ -2051,7 +2158,7 @@ function render(){
 
   /* transfer */
   const tAmt=+S.tRaw||0;
-  const td=$('t-val'); td.innerHTML='$'+(S.tRaw?fa(grp(tAmt)):'۰')+'<span class="caret"></span>';
+  const td=$('t-val'); td.innerHTML='$'+(S.tRaw?grp(tAmt):'0')+'<span class="caret"></span>';
   td.classList.toggle('zero',!S.tRaw);
   const tOk=tAmt>0 && tAmt+CONFIG.transferFee<=S.available;
   $('t-cta2').classList.toggle('hidden',!tOk);
@@ -2060,7 +2167,7 @@ function render(){
 
   /* withdraw */
   const wAmt=+S.wRaw||0;
-  const wd=$('w-val'); wd.innerHTML='$'+(S.wRaw?fa(grp(wAmt)):'۰')+'<span class="caret"></span>';
+  const wd=$('w-val'); wd.innerHTML='$'+(S.wRaw?grp(wAmt):'0')+'<span class="caret"></span>';
   wd.classList.toggle('zero',!S.wRaw);
   $('w-cta').classList.toggle('hidden',!(wAmt>0&&wAmt<=S.available));
   const wNet=Math.max(0,(wAmt-CONFIG.sellFlatFee))*sellRate();
@@ -2096,7 +2203,7 @@ function doConvert(){
     }
     S.available+=net;
     setStatus('cs','ok',L('convertOk'),'انجام شد','');
-    $('cs-note').innerHTML=`<div class="note" style="text-align:start"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg><p>حالا می‌توانی این موجودی را <b>نگه داری</b>، انتقال بدهی، در یک لانه سرمایه‌گذاری کنی، طلا تحویل بگیری یا به تومان برگردانی.</p></div>`;
+    $('cs-note').innerHTML=`<div class="note" style="text-align:start"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg><p>این موجودی را می‌توانید <b>نگه دارید</b>، انتقال دهید، سرمایه‌گذاری کنید، به طلای فیزیکی تبدیل کنید یا به تومان برگردانید.</p></div>`;
     $('cs-actions').innerHTML=`<button class="btn btn-primary" onclick="go('home')">مشاهدهٔ موجودی</button>
       <button class="btn btn-ghost" onclick="showReceipt(S.activity[0])">رسید</button>`;
     addTx({kind:'convert',title:L('txIn'),amount:net,dir:'in',status:'done',
@@ -2269,9 +2376,9 @@ function fillNest(id){
   $('nd-vol').textContent=n.vol;
   $('nd-year').textContent=n.year;
   $('nd-warn').innerHTML = n.riskLv>=3
-    ? '<b>این '+L('nestWord')+' می‌تواند به‌شدت افت کند.</b> فقط مبلغی بگذار که اگر نصف شود، برنامه‌ات به هم نریزد.'
+    ? '<b>این '+L('nestWord')+' می‌تواند به‌شدت افت کند.</b> تنها مبلغی بگذارید که اگر نصف شود، برنامه‌تان به هم نریزد.'
     : n.riskLv===2
-    ? '<b>ارزش این '+L('nestWord')+' بالا و پایین می‌شود.</b> برای پولی که ماه بعد لازمت می‌شود مناسب نیست.'
+    ? '<b>ارزش این '+L('nestWord')+' بالا و پایین می‌شود.</b> برای پولی که ماه آینده به آن نیاز دارید مناسب نیست.'
     : '<b>کم‌نوسان یعنی بی‌نوسان نیست.</b> ارزش این '+L('nestWord')+' هم می‌تواند کم شود.';
   $('nd-range').innerHTML=RANGES.map(r=>
     '<button aria-pressed="'+(r[0]===ndRange)+'" onclick="setRange('+r[0]+')">'+r[1]+'</button>').join('');
@@ -2293,7 +2400,7 @@ function naCheck(){
   $('na-net').textContent=usd(Math.max(0,a-f));
   const over=a>S.available;
   $('na-warn').innerHTML = over
-    ? '<div class="note bad"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>موجودی آزاد شما '+usd(S.available)+' است.</p></div>'
+    ? '<div class="note bad"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>موجودی آزاد شما <span class="num">'+usd(S.available)+'</span> است.</p></div>'
     : (a>0 && a<10
       ? '<div class="note warn"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>حداقل مبلغ ۱۰ دلار است.</p></div>'
       : '');
@@ -2393,7 +2500,7 @@ function renderShops(){
       '<span class="badge2 num">'+fa(i+1)+'</span>' +
       '<span class="m"><span class="t">'+t.n+'</span>' +
       '<span class="d">'+t.addr.split('،')[0]+' · '+
-        (t.open?'<span style="color:var(--ok)">باز است</span>':'<span style="color:var(--ink-3)">الان بسته</span>')+
+        (t.open?'<span style="color:var(--ok)">باز است</span>':'<span style="color:var(--ink-3)">اکنون بسته</span>')+
       '</span></span>' +
       '<span class="far"><span class="num">'+fa(t.km.toFixed(1))+'</span> کیلومتر' +
         '<small><span class="num">'+fa(t.min)+'</span> دقیقه پیاده</small></span>' +
@@ -2434,8 +2541,8 @@ function openShop(id){
   $('ps-hours').textContent = t.hours;
   $('ps-cap').innerHTML = '<span class="num">' + fa(t.capG) + '</span> گرم';
   $('ps-open').innerHTML = t.open
-    ? '<span style="color:var(--ok)">الان باز است</span>'
-    : '<span style="color:var(--ink-3)">الان بسته است</span>';
+    ? '<span style="color:var(--ok)">اکنون باز است</span>'
+    : '<span style="color:var(--ink-3)">اکنون بسته است</span>';
   $('ps-addr').textContent = t.addr;
   $('ps-since').textContent = t.since;
   $('ps-steps-wrap').hidden = true;
@@ -2471,7 +2578,7 @@ function koCheck(){
   const over = need > S.available;
   $('ko-move').textContent = move > 0 ? usd(move) : '—';
   $('ko-warn').innerHTML = over
-    ? '<div class="note bad"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>موجودی آزاد تو '+usd(S.available)+' است. دستگاه '+usd(KEY_PRICE)+' و مبلغ کنارگذاشته '+usd(move)+' می‌شود.</p></div>'
+    ? '<div class="note bad"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>موجودی آزاد شما <span class="num">'+usd(S.available)+'</span> است، در حالی که دستگاه <span class="num">'+usd(KEY_PRICE)+'</span> و مبلغ انتقالی <span class="num">'+usd(move)+'</span> می‌شود.</p></div>'
     : '';
   $('ko-cta').disabled = over;
 }
@@ -2483,11 +2590,11 @@ function doKeyOrder(){
   $('ks-code').textContent = fa(code.split('').join(' '));
   $('ks-eta').textContent = '۵ تا ۷ روز کاری';
   $('ks-addr').textContent = S.key.addr;
-  $('ks-move').textContent = move > 0 ? usd(move) : 'بدون انتقال اولیه';
+  $('ks-move').innerHTML = move > 0 ? '<span class="num">'+usd(move)+'</span>' : 'بدون انتقال اولیه';
   addTx({ kind:'key', title:'سفارش کلید مهاجر', amount:KEY_PRICE, dir:'out', status:'done',
     rows:[['دستگاه','کلید مهاجر'],['قیمت',usd(KEY_PRICE)],['ارسال','رایگان · ۵ تا ۷ روز کاری'],
           ['انتقال در فعال‌سازی', move>0?usd(move):'—'],['کد فعال‌سازی',fa(code)],
-          ['نگهداری کلید','فقط روی دستگاه']] });
+          ['حالت نگهداری پس از فعال‌سازی','نگهداری شخصی']] });
   render(); go('k-status');
 }
 function cancelKey(){
@@ -2504,7 +2611,7 @@ function paCheck(){
   $('pa-gold').textContent = usd(val);
   $('pa-total').textContent = usd(total);
   $('pa-warn').innerHTML = over
-    ? '<div class="note bad"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>موجودی آزاد تو '+usd(S.available)+' است و این سفارش '+usd(total)+' می‌شود.</p></div>'
+    ? '<div class="note bad"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>موجودی آزاد شما <span class="num">'+usd(S.available)+'</span> است و این سفارش <span class="num">'+usd(total)+'</span> می‌شود.</p></div>'
     : cap
     ? '<div class="note warn"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p>موجودی طلای این شعبه '+fa(t.capG)+' گرم است. مقدار کمتری بگذار یا صرافی دیگری انتخاب کن.</p></div>'
     : '';
@@ -2591,6 +2698,24 @@ function renderDash(){
        <div class="m"><div class="t">${a.t}</div><div class="d">${a.d}</div>
          <div class="d" style="color:var(--ink-2);margin-top:3px">${a.f}</div></div></button>`).join('');
 
+  const c=cu();
+  $('d-custody').textContent=c.chip;
+  const kc=$('ks-cu');
+  if(kc) kc.textContent = S.custody==='self' ? c.chip : c.chip + ' — تا زمان فعال‌سازی';
+  const live=$('cu-live');
+  if(live) live.innerHTML=
+    `<div class="custody ${c.tone}">
+       <svg viewBox="0 0 24 24">${c.ic}</svg>
+       <div><div class="ct">${c.name}</div><p>${c.what}</p></div>
+     </div>
+     <button class="opt" onclick="openCustody('use')" style="margin-top:10px">
+       <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 12h16M13 5l7 7-7 7"/></svg></div>
+       <div class="m"><div class="t">دیدن و تغییر حالت نگهداری</div>
+         <div class="d">${S.custody==='basic'
+           ? 'دو حالت دیگر، کلید را از اختیار مهاجر خارج می‌کنند.'
+           : 'مقایسهٔ سه حالت و آنچه هرکدام بر عهدهٔ شما می‌گذارد.'}</div></div></button>`;
+  const pcc=$('pc-custody'); if(pcc) pcc.textContent=c.name+' · '+c.sum;
+
   $('d-rate').textContent=fa(buyRate().toLocaleString('en-US'))+' تومان';
   $('d-fee').textContent=fa((CONFIG.buySpread*100).toFixed(1))+'٪ + $'+CONFIG.buyFlatFee.toFixed(2);
   $('d-tx').innerHTML=S.activity.length?S.activity.slice(0,3).map(txRow).join('')
@@ -2605,7 +2730,7 @@ function startWithdraw(){ if(!guard()) return; S.wRaw=''; render(); go('w-amt');
    cannot stand behind yet says so in the row itself. */
 const ANCHOR=[
   {k:'ثبت شرکت',        v:'ثبت‌شده در ایران',            ok:true},
-  {k:'پولت کجا نگه داشته می‌شود', v:'جدا از حساب‌های ما', ok:true},
+  {k:'محل نگهداری دارایی کاربران', v:'جدا از حساب‌های عملیاتی مهاجر', ok:true},
   {k:'پشتیبان مسئول',   v:'یک نفر مشخص، با نام',          ok:true},
   {k:'صرافی طرف قرارداد',v:'در حال بررسی',               ok:false},
   {k:'دفتر حضوری',      v:'در حال بررسی',                ok:false},
@@ -2626,26 +2751,30 @@ function anchorHTML(){
    An FAQ that answers invented questions is decoration; this one exists to
    close the specific gaps that stopped people. */
 const FAQ=[
- {q:'پولم دقیقاً کجاست و دست کیست؟',
-  a:'معادل دلاری پولت جدا از حساب‌های خودِ مهاجر نگه داشته می‌شود و برای جابه‌جایی‌اش امضای بیش از یک نفر لازم است — یعنی هیچ‌کس به‌تنهایی نمی‌تواند به آن دست بزند. <b>حضانتش دست خودته</b> — یعنی کلید دسترسی به پول دست خودت است و برای برداشتنش لازم نیست به کسی اعتماد کنی، حتی به ما. <span class="rev">انتخاب شریک نگهدارنده هنوز نهایی نشده</span> و تا آن زمان نامی اعلام نمی‌کنیم.'},
- {q:'اگر مهاجر نبود، پول من چه می‌شود؟',
-  a:'پول تو در حساب‌های عملیاتی ما نیست، پس به ادامهٔ کار ما وابسته نیست. اگر می‌خواهی این را کامل از دست ما خارج کنی، دو راه داری: <b>طلا را فیزیکی تحویل بگیر</b>، یا <b>کلید مهاجر</b> را سفارش بده که کلید دارایی را خودش نگه می‌دارد. <span class="rev">جزئیات حقوقی این تفکیک در حال بررسی است.</span>'},
+ {q:'مهاجر صرافی است یا کیف پول؟',
+  a:'مهاجر پیش از هر چیز یک <b>اپلیکیشن کیف پول</b> است — مانند متامسک یا رَبی — که امکانات صرافی را هم در خود دارد تا لازم نباشد برای تبدیل تومان به دلار به سرویس دیگری بروید. تفاوت اصلی همین است: در یک صرافی معمولی کلید دارایی همیشه نزد صرافی می‌ماند، اینجا می‌توانید آن را به خودتان منتقل کنید.'},
+ {q:'کلید دارایی من دست چه کسی است؟',
+  a:'بستگی به حالتی دارد که فعال کرده‌اید و <b>حالت فعال شما همیشه در صفحهٔ «نگهداری کلید» نوشته شده است</b>. در <b>حالت پایه</b>، کلید نزد مهاجر و شریک نگهدارندهٔ دارای مجوز است. در <b>نگهداری شخصی</b>، کلید فقط داخل دستگاه شماست. در <b>کلید چندبخشی</b>، کلید به سه بخش تقسیم می‌شود که دو بخش آن نزد شماست.'},
+ {q:'در حالت پایه، مهاجر می‌تواند جلوی برداشت من را بگیرد؟',
+  a:'در حالت پایه، برداشت از مسیر مهاجر اجرا می‌شود؛ بنابراین <b>از نظر فنی چنین امکانی وجود دارد</b> و لایه‌ای از اعتماد به ما باقی می‌ماند. اگر می‌خواهید این وابستگی برداشته شود، با فعال‌سازی <b>کلید چندبخشی</b> یا <b>کلید سخت‌افزاری</b>، اجرای برداشت دیگر به تصمیم ما وابسته نخواهد بود.'},
+ {q:'کلید چندبخشی (MPC) دقیقاً چطور کار می‌کند؟',
+  a:'به‌جای یک کلید واحد، سه بخش ساخته می‌شود: یکی روی گوشی شما، یکی در نسخهٔ پشتیبان شما و یکی نزد مهاجر. هر برداشت به <b>دو بخش از سه بخش</b> نیاز دارد. چون مهاجر تنها یک بخش دارد، به‌تنهایی نمی‌تواند دارایی را جابه‌جا کند؛ و چون شما دو بخش دارید، اگر نسخهٔ پشتیبان را از دست بدهید همچنان مسیر بازیابی باز است.'},
+ {q:'کلید مهاجر چیست و چه تفاوتی با MPC دارد؟',
+  a:'کلید مهاجر یک دستگاه سخت‌افزاری است که کلید خصوصی شما را در نخستین راه‌اندازی، <b>به‌صورت ایزوله و آفلاین داخل خودش تولید می‌کند</b> و هرگز بیرون نمی‌دهد. بالاترین سطح کنترل را می‌دهد و در عوض، بازیابی تنها از طریق عبارت ۱۲ کلمه‌ای ممکن است. کلید چندبخشی همان استقلال از مهاجر را می‌دهد، اما مسیر بازیابی را هم حفظ می‌کند.'},
+ {q:'اگر فعالیت مهاجر متوقف شود، چه بر سر دارایی من می‌آید؟',
+  a:'دارایی کاربران جدا از حساب‌های عملیاتی مهاجر نگهداری می‌شود. در <b>نگهداری شخصی</b> و <b>کلید چندبخشی</b>، دسترسی شما مستقل از ادامهٔ فعالیت ماست. در <b>حالت پایه</b> این استقلال وجود ندارد و دسترسی تابع فرایند شریک نگهدارنده خواهد بود. <span class="rev">چارچوب حقوقی این تفکیک هنوز در حال بررسی است.</span>'},
  {q:'هر وقت بخواهم می‌توانم پولم را برگردانم؟',
-  a:'بله. هیچ قفل زمانی و هیچ جریمه‌ای وجود ندارد. برگرداندن دلار به تومان از همان صفحهٔ «تبدیل» انجام می‌شود و مبلغ به حساب بانکی به‌نام خودت می‌رود. کارمزد پیش از تأیید نمایش داده می‌شود.'},
+  a:'بله. هیچ قفل زمانی و جریمه‌ای وجود ندارد. برگرداندن دلار به تومان از همان صفحهٔ «تبدیل» انجام می‌شود و مبلغ به حساب بانکی به نام خودتان واریز می‌گردد. کارمزد پیش از تأیید نمایش داده می‌شود.'},
  {q:'«تبدیل» با شارژ حساب فرق دارد؟',
-  a:'هر دو است. تومان از حساب بانکی تو کم می‌شود و <b>معادل دلاری‌اش</b> به موجودی‌ات اضافه می‌شود. همان صفحه هر دو جهت را انجام می‌دهد: تومان به دلار، و دلار به تومان.'},
- {q:'{NP} سود می‌دهند؟ اگر نه، به چه درد می‌خورند؟',
-  a:'<b>سود ثابتی پرداخت نمی‌شود.</b> هر {N} ترکیبی از چند دارایی است — دلار، طلا و رمزارز — و ارزشش با بازار بالا و پایین می‌رود. کاری که می‌کند این است که همهٔ پولت را روی یک چیز نمی‌گذارد، تا اگر یکی افت کرد بقیه جلوی ضرر را بگیرند. <b>ارزشش می‌تواند کم هم بشود.</b>'},
- {q:'طلا را چطور تحویل می‌گیرم؟',
-  a:'از تب «تحویل فیزیکی»، مقدار طلا را به گرم انتخاب می‌کنی و یکی از صرافی‌های طرف قرارداد را روی نقشه برمی‌داری. یک کد یک‌بارمصرف می‌گیری و حضوری طلای ۱۸ عیار تحویل می‌گیری. <b>تا لحظه‌ای که کد را ندهی، هیچ مبلغی از حسابت کم نمی‌شود.</b>'},
- {q:'کلید مهاجر چیست و چه فرقی می‌کند؟',
-  a:'یک دستگاه کوچک که کلید دارایی‌ات را <b>خودش داخل خودش می‌سازد</b> و بیرون نمی‌دهد. با آن، دارایی کاملاً دست خودت است و ما حتی اگر بخواهیم هم نمی‌توانیم به آن دست بزنیم. روی دیگرش هم هست: اگر دستگاه و آن دوازده کلمهٔ بازیابی را با هم گم کنی، <b>هیچ‌کس نمی‌تواند برش گرداند</b>.'},
- {q:'کارمزد دقیقاً چقدر است؟',
-  a:'یک درصد کارمزد روی نرخ تبدیل، به‌علاوهٔ یک کارمزد ثابت. ورود به هر {N} نیم درصد است و تحویل حضوری طلا $2.50. همه <b>پیش از تأیید</b> و جداگانه نوشته می‌شوند و نرخ تا زمان تأیید قفل می‌ماند.'},
- {q:'چقدر طول می‌کشد؟',
-  a:'تبدیل معمولاً کمتر از چند دقیقه. انتقال بین کاربران مهاجر آنی است. برداشت بانکی تابع ساعت کاری شبکهٔ بانکی است و کلید مهاجر ۵ تا ۷ روز کاری پست می‌شود. زمان تقریبی همیشه پیش از تأیید نمایش داده می‌شود.'},
- {q:'اگر تراکنش انجام نشد چه می‌شود؟',
-  a:'مبلغ به موجودی‌ات برمی‌گردد و وضعیتش در بخش فعالیت‌ها با دلیل ثبت می‌شود. اگر برنگشت، یک پشتیبان مشخص پیگیری می‌کند — نه یک صف پاسخ خودکار.'}
+  a:'هر دو است. تومان از حساب بانکی شما کم می‌شود و <b>معادل دلاری آن</b> به موجودی‌تان اضافه می‌گردد. همان صفحه هر دو جهت را انجام می‌دهد: تومان به دلار و دلار به تومان.'},
+ {q:'طلا را چطور فیزیکی تحویل می‌گیرم؟',
+  a:'از تب «تحویل فیزیکی»، مقدار طلا را به گرم انتخاب می‌کنید و یکی از صرافی‌های طرف قرارداد را روی نقشه برمی‌گزینید. یک کد یک‌بارمصرف دریافت می‌کنید و طلای ۱۸ عیار را حضوری تحویل می‌گیرید. <b>تا زمانی که کد را ارائه نکنید، هیچ مبلغی از موجودی شما کسر نمی‌شود.</b> تحویل فیزیکی حالت نگهداری کلید را تغییر نمی‌دهد؛ دارایی را از حساب خارج می‌کند.'},
+ {q:'{NP} سود می‌دهند؟',
+  a:'<b>سود ثابتی پرداخت نمی‌شود.</b> هر {N} ترکیبی از چند دارایی است — دلار، طلا و رمزارز — و ارزش آن با بازار تغییر می‌کند. کارکردش این است که کل سرمایه را به یک دارایی وابسته نمی‌کند. <b>ارزش آن می‌تواند کاهش هم پیدا کند.</b>'},
+ {q:'کارمزدها دقیقاً چقدر است؟',
+  a:'یک درصد روی نرخ تبدیل، به‌علاوهٔ یک کارمزد ثابت. ورود به هر {N} نیم درصد است و تحویل حضوری طلا $2.50. همهٔ این‌ها <b>پیش از تأیید</b> و جداگانه نمایش داده می‌شوند و نرخ تا لحظهٔ تأیید ثابت می‌ماند.'},
+ {q:'اگر تراکنشی انجام نشد چه می‌شود؟',
+  a:'مبلغ به موجودی شما بازمی‌گردد و وضعیت آن با ذکر دلیل در بخش فعالیت‌ها ثبت می‌شود. در صورت بازنگشتن، یک پشتیبان مشخص پیگیری می‌کند.'}
 ];
 function renderFAQ(){
   const el=$('d-faq'); if(!el) return;
@@ -2660,6 +2789,129 @@ function renderFAQ(){
 }
 /* what a participant chose to open is behavioural evidence, not a page view */
 function faqReport(){ return [...S.faqOpened]; }
+
+
+/* ════════ custody models ════════
+   The single most important accuracy fix in this build. Until the hardware key
+   is activated or MPC is set up, the key is held by Mohajer and its licensed
+   partner — so no screen may claim otherwise. Every custody sentence in the app
+   is generated from this table against S.custody, which means the claim can
+   never drift out of step with the state the participant is actually in. */
+const CUSTODY = {
+  basic:{
+    lvl:1, name:'نگهداری توسط مهاجر', chip:'حالت پایه', tone:'',
+    ic:'<rect x="4" y="10" width="16" height="10" rx="2.4"/><path d="M8 10V7.5a4 4 0 018 0V10"/>',
+    line:'کلید دارایی شما نزد مهاجر و شریک نگهدارندهٔ دارای مجوز است.',
+    what:'حضانت یعنی کلید دسترسی به دارایی در اختیار چه کسی است. در این حالت کلید در اختیار ماست: برداشت با دستور شما انجام می‌شود، اما از مسیر ما.',
+    sum:'کلید نزد مهاجر · بازیابی از طریق پشتیبانی',
+    rows:[
+      ['کلید دارایی','نزد مهاجر و شریک نگهدارنده',''],
+      ['اجرای برداشت','از مسیر مهاجر',''],
+      ['محدودکردن برداشت از سوی ما','از نظر فنی ممکن است','warn'],
+      ['بازیابی دسترسی','از طریق احراز هویت و پشتیبانی','ok'],
+      ['دارایی در ترازنامهٔ مهاجر','نگهداری نمی‌شود','ok']
+    ],
+    risk:{tone:'risk', t:'در این حالت اتکای شما به ماست.',
+      b:'دارایی جدا از حساب‌های عملیاتی مهاجر نگهداری می‌شود، اما کلید در اختیار ماست. اگر می‌خواهید این اتکا برداشته شود، یکی از دو حالت زیر را فعال کنید.'},
+    cta:null
+  },
+  self:{
+    lvl:3, name:'نگهداری شخصی', chip:'سلف‌کاستدی', tone:'who',
+    ic:'<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke-linejoin="round"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/>',
+    line:'با کلید سخت‌افزاری مهاجر، کلید دارایی فقط داخل دستگاه شماست و از آن خارج نمی‌شود.',
+    what:'حضانت یعنی کلید دسترسی به دارایی در اختیار چه کسی است. در این حالت فقط در اختیار شماست: هیچ برداشتی بدون تأیید روی دستگاه شما اجرا نمی‌شود و مهاجر نسخه‌ای از کلید ندارد.',
+    sum:'کلید فقط روی دستگاه شما · بدون دسترسی مهاجر',
+    rows:[
+      ['کلید دارایی','فقط داخل دستگاه شما','ok'],
+      ['اجرای برداشت','با تأیید روی دستگاه','ok'],
+      ['محدودکردن برداشت از سوی ما','ممکن نیست','ok'],
+      ['بازیابی دسترسی','فقط با عبارت بازیابی ۱۲ کلمه‌ای','warn'],
+      ['اگر مهاجر متوقف شود','دسترسی شما باقی است','ok']
+    ],
+    risk:{tone:'risk', t:'مسئولیت نگهداری کامل بر عهدهٔ شماست.',
+      b:'با از دست رفتن هم‌زمان دستگاه و عبارت بازیابی، امکان بازگرداندن دسترسی وجود ندارد. این محدودیت ذاتیِ نگهداری شخصی است، نه سیاست مهاجر.'},
+    cta:{t:'سفارش کلید مهاجر', go:"go('k-intro')"}
+  },
+  mpc:{
+    lvl:2, name:'کلید چندبخشی (MPC)', chip:'ام‌پی‌سی', tone:'who',
+    ic:'<circle cx="12" cy="6.5" r="2.6"/><circle cx="5.6" cy="17" r="2.6"/><circle cx="18.4" cy="17" r="2.6"/><path d="M10.4 8.6L7.2 14.9M13.6 8.6l3.2 6.3"/>',
+    line:'کلید به سه بخش تقسیم می‌شود و هر برداشت به دو بخش نیاز دارد.',
+    what:'حضانت یعنی کلید دسترسی به دارایی در اختیار چه کسی است. در این حالت کلید واحدی وجود ندارد: دو بخش نزد شماست — روی گوشی و در نسخهٔ پشتیبان — و یک بخش نزد مهاجر. چون هر برداشت به دو بخش نیاز دارد، مهاجر به‌تنهایی نمی‌تواند دارایی را جابه‌جا کند.',
+    sum:'دو بخش نزد شما · یک بخش نزد مهاجر · آستانهٔ دو از سه',
+    rows:[
+      ['بخش‌های کلید','۲ نزد شما، ۱ نزد مهاجر','ok'],
+      ['لازم برای هر برداشت','۲ بخش از ۳',''],
+      ['برداشت با تصمیم مهاجر به‌تنهایی','ممکن نیست','ok'],
+      ['اگر نسخهٔ پشتیبان را از دست بدهید','با بخش مهاجر بازیابی می‌شود','ok'],
+      ['اگر مهاجر متوقف شود','دو بخش شما کافی است','ok']
+    ],
+    risk:{tone:'', t:'حدواسط دو حالت دیگر.',
+      b:'کنترل از دست مهاجر خارج می‌شود، اما برخلاف نگهداری شخصیِ کلاسیک، از دست دادن نسخهٔ پشتیبان به از دست رفتن دارایی منجر نمی‌شود.'},
+    cta:{t:'فعال‌سازی کلید چندبخشی', go:'activateMpc()'}
+  }
+};
+const CU_ORDER = ['basic','mpc','self'];
+const cu = () => CUSTODY[S.custody];
+
+function openCustody(from){ S.cuBack = from || 'use'; renderCustody(); go('custody'); }
+
+function renderCustody(){
+  const c = cu();
+  $('cu-now').innerHTML =
+    `<div class="custody ${c.tone}">
+       <svg viewBox="0 0 24 24">${c.ic}</svg>
+       <div><div class="ct">حالت فعال شما: ${c.name}</div><p>${c.what}</p></div>
+     </div>
+     <div class="card" style="padding:4px 16px;margin-top:10px">${
+       c.rows.map(function(r){ return `<div class="row"><span class="k">${r[0]}</span><span class="v"${
+         r[2]==='ok'?' style="color:var(--ok)"':r[2]==='warn'?' style="color:var(--warn)"':''
+       }>${r[1]}</span></div>`; }).join('')}</div>
+     <div class="custody ${c.risk.tone}" style="margin-top:10px">
+       <svg viewBox="0 0 24 24">${c.risk.tone==='risk'
+         ? '<path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/>'
+         : '<circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/>'}</svg>
+       <div><div class="ct">${c.risk.t}</div><p>${c.risk.b}</p></div>
+     </div>`;
+
+  $('cu-opts').innerHTML = CU_ORDER.map(function(k){
+    const m = CUSTODY[k], on = k === S.custody;
+    return `<button class="keycard ${k==='self'?'k-dev':k==='mpc'?'k-mpc':'k-base'}${on?' is-on':''}"${
+      on || !m.cta ? ' disabled' : ' onclick="'+m.cta.go+'"'}>
+      <span class="ic"><svg viewBox="0 0 24 24">${m.ic}</svg></span>
+      <span class="m">
+        <span class="t cu-hd"><span class="nm">${m.name}</span><span class="cu-state${on?' on':''}">${on?'حالت فعلی':'فعال‌سازی'}</span></span>
+        <span class="d">${m.line}</span>
+        <span class="lim">${m.sum}</span>
+      </span></button>`;
+  }).join('');
+}
+
+function setCustody(mode){
+  S.custody = mode;
+  const b = $('cu-btn'); if(b) b.textContent = 'نگهداری: ' + CUSTODY[mode].chip;
+  if($('cu-opts')) renderCustody();
+  renderDash(); render();
+}
+function cycleCustody(){
+  setCustody(CU_ORDER[(CU_ORDER.indexOf(S.custody) + 1) % CU_ORDER.length]);
+}
+function activateMpc(){
+  setCustody('mpc');
+  addTx({kind:'custody', title:'فعال‌سازی کلید چندبخشی', amount:0, dir:'move', status:'done',
+    rows:[['حالت نگهداری','کلید چندبخشی (MPC)'],['بخش‌های کلید','۲ نزد شما، ۱ نزد مهاجر'],
+          ['آستانهٔ برداشت','۲ از ۳'],['کارمزد فعال‌سازی','رایگان']]});
+  openCustody(S.cuBack);
+}
+/* Ordering the device does not move custody — only activating a delivered one
+   does. Keeping those two apart is the whole point of the correction. */
+function activateKey(){
+  if(S.key){ S.key.status='active'; }
+  setCustody('self');
+  addTx({kind:'custody', title:'فعال‌سازی کلید مهاجر', amount:0, dir:'move', status:'done',
+    rows:[['حالت نگهداری','نگهداری شخصی'],['کلید خصوصی','فقط داخل دستگاه'],
+          ['دسترسی مهاجر','ندارد'],['بازیابی','عبارت ۱۲ کلمه‌ای']]});
+  openCustody('home');
+}
 
 function renderAnchor(){
   document.querySelectorAll('.anchor-slot').forEach(el=>{
@@ -2790,7 +3042,7 @@ function setStatus(p,kind,msg,badge){
 /* ════════ activity + receipts ════════ */
 const STATUS_TXT={done:['انجام شد','b-ok'],failed:['ناموفق','b-bad'],
                   refunded:['بازپرداخت','b-bad'],cancelled:['لغو شد','b-warn'],pending:['در انتظار','b-warn']};
-function addTx(tx){ tx.id=nextId(); tx.when='همین حالا'; S.activity.unshift(tx); }
+function addTx(tx){ tx.id=nextId(); tx.when='چند لحظه پیش'; S.activity.unshift(tx); }
 /* Nest rows read from the live lexicon; everything else keeps its own title. */
 function txTitle(t){
   if(t.kind==='nest' && t.nestId) return 'سرمایه‌گذاری در '+nName(nest(t.nestId));
@@ -2826,24 +3078,7 @@ function showReceipt(t){
 /* ════════ sheets ════════ */
 function openSheet(kind,data){
   let h='';
-  if(kind==='custody'){
-    h=`<h3>${L('custodyTitle')}</h3>
-      <p class="lead" style="margin-bottom:12px">${L('custodyWhat')}</p>
-      <div class="row"><span class="k">${L('dashCustody')}</span><span class="v">${L('dashCustodyV')}</span></div>
-      <div class="row"><span class="k">کلید برداشت</span><span class="v">${L('yoursShort')}</span></div>
-      <div class="row"><span class="k">استفاده از پول تو برای کار ما</span><span class="v" style="color:var(--ok)">هرگز</span></div>
-      <div class="row"><span class="k">جلوگیری ما از برداشت</span><span class="v" style="color:var(--ok)">ممکن نیست</span></div>
-      <div class="row"><span class="k">گزارش موجودی</span><span class="v">ماهانه، قابل بررسی</span></div>
-      <div style="height:10px"></div>
-      <div class="note" style="text-align:start">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-        <p><b>دو راه خروج همیشه باز است:</b> برگرداندن به تومان روی حساب بانکی خودت،
-          یا <b>تحویل گرفتن طلای فیزیکی</b> از یک صرافی طرف قرارداد. هیچ‌کدام به اجازهٔ ما نیاز ندارد.</p>
-      </div>
-      <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet();go('p-choose')">دیدن راه‌های خروج</button>
-      <button class="btn btn-ghost" onclick="closeSheet()">بستن</button>`;
-  }
-  else if(kind==='proof'){
+  if(kind==='proof'){
     h=`<h3>این اعداد از کجا می‌آیند؟</h3>
       <p class="lead" style="margin-bottom:10px">حجم فعالیت شبکه در ۲۴ ساعت گذشته.</p>
       <div class="row"><span class="k">تبدیل انجام‌شده</span><span class="v num">${fa(grp(CONFIG.proof.tx24h))}</span></div>
@@ -2857,7 +3092,7 @@ function openSheet(kind,data){
     h=`<h3>پشتوانه و مسئولیت</h3>
       <p class="lead" style="margin-bottom:12px">آنچه امروز قطعی است و آنچه هنوز در حال بررسی است، جدا نوشته شده. هیچ موردی که نهایی نشده باشد اینجا به‌عنوان قطعی نمایش داده نمی‌شود.</p>
       <div class="row"><span class="k">ثبت شرکت</span><span class="v">ثبت‌شده در ایران</span></div>
-      <div class="row"><span class="k">پولت کجاست</span><span class="v">جدا از حساب‌های ما</span></div>
+      <div class="row"><span class="k">دارایی کاربران</span><span class="v">جدا از حساب‌های عملیاتی مهاجر</span></div>
       <div class="row"><span class="k">گزارش موجودی</span><span class="v">ماهانه، قابل مشاهده</span></div>
       <div class="row"><span class="k">پشتیبان مسئول</span><span class="v">یک نفر مشخص، با نام</span></div>
       <div style="height:10px"></div>
@@ -2869,8 +3104,8 @@ function openSheet(kind,data){
   }
   else if(kind==='nestHelp'){
     h=`<h3>${L('nestWord')} چیست؟</h3>
-      <p class="lead" style="margin-bottom:10px">به‌جای اینکه همهٔ پولت را روی یک دارایی بگذاری،
-        هر ${L('nestWord')} ترکیبی از چند دارایی است — اگر یکی افت کند، بقیه جلوی ضرر را می‌گیرند.</p>
+      <p class="lead" style="margin-bottom:10px">به‌جای آنکه کل سرمایه روی یک دارایی بنشیند،
+        هر ${L('nestWord')} ترکیبی از چند دارایی است؛ افت یکی با رفتار بقیه جبران می‌شود.</p>
       <div class="row"><span class="k">کمترین مبلغ</span><span class="v num">$10</span></div>
       <div class="row"><span class="k">کارمزد ورود</span><span class="v num">۰٫۵٪</span></div>
       <div class="row"><span class="k">قفل زمانی</span><span class="v" style="color:var(--ok)">ندارد</span></div>
@@ -2896,7 +3131,7 @@ function openSheet(kind,data){
       <p class="lead" style="margin-bottom:10px">برای پرداخت، انتقال و برداشت، یک پشتیبان مشخص پاسخ می‌دهد.</p>
       <div style="display:flex;align-items:center;gap:9px;padding:12px 14px;background:var(--ok-soft);border-radius:var(--r-md);margin-bottom:6px">
         <span class="pulse"></span>
-        <span style="font-size:12.5px;font-weight:600;color:var(--ok)">الان فعال است</span>
+        <span style="font-size:12.5px;font-weight:600;color:var(--ok)">اکنون فعال است</span>
       </div>
       <div class="row"><span class="k">زمان پاسخ</span><span class="v">معمولاً زیر ۱۵ دقیقه</span></div>
       <div class="row"><span class="k">روزهای تعطیل</span><span class="v">فعال — شامل نوروز</span></div>
@@ -2912,9 +3147,9 @@ function closeSheet(){ $('sheet-bg').classList.remove('on'); $('sheet').classLis
 /* ════════ guard: needs balance ════════ */
 function guard(){
   if(S.available>0) return true;
-  openSheet('custody');
-  $('sheet-body').innerHTML=`<h3>اول باید موجودی داشته باشی</h3>
-    <p class="lead" style="margin-bottom:12px">برای انتقال، سرمایه‌گذاری یا تحویل طلا، اول بخشی از تومان را به دلار دیجیتال تبدیل کن.</p>
+  openSheet('blank');
+  $('sheet-body').innerHTML=`<h3>ابتدا باید موجودی داشته باشید</h3>
+    <p class="lead" style="margin-bottom:12px">برای انتقال، سرمایه‌گذاری یا تحویل طلا، ابتدا بخشی از تومان را به دلار دیجیتال تبدیل کنید.</p>
     <button class="btn btn-primary" onclick="closeSheet();go('convert')">رفتن به تبدیل</button>
     <button class="btn btn-ghost" onclick="closeSheet()">بستن</button>`;
   return false;
@@ -2928,32 +3163,37 @@ function guard(){
    both, exactly as the Nest boundary rule requires. */
 const LEX={
   std:{
-    walletLabel:'موجودی دلار دیجیتال', availLabel:'آزاد', goalsLabel:'در صندوق‌ها',
+    walletLabel:'دارایی شما', availLabel:'آزاد', goalsLabel:'در سبدها',
     pendingLabel:'در انتظار', goalsTab:'سرمایه‌گذاری', goalsTitle:'صندوق‌های هدف',
-    goalNew:'صندوق جدید', goalNewCta:'ساخت صندوق جدید', goalEmpty:'هنوز صندوقی نساخته‌ای',
+    goalNew:'صندوق جدید', goalNewCta:'ساخت صندوق جدید', goalEmpty:'هنوز صندوقی نساخته‌اید',
     goalNote:'پولِ صندوق <b>قفل نمی‌شود</b>. هر لحظه، آنی و بدون کارمزد به موجودی آزاد برمی‌گردد.',
     goalEmptyBody:'صندوق بخشی از همین موجودی شماست که کنار گذاشته می‌شود — نه حسابی جدا و نه سپرده. کاری که می‌کند این است که پولِ یک هدف را از پولِ روزمره جدا نگه می‌دارد، تا وقتی خرج می‌کنید بدانید از کدام جیب دارید برمی‌دارید.',
     typeIntro:'هر سه یک کار پایه را انجام می‌دهند — بخشی از موجودی را کنار می‌گذارند. تفاوتشان در این است که بعد از آن چه اتفاقی می‌افتد.',
     typeCta:'ادامه', fName:'نام صندوق', fDate:'تا چه تاریخی',
     honestT:'هیچ‌کدام سود نمی‌دهند',
     honestB:'این‌ها سپرده نیستند و مهاجر بابتشان سودی پرداخت نمی‌کند. ارزش از <b>دلار بودنِ پول</b> می‌آید، نه از سود — همان مقدار دلاری که کنار گذاشته‌اید، همان مقدار دلار باقی می‌ماند. کاری که این فضا می‌کند <b>جدا نگه داشتن پول است، نه بیشتر کردنش</b>.',
-    goalDel:'حذف صندوق (پول برمی‌گردد)', convertOk:'به موجودی دلاری‌ات اضافه شد.',
-    homeEmpty:'هنوز موجودی نداری. با <b>تبدیل</b> شروع کن — بعد از آن بقیهٔ کارها از همین موجودی انجام می‌شود.',
+    goalDel:'حذف صندوق (پول برمی‌گردد)', convertOk:'به موجودی دلاری شما اضافه شد.',
+    homeEmpty:'هنوز موجودی ندارید. با <b>تبدیل</b> شروع کنید — پس از آن، بقیهٔ کارها از همین موجودی انجام می‌شود.',
     useAvail:'موجودی آزاد', payFrom:'موجودی آزاد', goalPrefix:'صندوق',
-    custodyTitle:'حضانت پولتان دست خودتان است.',
-    custodyWhat:'«حضانت» یعنی کلید دسترسی به پول، دست چه کسی است. اینجا فقط دست خودتان است — برای برداشتن پولتان لازم نیست به هیچ‌کس اعتماد کنید، حتی به ما.',
-    yoursShort:'دست خودتان',
+    vp1t:'پولتان را زیر بالشت خودتان بگذارید.',
+    vp1d:'با کلید سخت‌افزاری مهاجر، کلید دارایی از دسترس ما خارج می‌شود و هیچ برداشتی بدون تأیید شما اجرا نمی‌شود.',
+    vp2t:'هر وقت خواستید، دارایی را فیزیکی تحویل بگیرید.',
+    vp2d:'بخشی از موجودی را به طلای ۱۸ عیار تبدیل کنید و حضوری از یک صرافی طرف قرارداد بگیرید.',
+    vp1s:'پولتان زیر بالشت خودتان', vp1sd:'کلید دارایی را خودتان نگه دارید.',
+    vp2s:'تحویل فیزیکی طلا', vp2sd:'هر وقت خواستید، حضوری بگیرید.',
+    introH:'دارایی شما،<br>با دو تفاوت روشن.',
+    introP:'مهاجر پیش از هر چیز یک اپلیکیشن کیف پول است و امکانات صرافی را هم در خود دارد. دو کاری که انجام می‌دهد و در جای دیگری کنار هم پیدا نمی‌کنید:',
     investDisclaim:'اعداد گذشته فقط رفتار هر سبد را نشان می‌دهند و <b>تضمین آینده نیستند</b>. ارزش این دارایی‌ها می‌تواند کم هم بشود.',
     mixTitle:'این سبد از چه ساخته شده', investCta:'سرمایه‌گذاری در این سبد',
     investAmt:'چه مبلغی در این سبد بگذارید؟ · دلار', investNet:'وارد سبد می‌شود',
     investExit:'هر وقت بخواهید می‌توانید بیرون بکشید. قفل زمانی و جریمه‌ای وجود ندارد؛ فقط ارزش سبد در همان روز حساب می‌شود.',
     investEmpty:'هنوز در سبدی سرمایه‌گذاری نکرده‌اید',
-    dashCustody:'پول شما کجاست', dashCustodyV:'جدا از حساب‌های ما', nestWordPl:'سبدها',
+    nestWordPl:'سبدها',
     pillowSay:'دارایی شما زیر بالش است.',
-    pillowSub:'حضانت این پول دست خودتان است. تا بالش را برندارید، حتی روی همین صفحه هم نشان داده نمی‌شود.',
+    pillowSub:'تا بالش را برندارید، موجودی شما روی این صفحه نمایش داده نمی‌شود — حتی اگر گوشی دست کس دیگری باشد.',
     pillowTap:'بالش را بردارید',
     nestWord:'سبد', nestsMine:'سبدهای شما',
-    eggLine:'<svg viewBox="0 0 24 24"><path d="M12 3v18M5 8h14M5 16h14"/></svg><p><b>همهٔ پولتان را روی یک دارایی نگذارید.</b> هر سبد ترکیبی از چند دارایی است، نه یکی. اگر یکی افت کند، بقیه کل ضرر را روی دوش شما نمی‌گذارند.</p>',
+    eggLine:'<svg viewBox="0 0 24 24"><path d="M12 3v18M5 8h14M5 16h14"/></svg><p><b>همهٔ سرمایه را روی یک دارایی نگذارید.</b> هر سبد ترکیبی از چند دارایی است. افت یکی از آن‌ها با رفتار بقیه جبران می‌شود و کل زیان به شما منتقل نمی‌گردد.</p>',
     dashTotal:'ارزش کل', dashBranches:'سبدهای شما', dashCan:'کارهایی که می‌توانید انجام دهید',
     dashState:'وضعیت', dashRate:'نرخ خرید امروز', dashFee:'کارمزد تبدیل',
     dashLock:'قفل زمانی', dashRecent:'آخرین فعالیت‌ها',
@@ -2962,11 +3202,9 @@ const LEX={
     useTitle:'نمای کلی', unitAlt:'به تومان', unitBack:'به دلار',
     txIn:'تبدیل تومان به دلار', txOutTo:'انتقال به سارا رضایی',
     goalAddTitle:'افزودن به صندوق', goalRelTitle:'برگرداندن به موجودی آزاد',
-    introH:'بخشی از پولت را دلار نگه دار<br>— بدون اینکه گیر بیفتد.',
-    introP:'تومان را با نرخ و کارمزد شفاف به دلار دیجیتال تبدیل کنید. هر وقت لازم شد از همان موجودی انتقال بدهید، در یک سبد سرمایه‌گذاری کنید، اسکناس تحویل بگیرید یا به تومان برگردانید.'
   },
   nest:{
-    walletLabel:'ارزش آشیانهٔ شما', availLabel:'در آشیانه', goalsLabel:'در سبدها',
+    walletLabel:'آشیانهٔ دارایی شما', availLabel:'در آشیانه', goalsLabel:'در لانه‌ها',
     pendingLabel:'در راه', goalsTab:'سرمایه‌گذاری', goalsTitle:'شاخه‌های هدف',
     goalNew:'شاخهٔ جدید', goalNewCta:'ساخت شاخهٔ جدید', goalEmpty:'هنوز شاخه‌ای نساخته‌اید',
     goalNote:'پولِ روی شاخه <b>قفل نمی‌شود</b>. هر لحظه، آنی و بدون کارمزد به آشیانه برمی‌گردد.',
@@ -2978,17 +3216,22 @@ const LEX={
     goalDel:'حذف شاخه (پول برمی‌گردد)', convertOk:'به آشیانهٔ شما نشست.',
     homeEmpty:'آشیانه هنوز خالی است. با <b>تبدیل</b> شروع کنید — بعد از آن بقیهٔ کارها از همین‌جا انجام می‌شود.',
     useAvail:'در آشیانه', payFrom:'در آشیانه', goalPrefix:'شاخهٔ',
-    custodyTitle:'حضانت پولت دست خودته.',
-    custodyWhat:'«حضانت» یعنی کلید دسترسی به پول دست کیه. اینجا دست خودته — مثل اینه که پولت واقعاً زیر بالشته، نه پیش ما.',
-    yoursShort:'دست خودت',
+    vp1t:'پولت رو بذار زیر بالشت خودت.',
+    vp1d:'با کلید سخت‌افزاری مهاجر، کلید دارایی از دسترس ما خارج می‌شود و هیچ برداشتی بدون تأیید شما اجرا نمی‌شود.',
+    vp2t:'هر وقت خواستی، دارایی را فیزیکی تحویل بگیر.',
+    vp2d:'بخشی از موجودی را به طلای ۱۸ عیار تبدیل کنید و حضوری از یک صرافی طرف قرارداد بگیرید.',
+    vp1s:'پولت زیر بالشت خودت', vp1sd:'کلید دارایی را خودت نگه دار.',
+    vp2s:'تحویل فیزیکی طلا', vp2sd:'هر وقت خواستی، حضوری بگیر.',
+    introH:'آشیانهٔ دارایی شما،<br>با دو تفاوت روشن.',
+    introP:'مهاجر پیش از هر چیز یک اپلیکیشن کیف پول است و امکانات صرافی را هم در خود دارد. دو کاری که انجام می‌دهد و در جای دیگری کنار هم پیدا نمی‌کنید:',
     investDisclaim:'اعداد گذشته فقط رفتار هر لانه را نشان می‌دهند و <b>تضمین آینده نیستند</b>. ارزش این دارایی‌ها می‌تواند کم هم بشود.',
     mixTitle:'این لانه از چه ساخته شده', investCta:'سرمایه‌گذاری در این لانه',
     investAmt:'چه مبلغی در این لانه بگذاری؟ · دلار', investNet:'وارد لانه می‌شود',
     investExit:'هر وقت بخواهی می‌توانی بیرون بکشی. قفل زمانی و جریمه‌ای وجود ندارد؛ فقط ارزش لانه در همان روز حساب می‌شود.',
     investEmpty:'هنوز در لانه‌ای سرمایه‌گذاری نکرده‌ای',
-    dashCustody:'پولت کجاست', dashCustodyV:'جدا از حساب‌های ما', nestWordPl:'لانه‌ها',
+    nestWordPl:'لانه‌ها',
     pillowSay:'دارایی‌ات زیر بالشته.',
-    pillowSub:'حضانت این پول دست خودته. تا بالش را برنداری، حتی روی همین صفحه هم نشان داده نمی‌شود.',
+    pillowSub:'تا بالش را برنداری، موجودی‌ات روی این صفحه نشان داده نمی‌شود — حتی اگر گوشی دست کس دیگری باشد.',
     pillowTap:'بالش را بردار',
     nestWord:'لانه', nestsMine:'لانه‌های شما',
     eggLine:'<svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 4.5 6.4 4.5 9a4.5 4.5 0 01-9 0c0-2.6 1.5-5.4 4.5-9z"/><path d="M3 20h18"/></svg><p><b>همهٔ تخم‌مرغ‌هایت را توی یک سبد نگذار.</b> هر لانه ترکیبی از چند دارایی است، نه یکی — اگر یکی افت کند، بقیه جلوی ضرر را می‌گیرند.</p>',
@@ -3000,15 +3243,13 @@ const LEX={
     useTitle:'نمای کلی', unitAlt:'به تومان', unitBack:'به دلار',
     txIn:'نشستن دلار در آشیانه', txOutTo:'پر کشیدن به سوی سارا رضایی',
     goalAddTitle:'گذاشتن روی شاخه', goalRelTitle:'برگرداندن به آشیانه',
-    introH:'آشیانه‌ای که هر وقت بخواهید<br>می‌توانید از آن پر بکشید.',
-    introP:'تومان را با نرخ و کارمزد شفاف به دلار تبدیل کنید. دلار در آشیانه می‌نشیند و هر وقت لازم شد از همان‌جا انتقال می‌دهید، در لانه‌ای سرمایه‌گذاری می‌کنید، طلا تحویل می‌گیرید یا به تومان برمی‌گردانید.'
   }
 };
 S.anchor=false; S.phys=true; S.pulse=false; S.pillow=false; S.lifted=false; S.lifting=false; S.faqOpened=new Set();
 /* The team ships dark by default now; the toggle still follows a pinned choice. */
 S.theme = 'dark';
 
-S.lex='nest';   // the Nest identity is the default; the toggle keeps the old wording for comparison
+S.lex='std';    // plain wording is the default; the Nest vocabulary is the comparison arm
 const L=k=>LEX[S.lex][k];
 
 function applyLex(){
@@ -3044,8 +3285,18 @@ function toggleTheme(){ S.themePinned=true; S.theme = S.theme==='dark' ? 'light'
 /* ════════ facilitator ════════ */
 function resetAll(){
   Object.assign(S,{available:0,pending:0,activity:[],cRaw:'',tRaw:'',wRaw:'',
-    tPhone:'',svc:null,model:'own',payFrom:'main'});
-  $('t-phone').value=''; go('intro'); render();
+    tPhone:'',svc:null,model:'own',payFrom:'main',
+    nests:[],activeNest:'calm',key:null,physical:null,shop:'s1',slot:0,route:false,
+    custody:'basic',cuBack:'use',lifted:false,lifting:false,seq:4190});
+  S.faqOpened=new Set();
+  $('t-phone').value='';
+  const ko=$('ko-amt'); if(ko) ko.value='500';
+  const pa=$('pa-amt'); if(pa) pa.value='2';
+  const na=$('na-amt'); if(na) na.value='';
+  document.querySelectorAll('#d-faq details[open]').forEach(d=>d.open=false);
+  renderNests(); fillNest('calm'); renderShops(); renderCustody();
+  applyPillow(); renderDash(); renderActivity();
+  go('intro'); render();
 }
 function seed(){ S.available+=2000;
   addTx({kind:'convert',title:'تبدیل تومان به دلار',amount:2000,dir:'in',status:'done',

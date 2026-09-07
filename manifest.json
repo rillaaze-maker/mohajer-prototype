@@ -1,10 +1,10 @@
 {
-  "name": "مهاجر · آشیانه",
+  "name": "مهاجر · کیف پول",
   "short_name": "مهاجر",
-  "description": "پروتوتایپ آزمایشی آشیانه — تبدیل، سرمایه‌گذاری و تحویل فیزیکی",
+  "description": "پروتوتایپ آزمایشی مهاجر — نگهداری کلید، سرمایه‌گذاری و تحویل فیزیکی",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "./wallet-v3.html?v=34",
+  "start_url": "./wallet-v3.html?v=36",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
