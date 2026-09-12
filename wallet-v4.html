@@ -776,7 +776,7 @@ button,input,select,textarea{color:inherit}
 .linkrow .ic{width:30px;height:30px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;flex:none}
 .linkrow .ic svg{width:15px;height:15px;stroke:var(--ink-2);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .linkrow .t{flex:1;font-size:13.5px;font-weight:500}
-.linkrow .go{color:var(--ink-3);font-size:18px;line-height:1;flex:none}
+.linkrow .go{color:var(--ink-3);flex:none}
 
 /* the one custody sentence on the balance card */
 .totbtn{background:none;border:none;padding:0;font-family:inherit;color:inherit;display:block;text-align:start;cursor:pointer}
@@ -787,7 +787,8 @@ button,input,select,textarea{color:inherit}
 .cupill:active{transform:scale(.97)}
 .cupill i{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none}
 .cupill.self i{background:var(--ok)}
-.cupill .go{opacity:.6;font-size:15px;line-height:1}
+.cupill .go{opacity:.7}
+.go svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block}
 .allbtn{width:100%;border:none;background:none;font-family:inherit;color:var(--ink-2);font-size:12px;
   font-weight:500;padding:12px;min-height:44px;cursor:pointer}
 
@@ -801,7 +802,7 @@ button,input,select,textarea{color:inherit}
 .staterow .m{flex:1;min-width:0}
 .staterow .k{display:block;font-size:11px;color:var(--ink-3)}
 .staterow .v{display:block;font-size:13.5px;font-weight:600;margin-top:1px}
-.staterow .go{color:var(--ink-3);font-size:18px;line-height:1}
+.staterow .go{color:var(--ink-3)}
 
 /* the use-tab cards borrow .keycard; one more colour for investment */
 .keycard.k-inv .ic{background:#EAF1F7} .keycard.k-inv .ic svg{stroke:#3D6E9E}
@@ -839,6 +840,28 @@ button,input,select,textarea{color:inherit}
 .pc span svg{width:16px;height:16px;flex:none;border-radius:50%;padding:3px;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
 .pc .y svg{background:var(--ok-soft);stroke:var(--ok)}
 .pc .n svg{background:var(--bad-soft);stroke:var(--bad)}
+
+/* comparison — the three places side by side */
+.cmp{margin-top:14px;background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--sh);padding:14px 14px 4px}
+.cmp .ct{font-size:14px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+.cmp table{width:100%;border-collapse:collapse;table-layout:fixed}
+.cmp th,.cmp td{padding:10px 2px;text-align:center;font-size:12px;font-weight:500;vertical-align:middle}
+.cmp th:first-child,.cmp td:first-child{text-align:start;width:38%;padding-inline-start:0;line-height:1.45}
+.cmp tr+tr td{border-top:1px solid var(--line-2)}
+.cmp th{font-size:10.5px;color:var(--ink-2);font-weight:600;padding-top:2px;padding-bottom:8px;line-height:1.3}
+.cmp th .ic{width:30px;height:30px;border-radius:10px;background:var(--surface-2);display:grid;place-items:center;margin:0 auto 5px}
+.cmp th .ic svg{width:16px;height:16px;fill:none;stroke:var(--ink);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.cmp th .ic.s-gold{background:var(--warn-soft)} .cmp th .ic.s-gold svg{stroke:var(--warn)}
+.cmp th .ic.s-self{background:var(--ok-soft)} .cmp th .ic.s-self svg{stroke:var(--ok)}
+.cmp td .y svg,.cmp td .n svg{width:20px;height:20px;border-radius:50%;padding:4px;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:middle}
+.cmp td .y svg{background:var(--ok-soft);stroke:var(--ok)} .cmp td .n svg{background:var(--bad-soft);stroke:var(--bad)}
+.cmp .on{background:var(--surface-2)}
+.cmp th.on{border-radius:12px 12px 0 0} .cmp tr:last-child td.on{border-radius:0 0 12px 12px}
+
+/* the deep layer button on an explainer */
+.exmore{margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px}
+.exmore svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.step3.deep .n{background:var(--ok-soft);color:var(--ok)}
 
 /* copy editor — lives outside the phone */
 .copyed{position:fixed;inset:0;z-index:200;background:var(--canvas);display:none;flex-direction:column;font-family:var(--f);color:var(--ink)}
@@ -906,7 +929,7 @@ button,input,select,textarea{color:inherit}
       <button class="linkrow" onclick="openExplain('safe')">
         <span class="ic" data-ic="shield"></span>
         <span class="t" data-c="introSafeQ"></span>
-        <span class="go">›</span>
+        <span class="go" data-ic="chev"></span>
       </button>
       <div style="height:14px"></div>
     </div>
@@ -918,7 +941,7 @@ button,input,select,textarea{color:inherit}
     <div class="scroll">
       <div class="hdr">
         <div class="t" data-c="homeTitle"></div>
-        <button class="info" onclick="openCustody('home')" aria-label="پول شما کجاست"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+        <button class="info" onclick="openCustody('home')" aria-label="پول شما کجاست" data-ic="info"></button>
       </div>
 
       <div class="flipwrap" id="flipwrap" data-flipped="false">
@@ -973,7 +996,7 @@ button,input,select,textarea{color:inherit}
                 <div class="s pend"><div class="l" data-c="pendingLabel"></div><div class="v num" id="h-pend">$0</div></div>
               </div>
               <!-- the one custody sentence on home — generated from the state, never typed -->
-              <button class="cupill" id="h-cupill" onclick="openCustody('home')"><i></i><span id="h-cutxt"></span><span class="go">›</span></button>
+              <button class="cupill" id="h-cupill" onclick="openCustody('home')"><i></i><span id="h-cutxt"></span><span class="go" data-ic="chev"></span></button>
             </div>
           </div>
         </div>
@@ -981,7 +1004,7 @@ button,input,select,textarea{color:inherit}
       <div class="pillownote" id="pillownote" data-gone="false" hidden>
         <div class="say" data-c="pillowSay"></div>
         <div class="sub" data-c="pillowSub"></div>
-        <div class="tap"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg><span data-c="pillowTap"></span></div>
+        <div class="tap"><span data-ic="send" style="display:contents"></span><span data-c="pillowTap"></span></div>
       </div>
 
       <div class="quickrow">
@@ -1060,12 +1083,12 @@ button,input,select,textarea{color:inherit}
       </div>
       <div class="sec" data-c="payFrom"></div>
       <button class="opt" aria-pressed="true">
-        <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/></svg></div>
+        <div class="ic" data-ic="card"></div>
         <div class="m"><div class="t">کارت بانکی · ۶۲۱۹ ****</div><div class="d" data-c="ownVerified"></div></div>
         <div class="radio"></div>
       </button>
       <button class="linkrow" onclick="openExplain('dollar')">
-        <span class="ic" data-ic="info"></span><span class="t" data-c="whatIsDollarQ"></span><span class="go">›</span>
+        <span class="ic" data-ic="info"></span><span class="t" data-c="whatIsDollarQ"></span><span class="go" data-ic="chev"></span>
       </button>
       <div style="height:12px"></div>
     </div>
@@ -1178,7 +1201,7 @@ button,input,select,textarea{color:inherit}
       <button class="staterow" id="use-state" onclick="openCustody('use')">
         <span class="ic" id="use-state-ic"></span>
         <span class="m"><span class="k" data-c="whereNow"></span><span class="v" id="use-state-v"></span></span>
-        <span class="go">›</span>
+        <span class="go" data-ic="chev"></span>
       </button>
 
       <button class="keycard k-inv" onclick="go('invest')">
@@ -1195,7 +1218,7 @@ button,input,select,textarea{color:inherit}
       </button>
 
       <button class="linkrow" style="margin-top:14px" onclick="setDir('out')">
-        <span class="ic" data-ic="down"></span><span class="t" data-c="uBack"></span><span class="go">›</span>
+        <span class="ic" data-ic="down"></span><span class="t" data-c="uBack"></span><span class="go" data-ic="chev"></span>
       </button>
       <div style="height:12px"></div>
     </div>
@@ -1211,6 +1234,7 @@ button,input,select,textarea{color:inherit}
     <div class="scroll">
       <p class="lead" style="margin:-4px 0 14px" data-c="cuSub"></p>
       <div id="cu-states"></div>
+      <div class="cmp" id="cu-cmp"></div>
       <div style="height:12px"></div>
     </div>
   </section>
@@ -1244,7 +1268,7 @@ button,input,select,textarea{color:inherit}
         <div class="step3"><span class="n num">۳</span><span class="t" data-c="gold3"></span></div>
       </div>
       <button class="linkrow" onclick="openExplain('goldWhy')">
-        <span class="ic" data-ic="info"></span><span class="t" data-c="goldWhyQ"></span><span class="go">›</span>
+        <span class="ic" data-ic="info"></span><span class="t" data-c="goldWhyQ"></span><span class="go" data-ic="chev"></span>
       </button>
       <div style="height:12px"></div>
     </div>
@@ -1360,7 +1384,7 @@ button,input,select,textarea{color:inherit}
       <div class="sec" data-c="prosCons"></div>
       <div class="card" id="kt-pc"></div>
       <button class="linkrow" onclick="openExplain('keyDeep')">
-        <span class="ic" data-ic="info"></span><span class="t" data-c="keyDeepQ"></span><span class="go">›</span>
+        <span class="ic" data-ic="info"></span><span class="t" data-c="keyDeepQ"></span><span class="go" data-ic="chev"></span>
       </button>
       <div style="height:12px"></div>
     </div>
@@ -1452,7 +1476,7 @@ button,input,select,textarea{color:inherit}
     <div class="nav">
       <button class="back" onclick="go('use')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
       <h2 data-c="investTitle"></h2>
-      <button class="info" style="margin-inline-start:auto" onclick="openExplain('basket')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+      <button class="info" style="margin-inline-start:auto" onclick="openExplain('basket')" data-ic="info"></button>
     </div>
     <div class="scroll">
       <div id="nest-mine"></div>
@@ -1571,7 +1595,7 @@ button,input,select,textarea{color:inherit}
       </div>
       <div class="sec" data-c="depositTo"></div>
       <button class="opt" aria-pressed="true">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v9h14v-9"/></svg></div>
+        <div class="ic" data-ic="bank"></div>
         <div class="m"><div class="t">بانک ملت · ****۴۴۲۱</div><div class="d" data-c="ownVerified"></div></div>
         <div class="radio"></div>
       </button>
@@ -1605,7 +1629,7 @@ button,input,select,textarea{color:inherit}
       </div>
       <div class="sec" data-c="support"></div>
       <button class="support" onclick="openSheet('support')">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3.5-7.1"/><path d="M12 12h.01M8 12h.01M16 12h.01"/></svg></div>
+        <div class="ic" data-ic="chat"></div>
         <div class="m"><div class="t" data-c="humanSupport"></div><div class="d" data-c="supportHours"></div></div>
       </button>
       <div style="height:14px"></div>
@@ -1627,7 +1651,7 @@ button,input,select,textarea{color:inherit}
       </div>
       <div style="height:10px"></div>
       <button class="support" onclick="openSheet('support')">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3.5-7.1"/><path d="M12 12h.01M8 12h.01M16 12h.01"/></svg></div>
+        <div class="ic" data-ic="chat"></div>
         <div class="m"><div class="t" data-c="problemQ"></div><div class="d" data-c="followUp"></div></div>
       </button>
       <div style="height:12px"></div>
@@ -1713,7 +1737,7 @@ const CONFIG={
    «متن‌ها» chip; a copy.json next to the file overrides them for everyone. */
 const COPY_GROUPS={
   intro:'معرفی', home:'خانه', conv:'تبدیل', send:'انتقال', use:'استفاده', cu:'پول شما کجاست',
-  gold:'تحویل طلا', key:'کلید مهاجر', inv:'سرمایه‌گذاری', wd:'برداشت', ex:'صفحه‌های توضیح', misc:'عمومی'
+  gold:'تحویل طلا', key:'کلید مهاجر', inv:'سرمایه‌گذاری', wd:'برداشت', ex:'صفحه‌های توضیح', dg:'زیرنویس نمودارها', misc:'عمومی'
 };
 const COPY_DEF={
   /* intro */
@@ -1779,7 +1803,7 @@ const COPY_DEF={
   cuBasicN:['cu','نزد مهاجر'],
   cuBasicL:['cu','ما نگه می‌داریم. هر وقت بخواهید، برمی‌گردانیم.'],
   cuBasicP1:['cu','هر وقت بخواهید، برداشت'], cuBasicP2:['cu','رمز گم شد؟ بازیابی می‌شود'],
-  cuBasicC1:['cu','به ما اعتماد می‌کنید'],
+  cuBasicC1:['cu','برای برداشت، به ما نیاز دارید'],
   cuGoldN:['cu','طلای فیزیکی'],
   cuGoldL:['cu','طلا می‌گیرید و دست خودتان نگه می‌دارید.'],
   cuGoldP1:['cu','دست خودتان'], cuGoldP2:['cu','بدون نیاز به ما'],
@@ -1901,6 +1925,42 @@ const COPY_DEF={
   exCuSelf2:['ex','بدون دستگاه شما، هیچ‌کس نمی‌تواند پول را جابه‌جا کند.'],
   exCuSelf3:['ex','دستگاه و ۱۲ کلمه گم شوند، پول برنمی‌گردد.'],
   exGotIt:['ex','فهمیدم'],
+  exMore:['ex','بیشتر توضیح بده'],
+  /* the deep layer — opens only on request; precise words are allowed here */
+  exSafeM1:['ex','دلار دیجیتال: هر واحد، معادل یک دلار و قابل تبدیل به دلار.'],
+  exSafeM2:['ex','در حالت پایه، موجودی نزد شریک نگهدارندهٔ دارای مجوز است، جدا از حساب‌های مهاجر.'],
+  exSafeM3:['ex','با کلید مهاجر، کلید پول روی دستگاه شما ساخته می‌شود و همان‌جا می‌ماند.'],
+  exDollarM1:['ex','یک دلار دیجیتال با پشتوانهٔ یک‌به‌یک؛ نوع آن در رسید هر تراکنش نوشته می‌شود.'],
+  exDollarM2:['ex','انتقال در چند دقیقه و با کارمزد ثابت انجام می‌شود، بدون واسطهٔ بانکی.'],
+  exDollarM3:['ex','هر تراکنش شناسهٔ عمومی دارد و از بیرون مهاجر هم قابل پیگیری است.'],
+  exGoldWhyM1:['ex','نرخ گرم = قیمت جهانی اونس × نرخ دلار ÷ ۳۱٫۱ × عیار.'],
+  exGoldWhyM2:['ex','تا لحظهٔ تحویل، دلار شما فروخته نمی‌شود؛ نرخ روز تحویل ملاک است.'],
+  exGoldWhyM3:['ex','اگر ظرف ۴۸ ساعت مراجعه نکنید، سفارش بدون کسر لغو می‌شود.'],
+  exKeyDeepM1:['ex','کلید خصوصی در تراشهٔ امن دستگاه ساخته می‌شود و هیچ‌وقت از آن خارج نمی‌شود.'],
+  exKeyDeepM2:['ex','۱۲ کلمهٔ بازیابی، استاندارد BIP-39 است؛ در هر کیف پول استاندارد قابل بازیابی است.'],
+  exKeyDeepM3:['ex','هر برداشت روی خودِ دستگاه امضا می‌شود؛ گوشی فقط پیام امضاشده را می‌فرستد.'],
+  exKeyDeepM4:['ex','مهاجر نه کلید دارد، نه نسخه‌ای از ۱۲ کلمه. هیچ‌وقت آن را از شما نمی‌پرسد.'],
+  exBasketM1:['ex','ترکیب و سهم هر دارایی از پیش مشخص است و هر روز نمایش داده می‌شود.'],
+  exBasketM2:['ex','کارمزد ورود ۰٫۵٪؛ خروج بدون کارمزد، با قیمت لحظه.'],
+  exBasketM3:['ex','دارایی‌های سبد نزد شریک نگهدارنده و به نام شما ثبت می‌شود.'],
+  exCuBasicM1:['ex','شریک نگهدارنده، مؤسسه‌ای دارای مجوز است که کلید را جدا از مهاجر نگه می‌دارد.'],
+  exCuBasicM2:['ex','مهاجر بدون دستور شما نمی‌تواند برداشت کند؛ هر برداشت با احراز هویت شما ثبت می‌شود.'],
+  exCuBasicM3:['ex','موجودی مشتریان جدا از دارایی شرکت نگهداری می‌شود.'],
+  exCuGoldM1:['ex','طلا به صورت شمش یا سکهٔ ۱۸ عیار، با رسید کتبی صرافی تحویل می‌شود.'],
+  exCuGoldM2:['ex','پس از تحویل، مهاجر هیچ نقشی در نگهداری ندارد؛ بیمه و ایمنی با شماست.'],
+  exCuGoldM3:['ex','فروش دوباره از هر صرافی ممکن است؛ الزامی به مهاجر نیست.'],
+
+  /* diagram labels */
+  dgDollar:['dg','دلار'], dgGold18:['dg','طلای ۱۸ عیار'], dgShop:['dg','صرافی نزدیک'],
+  dgNoKey:['dg','مهاجر: بدون کلید'], dgKeyIn:['dg','کلید داخل دستگاه'], dgOnlyDev:['dg','فقط با دستگاه شما'],
+  dgUsd:['dg','دلار، نه تومان'], dgPlace:['dg','جا: انتخاب شما'], dgAnytime:['dg','هر وقت بخواهید'],
+  dgDigi:['dg','دلار دیجیتال'], dgPartner:['dg','نزد شریک نگهدارنده'], dgOrKey:['dg','یا با کلید شما'],
+  dgGold:['dg','طلا'], dgBasket:['dg','یک سبد'],
+  dgAtMohajer:['dg','نزد مهاجر'], dgPhysGold:['dg','طلای فیزیکی'], dgYourKey:['dg','کلید شما'],
+
+  /* comparison on the custody page */
+  cmpTitle:['cu','در یک نگاه'],
+  cmp1:['cu','بدون نیاز به ما'], cmp2:['cu','رمز گم شد؟ بازیابی'], cmp3:['cu','خرج و انتقال، مستقیم'], cmp4:['cu','نگهداری با شما'],
 
   /* misc */
   next:['misc','ادامه'], done:['misc','تمام'], back:['misc','بازگشت'], home:['misc','خانه'],
@@ -1941,68 +2001,56 @@ function applyCopy(){
 
 /* ════════ icons + diagrams ════════ */
 const IC={
-  send:'<svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
-  down:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>',
-  invest:'<svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19h-20"/></svg>',
-  gold:'<svg viewBox="0 0 24 24"><path d="M4 8l3-4h10l3 4-8 12z"/><path d="M4 8h16M9 4l3 16M15 4l-3 16"/></svg>',
-  key:'<svg viewBox="0 0 24 24"><rect x="6.5" y="2" width="11" height="17" rx="3.2"/><circle cx="12" cy="5.9" r="1.5"/><circle cx="12" cy="12.2" r="2.9"/><path d="M10 19v2.2h4V19"/></svg>',
-  pillow:'<svg viewBox="0 0 24 24"><path d="M4 8q8-3 16 0q2 4 0 8q-8 3-16 0q-2-4 0-8z"/></svg>',
-  shield:'<svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/></svg>',
-  bank:'<svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v9h14v-9M3 19h18M9 13v6M15 13v6"/></svg>',
-  info:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>',
-  check:'<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>',
-  x:'<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+  /* One family: 24-grid, 2px margins, the same weight everywhere. Diagrams
+     reuse these glyphs, so what is on a card is what is on its explainer. */
+  home:  '<svg viewBox="0 0 24 24"><path d="M3.5 10.5L12 4l8.5 6.5M5.5 9.3V20h13V9.3M10 20v-5.5h4V20"/></svg>',
+  send:  '<svg viewBox="0 0 24 24"><path d="M12 19.5v-15M6 10.5l6-6 6 6"/></svg>',
+  down:  '<svg viewBox="0 0 24 24"><path d="M12 4.5v15M6 13.5l6 6 6-6"/></svg>',
+  grid:  '<svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg>',
+  swap:  '<svg viewBox="0 0 24 24"><path d="M4 9h16l-4-4M20 15H4l4 4"/></svg>',
+  invest:'<svg viewBox="0 0 24 24"><path d="M3.5 17l5.5-5.5 4 4L20.5 7M15 7h5.5v5.5"/></svg>',
+  gold:  '<svg viewBox="0 0 24 24"><path d="M2.5 20l2-6h6.5l2 6zM11 20l2-6h6.5l2 6zM6.5 14l2-6h6.5l2 6"/></svg>',
+  key:   '<svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3.2"/><circle cx="12" cy="9" r="2.6"/><path d="M12 11.6v6M12 14.6h2.2M12 16.6h1.6"/></svg>',
+  lock:  '<svg viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2.6"/><path d="M8 10.5V7.5a4 4 0 018 0v3M12 15v2"/></svg>',
+  shield:'<svg viewBox="0 0 24 24"><path d="M12 3l7.5 3v6c0 4.6-3.2 7.8-7.5 9-4.3-1.2-7.5-4.4-7.5-9V6L12 3z"/><path d="M9 12.3l2 2 4-4.3"/></svg>',
+  bank:  '<svg viewBox="0 0 24 24"><path d="M3.5 9.5L12 4l8.5 5.5M4.5 9.5h15M6.5 9.5V18M10.5 9.5V18M13.5 9.5V18M17.5 9.5V18M3.5 18h17"/></svg>',
+  pillow:'<svg viewBox="0 0 24 24"><path d="M3 6.5c6-2.4 12-2.4 18 0-1.3 3.7-1.3 7.3 0 11-6 2.4-12 2.4-18 0 1.3-3.7 1.3-7.3 0-11z"/><path d="M8 12c2.7-.7 5.3-.7 8 0"/></svg>',
+  card:  '<svg viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.6"/><path d="M2.5 10h19M6.5 14.5h4"/></svg>',
+  chat:  '<svg viewBox="0 0 24 24"><path d="M12 3.5c4.7 0 8.5 3.3 8.5 7.5s-3.8 7.5-8.5 7.5c-1 0-2-.1-2.9-.4L4 20l1.2-4.1C4.1 14.6 3.5 13.1 3.5 11c0-4.2 3.8-7.5 8.5-7.5z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></svg>',
+  coin:  '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 6.8v10.4M14.6 9.4c-.4-1-1.4-1.6-2.6-1.6-1.6 0-2.7.8-2.7 1.9 0 2.6 5.4 1.4 5.4 4 0 1.1-1.1 1.9-2.7 1.9-1.3 0-2.3-.6-2.7-1.6"/></svg>',
+  shop:  '<svg viewBox="0 0 24 24"><path d="M4 9l1.5-5h13L20 9M4 9a2.7 2.7 0 005.3 0 2.7 2.7 0 005.4 0 2.7 2.7 0 005.3 0M5.5 11.5V20h13v-8.5M10 20v-5h4v5"/></svg>',
+  basket:'<svg viewBox="0 0 24 24"><path d="M5 10l2.5-5M19 10l-2.5-5M3 10h18l-2 10H5zM9.5 14v3M14.5 14v3"/></svg>',
+  noKey: '<svg viewBox="0 0 24 24"><circle cx="7.5" cy="16.5" r="3.5"/><path d="M10 14l9.5-9.5M16 7.5l2.5 2.5M13.5 10l2 2"/><path d="M4 4l16 16" class="bad"/></svg>',
+  info:  '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 16v-4.5M12 8.2h.01"/></svg>',
+  check: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  x:     '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>',
+  chev:  '<svg viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></svg>'
 };
-/* Diagrams are drawn in the same stroke language as the icons. Each says one
-   thing and can be read without the text under it. */
+/* Diagrams are rows of tiles built from the same glyphs, so they cannot drift
+   from the icons. Flows start on the RIGHT and arrows point LEFT — the reading
+   direction of the people this is for. */
+const glyph=n=>(IC[n]||'').replace(/^<svg[^>]*>|<\/svg>$/g,'');
+function tiles(items,o={}){
+  const n=items.length, xs=n===3?[250,150,50]:n===2?[200,100]:[150], cy=46, sc=1.75, h=12*sc;
+  const bg={ok:'var(--ok-soft)',g:'var(--warn-soft)',bad:'var(--bad-soft)'};
+  let out='';
+  items.forEach((it,i)=>{ const cx=xs[i];
+    out+=`<rect x="${cx-29}" y="${cy-29}" width="58" height="58" rx="16" style="fill:${bg[it.cls]||'var(--surface-2)'};stroke:none"/>`;
+    out+=`<g class="${it.cls||''}" transform="translate(${cx-h} ${cy-h}) scale(${sc})" style="stroke-width:${(1.7/sc).toFixed(2)}">${glyph(it.ic)}</g>`;
+    out+=`<text x="${cx}" y="104" text-anchor="middle">${C(it.l)}</text>`;
+    if(i<n-1){ const x1=cx-33, x2=xs[i+1]+33;
+      if(o.flow) out+=`<path d="M${x1} ${cy}H${x2}M${x2+7} ${cy-6}l-7 6 7 6" class="mute"/>`;
+      else if(o.ops) out+=`<text x="${(x1+x2)/2}" y="${cy+5}" text-anchor="middle" style="font-size:16px;font-weight:600">${o.ops[i]}</text>`; }
+  });
+  return `<svg viewBox="0 0 300 120">${out}</svg>`;
+}
 const DIAG={
-  /* Flow diagrams start on the RIGHT and arrows point LEFT — the reading
-     direction of the people this is for. A left-to-right flow reads backwards. */
-  gold:`<svg viewBox="0 0 300 120">
-    <circle cx="252" cy="60" r="26" class="ok"/><text x="252" y="65" text-anchor="middle" style="font-size:18px;font-weight:700;fill:var(--ok)">$</text>
-    <path d="M214 60h-34M188 52l-8 8 8 8" class="mute"/>
-    <path d="M132 50l5-9h26l5 9-18 24z M132 50h36M141 41l9 33M159 41l-9 33" class="g"/>
-    <path d="M118 60h-34M92 52l-8 8 8 8" class="mute"/>
-    <path d="M16 68l9-16h32l9 16M14 68h54v22H14zM34 90v-12h14v12" class="ok"/>
-    <text x="252" y="106" text-anchor="middle">دلار</text><text x="150" y="106" text-anchor="middle">طلای ۱۸ عیار</text><text x="41" y="110" text-anchor="middle">صرافی نزدیک</text>
-  </svg>`,
-  key:`<svg viewBox="0 0 300 120">
-    <rect x="118" y="14" width="64" height="88" rx="14" class="ok"/><circle cx="150" cy="34" r="5" class="ok"/>
-    <circle cx="150" cy="58" r="11" class="g"/><path d="M150 69v20M150 80h7M150 87h5" class="g"/>
-    <rect x="220" y="38" width="62" height="44" rx="8" class="mute"/><path d="M230 48h42M230 60h30M230 72h36" class="mute"/>
-    <path d="M224 42l54 36M278 42l-54 36" class="bad"/>
-    <text x="251" y="100" text-anchor="middle">مهاجر: بدون کلید</text>
-    <path d="M28 40h44v40H28z M36 40v-8a14 14 0 0128 0v8" class="ok"/><circle cx="50" cy="60" r="4" class="ok"/>
-    <text x="50" y="100" text-anchor="middle">فقط با دستگاه شما</text>
-    <text x="150" y="114" text-anchor="middle">کلید داخل دستگاه</text>
-  </svg>`,
-  safe:`<svg viewBox="0 0 300 120">
-    <path d="M260 18l16 6v14c0 10-7 17-16 21-9-4-16-11-16-21V24l16-6z" class="ok"/><path d="M253 40l5 5 9-10" class="ok"/>
-    <text x="260" y="80" text-anchor="middle">دلار، نه تومان</text>
-    <path d="M120 30h60v34h-60z M128 30v-8a22 22 0 0144 0v8" class="mute"/><circle cx="150" cy="47" r="4" class="mute"/>
-    <text x="150" y="80" text-anchor="middle">جا: انتخاب شما</text>
-    <path d="M24 46h44M38 38l-14 8 14 8M24 62h44M54 54l14 8-14 8" class="g"/>
-    <text x="46" y="90" text-anchor="middle">هر وقت بخواهید</text>
-  </svg>`,
-  dollar:`<svg viewBox="0 0 300 120">
-    <circle cx="150" cy="44" r="30" class="ok"/><text x="150" y="51" text-anchor="middle" style="font-size:22px;font-weight:700;fill:var(--ok)">$</text>
-    <path d="M186 70l14-10h44l14 10M184 70h76v30h-76z" class="mute"/><text x="222" y="112" text-anchor="middle">شریک نگهدارنده</text>
-    <path d="M74 74h40v30H74z M82 74v-7a12 12 0 0124 0v7" class="g"/><text x="94" y="116" text-anchor="middle">یا کلید شما</text>
-  </svg>`,
-  basket:`<svg viewBox="0 0 300 120">
-    <path d="M70 60l12-24h136l12 24M66 60h168l-14 44H80z" class="mute"/>
-    <circle cx="180" cy="40" r="12" class="ok"/><circle cx="150" cy="30" r="12" class="g"/><circle cx="120" cy="40" r="12" class="bad"/>
-    <text x="180" y="45" text-anchor="middle" style="font-size:11px;fill:var(--ok)">$</text>
-    <text x="150" y="35" text-anchor="middle" style="font-size:9px;fill:var(--gold)">طلا</text>
-    <text x="120" y="44" text-anchor="middle" style="font-size:9px;fill:var(--bad)">₿</text>
-    <text x="150" y="118" text-anchor="middle">چند دارایی، یک سبد</text>
-  </svg>`,
-  states:`<svg viewBox="0 0 300 120">
-    <path d="M222 44l28-18 28 18M228 44v28h44V44M222 72h56" class="mute"/><text x="250" y="100" text-anchor="middle">نزد مهاجر</text>
-    <path d="M124 52l6-11h40l6 11-26 30z M124 52h52M137 41l13 41M163 41l-13 41" class="g"/><text x="150" y="100" text-anchor="middle">طلای فیزیکی</text>
-    <rect x="28" y="26" width="44" height="56" rx="10" class="ok"/><circle cx="50" cy="52" r="9" class="ok"/><circle cx="50" cy="38" r="3" class="ok"/>
-    <text x="50" y="100" text-anchor="middle">کلید شما</text>
-  </svg>`
+  gold:  ()=>tiles([{ic:'coin',cls:'ok',l:'dgDollar'},{ic:'gold',cls:'g',l:'dgGold18'},{ic:'shop',l:'dgShop'}],{flow:true}),
+  key:   ()=>tiles([{ic:'noKey',cls:'mute',l:'dgNoKey'},{ic:'key',cls:'ok',l:'dgKeyIn'},{ic:'lock',l:'dgOnlyDev'}]),
+  safe:  ()=>tiles([{ic:'shield',cls:'ok',l:'dgUsd'},{ic:'lock',l:'dgPlace'},{ic:'swap',cls:'g',l:'dgAnytime'}]),
+  dollar:()=>tiles([{ic:'coin',cls:'ok',l:'dgDigi'},{ic:'bank',l:'dgPartner'},{ic:'key',l:'dgOrKey'}]),
+  basket:()=>tiles([{ic:'coin',cls:'ok',l:'dgDollar'},{ic:'gold',cls:'g',l:'dgGold'},{ic:'basket',l:'dgBasket'}],{ops:['+','=']}),
+  states:()=>tiles([{ic:'bank',l:'dgAtMohajer'},{ic:'gold',cls:'g',l:'dgPhysGold'},{ic:'key',cls:'ok',l:'dgYourKey'}])
 };
 
 /* ════════ state ════════ */
@@ -2035,15 +2083,15 @@ const NOTE=(kind,html)=>'<div class="note '+kind+'" style="text-align:start"><sv
 
 /* ════════ navigation · three tabs ════════ */
 const TABS=[
-  {s:'home',  c:'home',      d:'M4 11l8-7 8 7M6 10v9h12v-9'},
-  {s:'t-who', c:'sendTitle', d:'M12 19V5M5 12l7-7 7 7'},
-  {s:'use',   c:'useTitle',  d:'M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 8h6V4h-6z'}
+  {s:'home',  c:'home',      ic:'home'},
+  {s:'t-who', c:'sendTitle', ic:'send'},
+  {s:'use',   c:'useTitle',  ic:'grid'}
 ];
 function buildTabs(){
   ['tabbar','tabbar2','tabbar3'].forEach(id=>{
     const el=$(id); if(!el) return;
     el.innerHTML=TABS.map(t=>`<button class="tab" data-tab="${t.s}" onclick="${t.s==='t-who'?'startTransfer()':"go('"+t.s+"')"}">
-      <svg viewBox="0 0 24 24"><path d="${t.d}"/></svg><span data-c="${t.c}"></span></button>`).join('');
+      ${IC[t.ic]}<span data-c="${t.c}"></span></button>`).join('');
   });
 }
 let current='intro';
@@ -2406,6 +2454,8 @@ const STATE_DEF={
   self: {cls:'s-self', ic:'key',  n:'cuSelfN', l:'cuSelfL', pros:['cuSelfP1','cuSelfP2'],cons:['cuSelfC1'],cta:{c:'cuSelfCta',go:"go('k-tut')"},ex:'cuSelf'}
 };
 const CU_ORDER=['basic','gold','self'];
+/* one row per question, one column per place; 1 = yes */
+const CMP=[{c:'cmp1',v:[0,1,1]},{c:'cmp2',v:[1,0,0]},{c:'cmp3',v:[1,0,1]},{c:'cmp4',v:[0,1,1]}];
 function openCustody(from){ S.cuBack=from||'home'; renderCustody(); go('custody'); }
 function renderCustody(){
   const host=$('cu-states'); if(!host) return;
@@ -2419,6 +2469,10 @@ function renderCustody(){
         ${d.cta&&!on?'<button class="btn btn-soft" onclick="'+d.cta.go+'">'+C(d.cta.c)+'</button>':''}
       </div>
     </div>`; }).join('');
+  const cmp=$('cu-cmp'); if(cmp) cmp.innerHTML=`<div class="ct">${C('cmpTitle')}</div><table>
+    <tr><th></th>${CU_ORDER.map(k=>`<th class="${k===S.custody?'on':''}"><span class="ic ${STATE_DEF[k].cls}">${IC[STATE_DEF[k].ic]}</span>${C(STATE_DEF[k].n)}</th>`).join('')}</tr>
+    ${CMP.map(r=>`<tr><td>${C(r.c)}</td>${r.v.map((v,i)=>`<td class="${CU_ORDER[i]===S.custody?'on':''}"><span class="${v?'y':'n'}">${v?IC.check:IC.x}</span></td>`).join('')}</tr>`).join('')}
+  </table>`;
 }
 function renderCuPill(){
   const p=$('h-cupill'); if(!p) return;
@@ -2438,23 +2492,31 @@ function cycleCustody(){ setCustody(S.custody==='basic'?'self':'basic'); }
 
 /* ════════ EXPLAIN · one page, many subjects ════════ */
 const EXPLAIN={
-  safe:   {t:'exSafeT',   vis:'safe',   steps:['exSafe1','exSafe2','exSafe3']},
-  dollar: {t:'exDollarT', vis:'dollar', steps:['exDollar1','exDollar2','exDollar3']},
-  goldWhy:{t:'exGoldWhyT',vis:'gold',   steps:['exGoldWhy1','exGoldWhy2','exGoldWhy3']},
-  keyDeep:{t:'exKeyDeepT',vis:'key',    steps:['exKeyDeep1','exKeyDeep2','exKeyDeep3','exKeyDeep4','exKeyDeep5','exKeyDeep6']},
-  basket: {t:'exBasketT', vis:'basket', steps:['exBasket1','exBasket2','exBasket3']},
-  cuBasic:{t:'exCuBasicT',vis:'states', steps:['exCuBasic1','exCuBasic2','exCuBasic3']},
-  cuGold: {t:'exCuGoldT', vis:'gold',   steps:['exCuGold1','exCuGold2','exCuGold3']},
-  cuSelf: {t:'exCuSelfT', vis:'key',    steps:['exCuSelf1','exCuSelf2','exCuSelf3']}
+  /* `more` is the deep layer: it appends under the three rows only when asked,
+     so the person who wants the mechanics gets them and nobody else sees them. */
+  safe:   {t:'exSafeT',   vis:'safe',   steps:['exSafe1','exSafe2','exSafe3'],       more:['exSafeM1','exSafeM2','exSafeM3']},
+  dollar: {t:'exDollarT', vis:'dollar', steps:['exDollar1','exDollar2','exDollar3'], more:['exDollarM1','exDollarM2','exDollarM3']},
+  goldWhy:{t:'exGoldWhyT',vis:'gold',   steps:['exGoldWhy1','exGoldWhy2','exGoldWhy3'],more:['exGoldWhyM1','exGoldWhyM2','exGoldWhyM3']},
+  keyDeep:{t:'exKeyDeepT',vis:'key',    steps:['exKeyDeep1','exKeyDeep2','exKeyDeep3','exKeyDeep4','exKeyDeep5','exKeyDeep6'], more:['exKeyDeepM1','exKeyDeepM2','exKeyDeepM3','exKeyDeepM4']},
+  basket: {t:'exBasketT', vis:'basket', steps:['exBasket1','exBasket2','exBasket3'], more:['exBasketM1','exBasketM2','exBasketM3']},
+  cuBasic:{t:'exCuBasicT',vis:'states', steps:['exCuBasic1','exCuBasic2','exCuBasic3'],more:['exCuBasicM1','exCuBasicM2','exCuBasicM3']},
+  cuGold: {t:'exCuGoldT', vis:'gold',   steps:['exCuGold1','exCuGold2','exCuGold3'],   more:['exCuGoldM1','exCuGoldM2','exCuGoldM3']},
+  cuSelf: {t:'exCuSelfT', vis:'key',    steps:['exCuSelf1','exCuSelf2','exCuSelf3'],   more:['exKeyDeep1','exKeyDeep2','exKeyDeep3','exKeyDeep4','exKeyDeep5','exKeyDeep6','exKeyDeepM1','exKeyDeepM2','exKeyDeepM3','exKeyDeepM4']}
 };
 function openExplain(id,from){
   const e=EXPLAIN[id]; if(!e) return;
   S.ex=id; S.exBack=from||current;
-  $('ex-title').textContent=C(e.t); $('ex-vis').innerHTML=DIAG[e.vis]||'';
+  $('ex-title').textContent=C(e.t); $('ex-vis').innerHTML=DIAG[e.vis]?DIAG[e.vis]():'';
   $('ex-steps').innerHTML=e.steps.map((k,i)=>'<div class="step3"><span class="n num">'+fa(i+1)+'</span><span class="t">'+C(k)+'</span></div>').join('');
-  $('ex-extra').innerHTML='';
+  $('ex-extra').innerHTML=e.more?'<button class="btn btn-soft exmore" onclick="exMore()">'+C('exMore')+IC.down+'</button>':'';
   $('ex-cta').innerHTML='<button class="btn btn-primary" onclick="go(S.exBack)">'+C('exGotIt')+'</button>';
   go('explain');
+}
+function exMore(){
+  const e=EXPLAIN[S.ex]; if(!e||!e.more) return;
+  const n0=e.steps.length;
+  $('ex-steps').insertAdjacentHTML('beforeend',e.more.map((k,i)=>'<div class="step3 deep"><span class="n num">'+fa(n0+i+1)+'</span><span class="t">'+C(k)+'</span></div>').join(''));
+  $('ex-extra').innerHTML='';
 }
 
 /* ════════ WITHDRAW ════════ */
@@ -2492,7 +2554,7 @@ function doWithdraw(){
 }
 
 /* ════════ status · activity · receipts ════════ */
-const ICONS={ok:'<path d="M5 13l4.5 4.5L19 7"/>',pend:'<path d="M12 3a9 9 0 109 9"/>',bad:'<path d="M18 6L6 18M6 6l12 12"/>'};
+const ICONS={ok:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',pend:'<path d="M12 3.5a8.5 8.5 0 108.5 8.5"/>',bad:'<path d="M18 6L6 18M6 6l12 12"/>'};
 const BADGE={ok:'b-ok',pend:'b-warn',bad:'b-bad'};
 function setStatus(p,kind,msg,badge){
   const d=$(p+'-disc'); d.className='disc '+kind; d.innerHTML=`<svg viewBox="0 0 24 24">${ICONS[kind]}</svg>`;
@@ -2506,12 +2568,11 @@ function txTitle(t){
   if(t.ck) return C(t.ck);
   return t.title||'';
 }
-const TXIC={convert:'M7 10h13l-3-3M17 14H4l3 3',transfer:'M12 19V5M5 12l7-7 7 7',nest:'M4 19V9M10 19V5M16 19v-7M22 19h-20',
-  physical:'M4 8l3-4h10l3 4-8 12zM4 8h16',key:'M8 2h8v17H8zM12 12.2a2.9 2.9 0 100-5.8 2.9 2.9 0 000 5.8',custody:'M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z',withdraw:'M12 5v14M5 12l7 7 7-7'};
+const TXIC={convert:'swap',transfer:'send',nest:'invest',physical:'gold',key:'key',custody:'shield',withdraw:'down'};
 function txRow(t){
   const [txt,cls]=STATUS_TXT()[t.status]||STATUS_TXT().done, sign=t.dir==='in'?'+':t.dir==='out'?'−':'';
   return `<button class="tx" onclick="showReceipt(S.activity.find(x=>x.id==='${t.id}'))">
-    <div class="ic"><svg viewBox="0 0 24 24"><path d="${TXIC[t.kind]||TXIC.withdraw}"/></svg></div>
+    <div class="ic">${IC[TXIC[t.kind]||'down']}</div>
     <div class="m"><div class="t">${txTitle(t)}</div><div class="d">${C('justNow')}</div></div>
     <div class="r"><div class="a num ${t.dir==='in'?'in':''}">${t.amount?sign+usd(t.amount):''}</div>
       <div class="s"><span class="badge ${cls}" style="padding:3px 7px;font-size:9.5px">${txt}</span></div></div></button>`;
@@ -2558,7 +2619,7 @@ function guard(){
 /* ════════ variants · anchor, pillow, lexicon, theme ════════ */
 const ANCHOR=[{k:'ثبت شرکت',v:'ثبت‌شده در ایران',ok:true},{k:'دارایی کاربران',v:'جدا از حساب‌های مهاجر',ok:true},
   {k:'پشتیبان مسئول',v:'یک نفر، با نام',ok:true},{k:'صرافی طرف قرارداد',v:'در حال بررسی',ok:false},{k:'بیمه',v:'در حال بررسی',ok:false}];
-function anchorHTML(){ return `<div class="anchor"><div class="hd"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></svg><div class="t">پشتوانه</div></div>
+function anchorHTML(){ return `<div class="anchor"><div class="hd">${IC.bank}<div class="t">پشتوانه</div></div>
   ${ANCHOR.slice(0,3).map(a=>`<div class="r"><span class="k">${a.k}</span><span class="v">${a.v}</span></div>`).join('')}
   <button class="more" onclick="openSheet('anchor')">بیشتر</button></div>`; }
 function renderAnchor(){ document.querySelectorAll('.anchor-slot').forEach(el=>{ el.innerHTML=S.anchor?anchorHTML():''; }); }
