@@ -1111,6 +1111,22 @@ chevron was a typed «›».
 
 Copy table: 329 keys. `copy.json` regenerated. Sweep: 0 problems.
 
+**Third pass, same day.** Two bugs and one workflow change:
+- `p-tut`/`k-tut` printed the diagram *function source* because `DIAG` entries
+  became functions and the two static callers still read them as strings.
+- Status screens (`c-/t-/n-/w-status`) sat at the top with the buttons glued
+  underneath: `.screen>*:not(.scroll){flex:none}` was overriding `.center`'s
+  `flex:1`. Now `.center` grows and `*-actions` is a gapped column.
+- **On-screen copy editing** («ویرایش روی صفحه» chip). In edit mode every
+  element whose text is a copy string gets a dashed frame; tap it (hold it if
+  it is a button's label) and a bottom panel opens with that one string. Typing
+  changes it in place, autosaves to this browser, and the chip counts the
+  edits. «فهرست متن‌ها» lists «تغییرهای شما» first, and «خروجی» has a one-tap
+  «کپی copy.json» with the GitHub steps written next to it. Matching is by
+  `data-c` or by reverse lookup of the rendered text, deepest element wins, so
+  JS-rendered strings are editable too; composite strings (label + number) are
+  not.
+
 ### Open
 
 - `platform/studies/mohajer-ws0.json` still points tasks at v3 screens.

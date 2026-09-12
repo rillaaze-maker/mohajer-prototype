@@ -79,7 +79,10 @@ body{font-family:var(--f);background:radial-gradient(900px 600px at 50% 0%,#FBFB
 .screen.active{opacity:1;visibility:visible;pointer-events:auto;transform:none}
 .screen.leaving{transform:translateX(14px) scale(.985);opacity:0}
 .screen.tabbed{padding-bottom:76px}
-.screen>*:not(.scroll){flex:none}
+.screen>*:not(.scroll):not(.center){flex:none}
+.screen>.center{flex:1 1 auto;min-height:0}
+.screen>[id$="-actions"]{display:flex;flex-direction:column;gap:4px;padding-top:14px}
+.screen>[id$="-actions"]:empty{display:none}
 .scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;margin:0 -20px;padding:0 20px}
 .scroll::-webkit-scrollbar{display:none}
 
@@ -578,6 +581,25 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 .chip.danger[aria-pressed=true]{background:var(--bad);border-color:var(--bad)}
 .hint{font:500 11px/1.7 var(--f);color:var(--ink-3);min-height:13px}
 .dev-fab{display:none}
+
+/* on-screen editing: every string that is a copy key gets a dashed frame; tap
+   a plain one, hold a button's label. The frame is where the change lands. */
+.editing #phone{-webkit-touch-callout:none;user-select:none}
+.editing .ed-hit{outline:1.5px dashed var(--ok);outline-offset:2px;border-radius:4px;cursor:text}
+.editing .ed-live{outline:2px solid var(--ok);outline-offset:2px;box-shadow:0 0 0 6px var(--ok-soft)}
+.edpop{position:fixed;inset-inline:0;bottom:0;z-index:210;background:var(--surface);border-top:1px solid var(--line);
+  padding:12px 16px calc(env(safe-area-inset-bottom,0px) + 14px);max-width:520px;margin:0 auto;border-radius:16px 16px 0 0;
+  box-shadow:0 -12px 34px -18px rgba(0,0,0,.55);font-family:var(--f);color:var(--ink);direction:rtl}
+.edpop .hd{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.edpop .g{font-size:12px;font-weight:600} .edpop .k{font-size:11px;color:var(--ink-3);flex:1;direction:ltr;text-align:end}
+.edpop .x{border:none;background:var(--surface-2);width:30px;height:30px;border-radius:50%;cursor:pointer;color:var(--ink);font-size:13px;flex:none}
+.edpop textarea{width:100%;min-height:60px;border:1.5px solid var(--ok);border-radius:10px;padding:9px 12px;
+  font:500 14px/1.7 var(--f);background:var(--canvas);color:var(--ink);resize:vertical;outline:none}
+.edpop .ft{display:flex;align-items:center;gap:8px;margin-top:8px}
+.edpop .ft .tiny{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.edpop .ft .btn{width:auto;height:36px;padding:0 12px;font-size:12.5px;flex:none}
+.copyed .chg{background:var(--ok-soft);border-radius:12px;padding:10px 14px;margin:12px 0 4px;font-size:12.5px;line-height:1.8}
+.copyed .chg s{color:var(--ink-3)} .copyed .chg b{color:var(--ok)}
 
 /* ══════════════════════════════════════════════════════════════════
    MOBILE — behaves like an installed app, not a shrunken mock-up.
@@ -1678,7 +1700,15 @@ button,input,select,textarea{color:inherit}
   <button class="chip" id="anchor-btn" aria-pressed="false" onclick="toggleAnchor()">پشتوانهٔ نهادی: خاموش</button>
   <button class="chip" id="flag-btn" aria-pressed="false" onclick="toggleFlag()">نشان آزمایشی: خاموش</button>
   <button class="chip" onclick="go('intro')">صفحهٔ معرفی</button>
-  <button class="chip" onclick="openCopyEd()">✎ متن‌ها</button>
+  <button class="chip" id="edit-btn" aria-pressed="false" onclick="toggleEdit()">✎ ویرایش روی صفحه</button>
+  <button class="chip" onclick="openCopyEd()">فهرست متن‌ها</button>
+</div>
+
+<!-- ═══ ON-SCREEN EDIT · tap a text, change it where it lives ═══ -->
+<div class="edpop" id="edpop" hidden>
+  <div class="hd"><span class="g" id="ed-grp"></span><span class="k num" id="ed-key"></span><button class="x" onclick="edClose()" aria-label="بستن">✕</button></div>
+  <textarea id="ed-ta" oninput="edInput()" rows="2"></textarea>
+  <div class="ft"><span class="tiny" id="ed-def"></span><button class="btn btn-ghost" id="ed-reset" onclick="edReset()">پیش‌فرض</button><button class="btn btn-soft" onclick="edClose()">تمام</button></div>
 </div>
 
 <!-- ═══ COPY EDITOR · every string in the app, editable live ═══ -->
@@ -1694,7 +1724,8 @@ button,input,select,textarea{color:inherit}
   </div>
   <div class="list" id="ce-list"></div>
   <div class="exp" id="ce-exp" hidden>
-    <p class="tiny" style="margin-bottom:8px">این متن را کپی کنید و در فایل <b>copy.json</b> کنار اپ بگذارید تا برای همه اعمال شود.</p>
+    <p class="tiny" style="margin-bottom:8px">در GitHub فایل <b>prototype/copy.json</b> را باز کنید، مداد ✎ را بزنید، همه را انتخاب کنید (Ctrl+A)، این را بچسبانید و Commit کنید. دقایقی بعد برای همه اعمال می‌شود.</p>
+    <div style="display:flex;gap:8px;margin-bottom:8px"><button class="btn btn-primary" onclick="copyClip()" id="ce-copy">کپی copy.json</button></div>
     <textarea id="ce-json" readonly></textarea>
     <p class="tiny" style="margin:10px 0 6px">یا JSON را اینجا بچسبانید و اعمال کنید:</p>
     <textarea id="ce-import" placeholder="{ … }"></textarea>
@@ -2102,6 +2133,7 @@ function go(name){
   if(cur){cur.classList.remove('active');cur.classList.add('leaving');
           setTimeout(()=>cur.classList.remove('leaving'),500)}
   nxt.classList.remove('leaving'); nxt.classList.add('active');
+  if(S.edit) setTimeout(markEditable,30);
   nxt.querySelector('.scroll')?.scrollTo(0,0);
   const prev=current; current=name;
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===name));
@@ -2112,8 +2144,8 @@ function go(name){
   if(name==='invest') renderNests();
   if(name==='use') renderUse();
   if(name==='custody') renderCustody();
-  if(name==='p-tut') $('pt-vis').innerHTML=DIAG.gold;
-  if(name==='k-tut'){ $('kt-vis').innerHTML=DIAG.key; renderKeyPC(); }
+  if(name==='p-tut') $('pt-vis').innerHTML=DIAG.gold();
+  if(name==='k-tut'){ $('kt-vis').innerHTML=DIAG.key(); renderKeyPC(); }
   if(name==='home' && S.pillow && prev!=='home'){ S.lifted=false; S.lifting=false; applyPillow(); }
   if(name==='p-amt'){ renderSlots(); paCheck(); }
   if(name==='k-order') koCheck();
@@ -2676,6 +2708,8 @@ function closeCopyEd(){ $('copyed').classList.remove('open'); }
 function renderCopyEd(){
   const q=($('ce-q').value||'').trim();
   let last=''; const out=[];
+  const ch=Object.keys(COPY_USER).filter(k=>COPY_DEF[k]);
+  if(ch.length&&!q) out.push('<div class="chg"><b>تغییرهای شما · '+fa(ch.length)+'</b><br>'+ch.map(k=>'<span class="num" style="opacity:.6">'+k+'</span> · <s>'+COPY_DEF[k][1].replace(/</g,'&lt;')+'</s> ← '+COPY_USER[k].replace(/</g,'&lt;')).join('<br>')+'</div>');
   Object.keys(COPY_DEF).forEach(k=>{
     const [g,def]=COPY_DEF[k], cur=COPY_USER[k]??def;
     if(q && !(k.includes(q)||cur.includes(q)||def.includes(q))) return;
@@ -2685,15 +2719,89 @@ function renderCopyEd(){
   });
   $('ce-list').innerHTML=out.join('');
 }
-function copyEdit(ta){
-  const k=ta.dataset.k, v=ta.value;
+/* one path for every edit, from the table or from the screen: set, re-render
+   whatever shows it, and keep it in this browser without asking */
+function setCopy(k,v){
   if(v===COPY_DEF[k][1]) delete COPY_USER[k]; else COPY_USER[k]=v;
   applyCopy(); render(); renderCustody(); renderUse(); renderNests(); renderActivity();
   if(current==='k-tut') renderKeyPC();
   if(current==='explain'&&S.ex) openExplain(S.ex,S.exBack);
+  try{ localStorage.setItem(LS_KEY,JSON.stringify(COPY_USER)); }catch(e){}
+  edCount();
 }
+function copyEdit(ta){ setCopy(ta.dataset.k,ta.value); }
+function copyClip(){
+  const t=$('ce-json'); t.select();
+  const done=()=>{ $('ce-copy').textContent='کپی شد ✓'; setTimeout(()=>$('ce-copy').textContent='کپی copy.json',1800); };
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t.value).then(done,()=>{ document.execCommand('copy'); done(); });
+  else { document.execCommand('copy'); done(); }
+}
+
+/* ── on-screen editing ──
+   The screen is the editor. In edit mode every element whose text is a copy
+   string gets a dashed frame; tap it (hold it, if it is a button's label) and
+   a small panel opens with that one string. Typing changes it in place. */
+let REV=new Map();
+function edKeyOf(t){
+  let el=t&&t.nodeType===1?t:t&&t.parentElement; let n=0;
+  while(el&&n++<5&&el.id!=='phone'){
+    if(el.dataset&&el.dataset.ek) return {el,key:el.dataset.ek};
+    if(el.dataset&&el.dataset.c&&COPY_DEF[el.dataset.c]) return {el,key:el.dataset.c};
+    el=el.parentElement;
+  }
+  return null;
+}
+function markEditable(){
+  document.querySelectorAll('.ed-hit').forEach(e=>{ e.classList.remove('ed-hit'); delete e.dataset.ek; });
+  if(!S.edit) return;
+  REV=new Map(); Object.keys(COPY).forEach(k=>{ if(COPY_DEF[k]&&!REV.has(COPY[k])) REV.set(COPY[k],k); });
+  const sc=document.querySelector('.screen.active'); const roots=[sc,$('tabbar'),$('tabbar2'),$('tabbar3'),...document.querySelectorAll('.sheet.open')].filter(Boolean);
+  roots.forEach(root=>root.querySelectorAll('*').forEach(el=>{
+    if(el.parentElement&&el.parentElement.closest('.ed-hit')) return;
+    const t=(el.textContent||'').trim(); if(!t) return;
+    /* the frame goes on the deepest element that carries the whole string */
+    if(!el.dataset.c&&[...el.children].some(c=>(c.textContent||'').trim()===t)) return;
+    const k=(el.dataset.c&&COPY_DEF[el.dataset.c])?el.dataset.c:REV.get(t);
+    if(k){ el.classList.add('ed-hit'); el.dataset.ek=k; }
+  }));
+  if(S.edKey){ const live=document.querySelector('[data-ek="'+S.edKey+'"]'); if(live) live.classList.add('ed-live'); }
+}
+function edCount(){ const n=Object.keys(COPY_USER).length; const b=$('edit-btn'); if(b) b.textContent='✎ ویرایش روی صفحه'+(n?' · '+fa(n):''); }
+function toggleEdit(){
+  S.edit=!S.edit; document.body.classList.toggle('editing',S.edit); $('edit-btn').setAttribute('aria-pressed',S.edit);
+  if(!S.edit) edClose(); markEditable();
+  $('hint').textContent=S.edit?'روی هر متن قاب‌دار بزنید. دکمه‌ها را نگه دارید.':'';
+}
+function edOpen(key){
+  S.edKey=key; const [g,def]=COPY_DEF[key];
+  $('ed-grp').textContent=COPY_GROUPS[g]||g; $('ed-key').textContent=key;
+  $('ed-ta').value=COPY[key].replace(/<br\s*\/?>/g,'\n');
+  $('ed-def').textContent=COPY_USER[key]!==undefined?'پیش‌فرض: '+def.replace(/<br\s*\/?>/g,' '):'';
+  $('ed-reset').hidden=COPY_USER[key]===undefined;
+  $('edpop').hidden=false; markEditable(); $('ed-ta').focus();
+}
+function edInput(){ const k=S.edKey; if(!k) return; const v=$('ed-ta').value.replace(/\n/g,'<br>'); setCopy(k,v);
+  $('ed-def').textContent=COPY_USER[k]!==undefined?'پیش‌فرض: '+COPY_DEF[k][1].replace(/<br\s*\/?>/g,' '):''; $('ed-reset').hidden=COPY_USER[k]===undefined; markEditable(); }
+function edReset(){ const k=S.edKey; if(!k) return; setCopy(k,COPY_DEF[k][1]); edOpen(k); }
+function edClose(){ S.edKey=null; $('edpop').hidden=true; document.querySelectorAll('.ed-live').forEach(e=>e.classList.remove('ed-live')); }
+let edPress=null, edSwallow=false;
+(function(){
+  const ph=$('phone'); if(!ph) return;
+  ph.addEventListener('pointerdown',e=>{ if(!S.edit) return; const h=edKeyOf(e.target); if(!h) return;
+    if(!e.target.closest('button,[onclick],a')) return;
+    edPress=setTimeout(()=>{ edPress=null; edSwallow=true; edOpen(h.key); },450); },true);
+  ['pointerup','pointercancel','pointerleave'].forEach(ev=>ph.addEventListener(ev,()=>{ if(edPress){ clearTimeout(edPress); edPress=null; } },true));
+  ph.addEventListener('click',e=>{ if(!S.edit) return;
+    if(edSwallow){ edSwallow=false; e.stopPropagation(); e.preventDefault(); return; }
+    const h=edKeyOf(e.target); if(!h) return;
+    if(e.target.closest('button,[onclick],a')) return;
+    e.stopPropagation(); e.preventDefault(); edOpen(h.key); },true);
+  ph.addEventListener('contextmenu',e=>{ if(S.edit) e.preventDefault(); });
+  let t=null; new MutationObserver(()=>{ if(!S.edit) return; clearTimeout(t); t=setTimeout(markEditable,60); })
+    .observe(ph,{childList:true,subtree:true,characterData:true});
+})();
 function copySave(){ try{ localStorage.setItem(LS_KEY,JSON.stringify(COPY_USER)); $('hint').textContent='متن‌ها در این مرورگر ذخیره شد.'; }catch(e){} }
-function copyReset(){ COPY_USER={}; try{ localStorage.removeItem(LS_KEY); }catch(e){} applyCopy(); render(); renderCustody(); renderUse(); renderNests(); renderCopyEd(); }
+function copyReset(){ COPY_USER={}; try{ localStorage.removeItem(LS_KEY); }catch(e){} applyCopy(); render(); renderCustody(); renderUse(); renderNests(); renderCopyEd(); edCount(); }
 /* exports the full table, not just the edits, so copy.json shows every string
    there is — the person editing it on GitHub never has to guess a key name */
 function copyExport(){
@@ -2732,7 +2840,7 @@ document.addEventListener('touchmove',e=>{ if(e.touches.length>1) e.preventDefau
 
 /* ════════ boot ════════ */
 loadCopyOverrides();
-buildTabs(); applyTheme(); applyCopy(); $('clock').textContent=fa('9:41');
+buildTabs(); edCount(); applyTheme(); applyCopy(); $('clock').textContent=fa('9:41');
 renderNests(); fillNest('calm'); renderShops(); renderCustody(); renderUse(); renderAnchor(); applyPillow(); render(); fitPhone();
 
 </script>
