@@ -4,7 +4,7 @@
   "description": "پروتوتایپ آزمایشی مهاجر — نگهداری کلید، سرمایه‌گذاری و تحویل فیزیکی",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "./wallet-v3.html?v=36",
+  "start_url": "./wallet-v4.html?v=40",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",

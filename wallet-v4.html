@@ -1,0 +1,2679 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>مهاجر · پروتوتایپ v4</title>
+
+<!-- installable: on a phone, Share → Add to Home Screen gives a real standalone app -->
+<link rel="manifest" href="./manifest.json">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<meta name="app-version" content="v3.4">
+<meta name="theme-color" content="#F4F4F1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="مهاجر">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" href="./icons/icon-192.png">
+<!--
+  MOHAJER · PROTOTYPE A · DIGITAL DOLLAR WALLET v0
+  Built from Mohajer_Digital_Dollar_Wallet_WS0_v0
+
+  Flows (WS0 §3.5):
+    1 تبدیل      Rial → digital dollar, with quote
+    2 انتقال     to another Mohajer user by phone
+    3 اشتراک/اکانت  two comparable models
+    4 صندوق هدف   create / fund / release instantly, no fee
+    5 برداشت      to Rial only — physical cash is OUT of v0 per team lead
+
+  Every flow has Success, Pending and at least one Failure/Fallback.
+  Failure paths are triggered from the facilitator panel (••• button).
+  All data is fake and labelled. CONFIG lives at the bottom of the script.
+-->
+<style>
+@font-face{font-family:Dana;src:url('./fonts/Dana-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-DemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-ExtraBold.woff2') format('woff2');font-weight:800;font-display:swap}
+
+
+:root{
+  --f:Dana,system-ui,sans-serif;
+  --canvas:#F4F4F1;--surface:#FFF;--surface-2:#EDEDE9;
+  --ink:#0D0F12;--ink-2:#6B7076;--ink-3:#A4A9AE;
+  --line:#E4E4DF;--line-2:#EFEFEA;
+  --gold:#D5A45C;--ok:#17936A;--ok-soft:#E7F3EE;
+  --warn:#B4642C;--warn-soft:#FBF1E8;--bad:#C0392B;--bad-soft:#FBEDEB;
+  --dark:linear-gradient(168deg,#1E232B 0%,#0D0F12 52%,#161B21 100%);
+  --r-sm:12px;--r-md:16px;--r-lg:22px;--r-xl:28px;
+  --spring:cubic-bezier(.16,1,.3,1);--swift:cubic-bezier(.4,0,.2,1);
+  --sh:0 1px 2px rgba(13,15,18,.04),0 10px 30px -16px rgba(13,15,18,.14);
+  --sh-d:0 2px 6px rgba(13,15,18,.10),0 24px 48px -22px rgba(13,15,18,.55);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;
+  touch-action:manipulation}   /* kills the double-tap-to-zoom delay */
+body{font-family:var(--f);background:radial-gradient(900px 600px at 50% 0%,#FBFBF9,#E9E9E4 70%,#E2E2DC);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;padding:26px 16px;color:var(--ink);-webkit-font-smoothing:antialiased}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+
+/* device */
+.stage{position:relative;flex:none}
+.phone{width:390px;height:844px;position:absolute;top:0;left:0;background:var(--canvas);
+  border-radius:46px;transform-origin:top left;overflow:hidden;
+  box-shadow:0 0 0 10px #101317,0 0 0 11.5px #303740,0 30px 70px -30px rgba(13,15,18,.55)}
+.notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:110px;height:30px;background:#101317;border-radius:99px;z-index:60}
+.statusbar{position:absolute;top:0;inset-inline:0;height:52px;z-index:55;display:flex;align-items:center;
+  justify-content:space-between;padding:0 30px;font:600 13px/1 var(--f);pointer-events:none}
+.statusbar .sig{display:flex;gap:4px;align-items:flex-end;opacity:.9}
+.statusbar .sig i{display:block;width:3px;background:currentColor;border-radius:2px}
+
+/* screens */
+.viewport{position:absolute;inset:0;overflow:hidden}
+.screen{position:absolute;inset:0;padding:58px 20px 20px;display:flex;flex-direction:column;background:var(--canvas);
+  opacity:0;visibility:hidden;pointer-events:none;transform:translateX(-22px) scale(.985);
+  transition:opacity .3s var(--swift),transform .5s var(--spring),visibility .5s}
+.screen.active{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.screen.leaving{transform:translateX(14px) scale(.985);opacity:0}
+.screen.tabbed{padding-bottom:76px}
+.screen>*:not(.scroll){flex:none}
+.scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;margin:0 -20px;padding:0 20px}
+.scroll::-webkit-scrollbar{display:none}
+
+/* tab bar */
+.tabbar{position:absolute;bottom:0;inset-inline:0;height:66px;z-index:50;display:flex;
+  background:rgba(255,255,255,.93);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+  padding-bottom:4px}
+.tab{flex:1;border:none;background:none;font-family:inherit;cursor:pointer;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--ink-3);transition:.22s var(--swift)}
+.tab svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab span{font-size:10px;font-weight:500}
+.tab[aria-current=true]{color:var(--ink)}
+.tab[aria-current=true] svg{stroke-width:2.1}
+
+/* nav */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:16px;min-height:38px}
+.back{width:38px;height:38px;border-radius:50%;border:none;background:var(--surface);display:grid;place-items:center;
+  cursor:pointer;flex:none;box-shadow:0 1px 2px rgba(13,15,18,.05);transition:.22s var(--spring)}
+.back:active{transform:scale(.9)}
+.back svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;transform:scaleX(-1)}
+.nav h2{font-size:17px;font-weight:600;letter-spacing:-.015em}
+.nav .step{margin-inline-start:auto;font-size:11.5px;font-weight:500;color:var(--ink-3)}
+
+/* type */
+h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
+.lead{font-size:14px;line-height:1.7;color:var(--ink-2)}
+.tiny{font-size:11.5px;line-height:1.6;color:var(--ink-3)}
+.eyebrow{font-size:11.5px;font-weight:600;color:var(--ink-3);margin-bottom:10px}
+.sec{font-size:12.5px;font-weight:600;color:var(--ink-3);margin:20px 0 9px}
+
+/* buttons */
+.btn{width:100%;border:none;cursor:pointer;font-family:inherit;height:54px;border-radius:var(--r-md);
+  font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform .2s var(--spring),background .2s,opacity .3s var(--swift)}
+.btn:active{transform:scale(.972)}
+.btn-primary{background:var(--ink);color:#fff;box-shadow:0 8px 22px -10px rgba(13,15,18,.6)}
+.btn-primary:disabled{background:var(--line);color:var(--ink-3);box-shadow:none;cursor:not-allowed}
+.btn-soft{background:var(--surface);color:var(--ink);box-shadow:var(--sh)}
+.btn-ghost{background:none;color:var(--ink-2);height:44px;font-weight:500;font-size:13.5px}
+.btn-danger{background:var(--bad-soft);color:var(--bad)}
+.cta-slot{margin-top:12px;transition:opacity .35s var(--swift),transform .5s var(--spring)}
+.cta-slot.hidden{opacity:0;transform:translateY(16px);pointer-events:none}
+
+/* surfaces */
+.card{background:var(--surface);border-radius:var(--r-lg);padding:18px;box-shadow:var(--sh)}
+.dark-card{background:var(--dark);border-radius:var(--r-xl);color:#fff;position:relative;overflow:hidden;box-shadow:var(--sh-d)}
+.dark-card::after{content:'';position:absolute;inset-inline-end:-140px;top:-180px;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(213,164,92,.16),rgba(213,164,92,.05) 45%,transparent 70%);pointer-events:none}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0}
+.row+.row{border-top:1px solid var(--line-2)}
+.row .k{font-size:13px;color:var(--ink-2);flex:1;min-width:0}
+.row .v{font-size:13px;font-weight:500;text-align:end;min-width:0}
+.row.total .k{font-weight:600;color:var(--ink);font-size:14px}
+.row.total .v{font-weight:700;font-size:16px}
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:5px 10px;font-size:11px;font-weight:500;line-height:1}
+.b-ok{background:var(--ok-soft);color:var(--ok)}
+.b-warn{background:var(--warn-soft);color:var(--warn)}
+.b-bad{background:var(--bad-soft);color:var(--bad)}
+.b-quiet{background:var(--surface-2);color:var(--ink-2)}
+.b-dark{background:rgba(255,255,255,.10);color:rgba(255,255,255,.72)}
+
+/* home balance */
+.bal-card{padding:22px 20px 20px}
+.bal-card .lab{font-size:12px;color:rgba(255,255,255,.5);position:relative}
+.bal-card .tot{font-size:40px;font-weight:700;letter-spacing:-.04em;margin-top:7px;position:relative;line-height:1.05}
+.bal-card .tot::first-letter{color:var(--gold)}
+/* The home card uses .nest-card, so the .bal-card sizes above never reached it
+   and the balance was rendering at body size. It is the one number the screen
+   is about — it leads, and the label above it recedes to a caption. */
+.nest-card .lab{font-size:11.5px;font-weight:500;color:rgba(255,255,255,.5);
+  letter-spacing:.01em;position:relative}
+.nest-card .tot{font-size:52px;font-weight:700;letter-spacing:-.045em;
+  margin-top:6px;position:relative;line-height:1.02}
+.nest-card .tot::first-letter{color:var(--gold)}
+.bal-card .rial{font-size:11.5px;color:rgba(255,255,255,.42);margin-top:5px;position:relative}
+.split{display:flex;gap:8px;margin-top:18px;position:relative}
+.split .s{flex:1;background:rgba(255,255,255,.07);border-radius:var(--r-sm);padding:10px 11px}
+.split .s .l{font-size:10px;color:rgba(255,255,255,.48)}
+.split .s .v{font-size:14.5px;font-weight:600;margin-top:3px;letter-spacing:-.02em}
+.split .s.pend .v{color:var(--gold)}
+
+/* action grid */
+.acts{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.act{background:var(--surface);border:none;border-radius:var(--r-md);padding:14px;cursor:pointer;
+  font-family:inherit;text-align:start;box-shadow:var(--sh);transition:.24s var(--spring);
+  display:flex;align-items:center;gap:10px}
+.act:active{transform:scale(.98)}
+.act .ic{width:32px;height:32px;border-radius:10px;background:var(--surface-2);display:grid;place-items:center;flex:none}
+.act .ic svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.act .t{font-size:13px;font-weight:600;letter-spacing:-.01em}
+.act.wide{grid-column:span 2}
+
+/* keypad + amount */
+.amt{text-align:center;padding:8px 0}
+.amt .cur{font-size:12px;color:var(--ink-3);font-weight:500}
+.amt .v{font-size:40px;font-weight:700;letter-spacing:-.04em;line-height:1.12;min-height:48px}
+.amt .v.zero{color:var(--line)}
+.amt .sub{font-size:13px;color:var(--ink-2);margin-top:4px}
+.caret{display:inline-block;width:2px;height:.76em;background:var(--gold);vertical-align:-.05em;
+  margin-inline-start:3px;animation:blink 1.05s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:auto}
+.key{height:56px;border:none;background:none;border-radius:18px;font-family:inherit;font-size:23px;
+  font-weight:500;color:var(--ink);cursor:pointer;position:relative;overflow:hidden;transition:transform .16s var(--spring)}
+.key::before{content:'';position:absolute;inset:0;background:var(--ink);opacity:0;border-radius:inherit;transition:opacity .3s var(--swift)}
+.key:active::before{opacity:.07;transition:opacity .04s}
+.key:active{transform:scale(.9)}
+.key svg{width:21px;height:21px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto;position:relative}
+.presets{display:flex;gap:7px;margin-top:12px}
+.preset{flex:1;height:38px;border-radius:99px;border:none;background:var(--surface);font-family:inherit;
+  font-size:12.5px;font-weight:500;color:var(--ink-2);cursor:pointer;box-shadow:0 1px 2px rgba(13,15,18,.05);transition:.22s var(--spring)}
+.preset:active{transform:scale(.94)}
+
+/* quote */
+.quote-head{padding:20px}
+.quote-head .l{font-size:12px;color:rgba(255,255,255,.5);position:relative}
+.quote-head .v{font-size:34px;font-weight:700;letter-spacing:-.035em;margin-top:6px;position:relative}
+.quote-head .v::first-letter{color:var(--gold)}
+.timer{display:flex;align-items:center;gap:7px;margin-top:14px;position:relative;
+  font-size:11.5px;color:rgba(255,255,255,.6)}
+.timer .bar{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.13);overflow:hidden}
+.timer .bar i{display:block;height:100%;background:var(--gold);width:100%;border-radius:2px}
+.timer.low{color:var(--gold)}
+
+/* inputs */
+.field{margin-top:14px}
+.field label{font-size:12.5px;font-weight:500;color:var(--ink-2);display:block;margin-bottom:6px}
+.field input,.field select{width:100%;height:50px;border-radius:var(--r-md);border:1.5px solid transparent;
+  background:var(--surface);padding:0 15px;font-family:inherit;font-size:15px;font-weight:500;color:var(--ink);
+  box-shadow:var(--sh);transition:.22s var(--swift)}
+.field input:focus{outline:none;border-color:var(--ink)}
+.field input::placeholder{color:var(--ink-3);font-weight:400}
+
+.opt{width:100%;display:flex;align-items:center;gap:12px;padding:15px;background:var(--surface);
+  border:1.5px solid transparent;border-radius:var(--r-md);cursor:pointer;font-family:inherit;
+  text-align:start;box-shadow:var(--sh);transition:.24s var(--spring)}
+.opt+.opt{margin-top:8px}
+.opt:active{transform:scale(.985)}
+.opt[aria-pressed=true]{border-color:var(--ink)}
+.opt[aria-pressed=true] .radio{border-color:var(--ink);background:var(--ink)}
+.opt[aria-pressed=true] .radio::after{transform:scale(1)}
+.opt .ic{width:38px;height:38px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;flex:none;font-size:16px}
+.opt .ic svg{width:17px;height:17px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.opt .m{flex:1;min-width:0}
+.opt .m .t{font-size:13.5px;font-weight:600}
+.opt .m .d{font-size:11.5px;color:var(--ink-3);margin-top:2px;line-height:1.5}
+.opt .m .p{font-size:13px;font-weight:600;margin-top:3px}
+.radio{width:19px;height:19px;border-radius:50%;border:1.5px solid var(--line);flex:none;display:grid;place-items:center;transition:.24s var(--spring)}
+.radio::after{content:'';width:7px;height:7px;border-radius:50%;background:#fff;transform:scale(0);transition:.24s var(--spring)}
+
+/* status */
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 6px}
+.disc{width:78px;height:78px;border-radius:50%;display:grid;place-items:center;margin-bottom:20px}
+.disc.ok{background:var(--ok-soft)}.disc.pend{background:var(--warn-soft)}.disc.bad{background:var(--bad-soft)}
+.disc svg{width:34px;height:34px;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.disc.ok svg{stroke:var(--ok)}.disc.pend svg{stroke:var(--warn)}.disc.bad svg{stroke:var(--bad)}
+.disc.ok svg path{stroke-dasharray:42;stroke-dashoffset:42}
+.screen.active .disc.ok svg path{animation:draw .6s .25s var(--spring) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.screen.active .disc{animation:pop .6s var(--spring)}
+@keyframes pop{0%{transform:scale(.5);opacity:0}62%{transform:scale(1.07)}100%{transform:scale(1);opacity:1}}
+.disc.pend svg{animation:spin 1.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.big-amt{font-size:34px;font-weight:700;letter-spacing:-.04em}
+
+/* notes */
+.note{display:flex;gap:10px;align-items:flex-start;padding:13px 15px;background:var(--surface-2);border-radius:var(--r-md);margin-top:14px}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.note svg{width:15px;height:15px;fill:none;stroke-width:1.9;flex:none;margin-top:1px;stroke:var(--ink-2)}
+.note.warn svg{stroke:var(--warn)}.note.bad svg{stroke:var(--bad)}
+.note p{font-size:11.5px;color:var(--ink-2);line-height:1.7}
+.note.warn p{color:var(--warn)}.note.bad p{color:var(--bad)}
+.note b{color:var(--ink);font-weight:600}
+.note.warn b,.note.bad b{color:inherit}
+
+/* tx list */
+.tx{display:flex;align-items:center;gap:11px;padding:12px 0;width:100%;background:none;border:none;
+  font-family:inherit;text-align:start;cursor:pointer}
+.tx+.tx{border-top:1px solid var(--line-2)}
+.tx .ic{width:36px;height:36px;border-radius:11px;background:var(--surface);display:grid;place-items:center;flex:none;box-shadow:0 1px 2px rgba(13,15,18,.05)}
+.tx .ic svg{width:15px;height:15px;stroke:var(--ink-2);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tx .m{flex:1;min-width:0}
+.tx .m .t{font-size:13px;font-weight:500}
+.tx .m .d{font-size:11px;color:var(--ink-3);margin-top:2px}
+.tx .r{text-align:end;flex:none}
+.tx .r .a{font-size:13px;font-weight:600}
+.tx .r .a.in{color:var(--ok)}
+.tx .r .s{font-size:10px;margin-top:3px}
+
+/* support strip */
+.support{display:flex;align-items:center;gap:10px;padding:13px 15px;background:var(--surface);
+  border-radius:var(--r-md);box-shadow:var(--sh);cursor:pointer;width:100%;border:none;font-family:inherit;text-align:start}
+.support .ic{width:30px;height:30px;border-radius:50%;background:var(--ok-soft);display:grid;place-items:center;flex:none}
+.support .ic svg{width:14px;height:14px;stroke:var(--ok);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.support .m .t{font-size:12.5px;font-weight:600}
+.support .m .d{font-size:11px;color:var(--ink-3);margin-top:1px}
+
+/* sheet */
+.sheet-bg{position:absolute;inset:0;background:rgba(13,15,18,.42);z-index:70;opacity:0;visibility:hidden;
+  transition:.3s var(--swift);backdrop-filter:blur(3px)}
+.sheet-bg.on{opacity:1;visibility:visible}
+.sheet{position:absolute;inset-inline:0;bottom:0;z-index:71;background:var(--surface);
+  border-radius:var(--r-xl) var(--r-xl) 0 0;padding:12px 20px 26px;transform:translateY(101%);
+  transition:transform .45s var(--spring);max-height:82%;overflow-y:auto}
+.sheet.on{transform:none}
+.sheet::-webkit-scrollbar{display:none}
+.grip{width:38px;height:4px;border-radius:99px;background:var(--line);margin:0 auto 16px}
+.sheet h3{font-size:17px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px}
+
+/* test-data ribbon */
+/* ── the pillow · privacy + custody, as a gesture ─────────────────
+   The app opens with the balance under a pillow. Nothing shows until the
+   participant lifts it — which is the test: does concealment read as safety
+   or as the app getting in the way.
+
+   Silhouette notes, since this is what makes it read as a pillow rather than
+   a pebble: each edge bows OUT and the four corners stay as soft cusps where
+   two curves meet. Uniformly rounded corners kill it instantly. The seam sits
+   inset and follows the same silhouette, and the shading is brightest just
+   above centre where a stuffed pillow is plumpest. */
+.flipwrap{perspective:1500px;width:100%}
+.flipper{position:relative;width:100%;transform-style:preserve-3d}
+.flipwrap[data-flipped=true] .flipper{animation:liftflip .95s cubic-bezier(.22,.85,.24,1) forwards}
+.flipwrap[data-flipped=true][data-instant=true] .flipper{animation:none;transform:rotateX(180deg)}
+@keyframes liftflip{
+  0%  {transform:translateY(0) rotateX(0deg) scale(1)}
+  38% {transform:translateY(-34px) rotateX(72deg) scale(1.04)}
+  70% {transform:translateY(-9px) rotateX(150deg) scale(1.01)}
+  100%{transform:translateY(0) rotateX(180deg) scale(1)}
+}
+.flipface{backface-visibility:hidden;-webkit-backface-visibility:hidden;width:100%}
+.flipface.back{position:absolute;inset:0;transform:rotateX(180deg)}
+
+.pillowbtn{width:100%;border:none;background:none;padding:0;cursor:pointer;
+  font-family:inherit;display:block;color:inherit}
+.pillowbtn:active .pillow-svg{transform:scale(.982)}
+.pillow-svg{width:100%;height:auto;display:block;transition:transform .26s var(--spring)}
+
+/* The caption lives OUTSIDE the flipper. Text turning upside-down with the
+   pillow looked broken; it fades out while the pillow turns. */
+.pillownote{text-align:center;margin-top:2px;
+  transition:opacity .34s var(--swift), transform .44s var(--spring)}
+.pillownote[data-gone=true]{opacity:0;transform:translateY(-8px);pointer-events:none}
+.pillownote .say{font-size:16.5px;font-weight:600;letter-spacing:-.022em;color:var(--ink)}
+.pillownote .sub{font-size:12px;color:var(--ink-2);margin-top:6px;line-height:1.75;
+  max-width:31ch;margin-inline:auto}
+.pillownote .tap{display:inline-flex;align-items:center;gap:6px;margin-top:12px;
+  font-size:12px;font-weight:600;color:var(--gold);
+  border:1px solid rgba(213,164,92,.28);border-radius:99px;padding:7px 15px}
+.pillownote .tap svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;animation:lifthint 2.4s var(--swift) infinite}
+@keyframes lifthint{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+.zzz text{fill:#D5A45C;font:600 15px var(--f);opacity:.5;
+  animation:float 3.6s var(--swift) infinite}
+.zzz text:nth-child(2){animation-delay:.6s;font-size:12px}
+.zzz text:nth-child(3){animation-delay:1.2s;font-size:9.5px}
+@keyframes float{
+  0%  {opacity:0;transform:translate(0,6px)}
+  25% {opacity:.85}
+  100%{opacity:0;transform:translate(9px,-20px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .flipwrap[data-flipped=true] .flipper{animation:none;transform:rotateX(180deg)}
+  .pillownote .tap svg{animation:none}
+  .zzz text{animation:none;opacity:.5}
+}
+/* ── the pillow · trust-anchor variant END ── */
+/* ── لانه cards + allocation bars + chart ─────────────────────────── */
+.nest{width:100%;display:block;text-align:start;font-family:inherit;padding:16px;
+  background:var(--surface);border:1.5px solid transparent;border-radius:var(--r-lg);
+  box-shadow:var(--sh);cursor:pointer;transition:.24s var(--spring);color:inherit}
+.nest+.nest{margin-top:10px}
+.nest:active{transform:scale(.985)}
+.nest .top{display:flex;align-items:center;gap:9px}
+.nest .t{font-size:14.5px;font-weight:600;letter-spacing:-.015em;flex:1}
+.nest .sub{font-size:12px;color:var(--ink-2);margin-top:5px;line-height:1.6}
+.mixbar{display:flex;height:9px;border-radius:99px;overflow:hidden;gap:2px;margin:12px 0 9px}
+.mixbar i{display:block;height:100%;border-radius:99px}
+.mixkey{display:flex;flex-wrap:wrap;gap:9px}
+.mixkey span{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-2)}
+.mixkey i{width:7px;height:7px;border-radius:2px;flex:none}
+.mixkey b{color:var(--ink);font-weight:600}
+.riskdots{display:inline-flex;gap:3px;align-items:center}
+.riskdots i{width:5px;height:5px;border-radius:50%;background:var(--line);display:block}
+.riskdots i.on{background:var(--warn)}
+
+.chartbox{background:var(--surface);border-radius:var(--r-lg);padding:16px;box-shadow:var(--sh)}
+.chart{width:100%;height:132px;display:block;overflow:visible}
+.chart .grid{stroke:var(--line-2);stroke-width:1}
+.chart .line{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chart .fill{fill:url(#cg);opacity:.16}
+.chart .fut{fill:none;stroke:var(--ink-3);stroke-width:2;stroke-dasharray:3 4;stroke-linecap:round}
+.chart .cone{fill:var(--ink-3);opacity:.10}
+.rangepick{display:flex;gap:5px;margin-top:12px}
+.rangepick button{flex:1;min-height:40px;border:none;background:var(--surface-2);font-family:inherit;font-size:11.5px;
+  font-weight:500;color:var(--ink-2);padding:7px;border-radius:8px;cursor:pointer}
+.rangepick button[aria-pressed=true]{background:var(--ink);color:var(--canvas)}
+
+/* ── کلید مهاجر · hardware self-custody device ────────────────────
+   The second trust anchor, and a different kind of claim from the gold
+   counter. Gold says "you can take it out". The key says "we cannot take
+   it at all" — the private key is generated on the device, never leaves
+   it, and Mohajer never holds a copy.
+
+   The honest cost of that is stated on every screen: if the recovery words
+   are lost, nobody can restore the balance — not us, not anyone. A product
+   that offers self-custody without saying this is selling the upside only,
+   and in a trust test that omission is exactly what a careful participant
+   would catch us on. */
+.keycard{width:100%;text-align:start;font-family:inherit;color:inherit;cursor:pointer;
+  border:1.5px solid transparent;border-radius:var(--r-lg);padding:16px;
+  background:var(--surface);box-shadow:var(--sh);display:flex;gap:13px;align-items:flex-start;
+  transition:.24s var(--spring)}
+.keycard+.keycard{margin-top:10px}
+.keycard:active{transform:scale(.985)}
+.keycard .ic{width:46px;height:46px;border-radius:14px;flex:none;display:grid;place-items:center}
+.keycard .ic svg{width:23px;height:23px;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.keycard.k-gold .ic{background:var(--warn-soft)} .keycard.k-gold .ic svg{stroke:var(--warn)}
+.keycard.k-base .ic{background:var(--surface-2)} .keycard.k-base .ic svg{stroke:var(--ink-2)}
+.keycard[disabled]{opacity:1;cursor:default}
+.keycard[disabled]:active{transform:none}
+.keycard.k-dev .ic{background:var(--brand-soft,#EDF0FF)} .keycard.k-dev .ic svg{stroke:#3D5AFE}
+:root[data-theme="dark"] .keycard.k-dev .ic{background:#1A1F3D}
+:root[data-theme="dark"] .keycard.k-dev .ic svg{stroke:#7C8FFF}
+.keycard .m{flex:1;min-width:0;display:block}
+.keycard .t{display:block;font-size:14.5px;font-weight:600;letter-spacing:-.015em;line-height:1.5}
+.keycard .d{display:block;font-size:12px;color:var(--ink-2);margin-top:5px;line-height:1.7}
+.keycard .lim{display:block;font-size:11px;color:var(--ink-3);margin-top:8px}
+
+/* The device is a real product shot — and it is a black object, which on a
+   near-black canvas would simply vanish. Product photography solves this with
+   a backlight; here that is a soft gold radial behind it plus a grounded
+   contact shadow, so it reads as an object sitting on a surface rather than a
+   cut-out floating in the dark. */
+.devframe{background:linear-gradient(168deg,var(--surface-2),var(--surface));
+  border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh);
+  padding:14px 16px 12px;position:relative;overflow:hidden}
+.devframe::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 70% at 50% 0%,rgba(255,255,255,.05),transparent 62%)}
+.devcap{display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--line-2);padding-top:10px;margin-top:6px;position:relative}
+.devcap .n{font-size:12.5px;font-weight:600}
+.devcap .p{font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.devstage{position:relative;display:grid;place-items:center;padding:6px 0 2px;isolation:isolate}
+.devstage .glow{position:absolute;width:74%;max-width:250px;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(213,164,92,.14),rgba(213,164,92,.05) 45%,transparent 68%);
+  z-index:-1}
+:root[data-theme="dark"] .devstage .glow{
+  background:radial-gradient(circle,rgba(213,164,92,.22),rgba(213,164,92,.07) 45%,transparent 70%)}
+.devstage .plinth{position:absolute;bottom:16px;width:46%;max-width:150px;height:14px;
+  border-radius:50%;background:rgba(0,0,0,.42);filter:blur(9px);z-index:-1}
+:root[data-theme="dark"] .devstage .plinth{background:rgba(0,0,0,.7)}
+.devimg{width:min(210px,60%);height:auto;display:block;
+  filter:drop-shadow(0 14px 22px rgba(13,15,18,.42));
+  animation:devhover 7s var(--swift) infinite}
+:root[data-theme="dark"] .devimg{filter:drop-shadow(0 16px 26px rgba(0,0,0,.75))}
+@keyframes devhover{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.devimg.sm{width:74px;animation:none;filter:drop-shadow(0 6px 10px rgba(13,15,18,.4))}
+@media(prefers-reduced-motion:reduce){.devimg{animation:none}}
+.custody{display:flex;gap:10px;align-items:flex-start;padding:14px 15px;border-radius:var(--r-md);
+  background:var(--surface-2);margin-top:10px;text-align:start}
+#ko-warn:not(:empty){margin-top:12px;display:block}
+.custody .ct{font-size:13.5px;font-weight:700;letter-spacing:-.015em;margin-bottom:5px;color:var(--ink)}
+.custody.who .ct{color:var(--ok)}
+.custody svg{width:16px;height:16px;flex:none;margin-top:2px;fill:none;stroke-width:1.8;
+  stroke:var(--ink-2);stroke-linecap:round;stroke-linejoin:round}
+.custody > div{flex:1;min-width:0;text-align:start}
+.custody p{font-size:12.5px;line-height:1.75;color:var(--ink-2)}
+.custody b{color:var(--ink)}
+.custody.who{background:var(--ok-soft)} .custody.who svg{stroke:var(--ok)}
+.custody.risk{background:var(--bad-soft)} .custody.risk svg{stroke:var(--bad)}
+.words{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.words span{background:var(--surface-2);border-radius:9px;padding:8px 6px;font-size:11.5px;
+  text-align:center;font-weight:500}
+.words span i{display:block;font-style:normal;font-size:9.5px;color:var(--ink-3);margin-bottom:2px}
+
+/* ── physical delivery map ────────────────────────────────────────
+   Hand-drawn SVG rather than a maps SDK. Three reasons, in order:
+   Google Maps needs a billable API key; tile services are unreliable or
+   blocked on Iranian connections, which would leave a tester staring at a
+   grey square; and inside the test-platform iframe an external map is one
+   more thing that can fail silently. A drawn map always renders, costs
+   nothing, and is styled to match the app. Every place on it is invented. */
+.mapwrap{position:relative;border-radius:var(--r-lg);overflow:hidden;background:#E8EBE6;
+  box-shadow:var(--sh);height:230px}
+:root[data-theme="dark"] .mapwrap{background:#12161A}
+.mapwrap svg{display:block;width:100%;height:100%}
+.mp-water{fill:#C8DCE6} :root[data-theme="dark"] .mp-water{fill:#152730}
+.mp-park{fill:#D3E3CE}  :root[data-theme="dark"] .mp-park{fill:#17251A}
+.mp-block{fill:#DEE2DA} :root[data-theme="dark"] .mp-block{fill:#1B2026}
+.mp-road{stroke:#F7F8F5;stroke-linecap:round}
+:root[data-theme="dark"] .mp-road{stroke:#262C33}
+.mp-route{stroke:var(--gold);stroke-width:3.5;fill:none;stroke-linecap:round;
+  stroke-dasharray:6 5;animation:dash 1.1s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-11}}
+.pin{cursor:pointer}
+.pin .body{fill:var(--ink);transition:.2s var(--spring)}
+.pin[aria-pressed=true] .body{fill:var(--gold)}
+.pin .glyph{fill:#fff;font:600 9px var(--f)}
+.me .ring{fill:#3D7DE0;opacity:.22}
+.me .ring2{fill:#3D7DE0;opacity:.14;animation:mepulse 2.4s var(--swift) infinite}
+@keyframes mepulse{0%{transform:scale(.6);opacity:.30}100%{transform:scale(1.5);opacity:0}}
+.me .dot{fill:#3D7DE0;stroke:#fff;stroke-width:2}
+.maploading{position:absolute;inset:0;display:grid;place-items:center;
+  background:var(--surface);font-size:12.5px;color:var(--ink-2);gap:9px}
+/* a declared display beats the UA rule for [hidden], so say it explicitly */
+.maploading[hidden]{display:none}
+.maploading .sp{width:22px;height:22px;border-radius:50%;border:2.5px solid var(--line);
+  border-top-color:var(--ink);animation:spin .8s linear infinite;margin:0 auto 9px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.shop{width:100%;display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--surface);
+  border:1.5px solid transparent;border-radius:var(--r-md);box-shadow:var(--sh);
+  text-align:start;font-family:inherit;cursor:pointer;color:inherit;transition:.2s var(--spring)}
+.shop+.shop{margin-top:8px}
+.shop[aria-pressed=true]{border-color:var(--ink)}
+.shop .badge2{width:38px;height:38px;border-radius:12px;background:var(--surface-2);flex:none;
+  display:grid;place-items:center;font-size:13px;font-weight:700}
+.shop .m{flex:1;min-width:0}
+.shop .t{display:block;font-size:13.5px;font-weight:600;line-height:1.5}
+.shop .d{display:block;font-size:11.5px;color:var(--ink-2);margin-top:2px;line-height:1.6}
+.shop .m{flex:1;min-width:0;padding-top:1px}
+.shop .far{font-size:12px;font-weight:600;flex:none;text-align:end;padding-top:1px;
+  white-space:nowrap}
+.shop .far small{display:block;font-weight:400;color:var(--ink-3);font-size:10.5px;margin-top:2px}
+.steps{counter-reset:st}
+.steps div{display:flex;gap:10px;padding:9px 0;font-size:12.5px;line-height:1.65;
+  border-bottom:1px solid var(--line-2)}
+.steps div:last-child{border-bottom:none}
+.steps div::before{counter-increment:st;content:counter(st);width:20px;height:20px;border-radius:50%;
+  background:var(--surface-2);display:grid;place-items:center;font-size:10.5px;font-weight:700;flex:none}
+
+/* ── home v0.3 ── */
+.nest-card{width:100%;border:none;font-family:inherit;text-align:start;cursor:pointer;
+  padding:22px 20px 20px;display:block;transition:transform .2s var(--spring)}
+.nest-card:active{transform:scale(.985)}
+.unit-hint{display:inline-flex;align-items:center;gap:6px;position:relative;margin-top:7px;
+  font-size:11px;color:rgba(255,255,255,.45)}
+.unit-hint svg{width:12px;height:12px;opacity:.8}
+
+.hero-say{font-size:15px;color:var(--ink-2);margin-top:16px;line-height:1.7}
+
+/* one bold action, then four quiet ones */
+.home-foot{flex:none;padding-top:6px}
+.quickrow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
+.quick{background:none;border:none;font-family:inherit;cursor:pointer;color:var(--ink-2);
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 2px;font-size:11px;
+  font-weight:500;border-radius:14px;transition:.2s var(--spring)}
+.quick:active{transform:scale(.94);background:var(--surface-2)}
+.quick .qi{width:38px;height:38px;border-radius:50%;background:var(--surface);display:grid;
+  place-items:center;box-shadow:var(--sh)}
+.quick .qi svg{width:17px;height:17px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── trust-anchor components (v0.2) ── */
+.livebar{display:flex;align-items:center;gap:9px;width:100%;padding:11px 14px;border:none;
+  background:var(--surface);border-radius:var(--r-md);box-shadow:var(--sh);font-family:inherit;
+  text-align:start;cursor:pointer;margin-top:10px}
+.livebar .m{flex:1;min-width:0}
+.livebar .t{font-size:12px;font-weight:600;letter-spacing:-.01em}
+.livebar .d{font-size:10.5px;color:var(--ink-3);margin-top:2px}
+.livebar .go{color:var(--ink-3);font-size:13px;flex:none}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none;position:relative}
+.pulse::after{content:'';position:absolute;inset:0;border-radius:50%;background:var(--ok);
+  animation:ping 2.2s var(--swift) infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.55}70%,100%{transform:scale(2.6);opacity:0}}
+.pulse.amber{background:var(--gold)}.pulse.amber::after{background:var(--gold)}
+
+.review{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:3px 9px;
+  font-size:10px;font-weight:600;background:var(--warn-soft);color:var(--warn);line-height:1.5}
+
+.factcard{display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--surface-2);
+  border-radius:var(--r-md);margin-top:10px}
+.factcard .ic{width:34px;height:34px;border-radius:11px;background:var(--surface);display:grid;
+  place-items:center;flex:none;box-shadow:0 1px 2px rgba(13,15,18,.05)}
+.factcard .ic svg{width:16px;height:16px;stroke:var(--ink-2);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.factcard .m{flex:1;min-width:0}
+.factcard .t{font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.factcard .d{font-size:11.5px;color:var(--ink-2);margin-top:4px;line-height:1.6}
+
+.preset.trial{background:var(--ink);color:#fff;flex:1.5}
+.eta-chip{display:inline-flex;align-items:center;gap:6px;margin-top:12px;position:relative;
+  background:rgba(255,255,255,.10);border-radius:99px;padding:5px 11px;font-size:11px;color:rgba(255,255,255,.86)}
+.eta-chip svg{width:12px;height:12px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.testflag{position:absolute;top:0;inset-inline-start:0;z-index:56;background:var(--gold);color:#fff;
+  font-size:8.5px;font-weight:700;letter-spacing:.06em;padding:2px 9px;border-end-end-radius:8px}
+
+/* facilitator chrome */
+.chrome{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:420px}
+.chip{font:500 12px/1 var(--f);background:rgba(255,255,255,.72);border:1px solid rgba(13,15,18,.07);
+  color:var(--ink-2);padding:8px 13px;border-radius:99px;cursor:pointer;backdrop-filter:blur(8px);
+  transition:.22s var(--swift);white-space:nowrap}
+.chip:hover{background:#fff;color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.danger[aria-pressed=true]{background:var(--bad);border-color:var(--bad)}
+.hint{font:500 11px/1.7 var(--f);color:var(--ink-3);min-height:13px}
+.dev-fab{display:none}
+
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE — behaves like an installed app, not a shrunken mock-up.
+   No scaling: the layout runs at true 1:1 CSS pixels so type stays
+   readable on small phones. Real safe-area insets, no zoom, no
+   text selection, no rubber-band scroll.
+   ══════════════════════════════════════════════════════════════════ */
+@media(max-width:768px){
+  html,body{height:100%;overflow:hidden;overscroll-behavior:none;
+            -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  body{padding:0;gap:0;display:block;background:var(--canvas)}
+
+  /* the fake device disappears entirely — the real phone is the device */
+  .stage{width:100%;height:100dvh}
+  .phone{position:fixed;inset:0;width:100%;height:100dvh;border-radius:0;box-shadow:none;
+         transform:none!important;background:var(--canvas)}
+  .notch,.statusbar,.hint{display:none}
+
+  /* real notch / home-indicator insets, plus a slim chrome strip at the top that
+     holds the test-data label and the facilitator dot on opposite edges, so
+     neither can ever sit on top of the app's own back button */
+  .screen{
+    padding-top:calc(env(safe-area-inset-top,0px) + 42px);
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 14px);
+    padding-inline:18px;
+  }
+  .screen.tabbed{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 70px)}
+  .scroll{margin-inline:-18px;padding-inline:18px}
+  .cta-slot{margin-top:10px}
+  .screen>*:last-child{margin-bottom:0}
+  /* a screen itself never scrolls — only its .scroll child does. Without this,
+     a stray 1–2px descendant overhang lets the whole view drag like a web page. */
+  .screen{overflow:hidden}
+
+  .tabbar{height:calc(62px + env(safe-area-inset-bottom,0px));
+          padding-bottom:calc(env(safe-area-inset-bottom,0px) + 4px)}
+
+  .sheet{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 22px)}
+
+  /* test label sits on the END edge; the facilitator dot on the START edge */
+  .testflag{top:calc(env(safe-area-inset-top,0px) + 12px);inset-inline-start:auto;inset-inline-end:18px;
+    font-size:8.5px;padding:3px 9px;border-radius:99px;opacity:.85;letter-spacing:.04em}
+
+  .dev-fab{display:grid;place-items:center;position:fixed;z-index:120;
+    top:calc(env(safe-area-inset-top,0px) + 6px);inset-inline-start:14px;
+    width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;
+    background:rgba(13,15,18,.07);backdrop-filter:blur(8px);transition:.24s var(--spring)}
+  .dev-fab span{width:3px;height:3px;border-radius:50%;background:var(--ink-2);box-shadow:0 -5px 0 var(--ink-2),0 5px 0 var(--ink-2)}
+  .dev-fab[aria-expanded=true]{background:var(--ink);transform:rotate(90deg)}
+  .dev-fab[aria-expanded=true] span{background:#fff;box-shadow:0 -5px 0 #fff,0 5px 0 #fff}
+  .chrome{position:fixed;z-index:119;top:calc(env(safe-area-inset-top,0px) + 44px);inset-inline-start:14px;
+    flex-direction:column;align-items:flex-start;gap:6px;max-width:none;
+    opacity:0;visibility:hidden;transform:translateY(-8px);transition:.26s var(--spring)}
+  .chrome.open{opacity:1;visibility:visible;transform:none}
+  .chip{background:rgba(255,255,255,.96);box-shadow:0 4px 14px -6px rgba(13,15,18,.3)}
+
+  /* inputs may be selected; everything else may not */
+  input,textarea{-webkit-user-select:text;user-select:text}
+}
+
+/* ── short phones: compress the tall screens rather than clipping them ── */
+@media(max-width:768px) and (max-height:750px){
+  .screen{padding-top:calc(env(safe-area-inset-top,0px) + 36px)}
+  .keypad{gap:3px}
+  .key{height:52px;font-size:21px}
+  .amt{padding:2px 0}
+  .amt .v{font-size:34px;min-height:40px}
+  .btn{height:50px}
+  .bal-card .tot{font-size:34px}
+  .nest-card .tot{font-size:46px}
+  .bal-card{padding:18px 17px 16px}
+  .split{margin-top:14px}
+  .nav{margin-bottom:12px}
+  .acts{gap:8px}
+  .act{padding:12px}
+  .presets{margin-top:9px}
+  .quote-head .v{font-size:29px}
+  .disc{width:66px;height:66px;margin-bottom:15px}
+  .disc svg{width:29px;height:29px}
+  .big-amt{font-size:28px}
+}
+@media(max-width:768px) and (max-height:640px){
+  .key{height:45px;font-size:19px}
+  .amt .v{font-size:29px;min-height:34px}
+  .btn{height:47px;font-size:14.5px}
+  .bal-card .tot{font-size:30px}
+  .nest-card .tot{font-size:42px}
+}
+/* institutional anchor — legitimacy shown as structure, not as a claim */
+.anchor{background:var(--surface);border-radius:var(--r-lg);padding:16px;box-shadow:var(--sh);margin-top:12px}
+.anchor .hd{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.anchor .hd svg{width:17px;height:17px;stroke:var(--ink);fill:none;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;flex:none}
+.anchor .hd .t{font-size:13.5px;font-weight:600;flex:1}
+.anchor .r{display:flex;align-items:flex-start;gap:8px;padding:7px 0;font-size:12px;line-height:1.6}
+.anchor .r+.r{border-top:1px solid var(--line-2)}
+.anchor .r .k{flex:1;color:var(--ink-2)}
+.anchor .r .v{font-weight:500;text-align:end;flex:none;max-width:52%}
+.anchor .more{width:100%;margin-top:11px;border:none;background:var(--surface-2);
+  font-family:inherit;font-size:12px;font-weight:500;color:var(--ink);padding:10px;
+  border-radius:var(--r-sm);cursor:pointer}
+
+/* direction switch — the same exchange, read both ways */
+.dirsw{display:flex;gap:4px;padding:4px;background:var(--surface-2);border-radius:99px;margin-bottom:16px}
+.dirsw button{flex:1;border:none;background:none;font-family:inherit;font-size:12.5px;
+  font-weight:500;color:var(--ink-2);padding:9px 6px;border-radius:99px;cursor:pointer;
+  transition:.22s var(--spring)}
+.dirsw button[aria-selected=true]{background:var(--surface);color:var(--ink);font-weight:600;
+  box-shadow:var(--sh)}
+
+/* Button elements take `color:buttontext` (black) from the user agent unless
+   told otherwise. Every component below is a <button> that was relying on that
+   accident. Setting it explicitly is a no-op in the light theme and the whole
+   fix in the dark one. .btn is excluded — its modifiers set their own colour. */
+button,input,select,textarea{color:inherit}
+
+/* ══════════════════════════════════════════════════════════════════
+   DARK THEME
+   Only tokens are redefined — no component rule is duplicated, so the
+   two themes cannot drift apart. Rules:
+   · Gold still only ever sits on near-black (design decision 10), which
+     dark mode satisfies everywhere by construction.
+   · The hero card must stay distinguishable from the canvas, so in dark
+     it lifts ABOVE the background instead of dropping below it, and
+     carries a hairline edge rather than a shadow.
+   · The primary button inverts: on a dark canvas an ink-black button
+     disappears, so it becomes light-on-dark.
+   · Status tints are rebuilt from scratch, not alpha-composited, so
+     text on them keeps its contrast.
+   ══════════════════════════════════════════════════════════════════ */
+:root[data-theme="dark"]{
+  --canvas:#0C0E11;--surface:#15181D;--surface-2:#1E222941;
+  --ink:#F2F3F4;--ink-2:#9AA1A9;--ink-3:#848C95;  /* 5.22:1 on --surface */
+  --line:#252A31;--line-2:#1C2026;
+  --gold:#E0B375;--ok:#4FBF95;--ok-soft:#12271F;
+  --warn:#D89152;--warn-soft:#2A1E12;--bad:#E4695C;--bad-soft:#2C1614;
+  --dark:linear-gradient(168deg,#232A33 0%,#141920 52%,#1C232B 100%);
+  --sh:0 1px 2px rgba(0,0,0,.4),0 10px 30px -16px rgba(0,0,0,.7);
+  --sh-d:0 2px 6px rgba(0,0,0,.5),0 24px 48px -22px rgba(0,0,0,.8);
+}
+:root[data-theme="dark"] body{
+  background:radial-gradient(900px 600px at 50% 0%,#181C22,#0C0E11 70%,#08090B)}
+:root[data-theme="dark"] .surface-2{background:#1E2229}
+/* --surface-2 carries alpha above so :active states read on both; give the
+   solid fills that need it an opaque value */
+:root[data-theme="dark"] .honest,
+:root[data-theme="dark"] .alloc{background:#1B1F25}
+:root[data-theme="dark"] .dark-card{border:1px solid rgba(255,255,255,.07)}
+:root[data-theme="dark"] .tabbar{background:rgba(18,21,25,.94);border-top-color:var(--line)}
+:root[data-theme="dark"] .btn-primary{background:#F2F3F4;color:#0C0E11;
+  box-shadow:0 8px 22px -12px rgba(0,0,0,.9)}
+:root[data-theme="dark"] .btn-primary:disabled{background:#2A2F36;color:#6C737B}
+:root[data-theme="dark"] .preset.trial{background:var(--ink);color:#0C0E11}
+:root[data-theme="dark"] .quick .qi svg{stroke:var(--ink)}
+:root[data-theme="dark"] .typecard{background:var(--surface)}
+:root[data-theme="dark"] .typecard[aria-pressed=true]{border-color:var(--gold)}
+:root[data-theme="dark"] .tc-family .ic{background:#152029}
+:root[data-theme="dark"] .chip{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.09);
+  color:var(--ink-2)}
+:root[data-theme="dark"] .chip:hover{background:rgba(255,255,255,.12);color:var(--ink)}
+:root[data-theme="dark"] .chip[aria-pressed=true]{background:var(--ink);color:#0C0E11;border-color:var(--ink)}
+:root[data-theme="dark"] .phone{box-shadow:0 0 0 10px #2A3038,0 0 0 11.5px #3A424C,
+  0 30px 70px -30px rgba(0,0,0,.9)}
+:root[data-theme="dark"] .dev-fab span,
+:root[data-theme="dark"] .dev-fab span::before,
+:root[data-theme="dark"] .dev-fab span::after{background:var(--ink)}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   v4 · the text-budget design system
+   A title is ≤3 words, a support line ≤12, one (i) per screen at most.
+   Anything longer lives on an explainer page: a diagram first, then three
+   numbered rows. These are the components that carry that rule.
+   ══════════════════════════════════════════════════════════════════ */
+.hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;min-height:38px}
+.hdr .t{font-size:18px;font-weight:600;letter-spacing:-.02em}
+.info{width:36px;height:36px;border-radius:50%;border:none;background:var(--surface);box-shadow:var(--sh);
+  display:grid;place-items:center;cursor:pointer;flex:none;transition:.2s var(--spring)}
+.info:active{transform:scale(.9)}
+.info svg{width:16px;height:16px;stroke:var(--ink-2);fill:none;stroke-width:1.9;stroke-linecap:round}
+
+/* the three uses, on the intro */
+.uses{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px}
+.use{background:var(--surface);border-radius:var(--r-lg);padding:15px 8px 13px;text-align:center;box-shadow:var(--sh)}
+.use .ic{width:40px;height:40px;border-radius:13px;background:var(--surface-2);display:grid;place-items:center;margin:0 auto}
+.use .ic svg{width:19px;height:19px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.use .ic.gold{background:var(--warn-soft)} .use .ic.gold svg{stroke:var(--warn)}
+.use .t{display:block;font-size:13px;font-weight:700;letter-spacing:-.015em;margin-top:10px}
+.use .d{display:block;font-size:11px;color:var(--ink-3);margin-top:3px}
+
+/* a row that goes somewhere — the (i) as a sentence */
+.linkrow{width:100%;display:flex;align-items:center;gap:11px;padding:13px 14px;margin-top:12px;
+  background:var(--surface);border:none;border-radius:var(--r-md);box-shadow:var(--sh);
+  font-family:inherit;color:inherit;text-align:start;cursor:pointer;transition:.2s var(--spring)}
+.linkrow:active{transform:scale(.985)}
+.linkrow .ic{width:30px;height:30px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;flex:none}
+.linkrow .ic svg{width:15px;height:15px;stroke:var(--ink-2);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.linkrow .t{flex:1;font-size:13.5px;font-weight:500}
+.linkrow .go{color:var(--ink-3);font-size:18px;line-height:1;flex:none}
+
+/* the one custody sentence on the balance card */
+.totbtn{background:none;border:none;padding:0;font-family:inherit;color:inherit;display:block;text-align:start;cursor:pointer}
+.cupill{display:inline-flex;align-items:center;gap:8px;margin-top:14px;position:relative;
+  background:rgba(255,255,255,.10);border:none;border-radius:99px;padding:11px 14px;min-height:40px;
+  font-family:inherit;font-size:12px;font-weight:500;color:rgba(255,255,255,.9);cursor:pointer;
+  transition:.2s var(--spring);max-width:100%}
+.cupill:active{transform:scale(.97)}
+.cupill i{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none}
+.cupill.self i{background:var(--ok)}
+.cupill .go{opacity:.6;font-size:15px;line-height:1}
+.allbtn{width:100%;border:none;background:none;font-family:inherit;color:var(--ink-2);font-size:12px;
+  font-weight:500;padding:12px;min-height:44px;cursor:pointer}
+
+/* state row on the use tab */
+.staterow{width:100%;display:flex;align-items:center;gap:11px;padding:12px 14px;margin-bottom:14px;
+  background:var(--surface-2);border:none;border-radius:var(--r-md);font-family:inherit;color:inherit;
+  text-align:start;cursor:pointer}
+.staterow .ic{width:32px;height:32px;border-radius:10px;background:var(--surface);display:grid;place-items:center;flex:none}
+.staterow .ic svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.staterow.self .ic svg{stroke:var(--ok)}
+.staterow .m{flex:1;min-width:0}
+.staterow .k{display:block;font-size:11px;color:var(--ink-3)}
+.staterow .v{display:block;font-size:13.5px;font-weight:600;margin-top:1px}
+.staterow .go{color:var(--ink-3);font-size:18px;line-height:1}
+
+/* the use-tab cards borrow .keycard; one more colour for investment */
+.keycard.k-inv .ic{background:#EAF1F7} .keycard.k-inv .ic svg{stroke:#3D6E9E}
+:root[data-theme="dark"] .keycard.k-inv .ic{background:#152029} :root[data-theme="dark"] .keycard.k-inv .ic svg{stroke:#7FB0E0}
+.keycard .ic svg{stroke:var(--ink)}
+
+/* explainer pages: diagram, then numbered rows */
+.vis{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--sh);padding:14px 12px;display:grid;place-items:center}
+.vis svg{width:100%;max-width:300px;height:auto;display:block;fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.vis .g{stroke:var(--gold)} .vis .ok{stroke:var(--ok)} .vis .mute{stroke:var(--ink-3)} .vis .bad{stroke:var(--bad)}
+.vis text{fill:var(--ink-2);stroke:none;font:500 10.5px var(--f)}
+.steps3{margin-top:6px}
+.step3{display:flex;gap:13px;align-items:flex-start;padding:13px 2px}
+.step3+.step3{border-top:1px solid var(--line-2)}
+.step3 .n{width:28px;height:28px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;
+  font-size:12px;font-weight:700;flex:none;margin-top:1px}
+.step3 .t{font-size:14.5px;font-weight:500;line-height:1.65;flex:1}
+
+/* where-your-money-is cards */
+.state{border:1.5px solid transparent;border-radius:var(--r-lg);background:var(--surface);box-shadow:var(--sh);padding:15px 16px}
+.state+.state{margin-top:10px}
+.state.on{border-color:var(--ok)}
+.state .hd{display:flex;align-items:center;gap:11px}
+.state .ic{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;flex:none;background:var(--surface-2)}
+.state .ic svg{width:21px;height:21px;fill:none;stroke:var(--ink);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.state.s-gold .ic{background:var(--warn-soft)} .state.s-gold .ic svg{stroke:var(--warn)}
+.state.s-self .ic{background:var(--ok-soft)} .state.s-self .ic svg{stroke:var(--ok)}
+.state .t{font-size:15.5px;font-weight:700;letter-spacing:-.02em;flex:1;min-width:0}
+.state .now{font-size:10.5px;font-weight:600;border-radius:99px;padding:4px 10px;background:var(--ok);color:#fff;flex:none;white-space:nowrap}
+.state .d{font-size:13px;color:var(--ink-2);margin-top:9px;line-height:1.65}
+.state .acts2{display:flex;gap:8px;margin-top:10px}
+.state .acts2 .btn{height:40px;font-size:12.5px;flex:1}
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:7px 12px;margin-top:11px}
+.pc span{display:flex;align-items:flex-start;gap:7px;font-size:12px;line-height:1.5;color:var(--ink)}
+.pc span svg{width:16px;height:16px;flex:none;border-radius:50%;padding:3px;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
+.pc .y svg{background:var(--ok-soft);stroke:var(--ok)}
+.pc .n svg{background:var(--bad-soft);stroke:var(--bad)}
+
+/* copy editor — lives outside the phone */
+.copyed{position:fixed;inset:0;z-index:200;background:var(--canvas);display:none;flex-direction:column;font-family:var(--f);color:var(--ink)}
+.copyed.open{display:flex}
+.copyed .bar{display:flex;gap:8px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface);flex-wrap:wrap}
+.copyed .bar input{flex:1;min-width:120px;height:38px;border:1.5px solid var(--line);border-radius:10px;padding:0 12px;font:500 13px var(--f);background:var(--canvas);color:var(--ink)}
+.copyed .bar .btn{height:38px;font-size:13px;width:auto;padding:0 14px;flex:none}
+.copyed .list{flex:1;overflow:auto;padding:12px 16px 60px;max-width:760px;width:100%;margin:0 auto}
+.copyed .grp{font-size:12px;font-weight:700;color:var(--ink-3);margin:20px 0 8px;letter-spacing:.03em;border-bottom:1px solid var(--line-2);padding-bottom:6px}
+.copyed .it{margin-bottom:10px}
+.copyed .it label{display:block;font-size:11px;color:var(--ink-3);margin-bottom:4px}
+.copyed textarea{width:100%;min-height:42px;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;
+  font:500 13.5px/1.6 var(--f);background:var(--surface);color:var(--ink);resize:vertical}
+.copyed textarea:focus{outline:none;border-color:var(--ink)}
+.copyed .exp{position:absolute;inset-inline:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:14px 16px 20px;max-width:760px;margin:0 auto;box-shadow:0 -10px 30px -20px rgba(0,0,0,.4)}
+.copyed .exp textarea{min-height:110px;font:12px/1.5 ui-monospace,Consolas,monospace;direction:ltr}
+.copyed .exp .btn{height:40px;width:auto;padding:0 16px;font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+<div class="phone" id="phone">
+  <div class="notch"></div>
+  <div class="testflag" id="testflag" hidden>داده آزمایشی</div>
+  <div class="statusbar">
+    <span class="num" id="clock">9:41</span>
+    <span class="sig"><i style="height:5px"></i><i style="height:7px"></i><i style="height:9px"></i><i style="height:11px"></i></span>
+  </div>
+
+  <div class="viewport" id="viewport">
+
+  <!-- ═══ INTRO · one proposition, three uses, nothing else ═══ -->
+  <section class="screen active" data-screen="intro">
+    <div class="scroll">
+      <div style="height:16px"></div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:30px">
+        <div style="width:31px;height:31px;border-radius:10px;background:var(--ink);display:grid;place-items:center">
+          <svg viewBox="0 0 49.33 39.99" width="16" height="16" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg>
+        </div>
+        <div style="font-size:17px;font-weight:600;letter-spacing:-.02em">مهاجر</div>
+      </div>
+
+      <h1 data-c="introH"></h1>
+      <p class="lead" style="margin-top:12px;font-size:15px" data-c="introSub"></p>
+
+      <div class="uses">
+        <div class="use">
+          <span class="ic" data-ic="send"></span>
+          <span class="t" data-c="useSend"></span>
+          <span class="d" data-c="useSendD"></span>
+        </div>
+        <div class="use">
+          <span class="ic" data-ic="invest"></span>
+          <span class="t" data-c="useInvest"></span>
+          <span class="d" data-c="useInvestD"></span>
+        </div>
+        <div class="use">
+          <span class="ic gold" data-ic="pillow"></span>
+          <span class="t" data-c="useKeep"></span>
+          <span class="d" data-c="useKeepD"></span>
+        </div>
+      </div>
+
+      <button class="linkrow" onclick="openExplain('safe')">
+        <span class="ic" data-ic="shield"></span>
+        <span class="t" data-c="introSafeQ"></span>
+        <span class="go">›</span>
+      </button>
+      <div style="height:14px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="go('home')" data-c="introCta"></button>
+  </section>
+
+  <!-- ═══ HOME · cash in, and where the money is ═══ -->
+  <section class="screen tabbed" data-screen="home">
+    <div class="scroll">
+      <div class="hdr">
+        <div class="t" data-c="homeTitle"></div>
+        <button class="info" onclick="openCustody('home')" aria-label="پول شما کجاست"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+      </div>
+
+      <div class="flipwrap" id="flipwrap" data-flipped="false">
+        <div class="flipper">
+          <div class="flipface front" id="pillow-face" hidden>
+            <button class="pillowbtn" onclick="liftPillow()" aria-label="برداشتن بالش">
+              <svg class="pillow-svg" viewBox="0 0 320 214" role="img" aria-hidden="true">
+                <defs>
+                  <linearGradient id="pfab" x1="0.2" y1="0" x2="0.8" y2="1">
+                    <stop offset="0%" stop-color="#333B47"/><stop offset="46%" stop-color="#1B212A"/><stop offset="100%" stop-color="#10141A"/>
+                  </linearGradient>
+                  <radialGradient id="ploft" cx="0.42" cy="0.34" r="0.55">
+                    <stop offset="0%" stop-color="#fff" stop-opacity=".16"/><stop offset="70%" stop-color="#fff" stop-opacity=".03"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+                  </radialGradient>
+                  <radialGradient id="pedge" cx="0.5" cy="0.5" r="0.5">
+                    <stop offset="62%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".38"/>
+                  </radialGradient>
+                  <linearGradient id="pshadow" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#000" stop-opacity=".34"/><stop offset="100%" stop-color="#000" stop-opacity="0"/>
+                  </linearGradient>
+                  <pattern id="pweave" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+                    <path d="M0 0V6" stroke="#fff" stroke-opacity=".055" stroke-width="1.1"/><path d="M0 0H6" stroke="#000" stroke-opacity=".07" stroke-width="1.1"/>
+                  </pattern>
+                  <clipPath id="pclip"><path d="M58,52 Q160,20 262,52 Q302,107 262,162 Q160,194 58,162 Q18,107 58,52 Z"/></clipPath>
+                </defs>
+                <ellipse cx="160" cy="192" rx="112" ry="13" fill="url(#pshadow)"/>
+                <path d="M58,52 Q160,20 262,52 Q302,107 262,162 Q160,194 58,162 Q18,107 58,52 Z" fill="url(#pfab)"/>
+                <g clip-path="url(#pclip)">
+                  <rect width="320" height="214" fill="url(#pweave)"/><rect width="320" height="214" fill="url(#ploft)"/><rect width="320" height="214" fill="url(#pedge)"/>
+                  <path d="M62,58 C76,70 82,79 85,89" stroke="#fff" stroke-opacity=".055" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+                  <path d="M258,58 C244,70 238,79 235,89" stroke="#fff" stroke-opacity=".055" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+                  <path d="M62,156 C76,144 82,135 85,125" stroke="#000" stroke-opacity=".14" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+                  <path d="M258,156 C244,144 238,135 235,125" stroke="#000" stroke-opacity=".14" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+                </g>
+                <path d="M58,52 Q160,20 262,52 Q302,107 262,162 Q160,194 58,162 Q18,107 58,52 Z" fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="1.6"/>
+                <path d="M70,62 Q160,34 250,62 Q286,107 250,152 Q160,180 70,152 Q34,107 70,62 Z" fill="none" stroke="#D5A45C" stroke-opacity=".38" stroke-width="1.2" stroke-dasharray="6 6" stroke-linecap="round"/>
+                <g transform="translate(146 92) scale(0.6)" opacity=".7"><path fill="#D5A45C" d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></g>
+                <g class="zzz" transform="translate(250 46)"><text x="0" y="0">z</text><text x="12" y="-13">z</text><text x="22" y="-24">z</text></g>
+              </svg>
+            </button>
+          </div>
+          <div class="flipface" id="plain-face">
+            <div class="nest-card dark-card" style="cursor:default">
+              <div class="lab" data-c="walletLabel"></div>
+              <button class="totbtn" onclick="cycleUnit()"><span class="tot num" id="h-total">$0.00</span></button>
+              <div class="unit-hint"><span id="h-unit-alt"></span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h13l-3-3M17 14H4l3 3"/></svg>
+              </div>
+              <div class="split">
+                <div class="s"><div class="l" data-c="availLabel"></div><div class="v num" id="h-avail">$0</div></div>
+                <div class="s"><div class="l" data-c="investedLabel"></div><div class="v num" id="h-goals">$0</div></div>
+                <div class="s pend"><div class="l" data-c="pendingLabel"></div><div class="v num" id="h-pend">$0</div></div>
+              </div>
+              <!-- the one custody sentence on home — generated from the state, never typed -->
+              <button class="cupill" id="h-cupill" onclick="openCustody('home')"><i></i><span id="h-cutxt"></span><span class="go">›</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pillownote" id="pillownote" data-gone="false" hidden>
+        <div class="say" data-c="pillowSay"></div>
+        <div class="sub" data-c="pillowSub"></div>
+        <div class="tap"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg><span data-c="pillowTap"></span></div>
+      </div>
+
+      <div class="quickrow">
+        <button class="quick" onclick="startTransfer()"><span class="qi" data-ic="send"></span><span data-c="qSend"></span></button>
+        <button class="quick" onclick="go('invest')"><span class="qi" data-ic="invest"></span><span data-c="qInvest"></span></button>
+        <button class="quick" onclick="go('p-tut')"><span class="qi" data-ic="gold"></span><span data-c="qGold"></span></button>
+        <button class="quick" onclick="setDir('out')"><span class="qi" data-ic="down"></span><span data-c="qOut"></span></button>
+      </div>
+
+      <div class="anchor-slot"></div>
+      <div id="home-empty"><p class="hero-say" data-c="homeEmpty"></p></div>
+      <div id="home-activity" style="display:none">
+        <div class="sec" data-c="recent"></div>
+        <div id="home-tx"></div>
+        <button class="allbtn" onclick="go('activity')" data-c="seeAll"></button>
+      </div>
+      <div style="height:10px"></div>
+    </div>
+    <div class="home-foot">
+      <button class="btn btn-primary" onclick="setDir('in')" data-c="homeCta"></button>
+    </div>
+    <div class="tabbar" id="tabbar"></div>
+  </section>
+
+  <!-- ═══ CONVERT · amount ═══ -->
+  <section class="screen" data-screen="convert">
+    <div class="nav">
+      <button class="back" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="convTitle"></h2><span class="step num">۱/۳</span>
+    </div>
+    <div class="dirsw" role="tablist">
+      <button role="tab" aria-selected="true" onclick="setDir('in')" data-c="dirIn"></button>
+      <button role="tab" aria-selected="false" onclick="setDir('out')" data-c="dirOut"></button>
+    </div>
+    <div class="amt">
+      <div class="cur" data-c="amtToman"></div>
+      <div class="v num zero" id="c-amt">0<span class="caret"></span></div>
+      <div class="sub" id="c-out"></div>
+    </div>
+    <div class="presets">
+      <button class="preset trial" onclick="cTrial()" data-c="presetTrial"></button>
+      <button class="preset num" onclick="cSet(50000000)">۵۰ م</button>
+      <button class="preset num" onclick="cSet(100000000)">۱۰۰ م</button>
+    </div>
+    <div class="keypad">
+      <button class="key num" onclick="cKey('1')">1</button><button class="key num" onclick="cKey('2')">2</button><button class="key num" onclick="cKey('3')">3</button>
+      <button class="key num" onclick="cKey('4')">4</button><button class="key num" onclick="cKey('5')">5</button><button class="key num" onclick="cKey('6')">6</button>
+      <button class="key num" onclick="cKey('7')">7</button><button class="key num" onclick="cKey('8')">8</button><button class="key num" onclick="cKey('9')">9</button>
+      <button class="key num" onclick="cKey('000')">000</button><button class="key num" onclick="cKey('0')">0</button>
+      <button class="key" onclick="cKey('del')"><svg viewBox="0 0 24 24"><path d="M20 6H9l-5 6 5 6h11a1 1 0 001-1V7a1 1 0 00-1-1z"/><path d="M17 10l-4 4M13 10l4 4"/></svg></button>
+    </div>
+    <div class="cta-slot hidden" id="c-cta"><button class="btn btn-primary" onclick="go('c-quote')" data-c="getRate"></button></div>
+  </section>
+
+  <!-- ═══ CONVERT · quote ═══ -->
+  <section class="screen" data-screen="c-quote">
+    <div class="nav">
+      <button class="back" onclick="go('convert')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="quoteTitle"></h2><span class="step num">۲/۳</span>
+    </div>
+    <div class="scroll">
+      <div class="dark-card quote-head">
+        <div class="l" data-c="youGet"></div>
+        <div class="v num" id="q-get">$0.00</div>
+        <div class="timer" id="q-timer">
+          <span data-c="rateValid"></span><span class="num" id="q-secs">۹۰</span><span data-c="seconds"></span>
+          <div class="bar"><i id="q-bar"></i></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:12px;padding:4px 18px">
+        <div class="row"><span class="k" data-c="youPay"></span><span class="v num" id="q-pay">۰</span></div>
+        <div class="row"><span class="k" data-c="rate"></span><span class="v num" id="q-rate">۰</span></div>
+        <div class="row"><span class="k" data-c="fee"></span><span class="v num" id="q-feeall">—</span></div>
+        <div class="row"><span class="k" data-c="time"></span><span class="v" data-c="convTime"></span></div>
+        <div class="row total"><span class="k" data-c="youGetFinal"></span><span class="v num" id="q-net">$0.00</span></div>
+      </div>
+      <div class="sec" data-c="payFrom"></div>
+      <button class="opt" aria-pressed="true">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/></svg></div>
+        <div class="m"><div class="t">کارت بانکی · ۶۲۱۹ ****</div><div class="d" data-c="ownVerified"></div></div>
+        <div class="radio"></div>
+      </button>
+      <button class="linkrow" onclick="openExplain('dollar')">
+        <span class="ic" data-ic="info"></span><span class="t" data-c="whatIsDollarQ"></span><span class="go">›</span>
+      </button>
+      <div style="height:12px"></div>
+    </div>
+    <div class="anchor-slot" style="padding:0 0 10px"></div>
+    <button class="btn btn-primary" onclick="doConvert()" data-c="confirmPay"></button>
+  </section>
+
+  <!-- ═══ CONVERT · status ═══ -->
+  <section class="screen" data-screen="c-status">
+    <div class="center">
+      <div class="disc pend" id="cs-disc"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9"/></svg></div>
+      <div class="big-amt num" id="cs-amt">$0.00</div>
+      <p class="lead" style="margin-top:8px" id="cs-msg"></p>
+      <div style="margin-top:14px" id="cs-badge"></div>
+      <div id="cs-note" style="width:100%"></div>
+    </div>
+    <div id="cs-actions"></div>
+  </section>
+
+  <!-- ═══ TRANSFER · recipient (tab) ═══ -->
+  <section class="screen tabbed" data-screen="t-who">
+    <div class="hdr"><div class="t" data-c="sendTitle"></div></div>
+    <div class="scroll">
+      <div class="field" style="margin-top:0">
+        <label data-c="recipientPhone"></label>
+        <input id="t-phone" class="num" inputmode="tel" placeholder="۰۹۱۲۳۴۵۶۷۸۹" oninput="tLookup()">
+      </div>
+      <div id="t-found" style="display:none">
+        <div class="card" style="margin-top:12px;display:flex;align-items:center;gap:12px">
+          <div style="width:42px;height:42px;border-radius:50%;background:var(--ok-soft);display:grid;place-items:center;font-size:16px;font-weight:600;color:var(--ok)">س</div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:600">سارا رضایی</div></div>
+          <span class="badge b-ok" data-c="verified"></span>
+        </div>
+      </div>
+      <div class="sec" data-c="recent"></div>
+      <button class="opt" onclick="tPick('۰۹۱۲۳۴۵۶۷۸۹')">
+        <div class="ic" style="background:var(--ok-soft);color:var(--ok);font-weight:600">س</div>
+        <div class="m"><div class="t">سارا رضایی</div><div class="d num">۰۹۱۲۳۴۵۶۷۸۹</div></div>
+      </button>
+      <button class="opt" onclick="tPick('۰۹۳۵۱۱۱۲۲۳۳')">
+        <div class="ic" style="background:var(--surface-2);font-weight:600">م</div>
+        <div class="m"><div class="t">مهدی کریمی</div><div class="d num">۰۹۳۵۱۱۱۲۲۳۳</div></div>
+      </button>
+      <div style="height:12px"></div>
+    </div>
+    <div class="cta-slot hidden" id="t-cta1"><button class="btn btn-primary" onclick="go('t-amt')" data-c="next"></button></div>
+    <div class="tabbar" id="tabbar2"></div>
+  </section>
+
+  <!-- ═══ TRANSFER · amount ═══ -->
+  <section class="screen" data-screen="t-amt">
+    <div class="nav">
+      <button class="back" onclick="go('t-who')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="amountTitle"></h2><span class="step num">۲/۳</span>
+    </div>
+    <div class="amt">
+      <div class="cur">به سارا رضایی</div>
+      <div class="v num zero" id="t-val">$0<span class="caret"></span></div>
+      <div class="sub" id="t-avail"></div>
+    </div>
+    <div class="keypad">
+      <button class="key num" onclick="tKey('1')">1</button><button class="key num" onclick="tKey('2')">2</button><button class="key num" onclick="tKey('3')">3</button>
+      <button class="key num" onclick="tKey('4')">4</button><button class="key num" onclick="tKey('5')">5</button><button class="key num" onclick="tKey('6')">6</button>
+      <button class="key num" onclick="tKey('7')">7</button><button class="key num" onclick="tKey('8')">8</button><button class="key num" onclick="tKey('9')">9</button>
+      <button class="key num" onclick="tKey('00')">00</button><button class="key num" onclick="tKey('0')">0</button>
+      <button class="key" onclick="tKey('del')"><svg viewBox="0 0 24 24"><path d="M20 6H9l-5 6 5 6h11a1 1 0 001-1V7a1 1 0 00-1-1z"/><path d="M17 10l-4 4M13 10l4 4"/></svg></button>
+    </div>
+    <div class="cta-slot hidden" id="t-cta2"><button class="btn btn-primary" onclick="go('t-confirm')" data-c="next"></button></div>
+  </section>
+
+  <!-- ═══ TRANSFER · confirm ═══ -->
+  <section class="screen" data-screen="t-confirm">
+    <div class="nav">
+      <button class="back" onclick="go('t-amt')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="confirmTitle"></h2><span class="step num">۳/۳</span>
+    </div>
+    <div class="scroll">
+      <div class="card" style="padding:4px 18px">
+        <div class="row"><span class="k" data-c="recipient"></span><span class="v">سارا رضایی</span></div>
+        <div class="row"><span class="k" data-c="phone"></span><span class="v num">۰۹۱۲۳۴۵۶۷۸۹</span></div>
+        <div class="row"><span class="k" data-c="amount"></span><span class="v num" id="tc-amt">$0.00</span></div>
+        <div class="row"><span class="k" data-c="fee"></span><span class="v num">$0.50</span></div>
+        <div class="row total"><span class="k" data-c="deducted"></span><span class="v num" id="tc-total">$0.00</span></div>
+      </div>
+      <div class="note warn">
+        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+        <p data-c="irreversible"></p>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="doTransfer()" data-c="confirmSend"></button>
+  </section>
+
+  <!-- ═══ TRANSFER · status ═══ -->
+  <section class="screen" data-screen="t-status">
+    <div class="center">
+      <div class="disc pend" id="ts-disc"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9"/></svg></div>
+      <div class="big-amt num" id="ts-amt">$0.00</div>
+      <p class="lead" style="margin-top:8px" id="ts-msg"></p>
+      <div style="margin-top:14px" id="ts-badge"></div>
+      <div id="ts-note" style="width:100%"></div>
+    </div>
+    <div id="ts-actions"></div>
+  </section>
+
+  <!-- ═══ USE · what you do with the dollars (tab) ═══ -->
+  <section class="screen tabbed" data-screen="use">
+    <div class="hdr"><div class="t" data-c="useTitle"></div></div>
+    <div class="scroll">
+      <button class="staterow" id="use-state" onclick="openCustody('use')">
+        <span class="ic" id="use-state-ic"></span>
+        <span class="m"><span class="k" data-c="whereNow"></span><span class="v" id="use-state-v"></span></span>
+        <span class="go">›</span>
+      </button>
+
+      <button class="keycard k-inv" onclick="go('invest')">
+        <span class="ic" data-ic="invest"></span>
+        <span class="m"><span class="t" data-c="uInvest"></span><span class="d" data-c="uInvestD"></span></span>
+      </button>
+      <button class="keycard k-gold" onclick="go('p-tut')">
+        <span class="ic" data-ic="gold"></span>
+        <span class="m"><span class="t" data-c="uGold"></span><span class="d" data-c="uGoldD"></span></span>
+      </button>
+      <button class="keycard k-dev" onclick="go('k-tut')">
+        <span class="ic" data-ic="key"></span>
+        <span class="m"><span class="t" data-c="uKey"></span><span class="d" data-c="uKeyD"></span></span>
+      </button>
+
+      <button class="linkrow" style="margin-top:14px" onclick="setDir('out')">
+        <span class="ic" data-ic="down"></span><span class="t" data-c="uBack"></span><span class="go">›</span>
+      </button>
+      <div style="height:12px"></div>
+    </div>
+    <div class="tabbar" id="tabbar3"></div>
+  </section>
+
+  <!-- ═══ CUSTODY · where your money is — the trust page ═══ -->
+  <section class="screen" data-screen="custody">
+    <div class="nav">
+      <button class="back" onclick="go(S.cuBack)"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="cuTitle"></h2>
+    </div>
+    <div class="scroll">
+      <p class="lead" style="margin:-4px 0 14px" data-c="cuSub"></p>
+      <div id="cu-states"></div>
+      <div style="height:12px"></div>
+    </div>
+  </section>
+
+  <!-- ═══ EXPLAIN · one visual page, reused for every (i) ═══ -->
+  <section class="screen" data-screen="explain">
+    <div class="nav">
+      <button class="back" onclick="go(S.exBack)"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 id="ex-title"></h2>
+    </div>
+    <div class="scroll">
+      <div class="vis" id="ex-vis"></div>
+      <div class="steps3" id="ex-steps"></div>
+      <div id="ex-extra"></div>
+      <div style="height:12px"></div>
+    </div>
+    <div id="ex-cta"></div>
+  </section>
+
+  <!-- ═══ GOLD · tutorial before anything else ═══ -->
+  <section class="screen" data-screen="p-tut">
+    <div class="nav">
+      <button class="back" onclick="go('use')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="goldTitle"></h2>
+    </div>
+    <div class="scroll">
+      <div class="vis" id="pt-vis"></div>
+      <div class="steps3">
+        <div class="step3"><span class="n num">۱</span><span class="t" data-c="gold1"></span></div>
+        <div class="step3"><span class="n num">۲</span><span class="t" data-c="gold2"></span></div>
+        <div class="step3"><span class="n num">۳</span><span class="t" data-c="gold3"></span></div>
+      </div>
+      <button class="linkrow" onclick="openExplain('goldWhy')">
+        <span class="ic" data-ic="info"></span><span class="t" data-c="goldWhyQ"></span><span class="go">›</span>
+      </button>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="openPhysical()" data-c="goldStart"></button>
+  </section>
+
+  <!-- ═══ GOLD · map ═══ -->
+  <section class="screen" data-screen="p-map">
+    <div class="nav">
+      <button class="back" onclick="go('p-tut')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="pickShop"></h2>
+    </div>
+    <div class="scroll">
+      <div class="mapwrap" id="p-mapwrap">
+        <div class="maploading" id="p-loading"><div style="text-align:center"><div class="sp"></div><span data-c="locating"></span></div></div>
+        <svg id="p-map-svg" viewBox="0 0 340 230" aria-hidden="true"></svg>
+      </div>
+      <div class="sec" data-c="nearest"></div>
+      <div id="p-list"></div>
+      <div style="height:12px"></div>
+    </div>
+  </section>
+
+  <!-- ═══ GOLD · one shop ═══ -->
+  <section class="screen" data-screen="p-shop">
+    <div class="nav">
+      <button class="back" onclick="go('p-map')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 id="ps-name"></h2>
+    </div>
+    <div class="scroll">
+      <div class="mapwrap" style="height:170px"><svg id="ps-map-svg" viewBox="0 0 340 230" aria-hidden="true"></svg></div>
+      <div class="card" style="margin-top:12px;padding:4px 16px">
+        <div class="row"><span class="k" data-c="distance"></span><span class="v" id="ps-dist">—</span></div>
+        <div class="row"><span class="k" data-c="hours"></span><span class="v" id="ps-hours">—</span></div>
+        <div class="row"><span class="k" data-c="goldStock"></span><span class="v" id="ps-cap">—</span></div>
+        <div class="row"><span class="k" data-c="status"></span><span class="v" id="ps-open">—</span></div>
+      </div>
+      <div class="card" style="margin-top:10px"><p style="font-size:13px;line-height:1.8" id="ps-addr"></p>
+        <div style="display:flex;gap:7px;margin-top:11px">
+          <button class="btn btn-ghost" style="height:42px;font-size:12px" onclick="toggleRoute()" id="ps-routebtn"></button>
+          <button class="btn btn-ghost" style="height:42px;font-size:12px" onclick="openSheet('shopCall')" data-c="callShop"></button>
+        </div>
+      </div>
+      <div id="ps-steps-wrap" hidden><div class="sec" data-c="route"></div><div class="card steps" id="ps-steps"></div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+        <span class="badge b-ok" data-c="partnerShop"></span><span class="badge b-ok" id="ps-since">—</span><span class="badge b-warn" data-c="licenseReview"></span>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="go('p-amt')" data-c="pickThisShop"></button>
+  </section>
+
+  <!-- ═══ GOLD · amount ═══ -->
+  <section class="screen" data-screen="p-amt">
+    <div class="nav">
+      <button class="back" onclick="go('p-shop')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="goldAmtTitle"></h2>
+    </div>
+    <div class="scroll">
+      <div class="field" style="margin-top:0"><label data-c="howManyGrams"></label>
+        <input id="pa-amt" class="input num" inputmode="decimal" value="3" oninput="paCheck()"></div>
+      <div class="card" style="padding:4px 16px;margin-top:12px">
+        <div class="row"><span class="k" data-c="gramRate"></span><span class="v num" id="pa-rate">—</span></div>
+        <div class="row"><span class="k" data-c="fee"></span><span class="v num">$2.50</span></div>
+        <div class="row total"><span class="k" data-c="deducted"></span><span class="v num" id="pa-total">—</span></div>
+        <div class="row"><span class="k" data-c="whenDeducted"></span><span class="v" style="color:var(--ok)" data-c="atPickup"></span></div>
+      </div>
+      <div id="pa-warn"></div>
+      <div class="sec" data-c="pickupTime"></div>
+      <div id="pa-slots"></div>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" id="pa-cta" onclick="doPhysical()" data-c="confirmGold"></button>
+  </section>
+
+  <!-- ═══ GOLD · code ═══ -->
+  <section class="screen" data-screen="p-status">
+    <div class="nav">
+      <button class="back" onclick="go('use')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="pickupCode"></h2>
+    </div>
+    <div class="scroll" style="text-align:center">
+      <div class="dark-card" style="padding:26px 20px;margin-top:6px">
+        <div style="font-size:12px;color:rgba(255,255,255,.55);position:relative" data-c="oneTimeCode"></div>
+        <div class="num" id="pc-code" style="font-size:38px;font-weight:700;letter-spacing:.12em;margin-top:8px;position:relative;color:var(--gold)">— — — —</div>
+        <div style="font-size:11.5px;color:rgba(255,255,255,.5);margin-top:10px;position:relative" data-c="showAtPickup"></div>
+      </div>
+      <div class="card" style="margin-top:12px;padding:4px 16px;text-align:start">
+        <div class="row"><span class="k" data-c="shop"></span><span class="v" id="pc-shop">—</span></div>
+        <div class="row"><span class="k" data-c="youReceive"></span><span class="v" id="pc-amt">—</span></div>
+        <div class="row"><span class="k" data-c="time"></span><span class="v" id="pc-slot">—</span></div>
+        <div class="row"><span class="k" data-c="deducted"></span><span class="v" style="color:var(--ok)" data-c="atPickup"></span></div>
+      </div>
+      <p class="tiny" style="margin-top:12px" data-c="codeExpires"></p>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-ghost" onclick="cancelPhysical()" data-c="cancel"></button>
+  </section>
+
+  <!-- ═══ KEY · tutorial (self-custody in plain words) ═══ -->
+  <section class="screen" data-screen="k-tut">
+    <div class="nav">
+      <button class="back" onclick="go('use')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="keyTitle"></h2>
+    </div>
+    <div class="scroll">
+      <div class="vis" id="kt-vis"></div>
+      <div class="steps3">
+        <div class="step3"><span class="n num">۱</span><span class="t" data-c="key1"></span></div>
+        <div class="step3"><span class="n num">۲</span><span class="t" data-c="key2"></span></div>
+        <div class="step3"><span class="n num">۳</span><span class="t" data-c="key3"></span></div>
+      </div>
+      <div class="sec" data-c="prosCons"></div>
+      <div class="card" id="kt-pc"></div>
+      <button class="linkrow" onclick="openExplain('keyDeep')">
+        <span class="ic" data-ic="info"></span><span class="t" data-c="keyDeepQ"></span><span class="go">›</span>
+      </button>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="go('k-intro')" data-c="keySeeDevice"></button>
+  </section>
+
+  <!-- ═══ KEY · the device ═══ -->
+  <section class="screen" data-screen="k-intro">
+    <div class="nav">
+      <button class="back" onclick="go('k-tut')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="keyName"></h2>
+    </div>
+    <div class="scroll">
+      <div class="devframe">
+        <div class="devstage"><span class="glow" aria-hidden="true"></span><span class="plinth" aria-hidden="true"></span>
+          <img class="devimg" src="./mohajer-key.png" width="500" height="500" alt="کلید مهاجر"></div>
+        <div class="devcap"><span class="n" data-c="keyName"></span><span class="p num">$49</span></div>
+      </div>
+      <div class="card" style="padding:4px 16px;margin-top:12px">
+        <div class="row"><span class="k" data-c="keyWhere"></span><span class="v" data-c="keyWhereV"></span></div>
+        <div class="row"><span class="k" data-c="keyCopy"></span><span class="v" style="color:var(--ok)" data-c="keyCopyV"></span></div>
+        <div class="row"><span class="k" data-c="keyLost"></span><span class="v" data-c="keyLostV"></span></div>
+        <div class="row"><span class="k" data-c="shipping"></span><span class="v" data-c="shippingV"></span></div>
+      </div>
+      <div class="custody risk"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+        <div><div class="ct" data-c="keyRiskT"></div><p data-c="keyRiskB"></p></div></div>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="go('k-order')"><span data-c="orderKey"></span> · <span class="num">$49</span></button>
+  </section>
+
+  <!-- ═══ KEY · order ═══ -->
+  <section class="screen" data-screen="k-order">
+    <div class="nav">
+      <button class="back" onclick="go('k-intro')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="orderKey"></h2>
+    </div>
+    <div class="scroll">
+      <div class="field" style="margin-top:0"><label data-c="address"></label>
+        <input id="ko-addr" class="input" value="تهران، خیابان ولیعصر، کوچهٔ بیستم، پلاک ۱۴"></div>
+      <div class="field"><label data-c="phone"></label>
+        <input id="ko-tel" class="input num" inputmode="tel" value="۰۹۱۲ ۳۴۵ ۶۷۸۹"></div>
+      <div class="field"><label data-c="moveToKey"></label>
+        <input id="ko-amt" class="input num" inputmode="decimal" value="500" oninput="koCheck()">
+        <p class="hint" data-c="moveLater"></p></div>
+      <div id="ko-warn"></div>
+      <div class="card" style="margin-top:14px;padding:4px 16px">
+        <div class="row"><span class="k" data-c="devicePrice"></span><span class="v num">$49.00</span></div>
+        <div class="row"><span class="k" data-c="shipping"></span><span class="v" style="color:var(--ok)" data-c="free"></span></div>
+        <div class="row"><span class="k" data-c="moveOnActivate"></span><span class="v" id="ko-move">—</span></div>
+        <div class="row total"><span class="k" data-c="deductedNow"></span><span class="v num">$49.00</span></div>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" id="ko-cta" onclick="doKeyOrder()" data-c="placeOrder"></button>
+  </section>
+
+  <!-- ═══ KEY · ordered ═══ -->
+  <section class="screen" data-screen="k-status">
+    <div class="nav">
+      <button class="back" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="orderPlaced"></h2>
+    </div>
+    <div class="scroll" style="text-align:center">
+      <div class="devstage" style="padding:0 0 2px"><span class="glow" aria-hidden="true"></span>
+        <img class="devimg sm" src="./mohajer-key.png" width="500" height="500" alt=""></div>
+      <p class="lead" style="margin-top:6px" data-c="keyOnWay"></p>
+      <div class="dark-card" style="padding:22px 20px;margin-top:14px">
+        <div style="font-size:12px;color:rgba(255,255,255,.55);position:relative" data-c="activationCode"></div>
+        <div class="num" id="ks-code" style="font-size:31px;font-weight:700;letter-spacing:.14em;margin-top:8px;position:relative;color:var(--gold)">— — — — — —</div>
+      </div>
+      <div class="card" style="margin-top:12px;padding:4px 16px;text-align:start">
+        <div class="row"><span class="k" data-c="eta"></span><span class="v" id="ks-eta">—</span></div>
+        <div class="row"><span class="k" data-c="moveOnActivate"></span><span class="v" id="ks-move">—</span></div>
+        <div class="row"><span class="k" data-c="whereNow"></span><span class="v" id="ks-cu">—</span></div>
+      </div>
+      <div class="custody risk" style="text-align:start"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+        <div><p data-c="wordsWarn"></p></div></div>
+      <div style="height:12px"></div>
+    </div>
+    <div>
+      <button class="btn btn-primary" onclick="activateKey()" data-c="simulateActivate"></button>
+      <button class="btn btn-ghost" onclick="cancelKey()" data-c="cancelOrder"></button>
+    </div>
+  </section>
+
+  <!-- ═══ INVEST · baskets ═══ -->
+  <section class="screen" data-screen="invest">
+    <div class="nav">
+      <button class="back" onclick="go('use')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="investTitle"></h2>
+      <button class="info" style="margin-inline-start:auto" onclick="openExplain('basket')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+    </div>
+    <div class="scroll">
+      <div id="nest-mine"></div>
+      <p class="lead" style="margin:-2px 0 12px" data-c="eggLine"></p>
+      <div id="nest-list"></div>
+      <p class="tiny" style="margin-top:12px;text-align:center" data-c="canDrop"></p>
+      <div style="height:12px"></div>
+    </div>
+  </section>
+
+  <!-- ═══ INVEST · detail ═══ -->
+  <section class="screen" data-screen="n-detail">
+    <div class="nav">
+      <button class="back" onclick="go('invest')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 id="nd-title"></h2>
+    </div>
+    <div class="scroll">
+      <div class="chartbox">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px">
+          <span class="tiny" id="nd-rangelab"></span>
+          <span class="num" id="nd-change" style="font-size:19px;font-weight:700;letter-spacing:-.03em"></span>
+        </div>
+        <svg class="chart" id="nd-chart" viewBox="0 0 300 132" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="rangepick" id="nd-range"></div>
+      </div>
+      <div class="sec" data-c="madeOf"></div>
+      <div class="card"><div class="mixbar" id="nd-mix"></div><div id="nd-key"></div></div>
+      <div class="card" style="padding:4px 16px;margin-top:10px">
+        <div class="row"><span class="k" data-c="swing"></span><span class="v" id="nd-vol"></span></div>
+        <div class="row"><span class="k" data-c="lastYear"></span><span class="v num" id="nd-year"></span></div>
+        <div class="row"><span class="k" data-c="minAmount"></span><span class="v num">$10</span></div>
+        <div class="row"><span class="k" data-c="lock"></span><span class="v" style="color:var(--ok)" data-c="none"></span></div>
+      </div>
+      <p class="tiny" style="margin-top:10px;text-align:center" id="nd-warn"></p>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="goBuy()" data-c="investCta"></button>
+  </section>
+
+  <!-- ═══ INVEST · amount ═══ -->
+  <section class="screen" data-screen="n-amt">
+    <div class="nav">
+      <button class="back" onclick="go('n-detail')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 id="na-title"></h2>
+    </div>
+    <div class="scroll">
+      <div class="field" style="margin-top:0"><label data-c="howMuchDollar"></label>
+        <input id="na-amt" class="input num" inputmode="decimal" value="100" oninput="naCheck()"></div>
+      <div id="na-warn"></div>
+      <div class="card" style="padding:4px 16px;margin-top:12px">
+        <div class="row"><span class="k" data-c="fee"></span><span class="v num" id="na-fee">—</span></div>
+        <div class="row total"><span class="k" data-c="goesIn"></span><span class="v num" id="na-net">—</span></div>
+        <div class="row"><span class="k" data-c="lock"></span><span class="v" style="color:var(--ok)" data-c="none"></span></div>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="na-cta" onclick="doNest()" data-c="confirm"></button>
+  </section>
+
+  <!-- ═══ INVEST · done ═══ -->
+  <section class="screen" data-screen="n-status">
+    <div class="center">
+      <div class="disc ok" id="ns-disc"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
+      <div class="big-amt num" id="ns-amt">$0.00</div>
+      <p class="lead" style="margin-top:8px" id="ns-msg"></p>
+      <div style="width:100%">
+        <div class="card" style="margin-top:16px;text-align:start"><div class="mixbar" id="ns-mix" style="margin-top:0"></div><div id="ns-key"></div></div>
+        <p class="tiny" style="margin-top:12px;text-align:center" data-c="exitAnytime"></p>
+      </div>
+    </div>
+    <div id="ns-actions"></div>
+  </section>
+
+  <!-- ═══ WITHDRAW · amount ═══ -->
+  <section class="screen" data-screen="w-amt">
+    <div class="nav">
+      <button class="back" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="convTitle"></h2><span class="step num">۱/۳</span>
+    </div>
+    <div class="dirsw" role="tablist">
+      <button role="tab" aria-selected="false" onclick="setDir('in')" data-c="dirIn"></button>
+      <button role="tab" aria-selected="true" onclick="setDir('out')" data-c="dirOut"></button>
+    </div>
+    <div class="amt">
+      <div class="cur" data-c="amtDollar"></div>
+      <div class="v num zero" id="w-val">$0<span class="caret"></span></div>
+      <div class="sub" id="w-avail"></div>
+    </div>
+    <div class="keypad">
+      <button class="key num" onclick="wKey('1')">1</button><button class="key num" onclick="wKey('2')">2</button><button class="key num" onclick="wKey('3')">3</button>
+      <button class="key num" onclick="wKey('4')">4</button><button class="key num" onclick="wKey('5')">5</button><button class="key num" onclick="wKey('6')">6</button>
+      <button class="key num" onclick="wKey('7')">7</button><button class="key num" onclick="wKey('8')">8</button><button class="key num" onclick="wKey('9')">9</button>
+      <button class="key num" onclick="wKey('00')">00</button><button class="key num" onclick="wKey('0')">0</button>
+      <button class="key" onclick="wKey('del')"><svg viewBox="0 0 24 24"><path d="M20 6H9l-5 6 5 6h11a1 1 0 001-1V7a1 1 0 00-1-1z"/><path d="M17 10l-4 4M13 10l4 4"/></svg></button>
+    </div>
+    <div class="cta-slot hidden" id="w-cta"><button class="btn btn-primary" onclick="go('w-quote')" data-c="getRate"></button></div>
+  </section>
+
+  <!-- ═══ WITHDRAW · quote ═══ -->
+  <section class="screen" data-screen="w-quote">
+    <div class="nav">
+      <button class="back" onclick="go('w-amt')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="withdrawTitle"></h2><span class="step num">۲/۳</span>
+    </div>
+    <div class="scroll">
+      <div class="dark-card quote-head">
+        <div class="l" data-c="toYourBank"></div>
+        <div class="v num" id="w-get">۰ تومان</div>
+        <div class="timer"><span data-c="rateValid"></span><span class="num" id="w-secs">۹۰</span><span data-c="seconds"></span><div class="bar"><i id="w-bar"></i></div></div>
+      </div>
+      <div class="card" style="margin-top:12px;padding:4px 18px">
+        <div class="row"><span class="k" data-c="amount"></span><span class="v num" id="wq-amt">$0.00</span></div>
+        <div class="row"><span class="k" data-c="rate"></span><span class="v num" id="wq-rate">۰</span></div>
+        <div class="row"><span class="k" data-c="fee"></span><span class="v num">$2.00</span></div>
+        <div class="row"><span class="k" data-c="time"></span><span class="v" data-c="withdrawTime"></span></div>
+        <div class="row total"><span class="k" data-c="youGetFinal"></span><span class="v num" id="wq-net">۰ تومان</span></div>
+      </div>
+      <div class="sec" data-c="depositTo"></div>
+      <button class="opt" aria-pressed="true">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v9h14v-9"/></svg></div>
+        <div class="m"><div class="t">بانک ملت · ****۴۴۲۱</div><div class="d" data-c="ownVerified"></div></div>
+        <div class="radio"></div>
+      </button>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="doWithdraw()" data-c="confirmWithdraw"></button>
+  </section>
+
+  <!-- ═══ WITHDRAW · status ═══ -->
+  <section class="screen" data-screen="w-status">
+    <div class="center">
+      <div class="disc pend" id="ws-disc"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9"/></svg></div>
+      <div class="big-amt num" id="ws-amt">۰ تومان</div>
+      <p class="lead" style="margin-top:8px" id="ws-msg"></p>
+      <div style="margin-top:14px" id="ws-badge"></div>
+      <div id="ws-note" style="width:100%"></div>
+    </div>
+    <div id="ws-actions"></div>
+  </section>
+
+  <!-- ═══ ACTIVITY ═══ -->
+  <section class="screen" data-screen="activity">
+    <div class="nav">
+      <button class="back" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="activityTitle"></h2>
+    </div>
+    <div class="scroll">
+      <div id="a-list"></div>
+      <div id="a-empty" class="card" style="text-align:center;padding:26px 18px">
+        <div style="font-size:14px;font-weight:600" data-c="noActivity"></div>
+      </div>
+      <div class="sec" data-c="support"></div>
+      <button class="support" onclick="openSheet('support')">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3.5-7.1"/><path d="M12 12h.01M8 12h.01M16 12h.01"/></svg></div>
+        <div class="m"><div class="t" data-c="humanSupport"></div><div class="d" data-c="supportHours"></div></div>
+      </button>
+      <div style="height:14px"></div>
+    </div>
+  </section>
+
+  <!-- ═══ RECEIPT ═══ -->
+  <section class="screen" data-screen="receipt">
+    <div class="nav">
+      <button class="back" onclick="go('activity')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="receiptTitle"></h2>
+    </div>
+    <div class="scroll">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><span id="r-badge"></span><span class="tiny num" id="r-id"></span></div>
+        <div class="num" style="font-size:30px;font-weight:700;letter-spacing:-.035em" id="r-amt">$0.00</div>
+        <div class="tiny" style="margin-top:4px" id="r-title">—</div>
+        <div style="margin-top:14px" id="r-rows"></div>
+      </div>
+      <div style="height:10px"></div>
+      <button class="support" onclick="openSheet('support')">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3.5-7.1"/><path d="M12 12h.01M8 12h.01M16 12h.01"/></svg></div>
+        <div class="m"><div class="t" data-c="problemQ"></div><div class="d" data-c="followUp"></div></div>
+      </button>
+      <div style="height:12px"></div>
+    </div>
+    <button class="btn btn-primary" onclick="go('home')" data-c="done"></button>
+  </section>
+
+  </div><!-- /viewport -->
+  <div class="sheet-bg" id="sheet-bg" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheet"><div class="grip"></div><div id="sheet-body"></div></div>
+</div>
+</div><!-- /stage -->
+
+<button class="dev-fab" id="dev-fab" aria-expanded="false" onclick="toggleDev()" aria-label="کنترل تسهیل‌گر"><span></span></button>
+<div class="hint" id="hint"></div>
+<div class="chrome" id="chrome">
+  <button class="chip" onclick="resetAll()">↻ شروع دوباره</button>
+  <button class="chip" onclick="seed()">+ موجودی $2,000</button>
+  <button class="chip danger" id="fail-btn" aria-pressed="false" onclick="toggleFail()">شبیه‌سازی خطا</button>
+  <button class="chip" id="lex-btn" aria-pressed="false" onclick="toggleLex()">واژگان: استاندارد</button>
+  <button class="chip" id="theme-btn" aria-pressed="false" onclick="toggleTheme()">حالت: تاریک</button>
+  <button class="chip" id="cu-btn" onclick="cycleCustody()">پول: نزد مهاجر</button>
+  <button class="chip" id="pillow-btn" aria-pressed="false" onclick="togglePillow()">بالش: خاموش</button>
+  <button class="chip" id="anchor-btn" aria-pressed="false" onclick="toggleAnchor()">پشتوانهٔ نهادی: خاموش</button>
+  <button class="chip" id="flag-btn" aria-pressed="false" onclick="toggleFlag()">نشان آزمایشی: خاموش</button>
+  <button class="chip" onclick="go('intro')">صفحهٔ معرفی</button>
+  <button class="chip" onclick="openCopyEd()">✎ متن‌ها</button>
+</div>
+
+<!-- ═══ COPY EDITOR · every string in the app, editable live ═══ -->
+<div class="copyed" id="copyed">
+  <div class="bar">
+    <strong style="font-size:14px">متن‌های اپ</strong>
+    <input id="ce-q" placeholder="جست‌وجو…" oninput="renderCopyEd()">
+    <span style="flex:1"></span>
+    <button class="btn btn-soft" onclick="copyExport()">خروجی</button>
+    <button class="btn btn-soft" onclick="copyReset()">بازنشانی</button>
+    <button class="btn btn-primary" onclick="copySave()">ذخیره</button>
+    <button class="btn btn-ghost" onclick="closeCopyEd()">بستن</button>
+  </div>
+  <div class="list" id="ce-list"></div>
+  <div class="exp" id="ce-exp" hidden>
+    <p class="tiny" style="margin-bottom:8px">این متن را کپی کنید و در فایل <b>copy.json</b> کنار اپ بگذارید تا برای همه اعمال شود.</p>
+    <textarea id="ce-json" readonly></textarea>
+    <p class="tiny" style="margin:10px 0 6px">یا JSON را اینجا بچسبانید و اعمال کنید:</p>
+    <textarea id="ce-import" placeholder="{ … }"></textarea>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn btn-primary" onclick="copyImport()">اعمال</button>
+      <button class="btn btn-ghost" onclick="$('ce-exp').hidden=true">بستن</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════ CONFIG — every mock number lives here ════════ */
+const CONFIG={
+  buyRate:145000, buySpread:0.009, buyFlatFee:1.50,
+  goldUsdPerGram:64, goldCarat:'۱۸ عیار', goldDeliveryFee:2.50,
+  trialCapUsd:10,
+  sellSpread:0.011, sellFlatFee:2.00,
+  transferFee:0.50,
+  quoteSeconds:90,
+  nests:[
+    {id:'calm', t:'لانهٔ آرام', tStd:'سبد آرام', cls:'n-calm',
+     sub:'بیشترش دلار و طلا. کم بالا و پایین می‌رود.',
+     risk:'کم', riskLv:1, year:'۱۸٪', yearNum:18,
+     mix:[{k:'دلار',v:55,c:'#4C8C6E'},{k:'طلا',v:30,c:'#D5A45C'},{k:'بیت‌کوین',v:15,c:'#E08A3C'}]},
+    {id:'mid', t:'لانهٔ متعادل', tStd:'سبد متعادل', cls:'n-mid',
+     sub:'نصف آرام، نصف رشدی.',
+     risk:'متوسط', riskLv:2, year:'۳۴٪', yearNum:34,
+     mix:[{k:'دلار',v:30,c:'#4C8C6E'},{k:'طلا',v:25,c:'#D5A45C'},{k:'بیت‌کوین',v:30,c:'#E08A3C'},{k:'اتریوم',v:15,c:'#6E7BC4'}]},
+    {id:'bold', t:'لانهٔ جسور', tStd:'سبد جسور', cls:'n-bold',
+     sub:'بیشترش رمزارز. زیاد بالا و پایین می‌رود.',
+     risk:'زیاد', riskLv:3, year:'۶۱٪', yearNum:61,
+     mix:[{k:'بیت‌کوین',v:40,c:'#E08A3C'},{k:'اتریوم',v:35,c:'#6E7BC4'},{k:'طلا',v:15,c:'#D5A45C'},{k:'دلار',v:10,c:'#4C8C6E'}]}
+  ]
+};
+
+/* ════════ COPY — every sentence in the app, in one place ════════
+   Rule: a title is ≤3 words, a support line ≤12, and anything longer goes
+   behind an (i) into an explainer page. Formal register. No blockchain
+   vocabulary anywhere. The facilitator can edit any of these live from the
+   «متن‌ها» chip; a copy.json next to the file overrides them for everyone. */
+const COPY_GROUPS={
+  intro:'معرفی', home:'خانه', conv:'تبدیل', send:'انتقال', use:'استفاده', cu:'پول شما کجاست',
+  gold:'تحویل طلا', key:'کلید مهاجر', inv:'سرمایه‌گذاری', wd:'برداشت', ex:'صفحه‌های توضیح', misc:'عمومی'
+};
+const COPY_DEF={
+  /* intro */
+  introH:['intro','پولتان را دلار کنید<br>و امن نگه دارید.'],
+  introSub:['intro','جای پول را خودتان انتخاب می‌کنید. هر وقت خواستید، خرجش می‌کنید.'],
+  useSend:['intro','انتقال'], useSendD:['intro','به هر کسی'],
+  useInvest:['intro','سرمایه‌گذاری'], useInvestD:['intro','طلا و رمزارز'],
+  useKeep:['intro','زیر بالشت'], useKeepD:['intro','دور از تورم'],
+  introSafeQ:['intro','«امن» یعنی چه؟'],
+  introCta:['intro','شروع'],
+
+  /* home */
+  homeTitle:['home','خانه'],
+  walletLabel:['home','دارایی شما'],
+  availLabel:['home','آزاد'], investedLabel:['home','سرمایه‌گذاری'], pendingLabel:['home','در راه'],
+  unitAlt:['home','به تومان'], unitBack:['home','به دلار'],
+  qSend:['home','انتقال'], qInvest:['home','سرمایه‌گذاری'], qGold:['home','تحویل طلا'], qOut:['home','برداشت'],
+  homeEmpty:['home','با تبدیل شروع کنید.'],
+  homeCta:['home','تبدیل به دلار'],
+  recent:['home','اخیر'], seeAll:['home','همه'],
+  cuAtMohajer:['home','پول شما نزد مهاجر است'],
+  cuAtYou:['home','پول شما زیر بالشت خودتان است'],
+  pillowSay:['home','دارایی شما زیر بالش است.'],
+  pillowSub:['home','تا بالش را برندارید، نمایش داده نمی‌شود.'],
+  pillowTap:['home','بالش را بردارید'],
+
+  /* convert */
+  convTitle:['conv','تبدیل'], dirIn:['conv','تومان به دلار'], dirOut:['conv','دلار به تومان'],
+  amtToman:['conv','مبلغ به تومان'], amtDollar:['conv','مبلغ به دلار'],
+  youGetApprox:['conv','دریافتی'], presetTrial:['conv','۵ دلار · امتحان'],
+  getRate:['conv','دریافت نرخ'], quoteTitle:['conv','بررسی نرخ'],
+  youGet:['conv','دریافت می‌کنید'], rateValid:['conv','اعتبار نرخ'], seconds:['conv','ثانیه'],
+  youPay:['conv','می‌پردازید'], rate:['conv','نرخ'], fee:['conv','کارمزد'], time:['conv','زمان'],
+  convTime:['conv','کمتر از ۵ دقیقه'], youGetFinal:['conv','دریافتی نهایی'],
+  payFrom:['conv','پرداخت از'], ownVerified:['conv','به نام خودتان'],
+  whatIsDollarQ:['conv','این دلار چیست و کجاست؟'],
+  confirmPay:['conv','تأیید و پرداخت'],
+  convPending:['conv','در حال تبدیل…'], convOk:['conv','به موجودی شما اضافه شد.'],
+  convFail:['conv','پرداخت انجام نشد.'], convFailNote:['conv','بانک تأیید نکرد. <b>مبلغی از حساب شما کم نشده است.</b>'],
+  freeTrial:['conv','رایگان · آزمایشی'],
+
+  /* transfer */
+  sendTitle:['send','انتقال'], recipientPhone:['send','شمارهٔ موبایل گیرنده'],
+  verified:['send','تأییدشده'], amountTitle:['send','مبلغ'], confirmTitle:['send','تأیید'],
+  recipient:['send','گیرنده'], phone:['send','شماره'], amount:['send','مبلغ'], deducted:['send','از موجودی کم می‌شود'],
+  irreversible:['send','<b>برگشت‌ناپذیر است.</b> شماره را دوباره ببینید.'],
+  confirmSend:['send','تأیید و ارسال'],
+  sendPending:['send','در حال ارسال…'], sendOk:['send','رسید.'], sendFail:['send','انجام نشد.'],
+  sendFailNote:['send','گیرنده در دسترس نبود. <b>کل مبلغ برگشت.</b>'],
+
+  /* use tab */
+  useTitle:['use','استفاده'],
+  whereNow:['use','پول شما الان'],
+  uInvest:['use','سرمایه‌گذاری'], uInvestD:['use','طلا و رمزارز، در سه سبد آماده.'],
+  uGold:['use','تحویل طلا'], uGoldD:['use','طلای فیزیکی، از صرافی نزدیک شما.'],
+  uKey:['use','کلید مهاجر'], uKeyD:['use','پولتان زیر بالشت خودتان.'],
+  uBack:['use','برگرداندن به تومان'],
+
+  /* custody page */
+  cuTitle:['cu','پول شما کجاست؟'],
+  cuSub:['cu','سه جا. هر وقت خواستید، عوض می‌کنید.'],
+  cuNow:['cu','الان اینجاست'],
+  cuBasicN:['cu','نزد مهاجر'],
+  cuBasicL:['cu','ما نگه می‌داریم. هر وقت بخواهید، برمی‌گردانیم.'],
+  cuBasicP1:['cu','هر وقت بخواهید، برداشت'], cuBasicP2:['cu','رمز گم شد؟ بازیابی می‌شود'],
+  cuBasicC1:['cu','به ما اعتماد می‌کنید'],
+  cuGoldN:['cu','طلای فیزیکی'],
+  cuGoldL:['cu','طلا می‌گیرید و دست خودتان نگه می‌دارید.'],
+  cuGoldP1:['cu','دست خودتان'], cuGoldP2:['cu','بدون نیاز به ما'],
+  cuGoldC1:['cu','نگهداری با شماست'], cuGoldC2:['cu','برای خرج، باید بفروشید'],
+  cuGoldCta:['cu','تحویل طلا'],
+  cuSelfN:['cu','کلید مهاجر'],
+  cuSelfL:['cu','کلید پول دست شماست. ما دسترسی نداریم.'],
+  cuSelfP1:['cu','حضانت با خودتان'], cuSelfP2:['cu','هر وقت بخواهید، بدون ما'],
+  cuSelfC1:['cu','کلید و ۱۲ کلمه گم شود، برنمی‌گردد'],
+  cuSelfCta:['cu','سفارش کلید'],
+  cuActive:['cu','فعال'],
+  cuWhatQ:['cu','یعنی چه؟'],
+
+  /* gold */
+  goldTitle:['gold','تحویل طلا'],
+  gold1:['gold','دلار شما به طلای ۱۸ عیار تبدیل می‌شود.'],
+  gold2:['gold','از صرافی نزدیک، حضوری می‌گیرید.'],
+  gold3:['gold','تا لحظهٔ تحویل، پولی کم نمی‌شود.'],
+  goldWhyQ:['gold','نرخ و اعتبارش از کجاست؟'],
+  goldStart:['gold','انتخاب صرافی'],
+  pickShop:['gold','صرافی'], locating:['gold','پیدا کردن موقعیت شما…'], nearest:['gold','نزدیک‌ترین‌ها'],
+  distance:['gold','فاصله'], hours:['gold','ساعت کاری'], goldStock:['gold','موجودی طلا'], status:['gold','وضعیت'],
+  openNow:['gold','باز است'], closedNow:['gold','بسته است'],
+  routeBtn:['gold','مسیر'], routeClose:['gold','بستن مسیر'], callShop:['gold','تماس'], route:['gold','مسیر'],
+  partnerShop:['gold','طرف قرارداد مهاجر'], licenseReview:['gold','مجوز · در حال بررسی'],
+  pickThisShop:['gold','از این صرافی'],
+  goldAmtTitle:['gold','مقدار طلا'], howManyGrams:['gold','چند گرم؟'],
+  gramRate:['gold','نرخ هر گرم'], whenDeducted:['gold','زمان کسر'], atPickup:['gold','لحظهٔ تحویل'],
+  pickupTime:['gold','زمان مراجعه'], confirmGold:['gold','ثبت درخواست'],
+  pickupCode:['gold','کد تحویل'], oneTimeCode:['gold','کد یک‌بارمصرف'], showAtPickup:['gold','فقط موقع تحویل نشان دهید'],
+  shop:['gold','صرافی'], youReceive:['gold','تحویل می‌گیرید'], codeExpires:['gold','اعتبار کد: ۲۴ ساعت. اگر نروید، خودکار باطل می‌شود.'],
+  goldOverStock:['gold','این شعبه این‌قدر طلا ندارد. مقدار کمتر یا صرافی دیگر.'],
+  cancel:['gold','لغو'],
+
+  /* key */
+  keyTitle:['key','کلید مهاجر'],
+  key1:['key','یک دستگاه کوچک، مثل فلش.'],
+  key2:['key','کلید پول شما فقط داخل آن ساخته می‌شود.'],
+  key3:['key','بدون تأیید روی دستگاه، پول جابه‌جا نمی‌شود. مهاجر کلیدی ندارد.'],
+  prosCons:['key','خوب و بدش'],
+  keyP1:['key','حضانت با خودتان'], keyP2:['key','هر وقت بخواهید، بدون ما'], keyP3:['key','اگر مهاجر نباشد، پول شما هست'],
+  keyC1:['key','مسئولیت با خودتان'], keyC2:['key','کلید و ۱۲ کلمه گم شود، برنمی‌گردد'], keyC3:['key','برای هر برداشت، دستگاه لازم است'],
+  keyDeepQ:['key','دقیق‌تر چطور کار می‌کند؟'],
+  keySeeDevice:['key','دیدن دستگاه'],
+  keyName:['key','کلید مهاجر'],
+  keyWhere:['key','کلید کجاست'], keyWhereV:['key','فقط داخل دستگاه'],
+  keyCopy:['key','نسخه نزد مهاجر'], keyCopyV:['key','ندارد'],
+  keyLost:['key','دستگاه گم شد'], keyLostV:['key','با ۱۲ کلمه برمی‌گردد'],
+  shipping:['key','ارسال'], shippingV:['key','رایگان · ۵ تا ۷ روز'],
+  keyRiskT:['key','این را بدانید'],
+  keyRiskB:['key','اگر دستگاه و ۱۲ کلمه هر دو گم شوند، پول برنمی‌گردد. هیچ‌کس نمی‌تواند برگرداند.'],
+  orderKey:['key','سفارش کلید'],
+  address:['key','نشانی'], moveToKey:['key','چقدر روی کلید برود؟ · دلار'], moveLater:['key','می‌توانید خالی بگذارید.'],
+  devicePrice:['key','قیمت دستگاه'], free:['key','رایگان'], moveOnActivate:['key','در فعال‌سازی منتقل می‌شود'],
+  deductedNow:['key','اکنون کسر می‌شود'], placeOrder:['key','ثبت سفارش'],
+  orderPlaced:['key','ثبت شد'], keyOnWay:['key','کلید در راه است.'], activationCode:['key','کد فعال‌سازی'],
+  eta:['key','تحویل'], wordsWarn:['key','۱۲ کلمه را روی کاغذ بنویسید. <b>عکس نگیرید.</b>'],
+  simulateActivate:['key','شبیه‌سازی: دستگاه رسید و فعال شد'], cancelOrder:['key','لغو سفارش'],
+  keyOverBalance:['key','موجودی کافی نیست.'],
+  untilActivate:['key','تا فعال‌سازی'],
+
+  /* invest */
+  investTitle:['inv','سرمایه‌گذاری'],
+  eggLine:['inv','همهٔ پول را روی یکی نگذارید.'],
+  canDrop:['inv','ارزش می‌تواند کم هم بشود.'],
+  mine:['inv','سبدهای شما'], madeOf:['inv','از چه ساخته شده'],
+  swing:['inv','بالا و پایین'], lastYear:['inv','سال گذشته'], minAmount:['inv','حداقل'], lock:['inv','قفل زمانی'], none:['inv','ندارد'],
+  investCta:['inv','سرمایه‌گذاری در این سبد'],
+  howMuchDollar:['inv','چند دلار؟'], goesIn:['inv','وارد سبد می‌شود'], confirm:['inv','تأیید'],
+  investOk:['inv','وارد سبد شد.'], exitAnytime:['inv','هر وقت خواستید، بیرون بکشید. بدون جریمه.'],
+  warnLow:['inv','کم یعنی صفر نیست. می‌تواند کم شود.'],
+  warnMid:['inv','برای پولِ ماه آینده مناسب نیست.'],
+  warnHigh:['inv','می‌تواند نصف شود. فقط پولی که به آن نیاز ندارید.'],
+  minTen:['inv','حداقل ۱۰ دلار.'], notEnough:['inv','موجودی کافی نیست.'],
+  backToInvest:['inv','بازگشت'],
+
+  /* withdraw */
+  withdrawTitle:['wd','بررسی برداشت'], toYourBank:['wd','به حساب شما'],
+  withdrawTime:['wd','تا روز کاری بعد'], depositTo:['wd','واریز به'],
+  confirmWithdraw:['wd','ثبت برداشت'],
+  wdPending:['wd','در حال بررسی…'], wdOk:['wd','واریز شد.'], wdRateChanged:['wd','نرخ عوض شد.'],
+  wdRateNote:['wd','نرخ جدید کمی پایین‌تر است. <b>موجودی شما برگشت.</b>'],
+  continueNewRate:['wd','ادامه با نرخ جدید'],
+
+  /* explain pages */
+  exSafeT:['ex','«امن» یعنی چه؟'],
+  exSafe1:['ex','پول شما دلار است، نه تومان. تورم آن را کوچک نمی‌کند.'],
+  exSafe2:['ex','جایش را خودتان انتخاب می‌کنید: نزد ما، طلا، یا کلید خودتان.'],
+  exSafe3:['ex','هر وقت بخواهید، برمی‌دارید.'],
+  exDollarT:['ex','این دلار چیست؟'],
+  exDollar1:['ex','یک دلار دیجیتال است؛ ارزشش همیشه یک دلار.'],
+  exDollar2:['ex','نزد شریک نگهدارندهٔ دارای مجوز نگه داشته می‌شود، جدا از حساب‌های مهاجر.'],
+  exDollar3:['ex','با کلید مهاجر می‌توانید کلیدش را به خودتان منتقل کنید.'],
+  exGoldWhyT:['ex','نرخ و اعتبار طلا'],
+  exGoldWhy1:['ex','نرخ هر گرم، هر روز از بازار طلای تهران.'],
+  exGoldWhy2:['ex','صرافی طرف قرارداد، با رسید کتبی و کد یک‌بارمصرف.'],
+  exGoldWhy3:['ex','عیار روی رسید نوشته می‌شود: ۱۸.'],
+  exKeyDeepT:['ex','کلید مهاجر، دقیق‌تر'],
+  exKeyDeep1:['ex','دستگاه در اولین روشن‌شدن، کلید را داخل خودش می‌سازد. کلید هرگز بیرون نمی‌آید.'],
+  exKeyDeep2:['ex','۱۲ کلمه نشان می‌دهد. این نسخهٔ پشتیبان کلید است؛ روی کاغذ بنویسید.'],
+  exKeyDeep3:['ex','هر برداشت را با فشار دکمهٔ دستگاه تأیید می‌کنید. مهاجر نمی‌تواند به‌جای شما تأیید کند.'],
+  exKeyDeep4:['ex','دستگاه گم شد؟ دستگاه جدید بخرید و ۱۲ کلمه را وارد کنید.'],
+  exKeyDeep5:['ex','مهاجر نبود؟ ۱۲ کلمه در هر کیف پول استاندارد دیگری کار می‌کند. پول شما داخل مهاجر نیست.'],
+  exKeyDeep6:['ex','دستگاه و ۱۲ کلمه هر دو گم شدند؟ پول برنمی‌گردد. این قانون خودِ این روش است، نه مهاجر.'],
+  exBasketT:['ex','سبد چیست؟'],
+  exBasket1:['ex','چند دارایی با هم، نه فقط یکی. یکی افت کند، بقیه جبران می‌کنند.'],
+  exBasket2:['ex','سود ثابت ندارد. ارزش با بازار بالا و پایین می‌رود.'],
+  exBasket3:['ex','قفل ندارد. هر وقت خواستید، بیرون بکشید.'],
+  exCuBasicT:['ex','نزد مهاجر یعنی چه؟'],
+  exCuBasic1:['ex','کلید پول نزد مهاجر و شریک نگهدارندهٔ دارای مجوز است.'],
+  exCuBasic2:['ex','برداشت با دستور شما انجام می‌شود، از مسیر ما.'],
+  exCuBasic3:['ex','رمز را گم کردید؟ با احراز هویت برمی‌گردد.'],
+  exCuGoldT:['ex','طلای فیزیکی یعنی چه؟'],
+  exCuGold1:['ex','دلار شما طلا می‌شود و به دست شما می‌رسد.'],
+  exCuGold2:['ex','از این لحظه، نگهداری‌اش با خودتان است.'],
+  exCuGold3:['ex','برای خرج یا انتقال، باید دوباره بفروشید.'],
+  exCuSelfT:['ex','کلید مهاجر یعنی چه؟'],
+  exCuSelf1:['ex','کلید پول فقط داخل دستگاه شماست.'],
+  exCuSelf2:['ex','بدون دستگاه شما، هیچ‌کس نمی‌تواند پول را جابه‌جا کند.'],
+  exCuSelf3:['ex','دستگاه و ۱۲ کلمه گم شوند، پول برنمی‌گردد.'],
+  exGotIt:['ex','فهمیدم'],
+
+  /* misc */
+  next:['misc','ادامه'], done:['misc','تمام'], back:['misc','بازگشت'], home:['misc','خانه'],
+  receipt:['misc','رسید'], retry:['misc','تلاش دوباره'], contactSupport:['misc','پشتیبان'],
+  activityTitle:['misc','فعالیت‌ها'], noActivity:['misc','هنوز چیزی نیست.'],
+  support:['misc','پشتیبانی'], humanSupport:['misc','پشتیبان انسانی'], supportHours:['misc','۹ تا ۲۱'],
+  receiptTitle:['misc','رسید'], problemQ:['misc','مشکلی هست؟'], followUp:['misc','پیگیری با پشتیبان'],
+  needBalanceT:['misc','اول موجودی لازم است'], needBalanceB:['misc','ابتدا تومان را به دلار تبدیل کنید.'],
+  goConvert:['misc','رفتن به تبدیل'], close:['misc','بستن'],
+  pending:['misc','در انتظار'], doneB:['misc','انجام شد'], failedB:['misc','ناموفق'], refundedB:['misc','برگشت'], cancelledB:['misc','لغو شد'],
+  txIn:['misc','تبدیل تومان به دلار'], txOut:['misc','برداشت به تومان'], txSend:['misc','انتقال به سارا رضایی'],
+  txInvest:['misc','سرمایه‌گذاری در'], txGold:['misc','تحویل طلا'], txKey:['misc','سفارش کلید مهاجر'], txActivate:['misc','فعال‌سازی کلید مهاجر'],
+  justNow:['misc','چند لحظه پیش'], freeBal:['misc','موجودی آزاد']
+};
+/* The Nest arm changes only narrative words, never facts. Kept small on purpose. */
+const COPY_NEST={
+  walletLabel:'آشیانهٔ دارایی شما', availLabel:'در آشیانه', investedLabel:'در لانه‌ها',
+  homeEmpty:'آشیانه هنوز خالی است.',
+  pillowSay:'دارایی‌ات زیر بالشته.',
+  cuAtYou:'پولت زیر بالشت خودته',
+  txIn:'نشستن دلار در آشیانه', txSend:'پر کشیدن به سوی سارا رضایی',
+  investCta:'سرمایه‌گذاری در این لانه', goesIn:'وارد لانه می‌شود', mine:'لانه‌های شما',
+  eggLine:'همهٔ تخم‌مرغ‌ها را توی یک سبد نگذار.', useInvestD:'لانه‌های سرمایه'
+};
+const COPY={};                       // the live table
+let COPY_USER={};                    // overrides from this browser / copy.json
+function buildCopy(){
+  Object.keys(COPY_DEF).forEach(k=>COPY[k]=COPY_DEF[k][1]);
+  if(S.lex==='nest') Object.assign(COPY,COPY_NEST);
+  Object.assign(COPY,COPY_USER);
+}
+const C=k=>COPY[k] ?? ('⟨'+k+'⟩');
+function applyCopy(){
+  buildCopy();
+  document.querySelectorAll('[data-c]').forEach(el=>{ el.innerHTML=C(el.dataset.c); });
+  document.querySelectorAll('[data-ic]').forEach(el=>{ if(!el.firstChild) el.innerHTML=IC[el.dataset.ic]||''; });
+}
+
+/* ════════ icons + diagrams ════════ */
+const IC={
+  send:'<svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+  down:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>',
+  invest:'<svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19h-20"/></svg>',
+  gold:'<svg viewBox="0 0 24 24"><path d="M4 8l3-4h10l3 4-8 12z"/><path d="M4 8h16M9 4l3 16M15 4l-3 16"/></svg>',
+  key:'<svg viewBox="0 0 24 24"><rect x="6.5" y="2" width="11" height="17" rx="3.2"/><circle cx="12" cy="5.9" r="1.5"/><circle cx="12" cy="12.2" r="2.9"/><path d="M10 19v2.2h4V19"/></svg>',
+  pillow:'<svg viewBox="0 0 24 24"><path d="M4 8q8-3 16 0q2 4 0 8q-8 3-16 0q-2-4 0-8z"/></svg>',
+  shield:'<svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9.5 12.2l1.8 1.8 3.4-3.6"/></svg>',
+  bank:'<svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v9h14v-9M3 19h18M9 13v6M15 13v6"/></svg>',
+  info:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>',
+  check:'<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>',
+  x:'<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+};
+/* Diagrams are drawn in the same stroke language as the icons. Each says one
+   thing and can be read without the text under it. */
+const DIAG={
+  /* Flow diagrams start on the RIGHT and arrows point LEFT — the reading
+     direction of the people this is for. A left-to-right flow reads backwards. */
+  gold:`<svg viewBox="0 0 300 120">
+    <circle cx="252" cy="60" r="26" class="ok"/><text x="252" y="65" text-anchor="middle" style="font-size:18px;font-weight:700;fill:var(--ok)">$</text>
+    <path d="M214 60h-34M188 52l-8 8 8 8" class="mute"/>
+    <path d="M132 50l5-9h26l5 9-18 24z M132 50h36M141 41l9 33M159 41l-9 33" class="g"/>
+    <path d="M118 60h-34M92 52l-8 8 8 8" class="mute"/>
+    <path d="M16 68l9-16h32l9 16M14 68h54v22H14zM34 90v-12h14v12" class="ok"/>
+    <text x="252" y="106" text-anchor="middle">دلار</text><text x="150" y="106" text-anchor="middle">طلای ۱۸ عیار</text><text x="41" y="110" text-anchor="middle">صرافی نزدیک</text>
+  </svg>`,
+  key:`<svg viewBox="0 0 300 120">
+    <rect x="118" y="14" width="64" height="88" rx="14" class="ok"/><circle cx="150" cy="34" r="5" class="ok"/>
+    <circle cx="150" cy="58" r="11" class="g"/><path d="M150 69v20M150 80h7M150 87h5" class="g"/>
+    <rect x="220" y="38" width="62" height="44" rx="8" class="mute"/><path d="M230 48h42M230 60h30M230 72h36" class="mute"/>
+    <path d="M224 42l54 36M278 42l-54 36" class="bad"/>
+    <text x="251" y="100" text-anchor="middle">مهاجر: بدون کلید</text>
+    <path d="M28 40h44v40H28z M36 40v-8a14 14 0 0128 0v8" class="ok"/><circle cx="50" cy="60" r="4" class="ok"/>
+    <text x="50" y="100" text-anchor="middle">فقط با دستگاه شما</text>
+    <text x="150" y="114" text-anchor="middle">کلید داخل دستگاه</text>
+  </svg>`,
+  safe:`<svg viewBox="0 0 300 120">
+    <path d="M260 18l16 6v14c0 10-7 17-16 21-9-4-16-11-16-21V24l16-6z" class="ok"/><path d="M253 40l5 5 9-10" class="ok"/>
+    <text x="260" y="80" text-anchor="middle">دلار، نه تومان</text>
+    <path d="M120 30h60v34h-60z M128 30v-8a22 22 0 0144 0v8" class="mute"/><circle cx="150" cy="47" r="4" class="mute"/>
+    <text x="150" y="80" text-anchor="middle">جا: انتخاب شما</text>
+    <path d="M24 46h44M38 38l-14 8 14 8M24 62h44M54 54l14 8-14 8" class="g"/>
+    <text x="46" y="90" text-anchor="middle">هر وقت بخواهید</text>
+  </svg>`,
+  dollar:`<svg viewBox="0 0 300 120">
+    <circle cx="150" cy="44" r="30" class="ok"/><text x="150" y="51" text-anchor="middle" style="font-size:22px;font-weight:700;fill:var(--ok)">$</text>
+    <path d="M186 70l14-10h44l14 10M184 70h76v30h-76z" class="mute"/><text x="222" y="112" text-anchor="middle">شریک نگهدارنده</text>
+    <path d="M74 74h40v30H74z M82 74v-7a12 12 0 0124 0v7" class="g"/><text x="94" y="116" text-anchor="middle">یا کلید شما</text>
+  </svg>`,
+  basket:`<svg viewBox="0 0 300 120">
+    <path d="M70 60l12-24h136l12 24M66 60h168l-14 44H80z" class="mute"/>
+    <circle cx="180" cy="40" r="12" class="ok"/><circle cx="150" cy="30" r="12" class="g"/><circle cx="120" cy="40" r="12" class="bad"/>
+    <text x="180" y="45" text-anchor="middle" style="font-size:11px;fill:var(--ok)">$</text>
+    <text x="150" y="35" text-anchor="middle" style="font-size:9px;fill:var(--gold)">طلا</text>
+    <text x="120" y="44" text-anchor="middle" style="font-size:9px;fill:var(--bad)">₿</text>
+    <text x="150" y="118" text-anchor="middle">چند دارایی، یک سبد</text>
+  </svg>`,
+  states:`<svg viewBox="0 0 300 120">
+    <path d="M222 44l28-18 28 18M228 44v28h44V44M222 72h56" class="mute"/><text x="250" y="100" text-anchor="middle">نزد مهاجر</text>
+    <path d="M124 52l6-11h40l6 11-26 30z M124 52h52M137 41l13 41M163 41l-13 41" class="g"/><text x="150" y="100" text-anchor="middle">طلای فیزیکی</text>
+    <rect x="28" y="26" width="44" height="56" rx="10" class="ok"/><circle cx="50" cy="52" r="9" class="ok"/><circle cx="50" cy="38" r="3" class="ok"/>
+    <text x="50" y="100" text-anchor="middle">کلید شما</text>
+  </svg>`
+};
+
+/* ════════ state ════════ */
+const S={ available:0, pending:0, activity:[], failMode:false,
+  cRaw:'', tRaw:'', wRaw:'', tPhone:'',
+  custody:'basic', cuBack:'home', exBack:'home', ex:null,
+  nests:[], activeNest:'calm', key:null, lastBuy:null,
+  shop:'s1', slot:0, route:false, physical:null, quoteTimer:null, seq:4190,
+  lex:'std', theme:'dark', pillow:false, lifted:false, lifting:false, anchor:false, unit:'usd' };
+
+/* ════════ helpers ════════ */
+const FA=['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+const fa=s=>String(s).replace(/\d/g,d=>FA[+d]).replace(/\./g,'٫').replace(/,/g,'٬');
+const grp=n=>Math.round(n).toLocaleString('en-US');
+const toman=n=>fa(grp(n));
+const usd=n=>'$'+(+n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const usd0=n=>'$'+grp(n);
+const $=id=>document.getElementById(id);
+const nestsTotal=()=>S.nests.reduce((a,h)=>a+h.amount,0);
+const total=()=>S.available+nestsTotal()+S.pending;
+const buyRate=()=>CONFIG.buyRate*(1+CONFIG.buySpread);
+const isTrial=amt=>amt>0 && (amt/buyRate())<=CONFIG.trialCapUsd;
+const buyFee=amt=>isTrial(amt)?0:CONFIG.buyFlatFee;
+const sellRate=()=>CONFIG.buyRate*(1-CONFIG.sellSpread);
+const nextId=()=>'MHJ-'+(++S.seq);
+const N=s=>'<span class="num">'+s+'</span>';
+const NOTE=(kind,html)=>'<div class="note '+kind+'" style="text-align:start"><svg viewBox="0 0 24 24">'+
+  (kind==='bad'||kind==='warn'?'<path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/>':'<circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/>')+
+  '</svg><p>'+html+'</p></div>';
+
+/* ════════ navigation · three tabs ════════ */
+const TABS=[
+  {s:'home',  c:'home',      d:'M4 11l8-7 8 7M6 10v9h12v-9'},
+  {s:'t-who', c:'sendTitle', d:'M12 19V5M5 12l7-7 7 7'},
+  {s:'use',   c:'useTitle',  d:'M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 8h6V4h-6z'}
+];
+function buildTabs(){
+  ['tabbar','tabbar2','tabbar3'].forEach(id=>{
+    const el=$(id); if(!el) return;
+    el.innerHTML=TABS.map(t=>`<button class="tab" data-tab="${t.s}" onclick="${t.s==='t-who'?'startTransfer()':"go('"+t.s+"')"}">
+      <svg viewBox="0 0 24 24"><path d="${t.d}"/></svg><span data-c="${t.c}"></span></button>`).join('');
+  });
+}
+let current='intro';
+function go(name){
+  const cur=document.querySelector('.screen.active');
+  const nxt=document.querySelector(`[data-screen="${name}"]`);
+  if(!nxt||cur===nxt) return;
+  if(cur){cur.classList.remove('active');cur.classList.add('leaving');
+          setTimeout(()=>cur.classList.remove('leaving'),500)}
+  nxt.classList.remove('leaving'); nxt.classList.add('active');
+  nxt.querySelector('.scroll')?.scrollTo(0,0);
+  const prev=current; current=name;
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===name));
+  stopQuote();
+  if(name==='c-quote') startQuote('q-secs','q-bar',()=>go('convert'));
+  if(name==='w-quote') startQuote('w-secs','w-bar',()=>go('w-amt'));
+  if(name==='activity') renderActivity();
+  if(name==='invest') renderNests();
+  if(name==='use') renderUse();
+  if(name==='custody') renderCustody();
+  if(name==='p-tut') $('pt-vis').innerHTML=DIAG.gold;
+  if(name==='k-tut'){ $('kt-vis').innerHTML=DIAG.key; renderKeyPC(); }
+  if(name==='home' && S.pillow && prev!=='home'){ S.lifted=false; S.lifting=false; applyPillow(); }
+  if(name==='p-amt'){ renderSlots(); paCheck(); }
+  if(name==='k-order') koCheck();
+  renderAnchor(); render();
+}
+
+/* ════════ quote countdown ════════ */
+function startQuote(secId,barId,onExpire){
+  let left=CONFIG.quoteSeconds;
+  const secs=$(secId), bar=$(barId), wrap=secs.closest('.timer');
+  secs.textContent=fa(left); bar.style.width='100%'; wrap?.classList.remove('low');
+  S.quoteTimer=setInterval(()=>{ left--;
+    secs.textContent=fa(Math.max(0,left)); bar.style.width=(left/CONFIG.quoteSeconds*100)+'%';
+    if(left<=20) wrap?.classList.add('low');
+    if(left<=0){stopQuote(); onExpire();} },1000);
+}
+function stopQuote(){ if(S.quoteTimer){clearInterval(S.quoteTimer);S.quoteTimer=null} }
+
+/* ════════ render ════════ */
+function cycleUnit(){ S.unit=S.unit==='usd'?'irr':'usd'; render(); }
+function render(){
+  const irr=S.unit==='irr';
+  $('h-total').textContent= irr ? toman(total()*CONFIG.buyRate)+' تومان' : usd(total());
+  $('h-unit-alt').textContent= irr ? C('unitBack') : C('unitAlt');
+  $('h-avail').textContent= irr ? toman(S.available*CONFIG.buyRate) : usd0(S.available);
+  $('h-goals').textContent= irr ? toman(nestsTotal()*CONFIG.buyRate) : usd0(nestsTotal());
+  $('h-pend').textContent = irr ? toman(S.pending*CONFIG.buyRate) : usd0(S.pending);
+  renderCuPill();
+  $('t-avail').innerHTML=C('freeBal')+' '+N(usd(S.available));
+  $('w-avail').innerHTML=C('freeBal')+' '+N(usd(S.available));
+  $('home-empty').style.display=S.activity.length?'none':'block';
+  $('home-activity').style.display=S.activity.length?'block':'none';
+  if(S.activity.length) $('home-tx').innerHTML=S.activity.slice(0,3).map(txRow).join('');
+
+  const cAmt=+S.cRaw||0, gross=cAmt/buyRate(), fee=buyFee(cAmt), net=Math.max(0,gross-fee);
+  const cd=$('c-amt'); cd.innerHTML=(S.cRaw?toman(+S.cRaw):'۰')+'<span class="caret"></span>';
+  cd.classList.toggle('zero',!S.cRaw);
+  $('c-out').innerHTML=C('youGetApprox')+' '+N(usd(net));
+  $('c-cta').classList.toggle('hidden',!(gross>=1));
+  /* one number, in the currency the user is about to hold: spread + flat, in dollars */
+  const feeUsd=Math.max(0,cAmt/CONFIG.buyRate-net);
+  $('q-feeall').innerHTML = fee===0
+    ? '<span style="color:var(--ok)">'+C('freeTrial')+'</span>'
+    : N(usd(feeUsd));
+  $('q-get').textContent=usd(net); $('q-net').textContent=usd(net);
+  $('q-pay').textContent=toman(cAmt)+' تومان'; $('q-rate').textContent=toman(buyRate());
+
+  const tAmt=+S.tRaw||0;
+  const td=$('t-val'); td.innerHTML='$'+(S.tRaw?grp(tAmt):'0')+'<span class="caret"></span>';
+  td.classList.toggle('zero',!S.tRaw);
+  $('t-cta2').classList.toggle('hidden',!(tAmt>0 && tAmt+CONFIG.transferFee<=S.available));
+  $('tc-amt').textContent=usd(tAmt); $('tc-total').textContent=usd(tAmt+CONFIG.transferFee);
+
+  const wAmt=+S.wRaw||0;
+  const wd=$('w-val'); wd.innerHTML='$'+(S.wRaw?grp(wAmt):'0')+'<span class="caret"></span>';
+  wd.classList.toggle('zero',!S.wRaw);
+  $('w-cta').classList.toggle('hidden',!(wAmt>0&&wAmt<=S.available));
+  const wNet=Math.max(0,(wAmt-CONFIG.sellFlatFee))*sellRate();
+  $('w-get').textContent=toman(wNet)+' تومان'; $('wq-net').textContent=toman(wNet)+' تومان';
+  $('wq-amt').textContent=usd(wAmt); $('wq-rate').textContent=toman(sellRate());
+  if(current==='use') renderUse();
+}
+
+/* ════════ CONVERT ════════ */
+function cKey(k){ if(k==='del') S.cRaw=S.cRaw.slice(0,-1);
+  else if(S.cRaw.length<13) S.cRaw=(S.cRaw==='0'?'':S.cRaw)+k; render(); }
+function cSet(n){ S.cRaw=String(n); render(); }
+function cTrial(){ S.cRaw=String(Math.ceil(5*buyRate()/1000)*1000); render(); }
+function doConvert(){
+  stopQuote();
+  const cAmt=+S.cRaw||0, net=Math.max(0,cAmt/buyRate()-buyFee(cAmt));
+  go('c-status'); $('cs-amt').textContent=usd(net);
+  setStatus('cs','pend',C('convPending'),C('pending')); $('cs-actions').innerHTML='';
+  setTimeout(()=>{
+    if(S.failMode){
+      setStatus('cs','bad',C('convFail'),C('failedB'));
+      $('cs-note').innerHTML=NOTE('bad',C('convFailNote'));
+      $('cs-actions').innerHTML=`<button class="btn btn-primary" onclick="go('c-quote')">${C('retry')}</button>
+        <button class="btn btn-ghost" onclick="openSheet('support')">${C('contactSupport')}</button>`;
+      addTx({kind:'convert',title:C('txIn'),amount:net,dir:'in',status:'failed'}); return;
+    }
+    S.available+=net;
+    setStatus('cs','ok',C('convOk'),C('doneB')); $('cs-note').innerHTML='';
+    $('cs-actions').innerHTML=`<button class="btn btn-primary" onclick="go('home')">${C('home')}</button>
+      <button class="btn btn-ghost" onclick="showReceipt(S.activity[0])">${C('receipt')}</button>`;
+    addTx({kind:'convert',ck:'txIn',amount:net,dir:'in',status:'done',
+      rows:[[C('youPay'),toman(cAmt)+' تومان'],[C('rate'),toman(buyRate())],[C('fee'),buyFee(cAmt)===0?C('freeTrial'):'$1.50']]});
+    render();
+  },1900);
+}
+
+/* ════════ TRANSFER ════════ */
+function startTransfer(){ if(!guard()) return; S.tRaw=''; S.tPhone=''; $('t-phone').value='';
+  $('t-found').style.display='none'; $('t-cta1').classList.add('hidden'); go('t-who'); }
+const toAscii=s=>String(s).replace(/[۰-۹]/g,d=>FA.indexOf(d));
+function tLookup(){
+  const v=toAscii($('t-phone').value).replace(/\D/g,''), ok=v.length>=10;
+  $('t-found').style.display=ok?'block':'none'; $('t-cta1').classList.toggle('hidden',!ok); S.tPhone=v;
+}
+function tPick(p){ $('t-phone').value=p; tLookup(); }
+function tKey(k){ if(k==='del') S.tRaw=S.tRaw.slice(0,-1);
+  else if(S.tRaw.length<7) S.tRaw=(S.tRaw==='0'?'':S.tRaw)+k; render(); }
+function doTransfer(){
+  const amt=+S.tRaw||0, tot=amt+CONFIG.transferFee;
+  S.available-=tot; S.pending+=amt;
+  go('t-status'); $('ts-amt').textContent=usd(amt);
+  setStatus('ts','pend',C('sendPending'),C('pending')); $('ts-actions').innerHTML=''; render();
+  setTimeout(()=>{
+    S.pending-=amt;
+    if(S.failMode){
+      S.available+=tot;
+      setStatus('ts','bad',C('sendFail'),C('refundedB'));
+      $('ts-note').innerHTML=NOTE('bad',C('sendFailNote'));
+      $('ts-actions').innerHTML=`<button class="btn btn-primary" onclick="go('t-who')">${C('retry')}</button>
+        <button class="btn btn-ghost" onclick="openSheet('support')">${C('contactSupport')}</button>`;
+      addTx({kind:'transfer',ck:'txSend',amount:amt,dir:'out',status:'refunded'});
+    }else{
+      setStatus('ts','ok',C('sendOk'),C('doneB')); $('ts-note').innerHTML='';
+      $('ts-actions').innerHTML=`<button class="btn btn-primary" onclick="showReceipt(S.activity[0])">${C('receipt')}</button>
+        <button class="btn btn-ghost" onclick="go('home')">${C('home')}</button>`;
+      addTx({kind:'transfer',ck:'txSend',amount:amt,dir:'out',status:'done',
+        rows:[[C('recipient'),'سارا رضایی'],[C('phone'),'۰۹۱۲۳۴۵۶۷۸۹'],[C('fee'),'$0.50']]});
+    }
+    render();
+  },2000);
+}
+
+/* ════════ INVEST ════════ */
+const nest=id=>CONFIG.nests.find(n=>n.id===id)||CONFIG.nests[0];
+const nName=n=>S.lex==='std'?(n.tStd||n.t):n.t;
+function series(id,months){
+  const seed=[...id].reduce((a,c)=>a+c.charCodeAt(0),0);
+  const n=nest(id), drift=n.yearNum/100/12, vol=[0,.030,.065,.12][n.riskLv];
+  let v=100; const out=[v];
+  for(let i=1;i<=months;i++){ const r=Math.sin(seed*1.7+i*2.3)*Math.cos(seed*0.6+i*1.1);
+    v=v*(1+drift+r*vol); out.push(Math.max(12,v)); }
+  return out;
+}
+function drawChart(id,months){
+  const data=series(id,months), W=300,H=132,pad=8;
+  const lo=Math.min(...data), hi=Math.max(...data), span=(hi-lo)||1, histW=W*0.66;
+  const fx=i=>pad+(i/(data.length-1))*(histW-pad*2), fy=v=>H-pad-((v-lo)/span)*(H-pad*2);
+  const pts=data.map((v,i)=>fx(i).toFixed(1)+','+fy(v).toFixed(1));
+  const line='M'+pts.join(' L');
+  const area=line+' L'+fx(data.length-1).toFixed(1)+','+H+' L'+fx(0).toFixed(1)+','+H+' Z';
+  const last=data[data.length-1], n=nest(id);
+  const k=n.yearNum/100*(months/12), w=[0,.10,.20,.34][n.riskLv];
+  const x0=fx(data.length-1), x1=W-pad;
+  const clamp=v=>Math.max(lo-span*0.6,Math.min(hi+span*0.6,v));
+  const mid=clamp(last*(1+k/2)), up=clamp(last*(1+k/2+w)), dn=clamp(last*(1+k/2-w));
+  const cone='M'+x0+','+fy(last)+' L'+x1+','+fy(up)+' L'+x1+','+fy(dn)+' Z';
+  const midline='M'+x0+','+fy(last)+' L'+x1+','+fy(mid);
+  const gl=[0,1,2,3].map(i=>'<line class="grid" x1="0" y1="'+(pad+i*(H-pad*2)/3)+'" x2="'+W+'" y2="'+(pad+i*(H-pad*2)/3)+'"/>').join('');
+  $('nd-chart').innerHTML='<defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--ink)"/><stop offset="100%" stop-color="var(--ink)" stop-opacity="0"/></linearGradient></defs>'+
+    gl+'<path class="cone" d="'+cone+'"/><path class="fill" d="'+area+'"/><path class="line" d="'+line+'"/><path class="fut" d="'+midline+'"/>'+
+    '<line class="grid" x1="'+x0+'" y1="0" x2="'+x0+'" y2="'+H+'" stroke-dasharray="2 3"/>';
+  const chg=((last-data[0])/data[0])*100, c=$('nd-change');
+  c.textContent=(chg>=0?'+':'−')+fa(Math.abs(chg).toFixed(1))+'٪'; c.style.color=chg>=0?'var(--ok)':'var(--bad)';
+}
+const RANGES=[[3,'۳ ماه'],[6,'۶ ماه'],[12,'۱۲ ماه']]; let ndRange=12;
+const mixKey=n=>'<div class="mixkey">'+n.mix.map(m=>'<span><i style="background:'+m.c+'"></i>'+m.k+' <b class="num">'+fa(m.v)+'٪</b></span>').join('')+'</div>';
+const mixBar=n=>n.mix.map(m=>'<i style="width:'+m.v+'%;background:'+m.c+'"></i>').join('');
+function renderNests(){
+  const host=$('nest-list'); if(!host) return;
+  host.innerHTML=CONFIG.nests.map(n=>'<button class="nest" onclick="openNest(\''+n.id+'\')">'+
+    '<div class="top"><span class="t">'+nName(n)+'</span><span class="riskdots">'+[1,2,3].map(i=>'<i class="'+(i<=n.riskLv?'on':'')+'"></i>').join('')+'</span></div>'+
+    '<div class="sub">'+n.sub+'</div><div class="mixbar">'+mixBar(n)+'</div>'+mixKey(n)+'</button>').join('');
+  $('nest-mine').innerHTML=S.nests.length
+    ? '<div class="sec" style="margin-top:0">'+C('mine')+'</div>'+S.nests.map(h=>{const n=nest(h.id);
+        return '<button class="opt" onclick="openNest(\''+h.id+'\')"><div class="ic">'+IC.invest+'</div>'+
+        '<div class="m"><div class="t">'+nName(n)+'</div><div class="d">'+N(usd(h.amount))+'</div></div></button>';}).join('')+'<div style="height:14px"></div>'
+    : '';
+}
+function openNest(id){ fillNest(id); go('n-detail'); setTimeout(()=>drawChart(id,ndRange),60); }
+function fillNest(id){
+  S.activeNest=id; const n=nest(id);
+  $('nd-title').textContent=nName(n); $('na-title').textContent=nName(n);
+  $('nd-mix').innerHTML=mixBar(n); $('nd-key').innerHTML=mixKey(n);
+  $('nd-vol').textContent=n.risk; $('nd-year').textContent=n.year;
+  $('nd-warn').textContent=n.riskLv>=3?C('warnHigh'):n.riskLv===2?C('warnMid'):C('warnLow');
+  $('nd-range').innerHTML=RANGES.map(r=>'<button aria-pressed="'+(r[0]===ndRange)+'" onclick="setRange('+r[0]+')">'+r[1]+'</button>').join('');
+  $('nd-rangelab').textContent=RANGES.find(r=>r[0]===ndRange)[1]+' گذشته';
+}
+function setRange(m){ ndRange=m; openNest(S.activeNest); }
+function goBuy(){ if(!guard()) return; $('na-amt').value=Math.min(100,Math.floor(S.available))||10; naCheck(); go('n-amt'); }
+const nestFee=a=>a*0.005;
+function naCheck(){
+  const a=parseFloat($('na-amt').value)||0, f=nestFee(a), over=a>S.available;
+  $('na-fee').textContent=usd(f); $('na-net').textContent=usd(Math.max(0,a-f));
+  $('na-warn').innerHTML= over ? NOTE('bad',C('notEnough')+' '+N(usd(S.available))) : (a>0&&a<10 ? NOTE('warn',C('minTen')) : '');
+  $('na-cta').disabled=over||a<10;
+}
+function doNest(){
+  const a=parseFloat($('na-amt').value)||0, f=nestFee(a), net=a-f, n=nest(S.activeNest);
+  S.available-=a;
+  const held=S.nests.find(x=>x.id===n.id);
+  if(held) held.amount+=net; else S.nests.push({id:n.id,amount:net});
+  addTx({kind:'nest',nestId:n.id,amount:a,dir:'move',status:'done',rows:[[C('fee'),usd(f)],[C('goesIn'),usd(net)],[C('lock'),C('none')]]});
+  render(); renderNests();
+  $('ns-amt').textContent=usd(net); $('ns-msg').textContent=C('investOk')+' · '+nName(n);
+  $('ns-mix').innerHTML=mixBar(n); $('ns-key').innerHTML=mixKey(n);
+  $('ns-actions').innerHTML='<button class="btn btn-primary" onclick="showReceipt(S.activity[0])">'+C('receipt')+'</button>'+
+    '<button class="btn btn-ghost" onclick="go(\'invest\')">'+C('backToInvest')+'</button>';
+  go('n-status');
+}
+
+/* ════════ GOLD · physical delivery ════════ */
+const SHOPS=[
+  {id:'s1',n:'صرافی پارسیان',x:196,y:82,km:0.8,min:11,addr:'خیابان ولیعصر، نبش کوچهٔ بیستم، پلاک ۱۴۲',hours:'۹ تا ۱۹ · جمعه تعطیل',capG:120,since:'۳ سال همکاری',open:true},
+  {id:'s2',n:'صرافی آرین',x:112,y:150,km:1.6,min:19,addr:'میدان فردوسی، ضلع جنوبی، ساختمان نگین',hours:'۱۰ تا ۱۸ · همه‌روزه',capG:400,since:'۵ سال همکاری',open:true},
+  {id:'s3',n:'صرافی مهرگان',x:255,y:170,km:2.4,min:26,addr:'خیابان شریعتی، بالاتر از سیدخندان، پلاک ۸۹۰',hours:'۹:۳۰ تا ۱۷:۳۰',capG:60,since:'۱ سال همکاری',open:false},
+  {id:'s4',n:'صرافی کاسپین',x:70,y:60,km:3.1,min:33,addr:'بلوار کشاورز، روبه‌روی پارک لاله، پلاک ۲۱',hours:'۸:۳۰ تا ۲۰ · همه‌روزه',capG:750,since:'۴ سال همکاری',open:true}
+];
+const ME={x:165,y:120};
+const SLOTS=['امروز · ۱۴ تا ۱۶','امروز · ۱۶ تا ۱۸','فردا · ۱۰ تا ۱۲','فردا · ۱۴ تا ۱۶'];
+const shop=id=>SHOPS.find(x=>x.id===id)||SHOPS[0];
+function mapSVG(highlight,withRoute){
+  const road=(x1,y1,x2,y2,w)=>'<line class="mp-road" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke-width="'+w+'"/>';
+  const block=(x,y,w,h)=>'<rect class="mp-block" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="3"/>';
+  let g='<rect x="0" y="0" width="340" height="230" class="mp-block"/>';
+  g+='<path class="mp-water" d="M0,196 Q80,182 150,198 T340,188 L340,230 L0,230 Z"/>';
+  g+='<rect class="mp-park" x="212" y="30" width="66" height="52" rx="8"/>';
+  [[16,14,74,54],[104,14,80,54],[16,84,74,44],[104,84,80,44],[196,96,86,44],[16,142,74,42],[104,142,80,42],[196,152,86,32],[292,14,40,60],[292,96,40,60]].forEach(b=>g+=block(...b));
+  [[0,76,340,76,9],[0,136,340,136,7],[96,0,96,196,9],[190,0,190,196,7],[286,0,286,196,5],[0,8,340,8,5],[0,190,340,190,5]].forEach(r=>g+=road(...r));
+  if(withRoute){ const t=shop(highlight);
+    g+='<path class="mp-route" d="M'+ME.x+','+ME.y+' L'+ME.x+','+((ME.y+t.y)/2)+' L'+t.x+','+((ME.y+t.y)/2)+' L'+t.x+','+t.y+'"/>'; }
+  g+='<g class="me"><circle class="ring" cx="'+ME.x+'" cy="'+ME.y+'" r="15"/><circle class="ring2" cx="'+ME.x+'" cy="'+ME.y+'" r="15" style="transform-origin:'+ME.x+'px '+ME.y+'px"/><circle class="dot" cx="'+ME.x+'" cy="'+ME.y+'" r="6"/></g>';
+  SHOPS.forEach((t,i)=>{ const on=t.id===highlight;
+    g+='<g class="pin" aria-pressed="'+on+'" onclick="pickShop(\''+t.id+'\')" role="button"><path class="body" d="M'+t.x+','+(t.y+9)+' c-7,-9 -11,-13 -11,-18 a11,11 0 1 1 22,0 c0,5 -4,9 -11,18 z"/><text class="glyph" x="'+t.x+'" y="'+(t.y-5)+'" text-anchor="middle">'+fa(i+1)+'</text></g>'; });
+  return g;
+}
+function renderShops(){
+  const host=$('p-list'); if(!host) return;
+  host.innerHTML=SHOPS.map((t,i)=>'<button class="shop" aria-pressed="'+(t.id===S.shop)+'" onclick="pickShop(\''+t.id+'\')">'+
+    '<span class="badge2 num">'+fa(i+1)+'</span><span class="m"><span class="t">'+t.n+'</span><span class="d">'+t.addr.split('،')[0]+' · '+
+    (t.open?'<span style="color:var(--ok)">'+C('openNow')+'</span>':'<span style="color:var(--ink-3)">'+C('closedNow')+'</span>')+'</span></span>'+
+    '<span class="far">'+N(fa(t.km.toFixed(1)))+' کیلومتر<small>'+N(fa(t.min))+' دقیقه پیاده</small></span></button>').join('');
+}
+function openPhysical(){
+  if(!guard()) return;
+  S.shop=S.shop||SHOPS[0].id; go('p-map');
+  $('p-loading').hidden=false; $('p-map-svg').innerHTML=''; renderShops();
+  setTimeout(()=>{ $('p-loading').hidden=true; $('p-map-svg').innerHTML=mapSVG(S.shop,false); },900);
+}
+function pickShop(id){
+  S.shop=id;
+  if(current==='p-map'){ $('p-map-svg').innerHTML=mapSVG(id,false); renderShops(); setTimeout(()=>openShop(id),220); return; }
+  openShop(id);
+}
+function openShop(id){
+  const t=shop(id); S.shop=id; S.route=false;
+  $('ps-name').textContent=t.n;
+  $('ps-dist').innerHTML=N(fa(t.km.toFixed(1)))+' کیلومتر · '+N(fa(t.min))+' دقیقه پیاده';
+  $('ps-hours').textContent=t.hours; $('ps-cap').innerHTML=N(fa(t.capG))+' گرم';
+  $('ps-open').innerHTML=t.open?'<span style="color:var(--ok)">'+C('openNow')+'</span>':'<span style="color:var(--ink-3)">'+C('closedNow')+'</span>';
+  $('ps-addr').textContent=t.addr; $('ps-since').textContent=t.since;
+  $('ps-steps-wrap').hidden=true; $('ps-routebtn').textContent=C('routeBtn');
+  $('ps-map-svg').innerHTML=mapSVG(id,false); go('p-shop');
+}
+function toggleRoute(){
+  S.route=!S.route; const t=shop(S.shop);
+  $('ps-map-svg').innerHTML=mapSVG(S.shop,S.route);
+  $('ps-routebtn').textContent=S.route?C('routeClose'):C('routeBtn');
+  $('ps-steps-wrap').hidden=!S.route;
+  if(S.route){ const road=t.addr.split('،')[0];
+    $('ps-steps').innerHTML=['<div>به سمت شمال، تا خیابان اصلی.</div>','<div>'+N(fa(Math.round(t.km*600)))+' متر مستقیم.</div>',
+      '<div>وارد '+road+' شوید.</div>','<div>'+t.n+'، سمت راست.</div>'].join(''); }
+}
+const goldUsd=g=>g*CONFIG.goldUsdPerGram;
+function paCheck(){
+  const g=parseFloat($('pa-amt').value)||0, t=shop(S.shop);
+  const val=goldUsd(g), tot=val+CONFIG.goldDeliveryFee, over=tot>S.available, cap=g>t.capG;
+  $('pa-rate').textContent=usd(CONFIG.goldUsdPerGram); $('pa-total').textContent=usd(tot);
+  $('pa-warn').innerHTML= over ? NOTE('bad',C('notEnough')+' '+N(usd(S.available))) : cap ? NOTE('warn',C('goldOverStock')) : '';
+  $('pa-cta').disabled=over||cap||g<1;
+}
+function renderSlots(){
+  $('pa-slots').innerHTML=SLOTS.map((sl,i)=>'<button class="opt" aria-pressed="'+(i===S.slot)+'" onclick="S.slot='+i+';renderSlots()">'+
+    '<div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="m"><div class="t">'+sl+'</div></div><div class="radio"></div></button>').join('');
+}
+function doPhysical(){
+  const g=parseFloat($('pa-amt').value)||0, t=shop(S.shop), val=goldUsd(g), tot=val+CONFIG.goldDeliveryFee;
+  S.physical={shop:t.id,grams:g,amount:tot,slot:SLOTS[S.slot],code:String(Math.floor(1000+Math.random()*9000))};
+  $('pc-code').textContent=fa(S.physical.code.split('').join(' ')); $('pc-shop').textContent=t.n;
+  $('pc-amt').innerHTML=N(fa(g))+' گرم طلای '+CONFIG.goldCarat; $('pc-slot').textContent=S.physical.slot;
+  addTx({kind:'physical',title:C('txGold')+' · '+t.n,amount:tot,dir:'out',status:'pending',
+    rows:[[C('youReceive'),fa(g)+' گرم طلای '+CONFIG.goldCarat],[C('shop'),t.n],[C('gramRate'),usd(CONFIG.goldUsdPerGram)],[C('fee'),usd(CONFIG.goldDeliveryFee)],[C('time'),S.physical.slot],[C('whenDeducted'),C('atPickup')]]});
+  render(); go('p-status');
+}
+function cancelPhysical(){
+  if(S.activity[0]&&S.activity[0].kind==='physical') S.activity[0].status='cancelled';
+  S.physical=null; render(); go('use');
+}
+
+/* ════════ KEY · self-custody device ════════ */
+const KEY_PRICE=49;
+function koCheck(){
+  const move=parseFloat($('ko-amt').value)||0, over=KEY_PRICE+move>S.available;
+  $('ko-move').innerHTML=move>0?N(usd(move)):'—';
+  $('ko-warn').innerHTML=over?NOTE('bad',C('keyOverBalance')+' '+N(usd(S.available))):'';
+  $('ko-cta').disabled=over;
+}
+function doKeyOrder(){
+  const move=parseFloat($('ko-amt').value)||0, code=String(Math.floor(100000+Math.random()*900000));
+  S.key={move,code,addr:$('ko-addr').value.trim(),status:'shipping'};
+  S.available-=KEY_PRICE;
+  $('ks-code').textContent=fa(code.split('').join(' ')); $('ks-eta').textContent='۵ تا ۷ روز کاری';
+  $('ks-move').innerHTML=move>0?N(usd(move)):'—';
+  addTx({kind:'key',ck:'txKey',amount:KEY_PRICE,dir:'out',status:'done',
+    rows:[[C('devicePrice'),usd(KEY_PRICE)],[C('shipping'),C('shippingV')],[C('moveOnActivate'),move>0?usd(move):'—'],[C('activationCode'),fa(code)]]});
+  render(); go('k-status');
+}
+function cancelKey(){
+  if(S.key){ S.available+=KEY_PRICE; S.key=null; if(S.activity[0]&&S.activity[0].kind==='key') S.activity[0].status='cancelled'; }
+  render(); go('home');
+}
+/* Ordering ships a device. Activating a delivered one is what moves the money
+   under the pillow — those two are kept apart on purpose. */
+function activateKey(){
+  if(S.key) S.key.status='active';
+  setCustody('self');
+  addTx({kind:'custody',ck:'txActivate',amount:0,dir:'move',status:'done',rows:[[C('whereNow'),C('cuSelfN')],[C('keyWhere'),C('keyWhereV')]]});
+  openCustody('home');
+}
+function renderKeyPC(){
+  $('kt-pc').innerHTML=pcList([C('keyP1'),C('keyP2'),C('keyP3')],[C('keyC1'),C('keyC2'),C('keyC3')]);
+}
+const pcList=(pros,cons)=>'<div class="pc">'+
+  pros.map(p=>'<span class="y">'+IC.check+p+'</span>').join('')+cons.map(c=>'<span class="n">'+IC.x+c+'</span>').join('')+'</div>';
+
+/* ════════ CUSTODY · where the money is ════════
+   Two real states (basic, self) plus gold, which is not a key model but is one
+   of the three places the user's money can be. Every custody sentence in the
+   app reads from S.custody through here — none is typed into a screen. */
+const STATE_DEF={
+  basic:{cls:'s-basic',ic:'bank', n:'cuBasicN',l:'cuBasicL',pros:['cuBasicP1','cuBasicP2'],cons:['cuBasicC1'],cta:null,ex:'cuBasic'},
+  gold: {cls:'s-gold', ic:'gold', n:'cuGoldN', l:'cuGoldL', pros:['cuGoldP1','cuGoldP2'],cons:['cuGoldC1','cuGoldC2'],cta:{c:'cuGoldCta',go:"go('p-tut')"},ex:'cuGold'},
+  self: {cls:'s-self', ic:'key',  n:'cuSelfN', l:'cuSelfL', pros:['cuSelfP1','cuSelfP2'],cons:['cuSelfC1'],cta:{c:'cuSelfCta',go:"go('k-tut')"},ex:'cuSelf'}
+};
+const CU_ORDER=['basic','gold','self'];
+function openCustody(from){ S.cuBack=from||'home'; renderCustody(); go('custody'); }
+function renderCustody(){
+  const host=$('cu-states'); if(!host) return;
+  host.innerHTML=CU_ORDER.map(k=>{ const d=STATE_DEF[k], on=k===S.custody;
+    return `<div class="state ${d.cls}${on?' on':''}">
+      <div class="hd"><span class="ic">${IC[d.ic]}</span><span class="t">${C(d.n)}</span>${on?'<span class="now">'+C('cuNow')+'</span>':''}</div>
+      <div class="d">${C(d.l)}</div>
+      ${pcList(d.pros.map(C),d.cons.map(C))}
+      <div class="acts2">
+        <button class="btn btn-ghost" onclick="openExplain('${d.ex}','custody')">${C('cuWhatQ')}</button>
+        ${d.cta&&!on?'<button class="btn btn-soft" onclick="'+d.cta.go+'">'+C(d.cta.c)+'</button>':''}
+      </div>
+    </div>`; }).join('');
+}
+function renderCuPill(){
+  const p=$('h-cupill'); if(!p) return;
+  const self=S.custody==='self';
+  p.classList.toggle('self',self);
+  $('h-cutxt').textContent=self?C('cuAtYou'):C('cuAtMohajer');
+  const cb=$('cu-btn'); if(cb) cb.textContent='پول: '+(self?C('cuSelfN'):C('cuBasicN'));
+  const kc=$('ks-cu'); if(kc) kc.textContent=self?C('cuSelfN'):C('cuBasicN')+' · '+C('untilActivate');
+}
+function renderUse(){
+  const self=S.custody==='self', d=STATE_DEF[self?'self':'basic'];
+  $('use-state-ic').innerHTML=IC[d.ic]; $('use-state-v').textContent=C(d.n);
+  $('use-state').classList.toggle('self',self);
+}
+function setCustody(m){ S.custody=m; render(); if(current==='custody') renderCustody(); }
+function cycleCustody(){ setCustody(S.custody==='basic'?'self':'basic'); }
+
+/* ════════ EXPLAIN · one page, many subjects ════════ */
+const EXPLAIN={
+  safe:   {t:'exSafeT',   vis:'safe',   steps:['exSafe1','exSafe2','exSafe3']},
+  dollar: {t:'exDollarT', vis:'dollar', steps:['exDollar1','exDollar2','exDollar3']},
+  goldWhy:{t:'exGoldWhyT',vis:'gold',   steps:['exGoldWhy1','exGoldWhy2','exGoldWhy3']},
+  keyDeep:{t:'exKeyDeepT',vis:'key',    steps:['exKeyDeep1','exKeyDeep2','exKeyDeep3','exKeyDeep4','exKeyDeep5','exKeyDeep6']},
+  basket: {t:'exBasketT', vis:'basket', steps:['exBasket1','exBasket2','exBasket3']},
+  cuBasic:{t:'exCuBasicT',vis:'states', steps:['exCuBasic1','exCuBasic2','exCuBasic3']},
+  cuGold: {t:'exCuGoldT', vis:'gold',   steps:['exCuGold1','exCuGold2','exCuGold3']},
+  cuSelf: {t:'exCuSelfT', vis:'key',    steps:['exCuSelf1','exCuSelf2','exCuSelf3']}
+};
+function openExplain(id,from){
+  const e=EXPLAIN[id]; if(!e) return;
+  S.ex=id; S.exBack=from||current;
+  $('ex-title').textContent=C(e.t); $('ex-vis').innerHTML=DIAG[e.vis]||'';
+  $('ex-steps').innerHTML=e.steps.map((k,i)=>'<div class="step3"><span class="n num">'+fa(i+1)+'</span><span class="t">'+C(k)+'</span></div>').join('');
+  $('ex-extra').innerHTML='';
+  $('ex-cta').innerHTML='<button class="btn btn-primary" onclick="go(S.exBack)">'+C('exGotIt')+'</button>';
+  go('explain');
+}
+
+/* ════════ WITHDRAW ════════ */
+function setDir(d){
+  if(d==='out'){ if(!guard()) return; S.wRaw=''; render(); go('w-amt'); }
+  else { S.cRaw=''; render(); go('convert'); }
+}
+function wKey(k){ if(k==='del') S.wRaw=S.wRaw.slice(0,-1);
+  else if(S.wRaw.length<7) S.wRaw=(S.wRaw==='0'?'':S.wRaw)+k; render(); }
+function doWithdraw(){
+  stopQuote();
+  const amt=+S.wRaw||0, net=Math.max(0,(amt-CONFIG.sellFlatFee))*sellRate();
+  S.available-=amt; S.pending+=amt;
+  go('w-status'); $('ws-amt').textContent=toman(net)+' تومان';
+  setStatus('ws','pend',C('wdPending'),C('pending')); $('ws-actions').innerHTML=''; render();
+  setTimeout(()=>{
+    S.pending-=amt;
+    if(S.failMode){
+      S.available+=amt;
+      setStatus('ws','bad',C('wdRateChanged'),C('cancelledB'));
+      $('ws-amt').textContent=toman(net*0.985)+' تومان';
+      $('ws-note').innerHTML=NOTE('warn',C('wdRateNote'));
+      $('ws-actions').innerHTML=`<button class="btn btn-primary" onclick="go('w-quote')">${C('continueNewRate')}</button>
+        <button class="btn btn-ghost" onclick="go('home')">${C('cancel')}</button>`;
+      addTx({kind:'withdraw',ck:'txOut',amount:amt,dir:'out',status:'cancelled'});
+    }else{
+      setStatus('ws','ok',C('wdOk'),C('doneB')); $('ws-note').innerHTML='';
+      $('ws-actions').innerHTML=`<button class="btn btn-primary" onclick="showReceipt(S.activity[0])">${C('receipt')}</button>
+        <button class="btn btn-ghost" onclick="go('home')">${C('home')}</button>`;
+      addTx({kind:'withdraw',ck:'txOut',amount:amt,dir:'out',status:'done',
+        rows:[[C('youGetFinal'),toman(net)+' تومان'],[C('rate'),toman(sellRate())],[C('fee'),'$2.00'],[C('depositTo'),'بانک ملت ****۴۴۲۱']]});
+    }
+    render();
+  },2200);
+}
+
+/* ════════ status · activity · receipts ════════ */
+const ICONS={ok:'<path d="M5 13l4.5 4.5L19 7"/>',pend:'<path d="M12 3a9 9 0 109 9"/>',bad:'<path d="M18 6L6 18M6 6l12 12"/>'};
+const BADGE={ok:'b-ok',pend:'b-warn',bad:'b-bad'};
+function setStatus(p,kind,msg,badge){
+  const d=$(p+'-disc'); d.className='disc '+kind; d.innerHTML=`<svg viewBox="0 0 24 24">${ICONS[kind]}</svg>`;
+  $(p+'-msg').textContent=msg; $(p+'-badge').innerHTML=`<span class="badge ${BADGE[kind]}">${badge}</span>`;
+  if(kind==='pend') $(p+'-note').innerHTML='';
+}
+const STATUS_TXT=()=>({done:[C('doneB'),'b-ok'],failed:[C('failedB'),'b-bad'],refunded:[C('refundedB'),'b-bad'],cancelled:[C('cancelledB'),'b-warn'],pending:[C('pending'),'b-warn']});
+function addTx(tx){ tx.id=nextId(); S.activity.unshift(tx); }
+function txTitle(t){
+  if(t.kind==='nest'&&t.nestId) return C('txInvest')+' '+nName(nest(t.nestId));
+  if(t.ck) return C(t.ck);
+  return t.title||'';
+}
+const TXIC={convert:'M7 10h13l-3-3M17 14H4l3 3',transfer:'M12 19V5M5 12l7-7 7 7',nest:'M4 19V9M10 19V5M16 19v-7M22 19h-20',
+  physical:'M4 8l3-4h10l3 4-8 12zM4 8h16',key:'M8 2h8v17H8zM12 12.2a2.9 2.9 0 100-5.8 2.9 2.9 0 000 5.8',custody:'M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z',withdraw:'M12 5v14M5 12l7 7 7-7'};
+function txRow(t){
+  const [txt,cls]=STATUS_TXT()[t.status]||STATUS_TXT().done, sign=t.dir==='in'?'+':t.dir==='out'?'−':'';
+  return `<button class="tx" onclick="showReceipt(S.activity.find(x=>x.id==='${t.id}'))">
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="${TXIC[t.kind]||TXIC.withdraw}"/></svg></div>
+    <div class="m"><div class="t">${txTitle(t)}</div><div class="d">${C('justNow')}</div></div>
+    <div class="r"><div class="a num ${t.dir==='in'?'in':''}">${t.amount?sign+usd(t.amount):''}</div>
+      <div class="s"><span class="badge ${cls}" style="padding:3px 7px;font-size:9.5px">${txt}</span></div></div></button>`;
+}
+function renderActivity(){ $('a-empty').style.display=S.activity.length?'none':'block'; $('a-list').innerHTML=S.activity.map(txRow).join(''); }
+function showReceipt(t){
+  if(!t) return;
+  const [txt,cls]=STATUS_TXT()[t.status]||STATUS_TXT().done;
+  $('r-badge').innerHTML=`<span class="badge ${cls}">${txt}</span>`; $('r-id').textContent=t.id;
+  $('r-amt').textContent=usd(t.amount); $('r-title').textContent=txTitle(t);
+  const rows=(t.rows||[]).concat([['شناسه',t.id]]);
+  $('r-rows').innerHTML=rows.map(([k,v])=>`<div class="row"><span class="k">${k}</span><span class="v num">${v}</span></div>`).join('');
+  go('receipt');
+}
+
+/* ════════ sheets ════════ */
+function openSheet(kind){
+  let h='';
+  if(kind==='shopCall'){ const t=shop(S.shop);
+    h=`<h3>${t.n}</h3><div class="row"><span class="k">تلفن</span><span class="v num">۰۲۱ ۸۸ ۴۵ ۲۲ ۱۰</span></div>
+      <div class="row"><span class="k">${C('hours')}</span><span class="v">${t.hours}</span></div>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet()">${C('close')}</button>`; }
+  else if(kind==='support'){
+    h=`<h3>${C('support')}</h3>
+      <div style="display:flex;align-items:center;gap:9px;padding:12px 14px;background:var(--ok-soft);border-radius:var(--r-md);margin-bottom:6px"><span class="pulse"></span><span style="font-size:12.5px;font-weight:600;color:var(--ok)">اکنون فعال</span></div>
+      <div class="row"><span class="k">زمان پاسخ</span><span class="v">زیر ۱۵ دقیقه</span></div>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet()">گفت‌وگو</button>
+      <button class="btn btn-ghost" onclick="closeSheet()">${C('close')}</button>`; }
+  else if(kind==='anchor'){
+    h=`<h3>پشتوانه</h3>${ANCHOR.map(a=>`<div class="row"><span class="k">${a.k}</span><span class="v" style="color:${a.ok?'var(--ink)':'var(--warn)'}">${a.v}</span></div>`).join('')}
+      <button class="btn btn-primary" style="margin-top:14px" onclick="closeSheet()">${C('close')}</button>`; }
+  $('sheet-body').innerHTML=h; $('sheet-bg').classList.add('on'); $('sheet').classList.add('on');
+}
+function closeSheet(){ $('sheet-bg').classList.remove('on'); $('sheet').classList.remove('on'); }
+function guard(){
+  if(S.available>0) return true;
+  openSheet('blank');
+  $('sheet-body').innerHTML=`<h3>${C('needBalanceT')}</h3><p class="lead" style="margin-bottom:12px">${C('needBalanceB')}</p>
+    <button class="btn btn-primary" onclick="closeSheet();setDir('in')">${C('goConvert')}</button>
+    <button class="btn btn-ghost" onclick="closeSheet()">${C('close')}</button>`;
+  return false;
+}
+
+/* ════════ variants · anchor, pillow, lexicon, theme ════════ */
+const ANCHOR=[{k:'ثبت شرکت',v:'ثبت‌شده در ایران',ok:true},{k:'دارایی کاربران',v:'جدا از حساب‌های مهاجر',ok:true},
+  {k:'پشتیبان مسئول',v:'یک نفر، با نام',ok:true},{k:'صرافی طرف قرارداد',v:'در حال بررسی',ok:false},{k:'بیمه',v:'در حال بررسی',ok:false}];
+function anchorHTML(){ return `<div class="anchor"><div class="hd"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></svg><div class="t">پشتوانه</div></div>
+  ${ANCHOR.slice(0,3).map(a=>`<div class="r"><span class="k">${a.k}</span><span class="v">${a.v}</span></div>`).join('')}
+  <button class="more" onclick="openSheet('anchor')">بیشتر</button></div>`; }
+function renderAnchor(){ document.querySelectorAll('.anchor-slot').forEach(el=>{ el.innerHTML=S.anchor?anchorHTML():''; }); }
+function toggleAnchor(){ S.anchor=!S.anchor; renderAnchor(); const b=$('anchor-btn'); b.setAttribute('aria-pressed',S.anchor); b.textContent='پشتوانهٔ نهادی: '+(S.anchor?'روشن':'خاموش'); }
+function liftPillow(){
+  if(S.lifting||S.lifted) return; S.lifting=true;
+  const w=$('flipwrap'), n=$('pillownote'); w.dataset.instant='false'; w.dataset.flipped='true'; if(n) n.dataset.gone='true';
+  setTimeout(()=>{ S.lifted=true; S.lifting=false; applyPillow(); },940);
+}
+function togglePillow(){ S.pillow=!S.pillow; const b=$('pillow-btn'); b.setAttribute('aria-pressed',S.pillow); b.textContent='بالش: '+(S.pillow?'روشن':'خاموش'); applyPillow(); }
+function applyPillow(){
+  const face=$('pillow-face'), wrap=$('flipwrap'); if(!face||!wrap) return;
+  const covered=S.pillow&&!S.lifted; face.hidden=!covered;
+  const note=$('pillownote'); if(note){ note.hidden=!covered; note.dataset.gone='false'; }
+  wrap.dataset.instant='true'; wrap.dataset.flipped='false'; $('plain-face').classList.toggle('back',covered);
+}
+function toggleFlag(){ const f=$('testflag'); f.hidden=!f.hidden; const b=$('flag-btn'); b.setAttribute('aria-pressed',!f.hidden); b.textContent=f.hidden?'نشان آزمایشی: خاموش':'نشان آزمایشی: روشن'; }
+function applyLex(){
+  applyCopy();
+  $('lex-btn').textContent=S.lex==='std'?'واژگان: استاندارد':'واژگان: آشیانه'; $('lex-btn').setAttribute('aria-pressed',S.lex==='nest');
+  renderNests(); if(S.activeNest) fillNest(S.activeNest); renderActivity(); renderCustody(); renderUse(); render();
+}
+function toggleLex(){ S.lex=S.lex==='std'?'nest':'std'; applyLex(); }
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme',S.theme);
+  const b=$('theme-btn'); if(b){ b.textContent='حالت: '+(S.theme==='dark'?'تاریک':'روشن'); b.setAttribute('aria-pressed',S.theme==='dark'); }
+  const m=document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute('content',S.theme==='dark'?'#0C0E11':'#F4F4F1');
+}
+function toggleTheme(){ S.theme=S.theme==='dark'?'light':'dark'; applyTheme(); }
+
+/* ════════ facilitator ════════ */
+function resetAll(){
+  Object.assign(S,{available:0,pending:0,activity:[],cRaw:'',tRaw:'',wRaw:'',tPhone:'',
+    nests:[],activeNest:'calm',key:null,physical:null,shop:'s1',slot:0,route:false,
+    custody:'basic',cuBack:'home',exBack:'home',lifted:false,lifting:false,seq:4190,unit:'usd'});
+  $('t-phone').value=''; const ko=$('ko-amt'); if(ko) ko.value='500'; const pa=$('pa-amt'); if(pa) pa.value='3'; const na=$('na-amt'); if(na) na.value='';
+  renderNests(); fillNest('calm'); renderShops(); renderCustody(); renderUse(); applyPillow(); renderActivity();
+  go('intro'); render();
+}
+function seed(){ S.available+=2000;
+  addTx({kind:'convert',ck:'txIn',amount:2000,dir:'in',status:'done',rows:[[C('youPay'),toman(2000*buyRate())+' تومان'],[C('rate'),toman(buyRate())]]});
+  render(); go('home'); }
+function toggleFail(){ S.failMode=!S.failMode; $('fail-btn').setAttribute('aria-pressed',S.failMode); $('hint').textContent=S.failMode?'حالت خطا روشن است':''; }
+function toggleDev(){ const f=$('dev-fab'), c=$('chrome'); const open=f.getAttribute('aria-expanded')!=='true'; f.setAttribute('aria-expanded',open); c.classList.toggle('open',open); }
+
+/* ════════ copy editor ════════
+   Every string above is editable here, live. «ذخیره» keeps the edits in this
+   browser; «خروجی» produces the JSON to drop into copy.json so the same words
+   ship to every device. Both merge over the defaults, so a key that is not in
+   the override falls back to the built-in text. */
+const LS_KEY='mhj4-copy';
+function openCopyEd(){ $('copyed').classList.add('open'); renderCopyEd(); }
+function closeCopyEd(){ $('copyed').classList.remove('open'); }
+function renderCopyEd(){
+  const q=($('ce-q').value||'').trim();
+  let last=''; const out=[];
+  Object.keys(COPY_DEF).forEach(k=>{
+    const [g,def]=COPY_DEF[k], cur=COPY_USER[k]??def;
+    if(q && !(k.includes(q)||cur.includes(q)||def.includes(q))) return;
+    if(g!==last){ out.push('<div class="grp">'+COPY_GROUPS[g]+'</div>'); last=g; }
+    out.push(`<div class="it"><label><span class="num" style="opacity:.6">${k}</span>${COPY_USER[k]!==undefined?' <b style="color:var(--ok)">· ویرایش‌شده</b>':''}</label>
+      <textarea data-k="${k}" oninput="copyEdit(this)">${cur.replace(/</g,'&lt;')}</textarea></div>`);
+  });
+  $('ce-list').innerHTML=out.join('');
+}
+function copyEdit(ta){
+  const k=ta.dataset.k, v=ta.value;
+  if(v===COPY_DEF[k][1]) delete COPY_USER[k]; else COPY_USER[k]=v;
+  applyCopy(); render(); renderCustody(); renderUse(); renderNests(); renderActivity();
+  if(current==='k-tut') renderKeyPC();
+  if(current==='explain'&&S.ex) openExplain(S.ex,S.exBack);
+}
+function copySave(){ try{ localStorage.setItem(LS_KEY,JSON.stringify(COPY_USER)); $('hint').textContent='متن‌ها در این مرورگر ذخیره شد.'; }catch(e){} }
+function copyReset(){ COPY_USER={}; try{ localStorage.removeItem(LS_KEY); }catch(e){} applyCopy(); render(); renderCustody(); renderUse(); renderNests(); renderCopyEd(); }
+/* exports the full table, not just the edits, so copy.json shows every string
+   there is — the person editing it on GitHub never has to guess a key name */
+function copyExport(){
+  const all={}; Object.keys(COPY_DEF).forEach(k=>all[k]=COPY_USER[k]??COPY_DEF[k][1]);
+  $('ce-exp').hidden=false; $('ce-json').value=JSON.stringify(all,null,2); $('ce-json').select();
+}
+function copyImport(){
+  try{ const o=JSON.parse($('ce-import').value||'{}'); Object.assign(COPY_USER,o); applyCopy(); render(); renderCustody(); renderUse(); renderNests(); renderCopyEd(); $('ce-exp').hidden=true; }
+  catch(e){ $('hint').textContent='JSON معتبر نیست.'; }
+}
+function loadCopyOverrides(){
+  try{ const s=localStorage.getItem(LS_KEY); if(s) COPY_USER=JSON.parse(s)||{}; }catch(e){}
+  /* copy.json next to the file wins for everyone; silently absent on file:// */
+  if(location.protocol.startsWith('http')){
+    fetch('./copy.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(o=>{
+      if(o&&typeof o==='object'&&Object.keys(o).length){ Object.assign(COPY_USER,o); applyCopy(); render(); renderCustody(); renderUse(); renderNests(); }
+    }).catch(()=>{});
+  }
+}
+
+/* ════════ layout ════════ */
+const MOBILE=()=>matchMedia('(max-width:768px)').matches;
+function fitPhone(){
+  const stage=$('stage'), phone=$('phone');
+  if(MOBILE()){ phone.style.transform=''; stage.style.width=''; stage.style.height=''; return; }
+  const vv=window.visualViewport, vw=Math.round(vv?vv.width:innerWidth), vh=Math.round(vv?vv.height:innerHeight);
+  const s=Math.max(.35,Math.min((vw-40)/390,(vh-138)/844,1));
+  phone.style.transform=`scale(${s})`; stage.style.width=(390*s)+'px'; stage.style.height=(844*s)+'px';
+}
+addEventListener('resize',fitPhone); addEventListener('orientationchange',()=>setTimeout(fitPhone,150));
+window.visualViewport?.addEventListener('resize',fitPhone);
+['gesturestart','gesturechange','gestureend'].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
+let lastTap=0;
+document.addEventListener('touchend',e=>{ const now=Date.now(); if(now-lastTap<=320&&e.touches.length===0) e.preventDefault(); lastTap=now; },{passive:false});
+document.addEventListener('touchmove',e=>{ if(e.touches.length>1) e.preventDefault(); },{passive:false});
+
+/* ════════ boot ════════ */
+loadCopyOverrides();
+buildTabs(); applyTheme(); applyCopy(); $('clock').textContent=fa('9:41');
+renderNests(); fillNest('calm'); renderShops(); renderCustody(); renderUse(); renderAnchor(); applyPillow(); render(); fitPhone();
+
+</script>
+</body>
+</html>
