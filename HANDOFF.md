@@ -1131,6 +1131,11 @@ Copy table: 329 keys. `copy.json` regenerated. Sweep: 0 problems.
   again. Two honest costs rewritten after a colleague's note: basic = «به مهاجر
   وابسته است», gold = «دزدی یا گم‌شدن، جبران ندارد» (theft was the missing risk).
   Pros/cons are one column, one line each. «یعنی چه» → «یعنی چی» everywhere.
+- **The last answer is a person.** After the deep layer, «نیاز به توضیح بیشتر
+  دارم» opens a call screen inside the phone (`#callui`): ringing for 2.4s,
+  then «وصل شد» with a running clock and «هر سؤالی دارید، بپرسید. عجله‌ای
+  نیست.» Copy keys `exAsk`, `call*` (337 keys now). It is a prop — nothing is
+  dialled — but it makes the point that the explainer chain ends with a human.
 
 ### Open
 

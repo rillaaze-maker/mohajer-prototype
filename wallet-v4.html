@@ -886,6 +886,28 @@ button,input,select,textarea{color:inherit}
 .exmore svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .step3.deep .n{background:var(--ok-soft);color:var(--ok)}
 
+/* the call screen — what the phone does when the app has no more to say */
+.callui{position:absolute;inset:0;z-index:54;display:none;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:120px 24px 64px;background:radial-gradient(120% 70% at 50% 0%,#213040 0%,#0B0E12 70%);color:#fff;text-align:center;font-family:var(--f)}
+.callui.open{display:flex}
+.callui .av{width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;position:relative;margin:0 auto 18px}
+.callui .av svg{width:44px;height:44px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.callui.ringing .av::before,.callui.ringing .av::after{content:'';position:absolute;inset:-8px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);animation:ring 1.6s ease-out infinite}
+.callui.ringing .av::after{animation-delay:.8s}
+@keyframes ring{0%{transform:scale(.92);opacity:1}100%{transform:scale(1.45);opacity:0}}
+.callui .nm{font-size:22px;font-weight:600;letter-spacing:-.02em}
+.callui .st{font-size:14px;color:rgba(255,255,255,.7);margin-top:6px;min-height:20px}
+.callui .tm{font-size:15px;font-weight:600;color:rgba(255,255,255,.85);margin-top:2px;min-height:22px}
+.callui .say{font-size:13px;color:rgba(255,255,255,.5);margin-top:18px;line-height:1.7;min-height:22px}
+.callui .acts{display:flex;gap:36px;align-items:flex-end}
+.callui .act{display:flex;flex-direction:column;align-items:center;gap:9px;font:500 11.5px var(--f);color:rgba(255,255,255,.75);background:none;border:none;padding:0;cursor:default}
+.callui .act i{width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center}
+.callui .act i svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.callui .act.end{cursor:pointer} .callui .act.end i{background:#E5484D;transform:rotate(135deg)}
+.callui .act.end:active i{transform:rotate(135deg) scale(.94)}
+.exask{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:8px}
+.exask svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
 /* copy editor — lives outside the phone */
 .copyed{position:fixed;inset:0;z-index:200;background:var(--canvas);display:none;flex-direction:column;font-family:var(--f);color:var(--ink)}
 .copyed.open{display:flex}
@@ -1683,6 +1705,21 @@ button,input,select,textarea{color:inherit}
   </section>
 
   </div><!-- /viewport -->
+  <!-- ═══ CALL · the last answer is a person ═══ -->
+  <div class="callui" id="callui" aria-hidden="true">
+    <div class="who">
+      <div class="av"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20.5c1.2-4 4.2-6 8-6s6.8 2 8 6"/></svg></div>
+      <div class="nm" data-c="callName"></div>
+      <div class="st" id="call-st"></div>
+      <div class="tm num" id="call-tm"></div>
+      <div class="say" id="call-say"></div>
+    </div>
+    <div class="acts">
+      <div class="act"><i><svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 013 3v6a3 3 0 01-6 0V6a3 3 0 013-3zM6 11a6 6 0 0012 0M12 17v4M9 21h6"/></svg></i><span data-c="callMute"></span></div>
+      <button class="act end" onclick="endCall()"><i><svg viewBox="0 0 24 24"><path d="M4.5 12.5C8.7 8.3 15.3 8.3 19.5 12.5l-1.2 1.9a1.6 1.6 0 01-1.9.6l-2.3-.9a1.6 1.6 0 01-1-1.5v-1.2a9 9 0 00-2.2 0v1.2a1.6 1.6 0 01-1 1.5l-2.3.9a1.6 1.6 0 01-1.9-.6z"/></svg></i><span data-c="callEnd"></span></button>
+      <div class="act"><i><svg viewBox="0 0 24 24"><path d="M4 9.5h4l5-4v13l-5-4H4zM16 9a4 4 0 010 6M18.5 6.5a7.5 7.5 0 010 11"/></svg></i><span data-c="callSpeaker"></span></div>
+    </div>
+  </div>
   <div class="sheet-bg" id="sheet-bg" onclick="closeSheet()"></div>
   <div class="sheet" id="sheet"><div class="grip"></div><div id="sheet-body"></div></div>
 </div>
@@ -2005,7 +2042,15 @@ const COPY_DEF={
   pending:['misc','در انتظار'], doneB:['misc','انجام شد'], failedB:['misc','ناموفق'], refundedB:['misc','برگشت'], cancelledB:['misc','لغو شد'],
   txIn:['misc','تبدیل تومان به دلار'], txOut:['misc','برداشت به تومان'], txSend:['misc','انتقال به سارا رضایی'],
   txInvest:['misc','سرمایه‌گذاری در'], txGold:['misc','تحویل طلا'], txKey:['misc','سفارش کلید مهاجر'], txActivate:['misc','فعال‌سازی کلید مهاجر'],
-  justNow:['misc','چند لحظه پیش'], freeBal:['misc','موجودی آزاد']
+  justNow:['misc','چند لحظه پیش'], freeBal:['misc','موجودی آزاد'],
+
+  /* after the deep layer: a person, not more text */
+  exAsk:['ex','نیاز به توضیح بیشتر دارم'],
+  callName:['ex','نرگس · پشتیبان مهاجر'],
+  callRinging:['ex','در حال تماس…'],
+  callOn:['ex','وصل شد'],
+  callSay:['ex','هر سؤالی دارید، بپرسید. عجله‌ای نیست.'],
+  callMute:['ex','بی‌صدا'], callSpeaker:['ex','بلندگو'], callEnd:['ex','پایان']
 };
 /* The Nest arm changes only narrative words, never facts. Kept small on purpose. */
 const COPY_NEST={
@@ -2056,7 +2101,8 @@ const IC={
   info:  '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 16v-4.5M12 8.2h.01"/></svg>',
   check: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
   x:     '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>',
-  chev:  '<svg viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></svg>'
+  chev:  '<svg viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></svg>',
+  phone: '<svg viewBox="0 0 24 24"><path d="M5.5 3.5h3l1.5 4-2 1.5a11 11 0 006.5 6.5l1.5-2 4 1.5v3a2 2 0 01-2 2A15.5 15.5 0 013.5 5.5a2 2 0 012-2z"/></svg>'
 };
 /* Diagrams are rows of tiles built from the same glyphs, so they cannot drift
    from the icons. Flows start on the RIGHT and arrows point LEFT — the reading
@@ -2549,8 +2595,20 @@ function exMore(){
   const e=EXPLAIN[S.ex]; if(!e||!e.more) return;
   const n0=e.steps.length;
   $('ex-steps').insertAdjacentHTML('beforeend',e.more.map((k,i)=>'<div class="step3 deep"><span class="n num">'+fa(n0+i+1)+'</span><span class="t">'+C(k)+'</span></div>').join(''));
-  $('ex-extra').innerHTML='';
+  $('ex-extra').innerHTML='<button class="btn btn-soft exask" onclick="startCall()">'+C('exAsk')+IC.phone+'</button>';
 }
+/* When the text runs out, the answer is a person. The screen behaves like the
+   phone's own call screen: ringing, then connected with a running clock. */
+let callT=null, callS=0;
+function startCall(){
+  const c=$('callui'); c.classList.add('open','ringing'); c.setAttribute('aria-hidden','false');
+  $('call-st').textContent=C('callRinging'); $('call-tm').textContent=''; $('call-say').textContent='';
+  clearInterval(callT); callS=0;
+  callT=setTimeout(()=>{ c.classList.remove('ringing'); $('call-st').textContent=C('callOn'); $('call-say').textContent=C('callSay');
+    const tick=()=>{ $('call-tm').textContent=fa(String(Math.floor(callS/60)).padStart(2,'0')+':'+String(callS%60).padStart(2,'0')); callS++; };
+    tick(); callT=setInterval(tick,1000); },2400);
+}
+function endCall(){ clearTimeout(callT); clearInterval(callT); const c=$('callui'); c.classList.remove('open','ringing'); c.setAttribute('aria-hidden','true'); }
 
 /* ════════ WITHDRAW ════════ */
 function setDir(d){
