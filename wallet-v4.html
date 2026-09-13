@@ -890,6 +890,7 @@ button,input,select,textarea{color:inherit}
 .cmp th .ic svg{width:16px;height:16px;fill:none;stroke:var(--ink);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .cmp th .ic.s-gold{background:var(--warn-soft)} .cmp th .ic.s-gold svg{stroke:var(--warn)}
 .cmp th .ic.s-self{background:var(--ok-soft)} .cmp th .ic.s-self svg{stroke:var(--ok)}
+.cmp td .na svg{width:20px;height:20px;border-radius:50%;padding:4px;fill:none;stroke-width:2.4;stroke-linecap:round;display:inline-block;vertical-align:middle;background:var(--surface-2);stroke:var(--ink-3)}
 .cmp td .y svg,.cmp td .n svg{width:20px;height:20px;border-radius:50%;padding:4px;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:middle}
 .cmp td .y svg{background:var(--ok-soft);stroke:var(--ok)} .cmp td .n svg{background:var(--bad-soft);stroke:var(--bad)}
 .cmp .on{background:var(--surface-2)}
@@ -2119,6 +2120,7 @@ const IC={
   check: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
   x:     '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>',
   chev:  '<svg viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></svg>',
+  dash:  '<svg viewBox="0 0 24 24"><path d="M7 12h10"/></svg>',
   phone: '<svg viewBox="0 0 24 24"><path d="M5.5 3.5h3l1.5 4-2 1.5a11 11 0 006.5 6.5l1.5-2 4 1.5v3a2 2 0 01-2 2A15.5 15.5 0 013.5 5.5a2 2 0 012-2z"/></svg>'
 };
 /* Diagrams are rows of tiles built from the same glyphs, so they cannot drift
@@ -2552,7 +2554,8 @@ const STATE_DEF={
 };
 const CU_ORDER=['basic','gold','self'];
 /* one row per question, one column per place; 1 = yes */
-const CMP=[{c:'cmp1',v:[0,1,1]},{c:'cmp2',v:[1,0,0]},{c:'cmp3',v:[1,0,1]},{c:'cmp4',v:[0,1,1]}];
+/* 1 = yes, 0 = no, 2 = does not apply (a dash) */
+const CMP=[{c:'cmp1',v:[0,1,1]},{c:'cmp2',v:[1,2,0]},{c:'cmp3',v:[1,0,1]},{c:'cmp4',v:[0,1,1]}];
 function openCustody(from){ S.cuBack=from||'home'; renderCustody(); go('custody'); }
 function renderCustody(){
   const host=$('cu-states'); if(!host) return;
@@ -2568,7 +2571,7 @@ function renderCustody(){
     </div>`; }).join('');
   const cmp=$('cu-cmp'); if(cmp) cmp.innerHTML=`<div class="ct">${C('cmpTitle')}</div><table>
     <tr><th></th>${CU_ORDER.map(k=>`<th class="${k===S.custody?'on':''}"><span class="ic ${STATE_DEF[k].cls}">${IC[STATE_DEF[k].ic]}</span>${C(STATE_DEF[k].n)}</th>`).join('')}</tr>
-    ${CMP.map(r=>`<tr><td>${C(r.c)}</td>${r.v.map((v,i)=>`<td class="${CU_ORDER[i]===S.custody?'on':''}"><span class="${v?'y':'n'}">${v?IC.check:IC.x}</span></td>`).join('')}</tr>`).join('')}
+    ${CMP.map(r=>`<tr><td>${C(r.c)}</td>${r.v.map((v,i)=>`<td class="${CU_ORDER[i]===S.custody?'on':''}"><span class="${v===2?'na':v?'y':'n'}">${v===2?IC.dash:v?IC.check:IC.x}</span></td>`).join('')}</tr>`).join('')}
   </table>`;
 }
 function renderCuPill(){
