@@ -857,9 +857,10 @@ button,input,select,textarea{color:inherit}
 .state .d{font-size:13px;color:var(--ink-2);margin-top:9px;line-height:1.65}
 .state .acts2{display:flex;gap:8px;margin-top:10px}
 .state .acts2 .btn{height:40px;font-size:12.5px;flex:1}
-.pc{display:grid;grid-template-columns:1fr 1fr;gap:7px 12px;margin-top:11px}
-.pc span{display:flex;align-items:flex-start;gap:7px;font-size:12px;line-height:1.5;color:var(--ink)}
-.pc span svg{width:16px;height:16px;flex:none;border-radius:50%;padding:3px;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
+.pc{display:flex;flex-direction:column;gap:6px;margin-top:11px}
+.pc span{display:flex;align-items:center;gap:8px;font-size:12.5px;line-height:1.5;color:var(--ink)}
+.pc .y+.n{margin-top:4px;padding-top:9px;border-top:1px solid var(--line-2)}
+.pc span svg{width:17px;height:17px;flex:none;border-radius:50%;padding:3.5px;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 .pc .y svg{background:var(--ok-soft);stroke:var(--ok)}
 .pc .n svg{background:var(--bad-soft);stroke:var(--bad)}
 
@@ -1772,12 +1773,12 @@ const COPY_GROUPS={
 };
 const COPY_DEF={
   /* intro */
-  introH:['intro','پولتان را دلار کنید<br>و امن نگه دارید.'],
-  introSub:['intro','جای پول را خودتان انتخاب می‌کنید. هر وقت خواستید، خرجش می‌کنید.'],
+  introH:['intro','دارایی را به صورت امن به دلار دیجیتال تبدیل کنید<br>هر موقع که خواستید از آن استفاده کنید'],
+  introSub:['intro','نحوهٔ نگهداری دارایی‌تان را خودتان انتخاب می‌کنید. هر وقت خواستید، استفاده می‌کنید.'],
   useSend:['intro','انتقال'], useSendD:['intro','به هر کسی'],
   useInvest:['intro','سرمایه‌گذاری'], useInvestD:['intro','طلا و رمزارز'],
-  useKeep:['intro','زیر بالشت'], useKeepD:['intro','دور از تورم'],
-  introSafeQ:['intro','«امن» یعنی چه؟'],
+  useKeep:['intro','زیر بالشت'], useKeepD:['intro','حضانت با شما'],
+  introSafeQ:['intro','«امن» یعنی چی؟'],
   introCta:['intro','شروع'],
 
   /* home */
@@ -1786,8 +1787,8 @@ const COPY_DEF={
   availLabel:['home','آزاد'], investedLabel:['home','سرمایه‌گذاری'], pendingLabel:['home','در راه'],
   unitAlt:['home','به تومان'], unitBack:['home','به دلار'],
   qSend:['home','انتقال'], qInvest:['home','سرمایه‌گذاری'], qGold:['home','تحویل طلا'], qOut:['home','برداشت'],
-  homeEmpty:['home','با تبدیل شروع کنید.'],
-  homeCta:['home','تبدیل به دلار'],
+  homeEmpty:['home',''],
+  homeCta:['home','حفظ ارزشِ دارایی'],
   recent:['home','اخیر'], seeAll:['home','همه'],
   cuAtMohajer:['home','پول شما نزد مهاجر است'],
   cuAtYou:['home','پول شما زیر بالشت خودتان است'],
@@ -1834,11 +1835,11 @@ const COPY_DEF={
   cuBasicN:['cu','نزد مهاجر'],
   cuBasicL:['cu','ما نگه می‌داریم. هر وقت بخواهید، برمی‌گردانیم.'],
   cuBasicP1:['cu','هر وقت بخواهید، برداشت'], cuBasicP2:['cu','رمز گم شد؟ بازیابی می‌شود'],
-  cuBasicC1:['cu','برای برداشت، به ما نیاز دارید'],
+  cuBasicC1:['cu','به مهاجر وابسته است'],
   cuGoldN:['cu','طلای فیزیکی'],
   cuGoldL:['cu','طلا می‌گیرید و دست خودتان نگه می‌دارید.'],
   cuGoldP1:['cu','دست خودتان'], cuGoldP2:['cu','بدون نیاز به ما'],
-  cuGoldC1:['cu','نگهداری با شماست'], cuGoldC2:['cu','برای خرج، باید بفروشید'],
+  cuGoldC1:['cu','دزدی یا گم‌شدن، جبران ندارد'], cuGoldC2:['cu','برای خرج، باید بفروشید'],
   cuGoldCta:['cu','تحویل طلا'],
   cuSelfN:['cu','کلید مهاجر'],
   cuSelfL:['cu','کلید پول دست شماست. ما دسترسی نداریم.'],
@@ -1846,7 +1847,7 @@ const COPY_DEF={
   cuSelfC1:['cu','کلید و ۱۲ کلمه گم شود، برنمی‌گردد'],
   cuSelfCta:['cu','سفارش کلید'],
   cuActive:['cu','فعال'],
-  cuWhatQ:['cu','یعنی چه؟'],
+  cuWhatQ:['cu','یعنی چی؟'],
 
   /* gold */
   goldTitle:['gold','تحویل طلا'],
@@ -1920,7 +1921,7 @@ const COPY_DEF={
   continueNewRate:['wd','ادامه با نرخ جدید'],
 
   /* explain pages */
-  exSafeT:['ex','«امن» یعنی چه؟'],
+  exSafeT:['ex','«امن» یعنی چی؟'],
   exSafe1:['ex','پول شما دلار است، نه تومان. تورم آن را کوچک نمی‌کند.'],
   exSafe2:['ex','جایش را خودتان انتخاب می‌کنید: نزد ما، طلا، یا کلید خودتان.'],
   exSafe3:['ex','هر وقت بخواهید، برمی‌دارید.'],
@@ -1943,15 +1944,15 @@ const COPY_DEF={
   exBasket1:['ex','چند دارایی با هم، نه فقط یکی. یکی افت کند، بقیه جبران می‌کنند.'],
   exBasket2:['ex','سود ثابت ندارد. ارزش با بازار بالا و پایین می‌رود.'],
   exBasket3:['ex','قفل ندارد. هر وقت خواستید، بیرون بکشید.'],
-  exCuBasicT:['ex','نزد مهاجر یعنی چه؟'],
+  exCuBasicT:['ex','نزد مهاجر یعنی چی؟'],
   exCuBasic1:['ex','کلید پول نزد مهاجر و شریک نگهدارندهٔ دارای مجوز است.'],
   exCuBasic2:['ex','برداشت با دستور شما انجام می‌شود، از مسیر ما.'],
   exCuBasic3:['ex','رمز را گم کردید؟ با احراز هویت برمی‌گردد.'],
-  exCuGoldT:['ex','طلای فیزیکی یعنی چه؟'],
+  exCuGoldT:['ex','طلای فیزیکی یعنی چی؟'],
   exCuGold1:['ex','دلار شما طلا می‌شود و به دست شما می‌رسد.'],
-  exCuGold2:['ex','از این لحظه، نگهداری‌اش با خودتان است.'],
+  exCuGold2:['ex','از این لحظه نگهداری‌اش با خودتان است؛ دزدی یا گم‌شدن جبران نمی‌شود.'],
   exCuGold3:['ex','برای خرج یا انتقال، باید دوباره بفروشید.'],
-  exCuSelfT:['ex','کلید مهاجر یعنی چه؟'],
+  exCuSelfT:['ex','کلید مهاجر یعنی چی؟'],
   exCuSelf1:['ex','کلید پول فقط داخل دستگاه شماست.'],
   exCuSelf2:['ex','بدون دستگاه شما، هیچ‌کس نمی‌تواند پول را جابه‌جا کند.'],
   exCuSelf3:['ex','دستگاه و ۱۲ کلمه گم شوند، پول برنمی‌گردد.'],

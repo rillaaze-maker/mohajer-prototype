@@ -4,7 +4,7 @@
   "description": "Ù¾Ø±ÙˆØªÙˆØªØ§ÛŒÙ¾ Ø¢Ø²Ù…Ø§ÛŒØ´ÛŒ Ù…Ù‡Ø§Ø¬Ø± â€” Ù†Ú¯Ù‡Ø¯Ø§Ø±ÛŒ Ú©Ù„ÛŒØ¯ØŒ Ø³Ø±Ù…Ø§ÛŒÙ‡â€ŒÚ¯Ø°Ø§Ø±ÛŒ Ùˆ ØªØ­ÙˆÛŒÙ„ ÙÛŒØ²ÛŒÚ©ÛŒ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "./wallet-v4.html?v=42",
+  "start_url": "./wallet-v4.html?v=43",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",

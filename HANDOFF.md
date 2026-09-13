@@ -1126,6 +1126,11 @@ Copy table: 329 keys. `copy.json` regenerated. Sweep: 0 problems.
   `data-c` or by reverse lookup of the rendered text, deepest element wins, so
   JS-rendered strings are editable too; composite strings (label + number) are
   not.
+- The copy owner's first pass (intro headline, «حفظ ارزشِ دارایی» CTA, empty
+  home line) is now the default table, so copy.json and the built-in text agree
+  again. Two honest costs rewritten after a colleague's note: basic = «به مهاجر
+  وابسته است», gold = «دزدی یا گم‌شدن، جبران ندارد» (theft was the missing risk).
+  Pros/cons are one column, one line each. «یعنی چه» → «یعنی چی» everywhere.
 
 ### Open
 
