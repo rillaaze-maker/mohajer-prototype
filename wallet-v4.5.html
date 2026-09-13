@@ -895,6 +895,8 @@ button,input,select,textarea{color:inherit}
 .cmp td .y svg{background:var(--ok-soft);stroke:var(--ok)} .cmp td .n svg{background:var(--bad-soft);stroke:var(--bad)}
 .cmp .on{background:var(--surface-2)}
 .cmp th.on{border-radius:12px 12px 0 0} .cmp tr:last-child td.on{border-radius:0 0 12px 12px}
+.cmp2 td{font-size:12px;line-height:1.45} .cmp2 td:first-child{width:34%}
+.cmp2 td .ok-txt{font-weight:600} .cmp2 td .bad-txt{color:var(--bad);font-weight:600}
 
 /* the deep layer button on an explainer */
 .exmore{margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px}
@@ -1504,8 +1506,8 @@ button,input,select,textarea{color:inherit}
       </div>
       <div class="sec" data-c="prosCons"></div>
       <div class="card" id="kt-pc"></div>
-      <button class="linkrow" onclick="openExplain('keyDeep')">
-        <span class="ic" data-ic="info"></span><span class="t" data-c="keyDeepQ"></span><span class="go" data-ic="chev"></span>
+      <button class="linkrow" onclick="openExplain('pwDeep')">
+        <span class="ic" data-ic="info"></span><span class="t" data-c="pwDeepQ"></span><span class="go" data-ic="chev"></span>
       </button>
       <div style="height:12px"></div>
     </div>
@@ -1530,6 +1532,10 @@ button,input,select,textarea{color:inherit}
         <span class="badge b-warn" data-c="pwHardB"></span><div class="radio"></div>
       </button>
       <p class="tiny" style="margin-top:12px;text-align:center" data-c="pwModeNote"></p>
+      <div class="cmp cmp2" id="pm-cmp"></div>
+      <button class="linkrow" onclick="openExplain('pwCompare','pw-mode')">
+        <span class="ic" data-ic="info"></span><span class="t" data-c="pwCompareQ"></span><span class="go" data-ic="chev"></span>
+      </button>
       <div style="height:12px"></div>
     </div>
     <button class="btn btn-primary" onclick="pwModeGo()" data-c="next"></button>
@@ -2129,7 +2135,7 @@ const COPY_GROUPS={
 };
 const COPY_DEF={
   /* intro */
-  introH:['intro','دارایی‌تان را <em>امن</em><br>دلارِ دیجیتال کنید.'],
+  introH:['intro','داراییتان را در آشیانه‌ای <em>امن</em><br>دیجیتال کنید'],
   introH2:['intro','هر وقت خواستید، استفاده کنید.'],
   introSub:['intro','جای نگهداری‌اش را خودتان انتخاب می‌کنید.'],
   useSend:['intro','انتقال'], useSendD:['intro','به هر کسی'],
@@ -2215,12 +2221,21 @@ const COPY_DEF={
   pwTitle:['pw','کیف پول شخصی'],
   pw1:['pw','کلید پول را خودتان نگه می‌دارید؛ روی گوشی یا یک دستگاه کوچک.'],
   pw2:['pw','هر مقدار خواستید منتقل می‌کنید. بقیه نزد مهاجر می‌ماند.'],
-  pw3:['pw','بدون کلید شما، هیچ‌کس نمی‌تواند جابه‌جا کند. مهاجر هم.'],
+  pw3:['pw','بدون کلید شما، هیچ‌کس نمی‌تواند جابه‌جا کند. حتی مهاجر.'],
   pwMake:['pw','ساخت کیف پول'],
   pwModeT:['pw','روی گوشی یا دستگاه؟'],
   pwSoft:['pw','روی گوشی'], pwSoftD:['pw','همین الان. کلید در فضای امن گوشی.'], pwSoftB:['pw','سریع'],
-  pwHard:['pw','دستگاه فیزیکی'], pwHardD:['pw','کلید داخل یک دستگاه جدا. <span class="num">$49</span> · ۵ تا ۷ روز.'], pwHardB:['pw','اختیاری'],
+  pwHard:['pw','دستگاه فیزیکی'], pwHardD:['pw','کلید داخل یک دستگاه جدا. ۵ تا ۷ روز.'], pwHardB:['pw','اختیاری'],
   pwModeNote:['pw','هر دو، کلید را به شما می‌دهد. دستگاه، از گوشی جداست.'],
+  pwCompareQ:['pw','فرقشان چیست؟'],
+  pmT:['pw','در یک نگاه'],
+  pm1:['pw','کلید کجا ساخته می‌شود'], pm1a:['pw','داخل گوشی'], pm1b:['pw','داخل دستگاه'],
+  pm2:['pw','۱۲ کلمه'], pm2a:['pw','روی صفحهٔ گوشی'], pm2b:['pw','روی صفحهٔ دستگاه'],
+  pm3:['pw','تأیید هر انتقال'], pm3a:['pw','لمس روی گوشی'], pm3b:['pw','دکمهٔ دستگاه'],
+  pm4:['pw','گوشی هک شود'], pm4a:['pw','در خطر'], pm4b:['pw','امن'],
+  pm5:['pw','آماده'], pm5a:['pw','همین الان'], pm5b:['pw','۵ تا ۷ روز'],
+  pm6:['pw','هزینه'], pm6a:['pw','رایگان'], pm6b:['pw','<span class="num">$49</span>'],
+  pwDeepQ:['pw','دقیق‌تر چطور کار می‌کند؟'],
   pwReadyT:['pw','قبل از شروع'],
   pwR1:['pw','جای خلوت'], pwR1d:['pw','کسی صفحه را نبیند.'],
   pwR2:['pw','بدون عکس'], pwR2d:['pw','فقط روی کاغذ بنویسید.'],
@@ -2254,6 +2269,24 @@ const COPY_DEF={
   txPwOut:['pw','انتقال به کیف پول شخصی'], txPwIn:['pw','بازگشت از کیف پول شخصی'], txPwMake:['pw','ساخت کیف پول شخصی'],
   txRef:['pw','شناسهٔ انتقال'], techRow:['pw','جزئیات فنی'],
   /* the one place the technical names are said, by request, a layer down */
+  exPwDeepT:['ex','کیف پول شخصی، دقیق‌تر'],
+  exPwDeep1:['ex','کلید پول روی گوشی یا دستگاهِ خودتان ساخته می‌شود و همان‌جا می‌ماند. مهاجر آن را نمی‌بیند.'],
+  exPwDeep2:['ex','۱۲ کلمه، نسخهٔ پشتیبان کلید است. روی کاغذ بنویسید؛ عکس نگیرید.'],
+  exPwDeep3:['ex','هر انتقال از این کیف پول را خودتان تأیید می‌کنید. مهاجر نمی‌تواند به‌جای شما.'],
+  exPwDeep4:['ex','گوشی یا دستگاه گم شد؟ یکی نو بگیرید و ۱۲ کلمه را وارد کنید.'],
+  exPwDeep5:['ex','مهاجر نبود؟ ۱۲ کلمه در هر کیف پول استاندارد دیگری کار می‌کند.'],
+  exPwDeep6:['ex','گوشی/دستگاه و ۱۲ کلمه هر دو گم شدند؟ پول برنمی‌گردد. این قانون خودِ این روش است.'],
+  exPwDeepM1:['ex','کلید خصوصی در فضای امن گوشی (Secure Enclave / StrongBox) یا تراشهٔ امن دستگاه ساخته می‌شود و خارج نمی‌شود.'],
+  exPwDeepM2:['ex','۱۲ کلمه، استاندارد BIP-39 است؛ همین کیف پول در هر کیف پول استاندارد قابل بازیابی است.'],
+  exPwDeepM3:['ex','هر انتقال روی خودِ گوشی یا دستگاه امضا می‌شود؛ فقط پیام امضاشده به شبکه می‌رود.'],
+  exPwDeepM4:['ex','موجودی از خودِ شبکه خوانده می‌شود؛ خرج از بیرون اپ هم دیده می‌شود. مهاجر نه کلید دارد، نه کلمات.'],
+  exPwCompT:['ex','گوشی یا دستگاه؟'],
+  exPwComp1:['ex','هر دو، کلید را به شما می‌دهد. فرق، جای کلید است: داخل گوشی، یا داخل یک دستگاه جدا.'],
+  exPwComp2:['ex','گوشی: همین الان و رایگان. اگر گوشی هک شود، کلید در خطر است.'],
+  exPwComp3:['ex','دستگاه: کلید هرگز به گوشی نمی‌آید؛ هر انتقال با دکمهٔ دستگاه. <span class="num">$49</span>، ۵ تا ۷ روز.'],
+  exPwCompM1:['ex','برای مبلغ کم و شروع: گوشی. برای مبلغ زیاد یا نگهداری بلندمدت: دستگاه.'],
+  exPwCompM2:['ex','می‌توانید با گوشی شروع کنید و بعداً دستگاه بگیرید؛ کیف پول همان می‌ماند.'],
+  exPwCompM3:['ex','۱۲ کلمهٔ دستگاه را هیچ‌وقت در گوشی یا اپ وارد نکنید؛ فقط روی خودِ دستگاه.'],
   exTechT:['ex','جزئیات فنی'],
   exTech1:['ex','دارایی: Tether USD (USDT). هر واحد یک دلار.'],
   exTech2:['ex','شبکه: TRON · استاندارد TRC-20. فقط همین؛ دارایی دیگری به این نشانی نفرستید.'],
@@ -2400,7 +2433,7 @@ const COPY_DEF={
   dgNoKey:['dg','مهاجر: بدون کلید'], dgKeyIn:['dg','کلید داخل دستگاه'], dgOnlyDev:['dg','فقط با دستگاه شما'],
   dgUsd:['dg','دلار، نه تومان'], dgPlace:['dg','جا: انتخاب شما'], dgAnytime:['dg','هر وقت بخواهید'],
   dgDigi:['dg','دلار دیجیتال'], dgPartner:['dg','نزد شریک نگهدارنده'], dgOrKey:['dg','یا با کلید شما'],
-  dgGold:['dg','طلا'], dgBasket:['dg','یک سبد'], dgKeyPhone:['dg','کلید روی گوشی'], dgKeyDev:['dg','یا روی دستگاه'],
+  dgGold:['dg','طلا'], dgBasket:['dg','یک سبد'], dgKeyPhone:['dg','کلید روی گوشی'], dgKeyDev:['dg','یا روی دستگاه'], dgModePhone:['dg','روی گوشی · رایگان'], dgModeDev:['dg','دستگاه · <tspan style="direction:ltr;unicode-bidi:isolate">$49</tspan>'],
   dgAtMohajer:['dg','نزد مهاجر'], dgPhysGold:['dg','طلای فیزیکی'], dgYourKey:['dg','کیف پول شما'],
 
   /* comparison on the custody page */
@@ -2490,7 +2523,7 @@ const IC={
    direction of the people this is for. */
 const glyph=n=>(IC[n]||'').replace(/^<svg[^>]*>|<\/svg>$/g,'');
 function tiles(items,o={}){
-  const n=items.length, xs=n===3?[250,150,50]:n===2?[200,100]:[150], cy=46, sc=1.75, h=12*sc;
+  const n=items.length, xs=n===3?[250,150,50]:n===2?[205,95]:[150], cy=46, sc=1.75, h=12*sc;
   const bg={ok:'var(--ok-soft)',g:'var(--warn-soft)',bad:'var(--bad-soft)'};
   let out='';
   items.forEach((it,i)=>{ const cx=xs[i];
@@ -2510,7 +2543,8 @@ const DIAG={
   dollar:()=>tiles([{ic:'coin',cls:'ok',l:'dgDigi'},{ic:'bank',l:'dgPartner'},{ic:'key',l:'dgOrKey'}]),
   basket:()=>tiles([{ic:'coin',cls:'ok',l:'dgDollar'},{ic:'gold',cls:'g',l:'dgGold'},{ic:'basket',l:'dgBasket'}],{ops:['+','=']}),
   states:()=>tiles([{ic:'bank',l:'dgAtMohajer'},{ic:'gold',cls:'g',l:'dgPhysGold'},{ic:'key',cls:'ok',l:'dgYourKey'}]),
-  pw:    ()=>tiles([{ic:'noKey',cls:'mute',l:'dgNoKey'},{ic:'mobile',cls:'ok',l:'dgKeyPhone'},{ic:'key',l:'dgKeyDev'}])
+  pw:    ()=>tiles([{ic:'noKey',cls:'mute',l:'dgNoKey'},{ic:'mobile',cls:'ok',l:'dgKeyPhone'},{ic:'key',l:'dgKeyDev'}]),
+  modes: ()=>tiles([{ic:'mobile',cls:'ok',l:'dgModePhone'},{ic:'key',cls:'g',l:'dgModeDev'}])
 };
 
 /* ════════ state ════════ */
@@ -2576,6 +2610,7 @@ function go(name){
   if(name==='custody') renderCustody();
   if(name==='p-tut') $('pt-vis').innerHTML=DIAG.gold();
   if(name==='pw-tut'){ $('pw-vis').innerHTML=DIAG.pw(); renderKeyPC(); }
+  if(name==='pw-mode') renderPmCmp();
   if(name==='intro'){ $('why-vis').innerHTML=DIAG.states(); slideReset(); }
   if(name==='pw-sign'){ S.signed=false; const h=S.pw&&S.pw.mode==='hard'; $('sign-soft').hidden=h; $('sign-hard').hidden=!h; $('sign-msg').innerHTML=''; $('holdbtn').className='holdbtn'; }
   if(name==='pw-wallet') renderPw();
@@ -2923,6 +2958,11 @@ function pwCreate(mode){
 }
 const pwShort=()=>S.pw?S.pw.addr.slice(0,4)+'…'+S.pw.addr.slice(-4):'';
 function pwEntry(){ go(S.pw?'pw-wallet':'pw-tut'); }
+function renderPmCmp(){
+  const el=$('pm-cmp'); if(!el) return;
+  const rows=[1,2,3,4,5,6].map(i=>`<tr><td>${C('pm'+i)}</td><td class="${i===4?'bad-txt':''}">${C('pm'+i+'a')}</td><td class="${i===4?'ok-txt':''}">${C('pm'+i+'b')}</td></tr>`).join('');
+  el.innerHTML=`<div class="ct">${C('pmT')}</div><table><tr><th></th><th><span class="ic">${IC.mobile}</span>${C('pwSoft')}</th><th><span class="ic s-gold">${IC.key}</span>${C('pwHard')}</th></tr>${rows}</table>`;
+}
 function pwMode(m){ S.pwMode=m; $('pm-soft').setAttribute('aria-pressed',m==='soft'); $('pm-hard').setAttribute('aria-pressed',m==='hard'); }
 function pwModeGo(){ if((S.pwMode||'soft')==='hard') go('k-intro'); else go('pw-ready'); }
 function pwShowWords(){
@@ -3115,8 +3155,10 @@ const EXPLAIN={
   basket: {t:'exBasketT', vis:'basket', steps:['exBasket1','exBasket2','exBasket3'], more:['exBasketM1','exBasketM2','exBasketM3']},
   cuBasic:{t:'exCuBasicT',vis:'states', steps:['exCuBasic1','exCuBasic2','exCuBasic3'],more:['exCuBasicM1','exCuBasicM2','exCuBasicM3']},
   cuGold: {t:'exCuGoldT', vis:'gold',   steps:['exCuGold1','exCuGold2','exCuGold3'],   more:['exCuGoldM1','exCuGoldM2','exCuGoldM3']},
+  pwDeep: {t:'exPwDeepT', vis:'pw',     steps:['exPwDeep1','exPwDeep2','exPwDeep3','exPwDeep4','exPwDeep5','exPwDeep6'], more:['exPwDeepM1','exPwDeepM2','exPwDeepM3','exPwDeepM4']},
+  pwCompare:{t:'exPwCompT',vis:'modes', steps:['exPwComp1','exPwComp2','exPwComp3'], more:['exPwCompM1','exPwCompM2','exPwCompM3']},
   tech:   {t:'exTechT',   vis:'pw',     steps:['exTech1','exTech2','exTech3','exTech4','exTech5','exTech6'], deep:true},
-  cuSelf: {t:'exCuSelfT', vis:'pw',     steps:['exCuSelf1','exCuSelf2','exCuSelf3'],   more:['exKeyDeep1','exKeyDeep2','exKeyDeep3','exKeyDeep4','exKeyDeep5','exKeyDeep6','exKeyDeepM1','exKeyDeepM2','exKeyDeepM3','exKeyDeepM4']}
+  cuSelf: {t:'exCuSelfT', vis:'pw',     steps:['exCuSelf1','exCuSelf2','exCuSelf3'],   more:['exPwDeep1','exPwDeep2','exPwDeep3','exPwDeep4','exPwDeep5','exPwDeep6','exPwDeepM1','exPwDeepM2','exPwDeepM3','exPwDeepM4']}
 };
 function openExplain(id,from){
   const e=EXPLAIN[id]; if(!e) return;
@@ -3321,7 +3363,8 @@ function renderCopyEd(){
 function setCopy(k,v){
   if(v===COPY_DEF[k][1]) delete COPY_USER[k]; else COPY_USER[k]=v;
   applyCopy(); render(); renderCustody(); renderUse(); renderNests(); renderActivity();
-  if(current==='k-tut') renderKeyPC();
+  if(current==='k-tut'||current==='pw-tut') renderKeyPC();
+  if(current==='pw-mode') renderPmCmp();
   if(current==='explain'&&S.ex) openExplain(S.ex,S.exBack);
   try{ localStorage.setItem(LS_KEY,JSON.stringify(COPY_USER)); }catch(e){}
   edCount();
