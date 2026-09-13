@@ -53,7 +53,10 @@ Tagline: **همسفر مالی، مهاجر**
 
 1. **Toman, not Rial**, in all UI. Nobody says ریال in an app.
 2. **Dollar amounts in Latin digits, Toman in Persian digits.** `$۶۸۲.۰۰` reads as broken.
-3. **Never say USDT / token / network / blockchain** anywhere in the UI. The asset is «دلار دیجیتال».
+3. **Never say USDT / token / network / blockchain** in the first layer of the UI. The asset is «دلار دیجیتال».
+   Since the custody-transfer concept (2026-09-13) the technical names are allowed in exactly two places, both
+   opened on request: the «جزئیات فنی» explainer of the personal wallet, and the «جزئیات فنی» row on a
+   transfer receipt. The sweep ignores `.deep` content for this reason.
 4. **Never say the word «اعتماد» in the UI.** Demonstrate it; don't claim it. (No-Name protocol.)
 5. **No verbs attached to currency labels.** «تومان» / «دلار دیجیتال» stand alone. «می‌پردازی / می‌گیری» was rejected as cliché and too familiar.
 6. **Formal register throughout** (شما, never تو). The audience has money.
@@ -1143,6 +1146,52 @@ Copy table: 329 keys. `copy.json` regenerated. Sweep: 0 problems.
 - `key-showcase.html` describes MPC as an alternative in one line.
 - The `p-map` screen is the wordiest of the flow screens (39) because of the
   four shop rows; acceptable, but the address could drop to the shop page only.
+
+## 10g. Personal wallet — the custody-transfer concept, in v4 language (2026-09-13)
+
+**Lives in `wallet-v4.5.html`, not v4.** The user wants v4 frozen as the test
+build; the custody-transfer concept is a separate file with its own copy table
+(`copy-v4.5.json`), manifest (`manifest-v4.5.json`), storage key (`mhj45-copy`)
+and index entry. v4 keeps `copy.json` (340 keys). Nothing below touches v4.
+
+Source: `Mohajer_Personal_Wallet_Custody_Transfer_Concept_v2.html` (a colleague's
+spec) plus their voice note. What changed in the model: custody is no longer a
+binary state you switch into — it is **a split**. Any amount can go from Mohajer
+to a personal wallet and back; the home card shows both (`نزد شما` box), the pill
+reads «$1,500 نزد مهاجر · $499 نزد شما», and `S.custody` is *derived* from where the
+money is (`self` iff the personal balance > 0). MPC and 2-of-3 stay out.
+
+Two ways to hold the key, one wallet: **روی گوشی** (software, immediate — the
+twelve words are shown once and checked three times before the wallet exists)
+or **دستگاه فیزیکی** (the existing $49 order flow; activating a delivered device
+creates the wallet with device-made words and moves the earmarked amount).
+Ordering a device never starts a transfer — the concept's acceptance rule.
+
+Flows, all in the text budget: `pw-tut → pw-mode → pw-ready → pw-words →
+pw-check → pw-wallet`; A: `pw-amt → pw-quote → pw-status` (ثبت شد → در راه →
+رسید; fee $1.20 shown and deducted, «برگشت‌ناپذیر» note; fail mode stops *before*
+sending and refunds in full); B: `pw-back-amt → pw-back-quote → pw-sign →
+pw-back-status` (destination fixed to the user's own Mohajer account; the user
+signs — hold the button on the phone, or press the device — Mohajer cannot; a
+refused signature changes nothing). Fee comes out of the amount, so the user never
+needs TRX — said in the tech explainer, not in the flow.
+
+The **tech layer** (`openExplain('tech')`) is where USDT / TRON / TRC‑20, the full
+address, key type and the on-chain-is-truth sentence live. Receipts of A/B carry a
+«جزئیات فنی ›» row that reveals asset and network. Both are `.deep` and the sweep
+skips them; everything else still fails on jargon.
+
+Also this pass: the **intro is two slides** — the proposition, then «چرا مهاجر؟»
+(three places diagram + three rows: place is your choice, custody with you, exit
+any time); dots, swipe or «بعدی», then «شروع». `S.slide` is the index; the scroll
+follows it, so it is testable headless.
+
+Verified by scene files (`scene-pw.js`, `scene-pw2.js`): 2,000 → 500 out → wallet
+498.80; 200 back → 1,698.80 / 298.80, total 1,997.60 (two fees); fail-mode out
+refunds everything; refused signature leaves the wallet untouched; device
+activation moves 500 → 498.80; slides reach home. Sweep: 0 problems in both
+custody states. Copy table: 450 keys.
+
 
 ---
 
