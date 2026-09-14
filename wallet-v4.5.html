@@ -925,6 +925,16 @@ button,input,select,textarea{color:inherit}
 .exask{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:8px}
 .exask svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 
+/* «مثلاً» — the example box. One everyday picture for one hard idea. It is the
+   thing an eight-year-old would understand; the rows above it are for adults. */
+.eg{display:flex;gap:12px;align-items:flex-start;padding:14px 15px;border-radius:var(--r-md);background:var(--warn-soft);margin-top:12px}
+.eg .ic{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.65);display:grid;place-items:center;flex:none}
+:root[data-theme="dark"] .eg .ic{background:rgba(255,255,255,.08)}
+.eg .ic svg{width:17px;height:17px;stroke:var(--warn);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.eg b{display:block;font-size:11px;font-weight:700;color:var(--warn);letter-spacing:.02em;margin-bottom:3px}
+.eg p{font-size:13.5px;line-height:1.75;color:var(--ink);margin:0}
+.eg-slot:empty{display:none}
+
 /* intro slides: two panels, swipe or «بعدی» */
 .slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -20px;-webkit-overflow-scrolling:touch}
 .slides::-webkit-scrollbar{display:none}
@@ -1370,6 +1380,7 @@ button,input,select,textarea{color:inherit}
     <div class="scroll">
       <div class="vis" id="ex-vis"></div>
       <div class="steps3" id="ex-steps"></div>
+      <div class="eg-slot" id="ex-eg"></div>
       <div id="ex-extra"></div>
       <div style="height:12px"></div>
     </div>
@@ -1389,6 +1400,7 @@ button,input,select,textarea{color:inherit}
         <div class="step3"><span class="n num">۲</span><span class="t" data-c="gold2"></span></div>
         <div class="step3"><span class="n num">۳</span><span class="t" data-c="gold3"></span></div>
       </div>
+      <div class="eg-slot" data-eg="egGold"></div>
       <button class="linkrow" onclick="openExplain('goldWhy')">
         <span class="ic" data-ic="info"></span><span class="t" data-c="goldWhyQ"></span><span class="go" data-ic="chev"></span>
       </button>
@@ -1504,6 +1516,7 @@ button,input,select,textarea{color:inherit}
         <div class="step3"><span class="n num">۲</span><span class="t" data-c="pw2"></span></div>
         <div class="step3"><span class="n num">۳</span><span class="t" data-c="pw3"></span></div>
       </div>
+      <div class="eg-slot" data-eg="egPw" data-always="1"></div>
       <div class="sec" data-c="prosCons"></div>
       <div class="card" id="kt-pc"></div>
       <button class="linkrow" onclick="openExplain('pwDeep')">
@@ -1532,6 +1545,7 @@ button,input,select,textarea{color:inherit}
         <span class="badge b-warn" data-c="pwHardB"></span><div class="radio"></div>
       </button>
       <p class="tiny" style="margin-top:12px;text-align:center" data-c="pwModeNote"></p>
+      <div class="eg-slot" data-eg="egMode"></div>
       <div class="cmp cmp2" id="pm-cmp"></div>
       <button class="linkrow" onclick="openExplain('pwCompare','pw-mode')">
         <span class="ic" data-ic="info"></span><span class="t" data-c="pwCompareQ"></span><span class="go" data-ic="chev"></span>
@@ -1567,6 +1581,7 @@ button,input,select,textarea{color:inherit}
     <div class="scroll">
       <div class="words" id="pw-words"></div>
       <p class="lead" style="margin-top:14px;text-align:center" data-c="pwWordsL"></p>
+      <div class="eg-slot" data-eg="egWords"></div>
       <div style="height:12px"></div>
     </div>
     <button class="btn btn-primary" onclick="pwStartCheck()" data-c="pwWrote"></button>
@@ -1776,6 +1791,7 @@ button,input,select,textarea{color:inherit}
         <div class="row"><span class="k" data-c="keyLost"></span><span class="v" data-c="keyLostV"></span></div>
         <div class="row"><span class="k" data-c="shipping"></span><span class="v" data-c="shippingV"></span></div>
       </div>
+      <div class="eg-slot" data-eg="egKey" data-always="1"></div>
       <div class="custody risk"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
         <div><div class="ct" data-c="keyRiskT"></div><p data-c="keyRiskB"></p></div></div>
       <div style="height:12px"></div>
@@ -2061,6 +2077,7 @@ button,input,select,textarea{color:inherit}
   <button class="chip" id="pillow-btn" aria-pressed="false" onclick="togglePillow()">بالش: خاموش</button>
   <button class="chip" id="anchor-btn" aria-pressed="false" onclick="toggleAnchor()">پشتوانهٔ نهادی: خاموش</button>
   <button class="chip" id="flag-btn" aria-pressed="false" onclick="toggleFlag()">نشان آزمایشی: خاموش</button>
+  <button class="chip" id="eli-btn" aria-pressed="false" onclick="toggleEli()">مثال‌های ساده: خاموش</button>
   <button class="chip" onclick="go('intro')">صفحهٔ معرفی</button>
   <button class="chip" id="edit-btn" aria-pressed="false" onclick="toggleEdit()">✎ ویرایش روی صفحه</button>
   <button class="chip" onclick="openCopyEd()">فهرست متن‌ها</button>
@@ -2131,7 +2148,7 @@ const CONFIG={
    «متن‌ها» chip; a copy.json next to the file overrides them for everyone. */
 const COPY_GROUPS={
   intro:'معرفی', home:'خانه', conv:'تبدیل', send:'انتقال', use:'استفاده', cu:'پول شما کجاست',
-  gold:'تحویل طلا', key:'کلید مهاجر', inv:'سرمایه‌گذاری', wd:'برداشت', ex:'صفحه‌های توضیح', dg:'زیرنویس نمودارها', pw:'کیف پول شخصی', misc:'عمومی'
+  gold:'تحویل طلا', key:'کلید مهاجر', inv:'سرمایه‌گذاری', wd:'برداشت', ex:'صفحه‌های توضیح', dg:'زیرنویس نمودارها', pw:'کیف پول شخصی', eg:'مثال‌های ساده', misc:'عمومی'
 };
 const COPY_DEF={
   /* intro */
@@ -2294,6 +2311,20 @@ const COPY_DEF={
   exTech4:['ex','کلید: {type}. مهاجر نسخه‌ای از کلید یا ۱۲ کلمه ندارد.'],
   exTech5:['ex','موجودی از خودِ شبکه خوانده می‌شود، نه از دفتر مهاجر. خرج از بیرون اپ هم دیده می‌شود.'],
   exTech6:['ex','هزینهٔ شبکه را مهاجر می‌پردازد و از مبلغ انتقال کم می‌کند؛ شما نیازی به TRX ندارید.'],
+
+  /* «مثلاً» — one picture per hard idea, in words a child would follow */
+  egLabel:['eg','مثلاً'],
+  egKey:['eg','پول شما داخل یک صندوق است. این دستگاه، تنها کلید آن صندوق است. مهاجر کلید ندارد، پس نمی‌تواند در صندوق را باز کند. کلید گم شد؟ با ۱۲ کلمه، یک کلید تازه ساخته می‌شود.'],
+  egPw:['eg','مثل این است که پول را از بانک بگیرید و در گاوصندوق خانهٔ خودتان بگذارید. کلیدش فقط دست شماست. بانک دیگر نمی‌تواند به آن دست بزند — و اگر کلید را گم کنید، بانک هم نمی‌تواند کمک کند.'],
+  egMode:['eg','کلید را می‌توانید در جیب خودتان نگه دارید (گوشی) یا در یک جاکلیدی جدا (دستگاه). جیب، دمِ دست است؛ جاکلیدی جدا، اگر جیب‌تان را زدند، امن می‌ماند.'],
+  egWords:['eg','این ۱۲ کلمه، کلید یدکی است. هر کس آن را داشته باشد، می‌تواند در را باز کند. پس فقط روی کاغذ، در جای امن.'],
+  egGold:['eg','دلار شما را به صرافی می‌برند و طلا می‌شود. شما با یک کد آن را می‌گیرید — مثل گرفتن بسته از پست، فقط با کد.'],
+  egSafe:['eg','تومان مثل یخ در آفتاب است: هر روز کمی آب می‌شود. دلار مثل سنگ است: همان‌قدر می‌ماند. مهاجر یخ شما را سنگ می‌کند.'],
+  egDollar:['eg','یک دلار دیجیتال مثل یک برگهٔ رسید است که همیشه ارزشش یک دلار است و می‌شود آن را با گوشی به هر کسی داد.'],
+  egBasket:['eg','مثل این که تخم‌مرغ‌ها را در چند سبد بگذارید، نه در یکی. یک سبد بیفتد، بقیه سالم‌اند.'],
+  egCuBasic:['eg','مثل پول در حساب بانکی: بانک نگه می‌دارد، شما هر وقت خواستید می‌گیرید. رمز را فراموش کردید؟ بانک کمک می‌کند.'],
+  egCuGold:['eg','مثل طلایی که مادربزرگ در خانه نگه می‌دارد: کاملاً مال خودش. ولی اگر دزد بیاید، کسی جبران نمی‌کند.'],
+  egCuSelf:['eg','مثل گاوصندوق خانهٔ خودتان: کلید فقط دست شماست. هیچ‌کس نمی‌تواند بازش کند — حتی مهاجر. کلید و یدکی هر دو گم شوند، صندوق برای همیشه بسته می‌ماند.'],
 
   /* gold */
   goldTitle:['gold','تحویل طلا'],
@@ -2516,6 +2547,7 @@ const IC={
   eye:   '<svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>',
   nocam: '<svg viewBox="0 0 24 24"><path d="M9 5l1.5-2h3L15 5h4a2 2 0 012 2v10M3.5 7.5A2 2 0 015 7h1M3 19h13"/><circle cx="12" cy="13" r="3.5"/><path d="M4 4l16 16" class="bad"/></svg>',
   words: '<svg viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="2.5"/><path d="M8 8.5h8M8 12h8M8 15.5h5"/></svg>',
+  bulb:  '<svg viewBox="0 0 24 24"><path d="M9.5 18h5M10.5 21h3M12 3a6 6 0 00-3.8 10.6c.6.6.8 1.4.8 2.4h6c0-1 .2-1.8.8-2.4A6 6 0 0012 3z"/></svg>',
   phone: '<svg viewBox="0 0 24 24"><path d="M5.5 3.5h3l1.5 4-2 1.5a11 11 0 006.5 6.5l1.5-2 4 1.5v3a2 2 0 01-2 2A15.5 15.5 0 013.5 5.5a2 2 0 012-2z"/></svg>'
 };
 /* Diagrams are rows of tiles built from the same glyphs, so they cannot drift
@@ -3075,6 +3107,15 @@ function pwDoOut(){
     $('pbs-actions').innerHTML='<button class="btn btn-primary" onclick="showReceipt(S.activity.find(x=>x.id===\''+tx.id+'\'))">'+C('receipt')+'</button><button class="btn btn-ghost" onclick="go(\'home\')">'+C('home')+'</button>';
     render(); },3200);
 }
+/* «مثلاً» boxes. A slot marked data-always shows regardless; the rest follow
+   the facilitator's «مثال‌های ساده» switch, so the same build can be run plain
+   or with a picture under every hard idea. */
+const EGBOX=k=>'<div class="eg"><span class="ic">'+IC.bulb+'</span><div><b>'+C('egLabel')+'</b><p>'+C(k)+'</p></div></div>';
+function renderEg(){
+  document.querySelectorAll('.eg-slot[data-eg]').forEach(el=>{ el.innerHTML=(el.dataset.always||S.eli)?EGBOX(el.dataset.eg):''; });
+  const ex=$('ex-eg'); if(ex){ const e=EXPLAIN[S.ex]; ex.innerHTML=(e&&e.eg&&S.eli)?EGBOX(e.eg):''; }
+}
+function toggleEli(){ S.eli=!S.eli; const b=$('eli-btn'); b.setAttribute('aria-pressed',S.eli); b.textContent='مثال‌های ساده: '+(S.eli?'روشن':'خاموش'); renderEg(); }
 /* intro slides */
 function slideIdx(){ const el=$('slides'); return Math.round(Math.abs(el.scrollLeft)/Math.max(1,el.clientWidth)); }
 function slidePaint(i){ S.slide=i; document.querySelectorAll('#dots i').forEach((d,j)=>d.classList.toggle('on',j===i)); $('intro-cta').textContent=C(i===0?'introNext':'introCta'); }
@@ -3148,17 +3189,17 @@ function cycleCustody(){
 const EXPLAIN={
   /* `more` is the deep layer: it appends under the three rows only when asked,
      so the person who wants the mechanics gets them and nobody else sees them. */
-  safe:   {t:'exSafeT',   vis:'safe',   steps:['exSafe1','exSafe2','exSafe3'],       more:['exSafeM1','exSafeM2','exSafeM3']},
-  dollar: {t:'exDollarT', vis:'dollar', steps:['exDollar1','exDollar2','exDollar3'], more:['exDollarM1','exDollarM2','exDollarM3']},
-  goldWhy:{t:'exGoldWhyT',vis:'gold',   steps:['exGoldWhy1','exGoldWhy2','exGoldWhy3'],more:['exGoldWhyM1','exGoldWhyM2','exGoldWhyM3']},
+  safe:   {t:'exSafeT',   vis:'safe',   steps:['exSafe1','exSafe2','exSafe3'],       more:['exSafeM1','exSafeM2','exSafeM3'], eg:'egSafe'},
+  dollar: {t:'exDollarT', vis:'dollar', steps:['exDollar1','exDollar2','exDollar3'], more:['exDollarM1','exDollarM2','exDollarM3'], eg:'egDollar'},
+  goldWhy:{t:'exGoldWhyT',vis:'gold',   steps:['exGoldWhy1','exGoldWhy2','exGoldWhy3'],more:['exGoldWhyM1','exGoldWhyM2','exGoldWhyM3'], eg:'egGold'},
   keyDeep:{t:'exKeyDeepT',vis:'key',    steps:['exKeyDeep1','exKeyDeep2','exKeyDeep3','exKeyDeep4','exKeyDeep5','exKeyDeep6'], more:['exKeyDeepM1','exKeyDeepM2','exKeyDeepM3','exKeyDeepM4']},
-  basket: {t:'exBasketT', vis:'basket', steps:['exBasket1','exBasket2','exBasket3'], more:['exBasketM1','exBasketM2','exBasketM3']},
-  cuBasic:{t:'exCuBasicT',vis:'states', steps:['exCuBasic1','exCuBasic2','exCuBasic3'],more:['exCuBasicM1','exCuBasicM2','exCuBasicM3']},
-  cuGold: {t:'exCuGoldT', vis:'gold',   steps:['exCuGold1','exCuGold2','exCuGold3'],   more:['exCuGoldM1','exCuGoldM2','exCuGoldM3']},
-  pwDeep: {t:'exPwDeepT', vis:'pw',     steps:['exPwDeep1','exPwDeep2','exPwDeep3','exPwDeep4','exPwDeep5','exPwDeep6'], more:['exPwDeepM1','exPwDeepM2','exPwDeepM3','exPwDeepM4']},
-  pwCompare:{t:'exPwCompT',vis:'modes', steps:['exPwComp1','exPwComp2','exPwComp3'], more:['exPwCompM1','exPwCompM2','exPwCompM3']},
+  basket: {t:'exBasketT', vis:'basket', steps:['exBasket1','exBasket2','exBasket3'], more:['exBasketM1','exBasketM2','exBasketM3'], eg:'egBasket'},
+  cuBasic:{t:'exCuBasicT',vis:'states', steps:['exCuBasic1','exCuBasic2','exCuBasic3'],more:['exCuBasicM1','exCuBasicM2','exCuBasicM3'], eg:'egCuBasic'},
+  cuGold: {t:'exCuGoldT', vis:'gold',   steps:['exCuGold1','exCuGold2','exCuGold3'],   more:['exCuGoldM1','exCuGoldM2','exCuGoldM3'], eg:'egCuGold'},
+  pwDeep: {t:'exPwDeepT', vis:'pw',     steps:['exPwDeep1','exPwDeep2','exPwDeep3','exPwDeep4','exPwDeep5','exPwDeep6'], more:['exPwDeepM1','exPwDeepM2','exPwDeepM3','exPwDeepM4'], eg:'egPw'},
+  pwCompare:{t:'exPwCompT',vis:'modes', steps:['exPwComp1','exPwComp2','exPwComp3'], more:['exPwCompM1','exPwCompM2','exPwCompM3'], eg:'egMode'},
   tech:   {t:'exTechT',   vis:'pw',     steps:['exTech1','exTech2','exTech3','exTech4','exTech5','exTech6'], deep:true},
-  cuSelf: {t:'exCuSelfT', vis:'pw',     steps:['exCuSelf1','exCuSelf2','exCuSelf3'],   more:['exPwDeep1','exPwDeep2','exPwDeep3','exPwDeep4','exPwDeep5','exPwDeep6','exPwDeepM1','exPwDeepM2','exPwDeepM3','exPwDeepM4']}
+  cuSelf: {t:'exCuSelfT', vis:'pw',     steps:['exCuSelf1','exCuSelf2','exCuSelf3'],   eg:'egCuSelf', more:['exPwDeep1','exPwDeep2','exPwDeep3','exPwDeep4','exPwDeep5','exPwDeep6','exPwDeepM1','exPwDeepM2','exPwDeepM3','exPwDeepM4']}
 };
 function openExplain(id,from){
   const e=EXPLAIN[id]; if(!e) return;
@@ -3167,6 +3208,7 @@ function openExplain(id,from){
   const fill=t=>t.replace('{addr}','<span class="num" style="direction:ltr;display:inline-block;word-break:break-all">'+(S.pw?S.pw.addr:'—')+'</span>').replace('{type}',S.pw?C(S.pw.mode==='hard'?'pwTypeHard':'pwTypeSoft'):'—');
   $('ex-steps').innerHTML=e.steps.map((k,i)=>'<div class="step3'+(e.deep?' deep':'')+'"><span class="n num">'+fa(i+1)+'</span><span class="t">'+fill(C(k))+'</span></div>').join('');
   $('ex-extra').innerHTML=e.more?'<button class="btn btn-soft exmore" onclick="exMore()">'+C('exMore')+IC.down+'</button>':'';
+  renderEg();
   $('ex-cta').innerHTML='<button class="btn btn-primary" onclick="go(S.exBack)">'+C('exGotIt')+'</button>';
   go('explain');
 }
@@ -3365,6 +3407,7 @@ function setCopy(k,v){
   applyCopy(); render(); renderCustody(); renderUse(); renderNests(); renderActivity();
   if(current==='k-tut'||current==='pw-tut') renderKeyPC();
   if(current==='pw-mode') renderPmCmp();
+  renderEg();
   if(current==='explain'&&S.ex) openExplain(S.ex,S.exBack);
   try{ localStorage.setItem(LS_KEY,JSON.stringify(COPY_USER)); }catch(e){}
   edCount();
@@ -3482,7 +3525,7 @@ document.addEventListener('touchmove',e=>{ if(e.touches.length>1) e.preventDefau
 loadCopyOverrides();
 buildTabs(); edCount(); applyTheme(); applyCopy(); $('clock').textContent=fa('9:41');
 renderNests(); fillNest('calm'); renderShops(); renderCustody(); renderUse(); renderAnchor(); applyPillow(); render(); fitPhone();
-$('why-vis').innerHTML=DIAG.states(); slideReset();
+$('why-vis').innerHTML=DIAG.states(); slideReset(); renderEg();
 
 </script>
 </body>
