@@ -1149,8 +1149,8 @@ Copy table: 329 keys. `copy.json` regenerated. Sweep: 0 problems.
 
 ## 10g. Personal wallet — the custody-transfer concept, in v4 language (2026-09-13)
 
-**Lives in `wallet-v4.5.html`, not v4.** The user wants v4 frozen as the test
-build; the custody-transfer concept is a separate file with its own copy table
+**Lives in `wallet-v4.5.html`, not v4.** (2026-09-16: **v4.5 is now the test
+build**; v4 is the previous version. The deck and index say so.) The user wanted v4 frozen at the time; the custody-transfer concept is a separate file with its own copy table
 (`copy-v4.5.json`), manifest (`manifest-v4.5.json`), storage key (`mhj45-copy`)
 and index entry. v4 keeps `copy.json` (340 keys). Nothing below touches v4.
 
@@ -1194,6 +1194,30 @@ custody states. Copy table: 450 keys.
 
 
 ---
+
+## 10h. Product deck for the client (2026-09-16)
+
+`prototype/product-deck.html` + `prototype/deck-assets/` (55 PNGs, 2× device
+scale, captured headless from every archived version). 21 slides, visual-first
+after the user rejected a text-heavy first cut: every screen sits in a CSS iPhone
+(`.iph`), and each "devil in the detail" is a **spotlight** (`.spot`) — the
+whole screen dimmed and blurred, one region crisp and magnified in a gold lens
+with a short note. Lens regions are the app's own 390×844 coordinates,
+**measured with getBoundingClientRect in the harness, not read off a
+screenshot** (eyeballing a grid was ~40px off). Forward navigation is the LEFT
+button/arrow — reading direction. Content order: the workstream map with product as the parallel
+lane, the wedge, the five hypotheses, a seven-version timeline, round-1
+learnings, the vocabulary/آشیانه argument and its protective rule, v3's three
+anchors, the false claim → custody-as-state, the text budget, depth-on-demand,
+honest costs, the icon family, the trust page, v4.5, gestures, «مثلاً», copy as
+a product surface, the 19 decisions, what the test will learn, next steps.
+Static images on purpose — a projector must never depend on an iframe booting.
+To refresh a capture: `scratchpad/shots.txt` lists file|scene|name, `shot.ps1`
+renders at 2×, the crops are defined in the same session's python.
+
+Note: on 2026-09-15 the three v4.5 files were found deleted from
+`prototype/` (they were in the Recycle Bin, last written 02:08). They were
+restored from there for this deck; nothing in them changed.
 
 ## 11. Blu Bank — the reference
 

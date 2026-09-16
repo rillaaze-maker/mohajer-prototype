@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مهاجر · مسیر محصول · ارائه</title>
+<meta name="theme-color" content="#0B0D10">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" href="./icons/icon-192.png">
+<style>
+@font-face{font-family:Dana;src:url('./fonts/Dana-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-DemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-ExtraBold.woff2') format('woff2');font-weight:800;font-display:swap}
+
+:root{
+  --f:Dana,system-ui,sans-serif;
+  --gold:#D5A45C;--ok:#3FBF8F;--bad:#E0705A;--warn:#D98A52;--blue:#6FA8DC;--vio:#A98BD0;
+  --w1:#fff;--w2:rgba(255,255,255,.74);--w3:rgba(255,255,255,.48);
+  --surf:rgba(255,255,255,.055);--surf2:rgba(255,255,255,.10);--brd:rgba(255,255,255,.11);
+  --spring:cubic-bezier(.16,1,.3,1);--swift:cubic-bezier(.4,0,.2,1);
+  --ratio:0.46209;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--f);color:var(--w1);background:#0B0D10;-webkit-font-smoothing:antialiased;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(1000px 660px at 82% -12%,rgba(213,164,92,.14),transparent 62%),
+             radial-gradient(760px 520px at 4% 112%,rgba(63,191,143,.06),transparent 60%),
+             linear-gradient(168deg,#1A1F26,#0B0D10 55%,#12161B)}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.en{direction:ltr;unicode-bidi:isolate;display:inline-block}
+b{font-weight:600}
+
+.deck{position:fixed;inset:0;z-index:1}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:stretch;
+  padding:52px 4vw 66px;opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateY(14px);transition:opacity .38s var(--swift),transform .58s var(--spring),visibility .58s;
+  overflow:hidden;padding-inline:max(4vw, calc((100% - 1240px) / 2))}
+.slide.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.slide>*{flex:none}
+.slide .in{opacity:0;transform:translateY(13px);transition:opacity .46s var(--swift),transform .62s var(--spring)}
+.slide.on .in{opacity:1;transform:none}
+.slide.on .in:nth-child(1){transition-delay:.05s}.slide.on .in:nth-child(2){transition-delay:.11s}
+.slide.on .in:nth-child(3){transition-delay:.17s}.slide.on .in:nth-child(4){transition-delay:.23s}
+.slide.on .in:nth-child(5){transition-delay:.29s}
+
+/* type — little of it */
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.15em;color:var(--gold);margin-bottom:8px}
+.eyebrow.dev{color:var(--warn)}
+h1{font-size:clamp(30px,4.6vw,56px);font-weight:700;letter-spacing:-.038em;line-height:1.15}
+h2{font-size:clamp(20px,2.6vw,30px);font-weight:600;letter-spacing:-.03em;line-height:1.3}
+.lead{font-size:clamp(12.5px,1.25vw,15px);color:var(--w2);max-width:60ch;margin-top:8px}
+.sub{font-size:clamp(11px,1.05vw,12.5px);color:var(--w3);margin-top:8px}
+.head{margin-bottom:14px}
+.head.center{text-align:center}
+.head.center .lead{margin-inline:auto}
+kbd{font-family:var(--f);font-size:10.5px;color:var(--w3);border:1px solid var(--brd);border-radius:5px;padding:1px 6px}
+.pill{display:inline-flex;align-items:center;gap:7px;background:var(--surf2);border-radius:99px;padding:6px 13px;font-size:11.5px;color:var(--w2);font-weight:500}
+.pill .d{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;border-radius:6px;padding:3px 7px;background:var(--surf2);color:var(--w2);vertical-align:middle}
+.tag.y{background:rgba(213,164,92,.18);color:var(--gold)} .tag.g{background:rgba(63,191,143,.16);color:var(--ok)} .tag.r{background:rgba(224,112,90,.16);color:var(--bad)}
+
+/* ── the iPhone ───────────────────────────────────────────────── */
+.iph{--h:62vh;position:relative;flex:none;width:calc(var(--h) * var(--ratio));height:var(--h);
+  border-radius:calc(var(--h) * .085);background:#0B0D10;padding:calc(var(--h) * .012);
+  box-shadow:0 0 0 calc(var(--h) * .0055) #2A3038,0 0 0 calc(var(--h) * .009) #0B0D10,0 40px 80px -30px rgba(0,0,0,.9),inset 0 0 0 1px rgba(255,255,255,.06)}
+.iph::before{content:'';position:absolute;top:calc(var(--h) * .022);left:50%;transform:translateX(-50%);width:calc(var(--h) * .13);height:calc(var(--h) * .036);border-radius:99px;background:#050607;z-index:2}
+.iph::after{content:'';position:absolute;inset-inline-end:calc(var(--h) * -.012);top:calc(var(--h) * .22);width:calc(var(--h) * .006);height:calc(var(--h) * .09);border-radius:2px;background:#2A3038}
+.iph img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:calc(var(--h) * .075);background:#0C0E11}
+.iph .lab{position:absolute;top:calc(100% + 12px);inset-inline:0;text-align:center;font-size:12px;color:var(--w2);line-height:1.5}
+.iph .lab b{display:block;color:var(--w1);font-size:13px}
+.iph .lab .tag{margin-inline-start:4px}
+.iph.hero{--h:70vh}
+.iph.md{--h:52vh}
+.iph.sm{--h:40vh}
+.iph.xs{--h:30vh}
+.row{display:flex;justify-content:center;align-items:flex-start;gap:clamp(16px,3vw,44px);padding-bottom:46px}
+.row.tight{gap:clamp(10px,1.6vw,22px)}
+.row .spot+.spot{margin-inline-start:clamp(10px,2vw,30px)}
+.arrow{align-self:center;font-size:30px;color:var(--gold);opacity:.8;margin-bottom:46px}
+
+/* ── the spotlight: a screen, dimmed, with one crisp magnified region ── */
+.spot{--h:60vh;position:relative;flex:none;width:calc(var(--h) * var(--ratio));height:var(--h);border-radius:calc(var(--h) * .06);overflow:visible}
+.spot .base{position:absolute;inset:0;border-radius:inherit;overflow:hidden;background:#0C0E11;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 30px 60px -30px rgba(0,0,0,.9)}
+.spot .base img{width:100%;height:100%;object-fit:cover;object-position:top;filter:blur(2.5px) brightness(.42) saturate(.7);transform:scale(1.02)}
+.spot .lens{position:absolute;border-radius:14px;box-shadow:0 0 0 2.5px var(--gold),0 0 0 7px rgba(213,164,92,.18),0 30px 60px -20px rgba(0,0,0,.95);background-repeat:no-repeat;background-color:#0C0E11;z-index:3}
+.spot .note{position:absolute;z-index:4;background:rgba(16,19,23,.92);backdrop-filter:blur(8px);border:1px solid rgba(213,164,92,.45);border-radius:12px;padding:9px 12px;font-size:12.5px;line-height:1.55;color:var(--w1);width:max-content;max-width:215px;box-shadow:0 20px 40px -20px rgba(0,0,0,.9)}
+.spot .note b{color:var(--gold);display:block;font-size:10.5px;letter-spacing:.08em;margin-bottom:3px}
+.spot .note::before{content:'';position:absolute;width:9px;height:9px;background:var(--gold);border-radius:50%;left:50%;transform:translateX(-50%)}
+.spot .note.b::before{bottom:calc(100% + 5px)}
+.spot .note.t::before{top:calc(100% + 5px)}
+.spot .lab{position:absolute;top:calc(100% + 12px);inset-inline:0;text-align:center;font-size:12px;color:var(--w2)}
+.spot .lab b{display:block;color:var(--w1);font-size:13px}
+.spot.md{--h:52vh}
+
+/* ── version rail ─────────────────────────────────────────────── */
+.rail{display:flex;gap:6px;align-items:center;justify-content:center;margin-bottom:16px}
+.rail span{font-size:11px;font-weight:600;color:var(--w3);border:1px solid var(--brd);border-radius:99px;padding:4px 10px;background:var(--surf)}
+.rail span.on{color:#0B0D10;background:var(--gold);border-color:var(--gold)}
+.rail span.done{color:var(--w2)}
+.rail i{width:14px;height:1px;background:var(--brd)}
+
+/* ── timeline ─────────────────────────────────────────────────── */
+.tl{display:flex;justify-content:center;align-items:flex-end;gap:clamp(8px,1.3vw,18px);padding-bottom:58px}
+.tl .iph{--h:36vh}
+.tl .iph.now{--h:42vh;box-shadow:0 0 0 calc(var(--h) * .0055) var(--gold),0 0 0 calc(var(--h) * .009) #0B0D10,0 40px 80px -30px rgba(0,0,0,.9)}
+.tl .iph .lab{font-size:11px}
+.tline{position:relative;height:4px;background:var(--surf2);border-radius:2px;margin:6px 4vw 0}
+.tline i{position:absolute;inset-block:0;inset-inline-start:0;width:var(--p,0%);background:linear-gradient(90deg,var(--gold),rgba(213,164,92,.3));border-radius:2px}
+
+/* ── lanes ────────────────────────────────────────────────────── */
+.lanes{display:flex;flex-direction:column;gap:8px;max-width:980px;margin:0 auto;width:100%}
+.lane{display:grid;grid-template-columns:44px 170px 1fr;gap:12px;align-items:center;background:var(--surf);border:1px solid var(--brd);border-radius:14px;padding:11px 14px}
+.lane .ic{width:40px;height:40px;border-radius:12px;background:var(--surf2);display:grid;place-items:center;font-size:15px;font-weight:700;color:var(--w2)}
+.lane .k{font-size:13px;font-weight:700} .lane .k small{display:block;font-size:10.5px;color:var(--w3);font-weight:500}
+.lane .q{font-size:12px;color:var(--w2);line-height:1.5}
+.lane.me{border-color:rgba(213,164,92,.45);background:linear-gradient(160deg,rgba(213,164,92,.14),transparent)}
+.lane.me .ic{background:var(--gold);color:#0B0D10}
+
+/* ── small text tiles when unavoidable ────────────────────────── */
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px}
+.chip{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:8px 12px;font-size:12.5px;color:var(--w2)}
+.chip b{color:var(--w1)} .chip.bad{border-color:rgba(224,112,90,.4)} .chip.good{border-color:rgba(63,191,143,.4)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:900px;margin:0 auto;width:100%}
+.stat{background:var(--surf);border:1px solid var(--brd);border-radius:14px;padding:12px 14px;text-align:center}
+.stat .v{font-size:clamp(26px,3.6vw,44px);font-weight:700;letter-spacing:-.03em;color:var(--gold);line-height:1.1}
+.stat .l{font-size:11.5px;color:var(--w3);margin-top:4px;line-height:1.45}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:1000px;margin:0 auto;width:100%}
+.rule{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:11px 13px;font-size:12.5px;line-height:1.55;color:var(--w2);display:flex;gap:10px;align-items:flex-start}
+.rule i{width:26px;height:26px;border-radius:8px;background:var(--surf2);display:grid;place-items:center;font-style:normal;font-size:12px;flex:none;color:var(--gold)}
+.rule b{color:var(--w1)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:1000px;margin:0 auto;width:100%}
+.box{background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:14px 16px}
+.box .n{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:8px}
+.box p{font-size:13px;color:var(--w2);line-height:1.75}
+.box.good{border-color:rgba(63,191,143,.35)} .box.good .n{color:var(--ok)}
+.split{display:grid;grid-template-columns:1fr auto;gap:clamp(20px,4vw,60px);align-items:center;justify-content:center}
+.callouts{display:flex;flex-direction:column;gap:12px;justify-content:center}
+.callout{background:var(--surf);border:1px solid var(--brd);border-inline-start:3px solid var(--gold);border-radius:14px;padding:11px 14px;max-width:340px}
+.callout .k{font-size:10.5px;font-weight:700;color:var(--gold);letter-spacing:.06em;margin-bottom:4px}
+.callout p{font-size:12.5px;color:var(--w2);line-height:1.6}
+.callout.ok{border-inline-start-color:var(--ok)} .callout.ok .k{color:var(--ok)}
+.callout.bad{border-inline-start-color:var(--bad)} .callout.bad .k{color:var(--bad)}
+
+/* ── chrome ───────────────────────────────────────────────────── */
+.bar-top{position:fixed;top:0;inset-inline:0;height:3px;background:var(--surf2);z-index:5;direction:rtl}
+.bar-top i{display:block;height:100%;background:var(--gold);width:0;transition:width .35s var(--swift)}
+.hud{position:fixed;bottom:16px;left:0;right:0;display:flex;justify-content:center;align-items:center;z-index:5;pointer-events:none;direction:rtl}
+.hud>*{pointer-events:auto}
+.dots{display:flex;gap:5px;align-items:center;background:rgba(16,19,23,.7);backdrop-filter:blur(8px);border:1px solid var(--brd);border-radius:99px;padding:7px 10px;direction:rtl}
+.dots button{width:6px;height:6px;border-radius:50%;border:none;background:var(--w3);opacity:.45;cursor:pointer;padding:0;transition:.25s}
+.dots button[aria-current="true"]{opacity:1;background:var(--gold);width:16px;border-radius:3px}
+.nav{width:36px;height:36px;border-radius:50%;border:1px solid var(--brd);background:rgba(16,19,23,.7);backdrop-filter:blur(8px);color:var(--w1);cursor:pointer;font-family:var(--f);font-size:18px;line-height:1;display:grid;place-items:center;z-index:6}
+.nav.next{position:fixed;left:18px;bottom:16px}   /* forward = into the reading direction = left */
+.nav.prev{position:fixed;right:18px;bottom:16px}
+.cnt{position:fixed;top:14px;left:22px;font-size:11px;color:var(--w3);z-index:5;direction:ltr}
+.brand{position:fixed;top:12px;right:22px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--w2);z-index:5}
+.brand i{width:24px;height:24px;border-radius:7px;background:#1B2027;border:1px solid rgba(255,255,255,.09);display:grid;place-items:center}
+.brand svg{width:13px;height:13px}
+
+@media (max-width:900px){
+  .iph{--h:44vh} .iph.hero{--h:50vh} .iph.md{--h:40vh} .iph.sm{--h:32vh} .tl .iph{--h:24vh} .tl .iph.now{--h:28vh}
+  .spot{--h:46vh} .split{grid-template-columns:1fr} .stats,.rules{grid-template-columns:repeat(2,1fr)} .two{grid-template-columns:1fr}
+  .lane{grid-template-columns:44px 1fr} .lane .q{grid-column:1/-1}
+}
+@media print{
+  html,body{overflow:visible;height:auto}
+  .slide{position:relative;opacity:1;visibility:visible;transform:none;page-break-after:always;min-height:100vh;overflow:visible}
+  .slide .in{opacity:1;transform:none}
+  .hud,.bar-top,.cnt,.nav{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bar-top"><i id="prog"></i></div>
+<div class="cnt num" id="cnt">1 / 21</div>
+<div class="brand"><i><svg viewBox="0 0 49.33 39.99" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></i>مهاجر · مسیر محصول</div>
+
+<div class="deck">
+
+<!-- 1 · COVER -->
+<section class="slide">
+  <div class="split in">
+    <div>
+      <div class="pill"><span class="d"></span>فاز سوم · ورک‌استریم ۰ · ۲۵ شهریور ۱۴۰۵</div>
+      <h1 style="margin-top:18px">مسیر محصول</h1>
+      <p class="lead" style="font-size:clamp(15px,1.7vw,20px)">از اولین پروتوتایپ تا لنگر اعتماد.<br>هفت نسخه، هفت یادگیری — به تصویر.</p>
+      <div class="sub">حرکت با <kbd>←</kbd> <kbd>→</kbd> یا فاصله · <kbd>P</kbd> چاپ</div>
+    </div>
+    <div class="iph hero"><img src="./deck-assets/v45-intro.png" alt=""></div>
+  </div>
+</section>
+
+<!-- 2 · TIMELINE -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow">مسیر</div><h2>هفت نسخه، چهار هفته</h2></div>
+  <div class="tl in">
+    <div class="iph"><img src="./deck-assets/v0-home.png" alt=""><div class="lab"><b>v0</b>پنج Flow سند WS0</div></div>
+    <div class="iph"><img src="./deck-assets/v03-home.png" alt=""><div class="lab"><b>v0.3</b>واژگان آشیانه، پشت یک کلید</div></div>
+    <div class="iph"><img src="./deck-assets/v1-use.png" alt=""><div class="lab"><b>v1</b>نمای کلی، الگوی بلو</div></div>
+    <div class="iph"><img src="./deck-assets/v2-convert.png" alt=""><div class="lab"><b>v2</b>دور اول تست</div></div>
+    <div class="iph"><img src="./deck-assets/v3-home.png" alt=""><div class="lab"><b>v3</b>سرمایه‌گذاری · طلا · کلید</div></div>
+    <div class="iph"><img src="./deck-assets/v4-home.png" alt=""><div class="lab"><b>v4</b>بودجهٔ متن، سه تب</div></div>
+    <div class="iph now"><img src="./deck-assets/v45-home.png" alt=""><div class="lab"><b>v4.5 <span class="tag y">تست</span></b>کیف پول شخصی</div></div>
+  </div>
+  <div class="tline in" style="--p:100%"><i></i></div>
+</section>
+
+<!-- 3 · WORKSTREAMS -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow">جای محصول در فاز سوم</div><h2>محصول، موازیِ چهار ورک‌استریم</h2></div>
+  <div class="lanes in">
+    <div class="lane"><div class="ic">۰</div><div class="k">Frame<small>WS0</small></div><div class="q">تعریف Wedge، پنج فرضیه، پنج Flow — <b style="color:var(--ok)">✓</b> پروتوتایپ روی همین ساخته شد</div></div>
+    <div class="lane me"><div class="ic">◆</div><div class="k">Product & Experience<small>WS1 — این ارائه</small></div><div class="q">یک مدل ذهنی برای «جای پول»؟ خانه هم حفظ ارزش و هم اقدام؟ لحظه‌های حقیقت کجاست؟</div></div>
+    <div class="lane"><div class="ic">۲</div><div class="k">Service Blueprint<small>WS2</small></div><div class="q">هر Flow سه مسیر: موفق · در انتظار · ناموفق — و پول همیشه درست برمی‌گردد</div></div>
+    <div class="lane"><div class="ic">۳</div><div class="k">Partner & Feasibility<small>WS3</small></div><div class="q">هرچه تأیید نشده «در حال بررسی» است؛ کانسپت انتقال حضانت از این‌جا آمد</div></div>
+    <div class="lane"><div class="ic">۴</div><div class="k">Evidence & Gate<small>WS4</small></div><div class="q">تست کاربر روی v4.5 → ادامه / اصلاح / محدودکردن / توقف</div></div>
+  </div>
+</section>
+
+<!-- 4 · V0 -->
+<section class="slide">
+  <div class="rail in"><span class="on">v0</span><i></i><span>v0.3</span><i></i><span>v1</span><i></i><span>v2</span><i></i><span>v3</span><i></i><span>v4</span><i></i><span>v4.5</span></div>
+  <div class="head center in"><h2>نقطهٔ صفر — پنج Flow، بی‌تزیین</h2><p class="lead" style="margin-inline:auto">تبدیل · انتقال · اشتراک · صندوق هدف · برداشت. همان سند WS0، کلیک‌پذیر.</p></div>
+  <div class="row in">
+    <div class="iph md"><img src="./deck-assets/v0-intro.png" alt=""><div class="lab">معرفی</div></div>
+    <div class="iph md"><img src="./deck-assets/v0-home.png" alt=""><div class="lab">خانه</div></div>
+    <div class="iph md"><img src="./deck-assets/v03-goals.png" alt=""><div class="lab">صندوق‌های هدف — بعداً حذف شد</div></div>
+  </div>
+</section>
+
+<!-- 5 · ROUND 1 -->
+<section class="slide">
+  <div class="rail in"><span class="done">v0</span><i></i><span class="done">v0.3</span><i></i><span class="done">v1</span><i></i><span class="on">v2</span><i></i><span>v3</span><i></i><span>v4</span><i></i><span>v4.5</span></div>
+  <div class="head center in"><div class="eyebrow">دور اول تست</div><h2>«این مگه شارژ حساب نیست؟»</h2></div>
+  <div class="row in">
+    <div class="spot" data-img="v2-convert.png" data-x="18" data-y="96" data-w="354" data-h="44" data-z="1.9" data-side="b" data-k="تبدیل، دوطرفه" data-note="کاربر «تبدیل» را شارژ حساب می‌خواند و درست می‌گفت: یک عملیات به یک درِ یک‌طرفه و یک خروج جدا شکسته بود. حالا یک تبدیل، یک کلید جهت."><div class="lab"><b>v2 · تبدیل</b></div></div>
+    <div class="spot" data-img="v2-use.png" data-x="10" data-y="94" data-w="370" data-h="300" data-z="1.25" data-side="b" data-k="پرسش‌های خودِ کاربران" data-note="هشت سؤالِ دور اول، کلمه‌به‌کلمه. کدام سؤال را باز می‌کند، خودش شاهد است."><div class="lab"><b>v2 · نمای کلی</b></div></div>
+    <div class="callouts">
+      <div class="callout bad"><div class="k">حذف شد</div><p>نشان «داده آزمایشی» — خودش اعتماد جعلی می‌ساخت</p></div>
+      <div class="callout bad"><div class="k">حذف شد</div><p>«صندوق» — یعنی جعبهٔ قفل‌دار، ضد فرضیهٔ خودش</p></div>
+      <div class="callout"><div class="k">اضافه شد</div><p>«پشتوانه و مسئولیت» — نهاد می‌خواستند، نه فیچر؛ «در حال بررسی» روی هر چیز امضانشده</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · VOCABULARY -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow">واژگان · آشیانه</div><h2>یک اپ، دو زبان — پشت یک کلید</h2><p class="lead" style="margin-inline:auto">استعاره فقط در روایت؛ در تراکنش هرگز. رشته‌های تراکنش در دو زبان بایت‌به‌بایت یکسان‌اند.</p></div>
+  <div class="row in">
+    <div class="iph md"><img src="./deck-assets/v4-invest-std.png" alt=""><div class="lab"><b>استاندارد · پیش‌فرض</b>سبد آرام · «همهٔ پول را روی یکی نگذارید»</div></div>
+    <div class="iph md"><img src="./deck-assets/v4-invest-nest.png" alt=""><div class="lab"><b>آشیانه · بازوی مقایسه</b>لانهٔ آرام · «همهٔ تخم‌مرغ‌هایت را توی یک سبد نگذار»</div></div>
+    <div class="iph md"><img src="./deck-assets/v4-home-nest.png" alt=""><div class="lab"><b>آشیانه · خانه</b>«آشیانهٔ دارایی شما» · «نشستن دلار در آشیانه»</div></div>
+  </div>
+  <div class="chips in"><span class="chip">پیش‌فرض: زبان ساده — بازخورد بنیان‌گذار</span><span class="chip">«زیر بالشت» ماند: اصطلاح است، نه اختراع</span><span class="chip">A/B یک کلید آن‌طرف‌تر</span></div>
+</section>
+
+<!-- 7 · V3 -->
+<section class="slide">
+  <div class="rail in"><span class="done">v0</span><i></i><span class="done">v0.3</span><i></i><span class="done">v1</span><i></i><span class="done">v2</span><i></i><span class="on">v3</span><i></i><span>v4</span><i></i><span>v4.5</span></div>
+  <div class="head center in"><h2>صندوق و اشتراک رفتند؛ سه لنگر آمدند</h2></div>
+  <div class="row tight in">
+    <div class="iph md"><img src="./deck-assets/v3-invest.png" alt=""><div class="lab"><b>سرمایه‌گذاری</b>سه سبد، ترکیب پیش از انتخاب</div></div>
+    <div class="iph md"><img src="./deck-assets/v3-map.png" alt=""><div class="lab"><b>طلای فیزیکی</b>نقشهٔ دستی، کد یک‌بارمصرف</div></div>
+    <div class="iph md"><img src="./deck-assets/v3-key.png" alt=""><div class="lab"><b>کلید مهاجر</b>کلید فقط داخل دستگاه</div></div>
+    <div class="iph md"><img src="./deck-assets/v3-pillow.png" alt=""><div class="lab"><b>بالش</b>برداری، پول زیرش است</div></div>
+  </div>
+</section>
+
+<!-- 8 · CLAIM → STATE -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow dev">🔍 شیطان در جزئیات · ۱</div><h2>ادعا → حالت</h2><p class="lead" style="margin-inline:auto">v3 می‌گفت «حتی به ما اعتماد نکنید»، در حالتی که کلید نزد ما بود. غلط بود. حالا هیچ صفحه‌ای بیش از حالتش ادعا نمی‌کند.</p></div>
+  <div class="row in">
+    <div class="spot" data-img="v3-home.png" data-x="18" data-y="328" data-w="354" data-h="104" data-z="1.7" data-side="b" data-k="v3 · گزاره، پیش از آنکه حالت باشد" data-note="«پولتان زیر بالشت خودتان» روی خانهٔ حسابی که هنوز کلیدش نزد مهاجر بود."><div class="lab"><b>v3</b></div></div>
+    <div class="arrow">←</div>
+    <div class="spot" data-img="v45-home.png" data-x="20" data-y="314" data-w="350" data-h="44" data-z="1.9" data-side="b" data-k="v4.5 · ساخته‌شده از حالت" data-note="«$1,500 نزد مهاجر · $499 نزد شما» — هر عدد از جایی می‌آید که پول واقعاً هست. جمله تایپ نشده؛ تولید شده."><div class="lab"><b>v4.5</b></div></div>
+  </div>
+</section>
+
+<!-- 9 · V4 -->
+<section class="slide">
+  <div class="rail in"><span class="done">v0</span><i></i><span class="done">v0.3</span><i></i><span class="done">v1</span><i></i><span class="done">v2</span><i></i><span class="done">v3</span><i></i><span class="on">v4</span><i></i><span>v4.5</span></div>
+  <div class="head center in"><h2>سهل و ممتنع</h2><p class="lead" style="margin-inline:auto">عنوان ≤۳ کلمه · خط پشتیبان ≤۱۲ · یک (i) در هر صفحه · سه تب. برای کسی شصت‌ساله که کریپتو را نشنیده.</p></div>
+  <div class="row in">
+    <div class="iph md"><img src="./deck-assets/v4-intro.png" alt=""><div class="lab"><b>معرفی</b>یک گزاره، سه استفاده، یک (i)</div></div>
+    <div class="iph md"><img src="./deck-assets/v4-home.png" alt=""><div class="lab"><b>خانه</b>یک جملهٔ حضانت زیر موجودی</div></div>
+    <div class="iph md"><img src="./deck-assets/v4-custody.png" alt=""><div class="lab"><b>پول شما کجاست؟</b>سه جا، خوب و بدِ هرکدام</div></div>
+  </div>
+</section>
+
+<!-- 10 · BEFORE / AFTER -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow">v3 → v4</div><h2>همان صفحه، یک‌سوم کلمه</h2></div>
+  <div class="row in">
+    <div class="iph md"><img src="./deck-assets/v3-intro.png" alt=""><div class="lab"><b>v3 · معرفی</b><span class="num">۱۳۰</span> کلمه</div></div>
+    <div class="arrow">←</div>
+    <div class="iph md"><img src="./deck-assets/v4-intro.png" alt=""><div class="lab"><b>v4 · معرفی</b><span class="num">۳۵</span> کلمه</div></div>
+    <div class="iph md"><img src="./deck-assets/v3-custody.png" alt=""><div class="lab"><b>v3 · نگهداری کلید</b><span class="num">۲۳۳</span> کلمه</div></div>
+    <div class="arrow">←</div>
+    <div class="iph md"><img src="./deck-assets/v4-custody.png" alt=""><div class="lab"><b>v4 · پول شما کجاست؟</b><span class="num">۱۱۶</span> کلمه، با ✓ و ✗</div></div>
+  </div>
+</section>
+
+<!-- 11 · DEPTH -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow dev">🔍 شیطان در جزئیات · ۲</div><h2>عمق، فقط برای کسی که بخواهد</h2></div>
+  <div class="row tight in">
+    <div class="iph md"><img src="./deck-assets/v45-ex-safe.png" alt=""><div class="lab"><b>(i)</b>نمودار + سه سطر</div></div>
+    <div class="arrow">←</div>
+    <div class="iph md"><img src="./deck-assets/v45-ex-self.png" alt=""><div class="lab"><b>بیشتر توضیح بده</b>سطرهای سبز</div></div>
+    <div class="arrow">←</div>
+    <div class="iph md"><img src="./deck-assets/v45-tech.png" alt=""><div class="lab"><b>جزئیات فنی</b>تنها جای USDT و TRON</div></div>
+    <div class="arrow">←</div>
+    <div class="iph md"><img src="./deck-assets/v45-call.png" alt=""><div class="lab"><b>نیاز به توضیح بیشتر دارم</b>آخرین جواب، یک آدم</div></div>
+  </div>
+</section>
+
+<!-- 12 · HONEST COSTS -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow dev">🔍 شیطان در جزئیات · ۳</div><h2>هزینهٔ صادقانه، در یک سطر</h2></div>
+  <div class="row in">
+    <div class="spot" data-img="v45-custody.png" data-x="30" data-y="303" data-w="330" data-h="31" data-z="2" data-side="b" data-k="یک ✗ که توهین نیست" data-note="پیش‌نویس اول: «به ما اعتماد می‌کنید». تیم: ما دزد نیستیم. حالا: «وابستگی به مهاجر در نگهداری» — قرینهٔ دقیقِ ✓ طلا: «بدون وابستگی به مهاجر»."><div class="lab"><b>نزد مهاجر</b></div></div>
+    <div class="spot" data-img="v45-cmp.png" data-x="30" data-y="690" data-w="330" data-h="43" data-z="2" data-side="t" data-k="خط تیره، نه ✗" data-note="برای طلا «بازیابی رمز» معنا ندارد — پس نه ✓، نه ✗. یک همکار پیدایش کرد."><div class="lab"><b>در یک نگاه</b></div></div>
+    <div class="spot" data-img="v45-custody.png" data-x="30" data-y="582" data-w="330" data-h="31" data-z="1.8" data-side="t" data-k="ریسکی که جا افتاده بود" data-note="طلای فیزیکی: «ریسک‌های نگهداری شخصی طلا» — دزدی. یک ✗ که فروش را سخت‌تر و اعتماد را بیشتر می‌کند."><div class="lab"><b>طلای فیزیکی</b></div></div>
+  </div>
+</section>
+
+<!-- 13 · ICONS -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow">زبان تصویری</div><h2>یک خانوادهٔ آیکون؛ نمودارها از همان ساخته می‌شوند</h2></div>
+  <div class="row in">
+    <div class="spot" data-img="v45-ex-safe.png" data-x="18" data-y="96" data-w="354" data-h="148" data-z="1.55" data-side="b" data-k="کاشی، نه نقاشی" data-note="سه کاشی، یک خط پایه، رنگ به معنا: سبز ما، طلایی طلا، قرمز «نه». جریان از راست شروع می‌شود."><div class="lab"><b>«امن» یعنی چی؟</b></div></div>
+    <div class="spot" data-img="v45-pwmode.png" data-x="30" data-y="675" data-w="330" data-h="40" data-z="1.9" data-side="t" data-k="سؤالی که تصمیم را می‌گیرد" data-note="«گوشی هک شود» — در خطر / امن. بقیهٔ جدول توضیح است؛ این سطر انتخاب."><div class="lab"><b>گوشی یا دستگاه؟</b></div></div>
+    <div class="iph md"><img src="./deck-assets/v45-pwtut.png" alt=""><div class="lab"><b>کیف پول شخصی</b>همان کلید، همان گوشی، همان دستگاه — همه‌جا</div></div>
+  </div>
+</section>
+
+<!-- 14 · TRUST PAGE -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow">لنگر اعتماد · هشتاد درصدِ محصول</div><h2>«پول شما کجاست؟»</h2></div>
+  <div class="row in">
+    <div class="callouts">
+      <div class="callout"><div class="k">نزد مهاجر · مثل بانک</div><p>برداشت هر وقت بخواهید · رمز گم شد، بازیابی · <b>وابسته به مهاجر</b></p></div>
+      <div class="callout" style="border-inline-start-color:var(--warn)"><div class="k" style="color:var(--warn)">طلای فیزیکی · مثل طلای مادربزرگ</div><p>دست خودتان · بدون نیاز به ما · <b>دزدی جبران ندارد</b></p></div>
+      <div class="callout ok"><div class="k">کیف پول شخصی · مثل گاوصندوق خانه</div><p>کلید فقط دست شما — حتی مهاجر نه · <b>کلید و ۱۲ کلمه گم شود، برنمی‌گردد</b></p></div>
+    </div>
+    <div class="iph hero"><img src="./deck-assets/v45-custody.png" alt=""><div class="lab">هر کارت، مبلغی را نشان می‌دهد که واقعاً آن‌جاست</div></div>
+    <div class="spot md" data-img="v45-cmp.png" data-x="18" data-y="537" data-w="354" data-h="280" data-z="1.35" data-side="b" data-k="در یک نگاه" data-note="سه جا، چهار سؤال. هیچ ستونی همه‌اش ✓ نیست — و همین صادق بودنش است."><div class="lab"><b>مقایسه</b></div></div>
+  </div>
+</section>
+
+<!-- 15 · V4.5 -->
+<section class="slide">
+  <div class="rail in"><span class="done">v0</span><i></i><span class="done">v0.3</span><i></i><span class="done">v1</span><i></i><span class="done">v2</span><i></i><span class="done">v3</span><i></i><span class="done">v4</span><i></i><span class="on">v4.5</span></div>
+  <div class="head center in"><h2>حضانت، دیگر روشن/خاموش نیست؛ یک تفکیک است <span class="tag y">نسخهٔ تست</span></h2><p class="lead" style="margin-inline:auto">هر مقدار خواستید به کیف پول شخصی، هر وقت خواستید برگشت. روی گوشی فوری، دستگاه اختیاری.</p></div>
+  <div class="row tight in">
+    <div class="iph md"><img src="./deck-assets/v45-home.png" alt=""><div class="lab"><b>خانه</b>دو موجودی، یک نگاه</div></div>
+    <div class="iph md"><img src="./deck-assets/v45-pwmode.png" alt=""><div class="lab"><b>گوشی یا دستگاه</b>یک کیف پول، دو جای کلید</div></div>
+    <div class="iph md"><img src="./deck-assets/v45-quote.png" alt=""><div class="lab"><b>بررسی انتقال</b>کسر · هزینه · دریافتی · برگشت‌ناپذیر</div></div>
+    <div class="iph md"><img src="./deck-assets/v45-wallet.png" alt=""><div class="lab"><b>کیف پول شخصی</b>آخرین بررسی: همین الان</div></div>
+  </div>
+</section>
+
+<!-- 16 · GESTURE -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow dev">🔍 شیطان در جزئیات · ۴</div><h2>کنترل، یک ژست است — نه یک جمله</h2></div>
+  <div class="row in">
+    <div class="spot" data-img="v45-words.png" data-x="18" data-y="106" data-w="354" data-h="160" data-z="1.5" data-side="b" data-k="۱۲ کلمه، یک بار" data-note="نشان داده می‌شود، بعد سه بار پرسیده می‌شود. اشتباه، برمی‌گرداند به کلمات. تا تأیید نشود، کیف پول وجود ندارد."><div class="lab"><b>پشتیبان</b></div></div>
+    <div class="spot" data-img="v45-sign.png" data-x="115" data-y="355" data-w="160" data-h="195" data-z="1.7" data-side="b" data-k="نگه دارید" data-note="بازگشت پول با نگه‌داشتن انگشت امضا می‌شود؛ با دستگاه، فشار یک دکمهٔ فیزیکی. مهاجر نمی‌تواند به‌جای شما — و این را با دست می‌فهمید."><div class="lab"><b>امضا</b></div></div>
+    <div class="iph md"><img src="./deck-assets/v3-pillow.png" alt=""><div class="lab"><b>بالش</b>برداری، پول زیرش است</div></div>
+  </div>
+</section>
+
+<!-- 17 · EXAMPLES -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow dev">🔍 شیطان در جزئیات · ۵</div><h2>«مثلاً» — یک تصویر برای هر ایدهٔ سخت</h2></div>
+  <div class="row in">
+    <div class="spot" data-img="v45-key.png" data-x="18" data-y="567" data-w="354" data-h="142" data-z="1.75" data-side="t" data-k="کلید مهاجر" data-note="بازخورد: برای کسی که نمی‌داند، هنوز روشن نیست. جواب، متن بیشتر نبود — یک صندوق، یک کلید، یک کلید یدکی."><div class="lab"><b>دستگاه</b></div></div>
+    <div class="spot" data-img="v45-pwtut.png" data-x="18" data-y="486" data-w="354" data-h="142" data-z="1.6" data-side="t" data-k="کیف پول شخصی" data-note="پول را از بانک می‌گیری و در گاوصندوق خانه می‌گذاری. بانک دیگر دستش نمی‌رسد — و اگر کلید را گم کنی، کمکی هم نمی‌تواند بکند."><div class="lab"><b>کیف پول</b></div></div>
+    <div class="spot" data-img="v45-ex-safe.png" data-x="18" data-y="472" data-w="354" data-h="118" data-z="1.75" data-side="t" data-k="امن" data-note="تومان مثل یخ در آفتاب؛ دلار مثل سنگ. مهاجر یخ شما را سنگ می‌کند."><div class="lab"><b>یازده مثال · یک متغیر تست</b></div></div>
+  </div>
+</section>
+
+<!-- 18 · COPY SURFACE -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow">متن، یک سطح محصول</div><h2>کسی که مالک اعتماد است، مالک کلمه هم هست</h2></div>
+  <div class="row in">
+    <div class="spot" data-img="v45-edit.png" data-x="0" data-y="660" data-w="390" data-h="184" data-z="1.5" data-side="t" data-k="ویرایش روی صفحه" data-note="هر متن قاب می‌شود. بزنید، تایپ کنید، همان‌جا عوض می‌شود. «کپی copy.json»، Commit — دقایقی بعد برای همه."><div class="lab"><b>حالت ویرایش</b></div></div>
+    <div class="stats" style="max-width:520px">
+      <div class="stat"><div class="v num">503</div><div class="l">رشتهٔ متنی، همه قابل ویرایش</div></div>
+      <div class="stat"><div class="v num">0</div><div class="l">جمله‌ای که در صفحه تایپ شده باشد</div></div>
+      <div class="stat"><div class="v num">67</div><div class="l">رشته که تیم در یک شب بازنویسی کرد — بدون کد</div></div>
+      <div class="stat"><div class="v num">2</div><div class="l">راه اعمال: روی صفحه، یا یک فایل در GitHub</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 · RULES + VERIFICATION -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow">قواعدی که دیگر بازبینی نمی‌شوند</div><h2>نوزده تصمیم، نه سطر — و یک بازرسی</h2></div>
+  <div class="rules in">
+    <div class="rule"><i>۱</i><span><b>تومان، نه ریال.</b> دلار با رقم لاتین، تومان با رقم فارسی.</span></div>
+    <div class="rule"><i>۲</i><span><b>«اعتماد» هرگز گفته نمی‌شود.</b> نشان داده می‌شود.</span></div>
+    <div class="rule"><i>۳</i><span><b>وعدهٔ تأییدنشده، واقعیت نیست.</b> «در حال بررسی».</span></div>
+    <div class="rule"><i>۴</i><span><b>خطا شاعرانه نیست.</b> جملهٔ ساده، بعد راه‌حل.</span></div>
+    <div class="rule"><i>۵</i><span><b>هر Flow سه مسیر دارد</b> و پول همیشه درست برمی‌گردد.</span></div>
+    <div class="rule"><i>۶</i><span><b>حضانت یک حالت است،</b> نه یک شعار.</span></div>
+    <div class="rule"><i>۷</i><span><b>ادعای مطلق ممنوع.</b> «حتی به ما» یا دروغ است یا اغراق.</span></div>
+    <div class="rule"><i>۸</i><span><b>زبان ساده پیش‌فرض.</b> واژگان اختراعی، بازوی مقایسه.</span></div>
+    <div class="rule"><i>۹</i><span><b>بودجهٔ متن.</b> ≤۳ · ≤۱۲ · یک (i). بقیه پشت (i).</span></div>
+  </div>
+  <div class="stats in" style="margin-top:14px;max-width:1000px">
+    <div class="stat"><div class="v num">40</div><div class="l">صفحه × حالت × واژگان × تم، بازرسی خودکار</div></div>
+    <div class="stat"><div class="v num">14</div><div class="l">قاعدهٔ اندازه‌گیری‌شده: رقم، جهت، واژهٔ فنی، ادعا، برش، دکمه</div></div>
+    <div class="stat"><div class="v num" style="color:var(--ok)">0</div><div class="l">یافته در آخرین اجرا</div></div>
+    <div class="stat"><div class="v num">$1,997.60</div><div class="l">۲٬۰۰۰ دلار پس از رفت‌وبرگشت با دو کارمزد — دقیق</div></div>
+  </div>
+</section>
+
+<!-- 20 · WHAT WE LEARN -->
+<section class="slide">
+  <div class="head center in"><div class="eyebrow">تست کاربر · دور دوم</div><h2>دقیقاً چه چیزی را یاد می‌گیریم</h2></div>
+  <div class="two in">
+    <div class="box"><div class="n">v4.5 · هستهٔ محصول</div><p>پول کجاست و چه کسی می‌تواند جابه‌جایش کند — بدون توضیح؟<br>«دلار دیجیتال» کافی است، یا دنبال «تتر» می‌گردد؟<br>کدام (i) را باز می‌کند؟<br>کارمزد و دریافتی خالص را پیش از تأیید درست می‌خواند؟<br>ساده یا آشیانه — کدام مبلغ بیشتری وارد می‌کند؟</p></div>
+    <div class="box good"><div class="n">v4.5 · کیف پول شخصی</div><p>دو موجودی را بدون کمک توضیح می‌دهد؟<br>بعد از انتقال، انتظار دارد مهاجر بتواند برگرداند؟ — علامت خطر<br>۱۲ کلمه: رمز ورود، یا مالکیت کامل؟<br>گوشی یا دستگاه؟ چرا؟<br>می‌فهمد بازگشت، امضای خودش را می‌خواهد؟</p></div>
+  </div>
+  <div class="chips in" style="margin-top:14px"><span class="chip"><b>مقیاس:</b> مبلغی که حاضر است وارد کند — قبل و بعد از هر مکانیزم</span><span class="chip"><b>قاعده:</b> ادامه / اصلاح / محدودکردن / توقف — ۳ از ۵</span><span class="chip"><b>ترتیب:</b> ارزش → اعتماد → اقدام</span></div>
+</section>
+
+<!-- 21 · NEXT + CLOSE -->
+<section class="slide">
+  <div class="split in">
+    <div>
+      <div class="eyebrow">گام بعد</div>
+      <h2>سه تصمیم باز</h2>
+      <div class="callouts" style="margin-top:14px">
+        <div class="callout"><div class="k">۱ · «آشیانه» در تیتر</div><p>اگر هر دو بازو یک کلمه را بگویند، تست واژگان تضادش را از دست می‌دهد.</p></div>
+        <div class="callout"><div class="k">۲ · USDT در لایهٔ دوم</div><p>قاعده: فقط «جزئیات فنی». تیم آن را به «بیشتر توضیح بده» آورد. یکی بماند.</p></div>
+        <div class="callout"><div class="k">۳ · $49 و ۵ تا ۷ روز</div><p>فرض تست‌اند، نه قول. یا تأیید WS3، یا «در حال بررسی» — پیش از جلسهٔ اول.</p></div>
+      </div>
+      <div class="chips" style="justify-content:flex-start;margin-top:14px"><a class="chip" href="./index.html" style="text-decoration:none">صفحهٔ فرود</a><a class="chip good" href="./wallet-v4.5.html" style="text-decoration:none"><b>v4.5 — نسخهٔ تست</b></a><a class="chip" href="./wallet-v4.html" style="text-decoration:none">v4 — نسخهٔ قبل</a></div>
+    </div>
+    <div class="row" style="padding-bottom:0"><div class="iph hero"><img src="./deck-assets/v45-custody.png" alt=""><div class="lab">v4.5 امروز آمادهٔ تست است</div></div></div>
+  </div>
+</section>
+
+</div>
+
+<button class="nav next" onclick="step(1)" aria-label="بعدی">‹</button>
+<button class="nav prev" onclick="step(-1)" aria-label="قبلی">›</button>
+<div class="hud"><div class="dots" id="dots"></div></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let i=0;
+const dots=document.getElementById('dots');
+slides.forEach((s,n)=>{ const b=document.createElement('button'); b.onclick=()=>show(n); b.setAttribute('aria-current',n===0); b.title='صفحهٔ '+(n+1); dots.appendChild(b); });
+function show(n){
+  n=Math.max(0,Math.min(slides.length-1,n));
+  slides[i].classList.remove('on'); i=n; slides[i].classList.add('on');
+  [...dots.children].forEach((d,k)=>d.setAttribute('aria-current',k===i));
+  document.getElementById('prog').style.width=((i+1)/slides.length*100)+'%';
+  document.getElementById('cnt').textContent=(i+1)+' / '+slides.length;
+  history.replaceState(null,'','#s'+(i+1));
+  layoutSpots(slides[i]);
+}
+function step(d){ show(i+d); }
+/* RTL: forward is the key that points into the reading direction (left) */
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'||e.key===' '||e.key==='PageDown'||e.key==='Enter'){ e.preventDefault(); step(1); }
+  else if(e.key==='ArrowRight'||e.key==='PageUp'||e.key==='Backspace'){ e.preventDefault(); step(-1); }
+  else if(e.key==='Home'){ show(0); } else if(e.key==='End'){ show(slides.length-1); }
+  else if(e.key==='p'||e.key==='P'){ print(); }
+});
+let tx=null; addEventListener('touchstart',e=>{ tx=e.touches[0].clientX; },{passive:true});
+addEventListener('touchend',e=>{ if(tx===null) return; const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>60) step(dx>0?1:-1); tx=null; });
+
+/* ── spotlights ──
+   A .spot carries the screen image and a region in the app's own 390×844
+   coordinates. The base is dimmed and blurred; the lens shows the same region
+   crisp and magnified, sitting over where it lives; the note hangs off it. */
+function layoutSpots(root){
+  root.querySelectorAll('.spot').forEach(sp=>{
+    if(!sp.dataset.built){
+      sp.insertAdjacentHTML('afterbegin',`<div class="base"><img src="./deck-assets/${sp.dataset.img}" alt=""></div><div class="lens"></div><div class="note"><b>${sp.dataset.k||''}</b>${sp.dataset.note||''}</div>`);
+      sp.dataset.built='1';
+    }
+    const W=sp.clientWidth, H=sp.clientHeight, s=W/390; let z=+sp.dataset.z||1.6;
+    z=Math.min(z,(W*1.22)/((+sp.dataset.w)*s));   /* a lens never grows wider than 1.22 phones — neighbours stay clear */
+    const x=+sp.dataset.x, y=+sp.dataset.y, w=+sp.dataset.w, h=+sp.dataset.h;
+    const lens=sp.querySelector('.lens'), note=sp.querySelector('.note');
+    const lw=w*s*z, lh=h*s*z;
+    let left=(x+w/2)*s-lw/2, top=(y+h/2)*s-lh/2;
+    left=Math.max(-W*.08,Math.min(W*1.08-lw,left)); top=Math.max(-8,Math.min(H-lh+8,top));
+    Object.assign(lens.style,{left:left+'px',top:top+'px',width:lw+'px',height:lh+'px',
+      backgroundImage:`url(./deck-assets/${sp.dataset.img})`,backgroundSize:(390*s*z)+'px auto',
+      backgroundPosition:(-x*s*z)+'px '+(-y*s*z)+'px'});
+    const side=sp.dataset.side||'b';
+    note.className='note '+side; note.style.left='50%'; note.style.transform='translateX(-50%)';
+    if(side==='b'){ note.style.top=(top+lh+18)+'px'; note.style.bottom='auto'; }
+    else { note.style.bottom=(H-top+18)+'px'; note.style.top='auto'; }
+  });
+}
+addEventListener('resize',()=>layoutSpots(slides[i]));
+const h0=+(location.hash.match(/s(\d+)/)||[])[1]; show(h0?h0-1:0);
+addEventListener('load',()=>layoutSpots(slides[i]));
+</script>
+</body>
+</html>
