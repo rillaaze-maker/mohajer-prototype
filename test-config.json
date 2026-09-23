@@ -1,7 +1,7 @@
 {
   "_": "تنها فایلی که برای راه‌اندازی تست لازم است دست بزنید. بعد از Commit، چند دقیقه بعد همه‌جا اعمال می‌شود. کلیدهایی که با _ شروع می‌شوند فقط توضیح‌اند.",
 
-  "endpoint": "",
+  "endpoint": "https://script.google.com/macros/s/AKfycbx1rpSFhvp0KRwhysQUQ6BvJQ_xqnYEPLEEfykG8bm19kg-RFih8ZWjPjbJmoDNvMS-EA/exec",
   "_endpoint": "آدرسی که جلسه‌ها به آن فرستاده می‌شوند. فایل test-collector.gs را در Google Apps Script بچسبانید و آدرس /exec را اینجا بگذارید. هر آدرس دیگری هم که POST قبول کند کار می‌کند. خالی بماند، هر شرکت‌کننده در پایان یک کد می‌گیرد و باید برای شما بفرستد.",
 
   "target": 100,
