@@ -72,6 +72,16 @@ function doGet(e) {
   if (p.ping) return out_({ ok: true, pong: 1 }, p.callback);
 
   var rows = sheet_().getDataRange().getValues();
+
+  /* «آیا این جلسه واقعاً رسید؟» — صفحهٔ شرکت‌کننده تا این را نپرسد و جواب
+     نگیرد، نمی‌نویسد «ارسال شد». یک POST بی‌پاسخ، دلیلِ رسیدن نیست. */
+  if (p.has) {
+    for (var h = rows.length - 1; h > 0; h--) {
+      if (String(rows[h][1]) === String(p.has)) return out_({ ok: true, found: true }, p.callback);
+    }
+    return out_({ ok: true, found: false }, p.callback);
+  }
+
   var byId = {};
   for (var i = 1; i < rows.length; i++) {
     var r = rows[i];
