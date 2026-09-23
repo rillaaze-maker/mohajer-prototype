@@ -1382,6 +1382,32 @@ highest — a metric that confidently points the wrong way.
 Rows whose id starts with `TEST-` are ignored everywhere, so a connection probe
 never becomes a data point.
 
+### Restarting a round — the team's own testing was polluting the numbers (2026-09-23)
+
+The team bug-hunts on the same build with the same link, so the console's
+counters mixed their sessions with real participants'. The user asked to
+"restart" the data.
+
+**The answer is the round, not deletion.** «راند تازه» in the console bumps the
+round number, rewrites every link and the invite text, and the live panel counts
+**that round only** — zero, immediately. Old sessions are not touched: they stay
+in the sheet, stay visible under «همهٔ راندها», and each round keeps its own
+«نتیجه» link. A line under the counters says how many sessions are sitting in
+other rounds, so a zero is never mistaken for lost data.
+
+Two things this needed to actually work:
+- The round is **remembered per version** (`mhj.test.round.<ver>`). It used to
+  reset to 1 on reopen, which would have quietly merged the new round back into
+  the old data — the restart would have looked like it worked and not have.
+- «راند تازه» is **max(data, current) + 1**, so it works before the server
+  answers. Apps Script's cold start is slow enough that the button was computing
+  "next = 1" from an empty table.
+
+**No remote wipe, deliberately.** The collector URL lives in a public repo;
+a delete action behind it would let anyone holding the link erase a round.
+Emptying the sheet stays where only the owner can do it — in Google Sheets
+(duplicate the tab first, then delete rows 2+). The console says exactly this.
+
 ### Copy rules the user set here (2026-09-23)
 
 - **No self-blame in participant copy.** «اگر جایی گیر کنید، ایراد از طراحی

@@ -178,9 +178,12 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
   <div class="sec"><span class="n num">۲</span>لینک‌ها<span class="ln"></span></div>
   <div class="card">
     <div class="row">
-      <div class="fld" style="max-width:130px">
+      <div class="fld" style="max-width:190px">
         <label for="round">شمارهٔ راند</label>
-        <input type="text" id="round" value="1" oninput="paint()">
+        <div style="display:flex;gap:6px">
+          <input type="text" id="round" value="1" oninput="saveRound();paint();paintLive()" style="min-width:0">
+          <button class="btn sm" onclick="newRound()" title="شمارش از صفر">راند تازه</button>
+        </div>
       </div>
       <div class="fld">
         <label>از چه راه‌هایی می‌فرستید؟ <span style="color:var(--w3)">(برای هرکدام یک لینک جدا)</span></label>
@@ -215,6 +218,11 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
       <a class="btn sm p" id="go-insights" href="./test-insights.html">دیدن نتیجه‌ها</a>
     </div>
     <p class="tiny" id="conn-h" style="margin-bottom:14px"></p>
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap">
+      <span class="pill y" id="scope-lb">راند ۱</span>
+      <button class="btn sm" id="scope-btn" onclick="toggleScope()">همهٔ راندها</button>
+      <span class="tiny" id="scope-h"></span>
+    </div>
     <div class="kpis" id="kpis"></div>
     <div class="bar"><i id="bar-i"></i></div>
     <div class="legend"><span id="bar-l">—</span><span id="bar-r">—</span></div>
@@ -257,6 +265,16 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
   </details>
 
   <details>
+    <summary>شروع دوباره — وقتی تست داخلیِ تیم نتیجه را آلوده کرده</summary>
+    <p class="tiny">دکمهٔ <b>«راند تازه»</b> در بخش ۲ کافی است: شمارهٔ راند یک واحد جلو می‌رود، لینک‌ها خودشان به‌روز می‌شوند، و شمارش از صفر شروع می‌شود. جلسه‌های قبلی پاک نمی‌شوند — فقط دیگر در عددهای این راند نیستند و هر وقت خواستید با «همهٔ راندها» دیده می‌شوند. در صفحهٔ نتیجه‌ها هم همان راند از پیش انتخاب شده است.</p>
+    <p class="tiny" style="margin-top:8px">اگر واقعاً می‌خواهید شیت خالی شود، همان‌جا در گوگل‌شیت سه کلیک است: سطرها را انتخاب کنید (از سطر ۲ به پایین) → راست‌کلیک → <span class="en">Delete rows</span>. پیش از آن، یک نسخه نگه دارید: <span class="en">Right-click on the tab → Duplicate</span>.</p>
+    <div class="note">
+      <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+      <p>عمداً دکمهٔ «پاک کردن همه» اینجا نگذاشتم: آدرس جمع‌آوری در مخزن عمومی است و هرکسی که لینک را داشته باشد می‌توانست با همان دکمه کل راند را پاک کند. پاک‌کردن باید جایی بماند که فقط شما به آن دسترسی دارید — خودِ گوگل‌شیت.</p>
+    </div>
+  </details>
+
+  <details>
     <summary>وارد کردن دستیِ کدهایی که فرستاده‌اند</summary>
     <p class="tiny">اگر کسی در پایان «کد» گرفته و برای شما فرستاده، اینجا بچسبانید — هر کد در یک خط. روی همین مرورگر ذخیره می‌شود و در صفحهٔ نتیجه‌ها با بقیه یکجا دیده می‌شود.</p>
     <textarea id="blobs" placeholder="یک کد در هر خط…"></textarea>
@@ -284,11 +302,12 @@ const base = () => location.href.replace(/[^/]*$/, '');
   CFG = await TK.config();
   VERS = await TK.versions();
   sel = (VERS.find(v => v.status === 'current') || VERS[0] || {}).id;
+  loadRound();                       /* راندی که دفعهٔ قبل روی آن بودیم */
   $('ep').value = CFG.endpoint || '';
   $('chans').innerHTML = Object.keys(TK.CHANNELS).map(k =>
     '<button class="chip" aria-pressed="' + (k === 'tg') + '" data-k="' + k + '" onclick="toggleChan(this)">' +
     TK.CHANNELS[k] + '</button>').join('');
-  paintVers(); paint(); resetInvite();
+  paintVers(); paint(); paintLive(); resetInvite();
   TK.flush(CFG);
   refresh();
   setInterval(refresh, 60000);
@@ -305,7 +324,14 @@ function paintVers(){
     '</button>').join('');
   countsOnVers();
 }
-function pickVer(b){ sel = b.dataset.id; paintVers(); paint(); resetInvite(); }
+function pickVer(b){ sel = b.dataset.id; loadRound(); paintVers(); paint(); paintLive(); resetInvite(); }
+
+/* شمارهٔ راند باید از بازکردنِ بعدی هم زنده بیرون بیاید: اگر به ۱ برگردد،
+   لینک‌های تازه دوباره با دادهٔ قدیمی قاطی می‌شوند و کل «شروع دوباره» بی‌اثر
+   است. هر نسخه راند خودش را دارد. */
+const roundKey = () => 'round.' + sel;
+function loadRound(){ $('round').value = TK.store.get(roundKey(), '1'); }
+function saveRound(){ TK.store.set(roundKey(), roundNow()); }
 function toggleChan(b){
   const k = b.dataset.k, on = b.getAttribute('aria-pressed') === 'true';
   b.setAttribute('aria-pressed', !on);
@@ -324,7 +350,8 @@ function paint(){
     '<code>' + TK.esc(linkFor(c)) + '</code>' +
     '<button class="btn sm" onclick="copyLink(this,\'' + c + '\')">کپی</button>' +
     '<a class="btn sm" href="' + TK.esc(linkFor(c)) + '" target="_blank" rel="noopener">باز کردن</a></div>').join('');
-  $('go-insights').href = './test-insights.html?v=' + encodeURIComponent(sel);
+  $('go-insights').href = './test-insights.html?v=' + encodeURIComponent(sel) +
+    '&r=' + encodeURIComponent(($('round').value || '1').trim());
 }
 async function copyLink(btn, c){
   const ok = await TK.copy(linkFor(c));
@@ -391,9 +418,37 @@ async function backup(){
   flash(TK.fa(full.length) + ' جلسه در فایل — همان را در prototype/ بگذارید و Commit کنید');
 }
 
+/* تستِ داخلیِ تیم نباید با تستِ واقعی قاطی شود. هر راند شمارش خودش را
+   دارد، و «راند تازه» یعنی از همین‌جا به بعد. داده‌های قبلی پاک نمی‌شوند —
+   فقط دیگر در این عددها نیستند؛ با «همهٔ راندها» باز دیده می‌شوند. */
+let scopeAll = false;
+const roundNow = () => ($('round').value || '1').trim();
+
+function toggleScope(){
+  scopeAll = !scopeAll;
+  $('scope-btn').textContent = scopeAll ? 'فقط راند جاری' : 'همهٔ راندها';
+  paintLive();
+}
+function newRound(){
+  const nums = rows.filter(x => String(x.ver) === String(sel))
+    .map(x => parseInt(String(x.r), 10)).filter(n => !isNaN(n));
+  const here = parseInt(roundNow(), 10);
+  const next = Math.max(nums.length ? Math.max(...nums) : 0, isNaN(here) ? 0 : here) + 1;
+  $('round').value = String(next); saveRound();
+  scopeAll = false; $('scope-btn').textContent = 'همهٔ راندها';
+  paint(); paintLive(); resetInvite();
+  flash('راند ' + TK.fa(next) + ' — شمارش از صفر شروع شد. لینک‌ها هم به‌روز شدند.');
+}
+
 function paintLive(){
   const target = CFG.target || 100;
-  const mine = rows.filter(x => String(x.ver) === String(sel));
+  const r = roundNow();
+  const mine = rows.filter(x => String(x.ver) === String(sel) && (scopeAll || String(x.r) === r));
+  const older = rows.filter(x => String(x.ver) === String(sel) && String(x.r) !== r).length;
+  $('scope-lb').textContent = scopeAll ? 'همهٔ راندها' : 'راند ' + TK.fa(r);
+  $('scope-h').textContent = (!scopeAll && older)
+    ? TK.fa(older) + ' جلسه در راندهای دیگر — در این عددها نیست'
+    : '';
   const done = mine.filter(x => +x.done === 1);
   const ages = new Set(mine.map(x => x.age).filter(Boolean));
   const avg = done.length ? done.reduce((a, b) => a + (+b.ms || 0), 0) / done.length : 0;
@@ -418,7 +473,11 @@ function paintLive(){
   const list = Object.values(by).sort((a, b) => b.n - a.n);
   $('rounds').innerHTML = list.length
     ? '<tr><th>نسخه</th><th>راند</th><th>شروع</th><th>کامل</th><th></th></tr>' + list.map(x =>
-        '<tr><td><b>' + TK.esc((VERS.find(v => v.id === x.ver) || {}).name || ('v' + x.ver)) + '</b></td>' +
+        /* شیت گاهی «4.5» را عدد برمی‌گرداند، پس مقایسه با String */
+        '<tr' + (String(x.ver) === String(sel) && String(x.r) === r
+          ? ' style="background:rgba(213,164,92,.08)"' : '') + '>' +
+        '<td><b>' + TK.esc((VERS.find(v => String(v.id) === String(x.ver)) || {}).name || ('v' + x.ver)) + '</b>' +
+        (String(x.ver) === String(sel) && String(x.r) === r ? ' <span class="pill y">راند جاری</span>' : '') + '</td>' +
         '<td class="num">' + TK.fa(x.r) + '</td><td class="num">' + TK.fa(x.n) + '</td>' +
         '<td class="num">' + TK.fa(x.d) + '</td>' +
         '<td style="text-align:end"><a class="btn sm" href="./test-insights.html?v=' + encodeURIComponent(x.ver) +
