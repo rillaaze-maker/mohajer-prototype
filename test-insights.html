@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مهاجر · نتیجه‌های تست</title>
+<meta name="theme-color" content="#0B0D10">
+<meta name="robots" content="noindex">
+<link rel="icon" href="./icons/icon-192.png">
+<!--
+  ════════════════════════════════════════════════════════════════════════
+  مهاجر · نتیجه‌های تست میدانی
+  test-insights.html?v=4.5&r=2
+
+  ترتیب صفحه، ترتیب تصمیم است:
+    چند نفر  →  کجا گیر کردند  →  کدام سن  →  کجای مسیر ریزش شد
+    →  روی کدام نقطه از کدام صفحه زدند  →  خودشان چه گفتند  →  تک‌تک جلسه‌ها
+
+  Everything here is derived from the same event stream (TK.derive), so a
+  number shown twice is the same number. Nothing is averaged across
+  versions: a version filter is always applied, because comparing v3 and
+  v4.5 in one bar would hide the only thing worth seeing.
+  ════════════════════════════════════════════════════════════════════════
+-->
+<style>
+@font-face{font-family:Dana;src:url('./fonts/Dana-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-DemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+
+:root{
+  --f:Dana,system-ui,sans-serif;
+  --gold:#D5A45C;--ok:#3FBF8F;--bad:#E06C5B;--blue:#4A9BE8;--purple:#8B6FD4;
+  --w1:#fff;--w2:rgba(255,255,255,.7);--w3:rgba(255,255,255,.44);
+  --surf:rgba(255,255,255,.05);--surf2:rgba(255,255,255,.08);--brd:rgba(255,255,255,.11);
+  --spring:cubic-bezier(.16,1,.3,1);--swift:cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--f);color:var(--w1);background:#0B0D10;line-height:1.65;
+  -webkit-font-smoothing:antialiased;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 82% -10%,rgba(213,164,92,.12),transparent 62%),
+             linear-gradient(168deg,#1A1F26,#0B0D10 56%,#12161B)}
+.wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:40px 22px 90px}
+.num{unicode-bidi:isolate;font-variant-numeric:tabular-nums}   /* Persian digits in Persian text: no LTR override */
+.en{direction:ltr;unicode-bidi:isolate}
+
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:26px;flex-wrap:wrap}
+.brand .mk{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.08);display:grid;place-items:center}
+.brand .nm{font-size:16px;font-weight:600;letter-spacing:-.02em}
+.brand a{color:var(--w3);font-size:12px;text-decoration:none}
+.brand a:hover{color:var(--gold)}
+
+h1{font-size:clamp(24px,4.6vw,33px);font-weight:700;letter-spacing:-.035em;line-height:1.22}
+.lead{font-size:14px;color:var(--w2);margin-top:10px;max-width:60ch}
+.sec{display:flex;align-items:baseline;gap:10px;margin:44px 0 14px}
+.sec h2{font-size:16.5px;font-weight:600;letter-spacing:-.025em}
+.sec .h{font-size:11.5px;color:var(--w3)}
+.sec .ln{flex:1;height:1px;background:var(--brd)}
+.tiny{font-size:11.5px;color:var(--w3);line-height:1.8}
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:18px;padding:20px}
+.card+.card{margin-top:10px}
+
+/* ── filters ────────────────────────────────────────────────────── */
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--surf);
+  border:1px solid var(--brd);border-radius:16px;padding:12px 14px;position:sticky;top:0;z-index:5;
+  backdrop-filter:blur(12px);background:rgba(16,19,23,.86)}
+.filters .lb{font-size:11px;color:var(--w3);margin-inline-end:2px}
+select,input[type=text]{background:var(--surf2);border:1px solid var(--brd);border-radius:99px;
+  padding:9px 14px;color:var(--w1);font:500 12.5px var(--f);outline:none;appearance:none;cursor:pointer}
+select:focus{border-color:var(--gold)}
+option{background:#14181D}
+.chip{border:1px solid var(--brd);background:var(--surf);color:var(--w2);border-radius:99px;
+  font:500 12px/1 var(--f);padding:9px 12px;cursor:pointer;transition:.2s var(--swift);white-space:nowrap}
+.chip[aria-pressed=true]{background:rgba(213,164,92,.16);border-color:var(--gold);color:var(--w1)}
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--brd);background:var(--surf2);
+  color:var(--w1);border-radius:99px;font:600 12.5px/1 var(--f);padding:10px 15px;cursor:pointer;
+  transition:.2s var(--swift);text-decoration:none}
+.btn:hover{border-color:rgba(213,164,92,.45)}
+.btn.p{background:var(--gold);border-color:var(--gold);color:#0B0D10}
+
+/* ── kpis ───────────────────────────────────────────────────────── */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(136px,1fr));gap:10px;margin-top:14px}
+.kpi{background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:16px 17px}
+.kpi .v{font-size:27px;font-weight:700;letter-spacing:-.03em;line-height:1.2}
+.kpi .l{font-size:11.5px;color:var(--w3);margin-top:2px}
+.kpi .s{font-size:10.5px;color:var(--w3);margin-top:6px}
+.kpi.gold .v{color:var(--gold)} .kpi.ok .v{color:var(--ok)} .kpi.bad .v{color:var(--bad)}
+
+/* ── bars ───────────────────────────────────────────────────────── */
+.lay{display:flex;flex-direction:column;gap:11px;margin-top:6px}
+.lay .r{display:grid;grid-template-columns:96px 1fr 46px;gap:12px;align-items:center}
+.lay .nm{font-size:13px;font-weight:500}
+.lay .tr{height:10px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.lay .tr i{display:block;height:100%;border-radius:99px;width:0;transition:width .9s var(--spring)}
+.lay .pc{font-size:12.5px;color:var(--w2);text-align:end}
+.verdict{display:flex;gap:12px;align-items:flex-start;margin-top:18px;padding-top:16px;border-top:1px solid var(--brd)}
+.verdict .big{font-size:15px;font-weight:600}
+.verdict p{font-size:12.5px;color:var(--w2);margin-top:4px;line-height:1.8}
+
+.stack{display:flex;height:11px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.06)}
+.stack i{display:block;height:100%}
+.keys{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:11.5px;color:var(--w3)}
+.keys span{display:inline-flex;align-items:center;gap:6px}
+.keys b{width:9px;height:9px;border-radius:3px;display:inline-block}
+
+/* ── age ────────────────────────────────────────────────────────── */
+.ages{display:flex;flex-direction:column;gap:14px}
+.age{display:grid;grid-template-columns:78px 1fr;gap:13px;align-items:center}
+.age .b{font-size:12.5px;font-weight:600}
+.age .b small{display:block;font-size:10.5px;font-weight:400;color:var(--w3)}
+.age .m{display:flex;gap:16px;margin-top:7px;font-size:11px;color:var(--w3);flex-wrap:wrap}
+.age .m b{color:var(--w2);font-weight:600}
+
+/* ── funnel ─────────────────────────────────────────────────────── */
+.fun{display:flex;flex-direction:column;gap:3px}
+.fun .s{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+  background:rgba(255,255,255,.03);border-radius:10px;padding:9px 13px;position:relative;overflow:hidden}
+.fun .s .fill{position:absolute;inset:0;inset-inline-end:auto;background:rgba(213,164,92,.14);
+  border-inline-end:2px solid rgba(213,164,92,.5);transition:width .9s var(--spring)}
+.fun .s .nm{position:relative;font-size:13px;font-weight:500}
+.fun .s .nm small{color:var(--w3);font-weight:400;font-size:11px;margin-inline-start:7px}
+.fun .s .n{position:relative;font-size:12.5px;color:var(--w2)}
+.fun .drop{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--bad);padding:2px 13px}
+.fun .drop.ok{color:var(--w3)}
+
+/* ── heat ───────────────────────────────────────────────────────── */
+.heat{display:flex;gap:22px;flex-wrap:wrap}
+.heat .side{flex:1;min-width:230px}
+.dev{position:relative;width:390px;height:844px;flex:none;border-radius:34px;overflow:hidden;
+  background:#0E1216;box-shadow:0 0 0 8px #101317,0 0 0 9.5px #303740,0 30px 70px -34px rgba(0,0,0,.8)}
+.dev iframe{width:390px;height:844px;border:0;display:block}
+.dev canvas{position:absolute;inset:0;pointer-events:none}
+.dev .mk{position:absolute;pointer-events:none;transform:translate(-50%,-50%);border-radius:50%}
+.dev .mk.rage{width:26px;height:26px;border:2px solid var(--bad);box-shadow:0 0 0 4px rgba(224,108,91,.2)}
+.dev .mk.dead{width:14px;height:14px;border:1.5px dashed rgba(255,255,255,.65)}
+.screens{display:flex;flex-direction:column;gap:5px;max-height:760px;overflow:auto;padding-inline-end:4px}
+.srow{display:grid;grid-template-columns:1fr auto auto;gap:9px;align-items:center;background:rgba(255,255,255,.03);
+  border:1px solid transparent;border-radius:11px;padding:9px 12px;cursor:pointer;transition:.18s var(--swift);
+  font-family:var(--f);color:var(--w1);text-align:start}
+.srow:hover{background:rgba(255,255,255,.06)}
+.srow[aria-pressed=true]{border-color:var(--gold);background:rgba(213,164,92,.1)}
+.srow .n{font-size:13px;font-weight:500}
+.srow .n small{display:block;font-size:10px;color:var(--w3)}
+.srow .v{font-size:11.5px;color:var(--w2)}
+.srow .w{font-size:10.5px;color:var(--bad)}
+
+/* ── quotes ─────────────────────────────────────────────────────── */
+.quotes{columns:2;column-gap:10px}
+@media(max-width:760px){.quotes{columns:1}}
+.q{break-inside:avoid;background:var(--surf);border:1px solid var(--brd);border-radius:15px;
+  padding:15px 16px;margin-bottom:10px}
+.q .hd{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.q .hd .t{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:99px;letter-spacing:.03em}
+.q .hd .age{font-size:10.5px;color:var(--w3)}
+.q p{font-size:13.5px;line-height:1.85;color:var(--w1)}
+.q .src{font-size:10.5px;color:var(--w3);margin-top:8px}
+
+/* ── sessions ───────────────────────────────────────────────────── */
+table{width:100%;border-collapse:collapse}
+th,td{text-align:start;padding:10px 8px;font-size:12.5px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle}
+th{font-size:10.5px;font-weight:700;letter-spacing:.08em;color:var(--w3)}
+tr.s-row{cursor:pointer}
+tr.s-row:hover td{background:rgba(255,255,255,.03)}
+.pill{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.08);color:var(--w3)}
+.pill.g{background:rgba(63,191,143,.15);color:var(--ok)}
+.pill.y{background:rgba(213,164,92,.17);color:var(--gold)}
+.pill.r{background:rgba(224,108,91,.16);color:var(--bad)}
+.track{display:flex;gap:4px;flex-wrap:wrap;padding:12px 8px 18px}
+.track .st{display:flex;flex-direction:column;gap:3px;background:rgba(255,255,255,.04);border-radius:9px;
+  padding:7px 10px;min-width:74px}
+.track .st b{font-size:11.5px;font-weight:600}
+.track .st span{font-size:10px;color:var(--w3)}
+.track .st.hot{background:rgba(224,108,91,.13)}
+.track .arw{align-self:center;color:var(--w3);font-size:11px}
+
+.empty{text-align:center;padding:46px 20px;color:var(--w3)}
+.empty h3{font-size:16px;color:var(--w2);font-weight:600;margin-bottom:6px}
+footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--brd);font-size:11.5px;color:var(--w3)}
+
+/* ── phone: the same page, one column ── */
+@media(max-width:860px){
+  .wrap{padding:26px 15px 70px}
+  .heat{flex-direction:column-reverse;gap:16px}
+  .dev{width:100%;max-width:390px;height:auto;aspect-ratio:390/844;margin:0 auto}
+  .dev iframe{width:100%;height:100%}
+  .screens{max-height:290px}
+  .filters{position:static;padding:11px}
+  .age{grid-template-columns:66px 1fr;gap:10px}
+  .lay .r{grid-template-columns:78px 1fr 40px;gap:9px}
+  table{display:block;overflow-x:auto;white-space:nowrap}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="mk"><svg viewBox="0 0 49.33 39.99" width="16" height="16" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></div>
+    <div class="nm">مهاجر · نتیجه‌های تست</div>
+    <a href="./test.html">کنسول</a><a href="./index.html">داشبورد</a>
+  </div>
+
+  <h1 id="title">—</h1>
+  <p class="lead" id="sub">در حال خواندن…</p>
+
+  <div class="filters" style="margin-top:20px">
+    <span class="lb">نسخه</span><select id="f-ver" onchange="apply()"></select>
+    <span class="lb">راند</span><select id="f-round" onchange="apply()"></select>
+    <span class="lb">سن</span><span id="f-ages" style="display:flex;gap:6px;flex-wrap:wrap"></span>
+    <span style="flex:1"></span>
+    <button class="btn" onclick="load()">تازه‌سازی</button>
+    <button class="btn" onclick="exportCsv()">CSV</button>
+    <button class="btn" onclick="exportJson()">JSON</button>
+  </div>
+
+  <div id="body"></div>
+
+  <footer>هر عدد این صفحه از همان جریان رویدادها ساخته می‌شود؛ چیزی دوباره‌شماری یا تخمین نمی‌شود. زیر سه جلسه، این صفحه قضاوت نمی‌کند — فقط داده را نشان می‌دهد.</footer>
+</div>
+
+<script src="./test-kit.js"></script>
+<script>
+const $ = TK.$, esc = TK.esc, fa = TK.fa;
+let CFG = {}, VERS = [], ALL = [], SEL = [], ageFilter = new Set(), heatScreen = null;
+
+(async function boot(){
+  CFG = await TK.config();
+  VERS = await TK.versions();
+  $('f-ages').innerHTML = TK.AGES.map(a =>
+    '<button class="chip" aria-pressed="false" data-a="' + a + '" onclick="toggleAge(this)">' + a + '</button>').join('');
+  await load();
+})();
+
+/* ── data ───────────────────────────────────────────────────────── */
+async function load(){
+  $('sub').textContent = 'در حال خواندن…';
+  let remote = [];
+  if (CFG.endpoint) {
+    try { const r = await TK.read(CFG.endpoint, { full: 1 }, 40000); remote = (r && r.sessions) || []; }
+    catch (e) { /* بدون سرور هم همین صفحه با کدهای واردشده کار می‌کند */ }
+  }
+  const loc = TK.store.get('local', []);
+  const seen = new Set(remote.map(s => s.id));
+  ALL = remote.concat(loc.filter(s => !seen.has(s.id)));
+  ALL.forEach(s => { if (!s._d) s._d = TK.derive(s); });
+
+  const vers = [...new Set(ALL.map(s => String(s.ver)))];
+  /* یک تازه‌سازی نباید انتخاب کاربر را به نسخهٔ داخل آدرس برگرداند */
+  const want = $('f-ver').value || TK.qs('v', '') || (VERS.find(v => v.status === 'current') || {}).id || vers[0] || '';
+  $('f-ver').innerHTML = (vers.length ? vers : [want]).map(v =>
+    '<option value="' + esc(v) + '"' + (v === want ? ' selected' : '') + '>' +
+    esc((VERS.find(x => x.id === v) || {}).name || ('v' + v)) + '</option>').join('');
+  apply();
+}
+
+function apply(){
+  const v = $('f-ver').value;
+  const rounds = [...new Set(ALL.filter(s => String(s.ver) === v).map(s => String(s.r)))].sort();
+  const wantR = $('f-round').value || TK.qs('r', '') || '';
+  $('f-round').innerHTML = '<option value="">همه</option>' + rounds.map(r =>
+    '<option value="' + esc(r) + '"' + (r === wantR ? ' selected' : '') + '>' + fa(r) + '</option>').join('');
+  const r = $('f-round').value;
+
+  SEL = ALL.filter(s => String(s.ver) === v
+    && (!r || String(s.r) === r)
+    && (!ageFilter.size || ageFilter.has((s.seg || {}).age)));
+
+  const nm = (VERS.find(x => x.id === v) || {}).name || ('v' + v);
+  $('title').textContent = nm;
+  $('sub').textContent = SEL.length
+    ? fa(SEL.length) + ' جلسه' + (r ? ' · راند ' + fa(r) : ' · همهٔ راندها') +
+      (ageFilter.size ? ' · فقط ' + [...ageFilter].join('، ') : '')
+    : 'هنوز جلسه‌ای برای این فیلتر نیست.';
+  render();
+}
+function toggleAge(b){
+  const a = b.dataset.a, on = b.getAttribute('aria-pressed') === 'true';
+  b.setAttribute('aria-pressed', !on);
+  if (on) ageFilter.delete(a); else ageFilter.add(a);
+  apply();
+}
+
+/* ── small maths ────────────────────────────────────────────────── */
+const med = (a) => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y); const h = s.length >> 1;
+  return s.length % 2 ? s[h] : (s[h - 1] + s[h]) / 2; };
+const pct = (n, d) => d ? Math.round(n / d * 100) : 0;
+
+/* ── render ─────────────────────────────────────────────────────── */
+function render(){
+  if (!SEL.length) {
+    $('body').innerHTML = '<div class="card empty"><h3>هنوز داده‌ای نیست</h3>' +
+      '<p class="tiny">لینک این نسخه را از کنسول بردارید و بفرستید؛ نتیجه‌ها همین‌جا ظاهر می‌شوند.<br>' +
+      'اگر کسی «کد» فرستاده، از کنسول واردش کنید.</p></div>';
+    return;
+  }
+  $('body').innerHTML =
+    blockCompare() + blockKpis() + blockLayer() + blockAges() + blockFunnel() + blockHeat() + blockStuck() + blockQuotes() + blockSessions();
+  paintHeat();
+  bindSessions();
+}
+
+/* ── ۰ مقایسهٔ نسخه‌ها ────────────────────────────────────────────
+   فقط وقتی معنا دارد که بیش از یک نسخه در میدان باشد. عمداً کوتاه است:
+   اینجا فقط می‌گوید «کدام نسخه بهتر جواب داده»؛ چراییِ آن، بقیهٔ صفحه است. */
+function blockCompare(){
+  const ids = [...new Set(ALL.map(s => String(s.ver)))];
+  if (ids.length < 2) return '';
+  const row = (id) => {
+    const g = ALL.filter(s => String(s.ver) === id);
+    const dn = g.filter(s => s.done);
+    const tr = g.map(s => +(s.end || {}).trust).filter(n => n > 0);
+    const go = g.map(s => (s.end || {}).go).filter(Boolean);
+    const cur = id === $('f-ver').value;
+    return '<tr' + (cur ? ' style="background:rgba(213,164,92,.07)"' : '') + '>' +
+      '<td><b>' + esc((VERS.find(x => x.id === id) || {}).name || ('v' + id)) + '</b>' +
+        (cur ? ' <span class="pill y">در نمایش</span>' : '') + '</td>' +
+      '<td class="num">' + fa(g.length) + '</td>' +
+      '<td class="num">' + fa(pct(dn.length, g.length)) + '٪</td>' +
+      '<td class="num">' + (tr.length ? fa(Math.round(med(tr) * 10) / 10) : '—') + '</td>' +
+      '<td class="num">' + (go.length ? fa(pct(go.filter(x => x === 'yes').length, go.length)) + '٪' : '—') + '</td>' +
+      '<td class="num">' + (dn.length ? TK.mmss(med(dn.map(s => s._d.ms))) : '—') + '</td></tr>';
+  };
+  return '<div class="sec"><h2>نسخه‌ها کنار هم</h2><span class="h">همهٔ راندها</span><span class="ln"></span></div>' +
+    '<div class="card"><table><tr><th>نسخه</th><th>شرکت‌کننده</th><th>تکمیل</th><th>اعتماد</th><th>«ادامه می‌دادم»</th><th>زمان میانه</th></tr>' +
+    ids.sort().reverse().map(row).join('') + '</table>' +
+    '<p class="tiny" style="margin-top:12px">این جدول تنها جایی است که نسخه‌ها با هم جمع می‌شوند. بقیهٔ صفحه فقط نسخهٔ انتخاب‌شده را نشان می‌دهد.</p></div>';
+}
+
+/* ── ۱ سرشماری ──────────────────────────────────────────────────── */
+function blockKpis(){
+  const done = SEL.filter(s => s.done);
+  const times = done.map(s => s._d.ms).filter(Boolean);
+  const trust = SEL.map(s => +(s.end || {}).trust).filter(n => n > 0);
+  const go = SEL.map(s => (s.end || {}).go).filter(Boolean);
+  const yes = go.filter(g => g === 'yes').length;
+  const ages = new Set(SEL.map(s => (s.seg || {}).age).filter(Boolean));
+  const target = CFG.target || 100;
+
+  const kpi = (v, l, s, c) => '<div class="kpi ' + (c || '') + '"><div class="v num">' + v + '</div>' +
+    '<div class="l">' + l + '</div>' + (s ? '<div class="s">' + s + '</div>' : '') + '</div>';
+
+  return '<div class="sec"><h2>چند نفر</h2><span class="h">' + fa(SEL.length) + ' از هدف ' + fa(target) + '</span><span class="ln"></span></div>' +
+    '<div class="kpis">' +
+      kpi(fa(SEL.length), 'شروع کرده‌اند', 'هدف: ' + fa(target) + ' نفر') +
+      kpi(fa(done.length), 'تا آخر رفته‌اند', fa(pct(done.length, SEL.length)) + '٪ تکمیل', 'gold') +
+      kpi(times.length ? TK.mmss(med(times)) : '—', 'زمان میانهٔ کار با اپ', times.length ? 'کمینه ' + TK.mmss(Math.min(...times)) : '') +
+      kpi(trust.length ? fa(Math.round(med(trust) * 10) / 10) : '—', 'اعتماد (از ۵)', trust.length ? fa(trust.length) + ' پاسخ' : '', 'ok') +
+      kpi(go.length ? fa(pct(yes, go.length)) + '٪' : '—', '«ادامه می‌دادم»', go.length ? fa(go.length) + ' پاسخ' : '') +
+      kpi(fa(ages.size) + '/' + fa(TK.AGES.length), 'پوشش سنی', ages.size < 3 ? 'هنوز یک‌طرفه است' : 'متنوع') +
+    '</div>';
+}
+
+/* ── ۲ لایه ─────────────────────────────────────────────────────── */
+function blockLayer(){
+  const t = { value: 0, usability: 0, trust: 0, motivation: 0 }; let clean = 0, n = 0;
+  SEL.forEach(s => { const v = (s.end || {}).stop; if (!v) return; n++;
+    if (v === 'none') clean++; else if (t[v] != null) t[v]++; });
+  const stops = n - clean;
+  const ranked = Object.keys(t).map(k => ({ k, n: t[k] })).sort((a, b) => b.n - a.n);
+  const top = ranked[0] && ranked[0].n ? ranked[0] : null;
+
+  const go = { yes: 0, maybe: 0, no: 0 };
+  SEL.forEach(s => { const g = (s.end || {}).go; if (go[g] != null) go[g]++; });
+  const gn = go.yes + go.maybe + go.no;
+
+  return '<div class="sec"><h2>کجا گیر کردند</h2><span class="h">' + fa(stops) + ' مکث از ' + fa(n) + ' پاسخ</span><span class="ln"></span></div>' +
+    '<div class="card"><div class="lay">' +
+      ranked.map(r => {
+        const L = TK.LAYERS[r.k];
+        return '<div class="r"><div class="nm">' + L.label + '</div>' +
+          '<div class="tr"><i style="width:' + pct(r.n, stops || 1) + '%;background:' + L.color + '"></i></div>' +
+          '<div class="pc num">' + (stops ? fa(pct(r.n, stops)) + '٪' : '—') + '</div></div>';
+      }).join('') +
+      '<div class="r"><div class="nm" style="color:var(--w3)">جایی گیر نکردند</div>' +
+      '<div class="tr"><i style="width:' + pct(clean, n || 1) + '%;background:rgba(255,255,255,.22)"></i></div>' +
+      '<div class="pc num">' + (n ? fa(pct(clean, n)) + '٪' : '—') + '</div></div>' +
+    '</div>' +
+    (SEL.length < 3
+      ? '<div class="verdict"><div><div class="big">هنوز قضاوت نمی‌کنیم</div><p>زیر سه جلسه، بزرگ‌ترین لایه معنایی ندارد. عددها را ببینید، نتیجه نگیرید.</p></div></div>'
+      : top
+        ? '<div class="verdict"><div><div class="big">گلوگاه: ' + TK.LAYERS[top.k].label +
+          ' <span class="pill y">' + fa(pct(top.n, stops)) + '٪ مکث‌ها</span></div>' +
+          '<p>این یعنی کار بعدی در <b>' + TK.LAYERS[top.k].fix + '</b> است، نه جای دیگر.</p></div></div>'
+        : '<div class="verdict"><div><div class="big">هیچ مکث معناداری ثبت نشده</div><p>یا مسیر واقعاً روان بوده، یا کار خواسته‌شده به‌قدر کافی سخت نبوده.</p></div></div>') +
+    '</div>' +
+    (gn ? '<div class="card"><div class="tiny" style="margin-bottom:10px">اگر واقعی بود، ادامه می‌دادید؟</div>' +
+      '<div class="stack">' +
+        '<i style="width:' + pct(go.yes, gn) + '%;background:var(--ok)"></i>' +
+        '<i style="width:' + pct(go.maybe, gn) + '%;background:var(--gold)"></i>' +
+        '<i style="width:' + pct(go.no, gn) + '%;background:var(--bad)"></i></div>' +
+      '<div class="keys"><span><b style="background:var(--ok)"></b>بله ' + fa(go.yes) + '</span>' +
+      '<span><b style="background:var(--gold)"></b>شاید ' + fa(go.maybe) + '</span>' +
+      '<span><b style="background:var(--bad)"></b>نه ' + fa(go.no) + '</span></div></div>' : '');
+}
+
+/* ── ۳ سن ───────────────────────────────────────────────────────── */
+function blockAges(){
+  const max = Math.max(1, ...TK.AGES.map(a => SEL.filter(s => (s.seg || {}).age === a).length));
+  const rows = TK.AGES.map(a => {
+    const g = SEL.filter(s => (s.seg || {}).age === a);
+    if (!g.length) return '<div class="age"><div class="b">' + a + '<small>—</small></div>' +
+      '<div><div class="stack"><i style="width:100%;background:rgba(255,255,255,.05)"></i></div>' +
+      '<div class="m">کسی از این بازه هنوز نیامده</div></div></div>';
+    const go = { yes: 0, maybe: 0, no: 0 };
+    g.forEach(s => { const x = (s.end || {}).go; if (go[x] != null) go[x]++; });
+    const gn = go.yes + go.maybe + go.no || 1;
+    const tr = g.map(s => +(s.end || {}).trust).filter(n => n > 0);
+    const dn = g.filter(s => s.done).length;
+    const w = Math.round(g.length / max * 100);
+    return '<div class="age"><div class="b">' + a + '<small class="num">' + fa(g.length) + ' نفر</small></div>' +
+      '<div><div class="stack" style="width:' + Math.max(12, w) + '%">' +
+        '<i style="width:' + pct(go.yes, gn) + '%;background:var(--ok)"></i>' +
+        '<i style="width:' + pct(go.maybe, gn) + '%;background:var(--gold)"></i>' +
+        '<i style="width:' + pct(go.no, gn) + '%;background:var(--bad)"></i>' +
+      '</div><div class="m">' +
+        '<span>تکمیل <b class="num">' + fa(pct(dn, g.length)) + '٪</b></span>' +
+        '<span>اعتماد <b class="num">' + (tr.length ? fa(Math.round(med(tr) * 10) / 10) : '—') + '</b></span>' +
+        '<span>زمان <b class="num">' + TK.mmss(med(g.map(s => s._d.ms))) + '</b></span>' +
+        '<span>گیر <b class="num">' + fa(g.reduce((n, s) => n + s._d.rage + s._d.dead, 0)) + '</b></span>' +
+      '</div></div></div>';
+  }).join('');
+
+  return '<div class="sec"><h2>سن</h2><span class="h">پهنای میله = تعداد · رنگ = «ادامه می‌دادم»</span><span class="ln"></span></div>' +
+    '<div class="card"><div class="ages">' + rows + '</div>' +
+    '<div class="keys" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--brd)">' +
+      '<span><b style="background:var(--ok)"></b>بله</span><span><b style="background:var(--gold)"></b>شاید</span>' +
+      '<span><b style="background:var(--bad)"></b>نه</span></div></div>';
+}
+
+/* ── ۴ قیف ──────────────────────────────────────────────────────── */
+/* ترتیب صفحه‌ها از خودِ مسیرها درمی‌آید، نه از یک نقشهٔ دستی: میانهٔ
+   «چندمین صفحه‌ای که دیدند» ترتیب را می‌سازد، پس نسخهٔ بعدی هم بدون
+   دست‌کاری این صفحه درست نمایش داده می‌شود. */
+function blockFunnel(){
+  const first = {};
+  SEL.forEach(s => { const seen = {};
+    s._d.path.forEach((scr, i) => { if (seen[scr]) return; seen[scr] = 1;
+      (first[scr] = first[scr] || []).push(i); }); });
+  const list = Object.keys(first)
+    .map(k => ({ k, n: first[k].length, at: med(first[k]) }))
+    .filter(x => x.n >= Math.max(2, Math.ceil(SEL.length * .08)))
+    .sort((a, b) => a.at - b.at).slice(0, 14);
+
+  if (!list.length) return '';
+  const top = list[0].n;
+  let out = '';
+  list.forEach((x, i) => {
+    if (i) {
+      const d = list[i - 1].n - x.n;
+      out += '<div class="drop' + (d <= 0 ? ' ok' : '') + '">' +
+        (d > 0 ? '↓ ' + fa(d) + ' نفر اینجا ادامه ندادند (' + fa(pct(d, list[i - 1].n)) + '٪)' : '↓ کسی از دست نرفت') + '</div>';
+    }
+    out += '<div class="s"><div class="fill" style="width:' + pct(x.n, top) + '%"></div>' +
+      '<div class="nm">' + esc(TK.screenFa(x.k)) + '<small class="en">' + esc(x.k) + '</small></div>' +
+      '<div class="n num">' + fa(x.n) + ' نفر · ' + fa(pct(x.n, SEL.length)) + '٪</div></div>';
+  });
+  return '<div class="sec"><h2>مسیر</h2><span class="h">به ترتیبی که واقعاً دیده شده</span><span class="ln"></span></div>' +
+    '<div class="card"><div class="fun">' + out + '</div></div>';
+}
+
+/* ── ۵ نقشهٔ ضربه ───────────────────────────────────────────────── */
+/* همان پروتوتایپ، زنده، با ضربه‌های واقعی روی آن. چون هر دو صفحه روی یک
+   مبدأ هستند، می‌شود صفحهٔ دلخواه را در iframe باز کرد و دقیقاً همان
+   چیزی را نشان داد که شرکت‌کننده دیده است. */
+function screenStats(){
+  const st = {};
+  SEL.forEach(s => {
+    const d = s._d;
+    Object.keys(d.time).forEach(k => {
+      st[k] = st[k] || { k, n: 0, ms: [], taps: [], rage: [], dead: [], exit: 0 };
+      st[k].n++; st[k].ms.push(d.time[k]);
+    });
+    d.taps.forEach(t => { if (!st[t.s]) return; st[t.s].taps.push(t); });
+    d.rages.forEach(t => { if (!st[t.s]) return; st[t.s].rage.push(t); });
+    d.deads.forEach(t => { if (!st[t.s]) return; st[t.s].dead.push(t); });
+    if (d.deepest && st[d.deepest]) st[d.deepest].exit++;
+  });
+  return Object.values(st).sort((a, b) => b.n - a.n);
+}
+
+function blockHeat(){
+  const st = screenStats();
+  if (!st.length) return '';
+  if (!heatScreen || !st.find(x => x.k === heatScreen)) heatScreen = st[0].k;
+  const v = $('f-ver').value;
+  const file = (VERS.find(x => x.id === v) || {}).file || ('wallet-v' + v + '.html');
+
+  return '<div class="sec"><h2>کجا را زدند</h2><span class="h">ضربه‌های واقعی، روی خودِ همان صفحه</span><span class="ln"></span></div>' +
+    '<div class="card"><div class="heat">' +
+      '<div class="dev" id="dev">' +
+        '<iframe id="heat-frame" src="./' + esc(file) + '?heat=1" title="پیش‌نمایش"></iframe>' +
+        '<canvas id="heat-canvas" width="390" height="844"></canvas>' +
+        '<div id="heat-marks"></div>' +
+      '</div>' +
+      '<div class="side">' +
+        '<p class="tiny" style="margin-bottom:12px">یک صفحه را انتخاب کنید. لکه‌های روشن‌تر یعنی ضربهٔ بیشتر؛ ' +
+        'حلقهٔ قرمز یعنی سه ضربهٔ پشت‌هم روی یک نقطه (عصبانیت)، و دایرهٔ نقطه‌چین یعنی ضربه روی چیزی که اصلاً دکمه نبوده.</p>' +
+        '<div class="screens">' + st.map(x =>
+          '<button class="srow" aria-pressed="' + (x.k === heatScreen) + '" data-k="' + esc(x.k) + '" onclick="pickScreen(this)">' +
+            '<div class="n">' + esc(TK.screenFa(x.k)) + '<small class="en">' + esc(x.k) + '</small></div>' +
+            '<div class="v num">' + fa(x.n) + ' نفر</div>' +
+            '<div class="w num">' + ((x.rage.length + x.dead.length) ? fa(x.rage.length + x.dead.length) + ' گیر' : '') + '</div>' +
+          '</button>').join('') + '</div>' +
+      '</div>' +
+    '</div></div>';
+}
+function pickScreen(b){
+  heatScreen = b.dataset.k;
+  TK.$$('.srow').forEach(r => r.setAttribute('aria-pressed', r.dataset.k === heatScreen));
+  paintHeat();
+}
+function paintHeat(){
+  const f = $('heat-frame'); if (!f) return;
+  const st = screenStats().find(x => x.k === heatScreen); if (!st) return;
+  const go = () => {
+    try {
+      const w = f.contentWindow;
+      if (w.seed) { try { w.seed(); } catch (e) {} }
+      if (w.go) w.go(heatScreen);
+      const d = f.contentDocument;
+      const s = d.createElement('style');
+      s.textContent = '#dev-fab,#chrome,.hint{display:none!important}';
+      d.head.appendChild(s);
+    } catch (e) {}
+  };
+  if (f.dataset.ready) go(); else f.onload = () => { f.dataset.ready = '1'; setTimeout(go, 260); };
+
+  /* چگالی خاکستری جمع می‌شود، بعد به رنگ نگاشته می‌شود — همان کاری که
+     یک heatmap واقعی می‌کند، بدون هیچ کتابخانه‌ای. */
+  const c = $('heat-canvas'), x = c.getContext('2d', { willReadFrequently: true });
+  x.clearRect(0, 0, 390, 844);
+  if (st.taps.length) {
+    x.globalCompositeOperation = 'lighter';
+    st.taps.forEach(t => {
+      const px = t.x / 1000 * 390, py = t.y / 1000 * 844;
+      const g = x.createRadialGradient(px, py, 0, px, py, 40);
+      g.addColorStop(0, 'rgba(255,255,255,.3)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+      x.fillStyle = g; x.beginPath(); x.arc(px, py, 40, 0, 6.2832); x.fill();
+    });
+    x.globalCompositeOperation = 'source-over';
+    const im = x.getImageData(0, 0, 390, 844), p = im.data;
+    for (let i = 0; i < p.length; i += 4) {
+      const a = p[i + 3] / 255; if (!a) continue;
+      const v = Math.min(1, a * 1.5);
+      p[i]     = 255;
+      p[i + 1] = Math.round(220 - 150 * v);
+      p[i + 2] = Math.round(150 - 130 * v);
+      p[i + 3] = Math.round(Math.min(.82, v * 1.15) * 255);
+    }
+    x.putImageData(im, 0, 0);
+  }
+  $('heat-marks').innerHTML =
+    st.rage.map(t => '<i class="mk rage" style="left:' + (t.x / 10) + '%;top:' + (t.y / 10) + '%"></i>').join('') +
+    st.dead.map(t => '<i class="mk dead" style="left:' + (t.x / 10) + '%;top:' + (t.y / 10) + '%"></i>').join('');
+}
+
+/* ── ۶ نقطه‌های گیر ─────────────────────────────────────────────── */
+function blockStuck(){
+  const st = screenStats().map(x => ({
+    ...x, medms: med(x.ms), hurt: x.rage.length * 2 + x.dead.length + x.exit
+  })).sort((a, b) => b.hurt - a.hurt).filter(x => x.hurt > 0).slice(0, 8);
+  if (!st.length) return '';
+  return '<div class="sec"><h2>نقطه‌های گیر</h2><span class="h">به ترتیب شدت</span><span class="ln"></span></div>' +
+    '<div class="card"><table><tr><th>صفحه</th><th>بیننده</th><th>زمان میانه</th><th>عصبانیت</th><th>ضربهٔ بی‌هدف</th><th>پایانِ کار</th></tr>' +
+    st.map(x => '<tr><td><b>' + esc(TK.screenFa(x.k)) + '</b> <span class="en tiny">' + esc(x.k) + '</span></td>' +
+      '<td class="num">' + fa(x.n) + '</td><td class="num">' + TK.mmss(x.medms) + '</td>' +
+      '<td class="num">' + (x.rage.length ? '<span class="pill r">' + fa(x.rage.length) + '</span>' : '—') + '</td>' +
+      '<td class="num">' + (x.dead.length ? fa(x.dead.length) : '—') + '</td>' +
+      '<td class="num">' + (x.exit ? fa(x.exit) + ' نفر' : '—') + '</td></tr>').join('') +
+    '</table><p class="tiny" style="margin-top:12px">«پایانِ کار» یعنی آخرین صفحه‌ای که آن نفر دید. اگر صفحه‌ای غیر از صفحهٔ نتیجه بالای این جدول است، همان‌جا کسی را از دست داده‌اید.</p></div>';
+}
+
+/* ── ۷ حرف‌ها ───────────────────────────────────────────────────── */
+function blockQuotes(){
+  const MOOD = { confused:['گیج شدم','y'], distrust:['اعتماد نکردم','r'], lost:['نمی‌دانم کجا بزنم','y'],
+                 slow:['کند بود',''], liked:['خوشم آمد','g'] };
+  const items = [];
+  SEL.forEach(s => {
+    const age = (s.seg || {}).age || '';
+    (s.fb || []).forEach(f => items.push({
+      kind: 'fb', mood: f.mood, text: f.text, screen: f.s, age,
+      t: 'حین کار · ' + (f.s ? 'صفحهٔ ' + TK.screenFa(f.s) : '')
+    }));
+    const e = s.end || {};
+    if (e.confuse) items.push({ kind: 'q', text: e.confuse, age, t: 'چه چیزی گیج‌کننده بود' });
+    if (e.change) items.push({ kind: 'q', text: e.change, age, t: 'اگر یک چیز عوض می‌شد' });
+  });
+  if (!items.length) return '';
+  return '<div class="sec"><h2>حرف‌ها</h2><span class="h">' + fa(items.length) + ' مورد</span><span class="ln"></span></div>' +
+    '<div class="quotes">' + items.map(i => {
+      const m = MOOD[i.mood];
+      return '<div class="q"><div class="hd">' +
+        (m ? '<span class="t pill ' + m[1] + '">' + m[0] + '</span>' : '') +
+        (i.age ? '<span class="age num">' + esc(i.age) + ' سال</span>' : '') + '</div>' +
+        (i.text ? '<p>«' + esc(i.text) + '»</p>' : '<p style="color:var(--w3)">بدون متن — فقط همین را علامت زد.</p>') +
+        '<div class="src">' + esc(i.t) + '</div></div>';
+    }).join('') + '</div>';
+}
+
+/* ── ۸ جلسه‌ها ──────────────────────────────────────────────────── */
+function blockSessions(){
+  const rows = SEL.slice().sort((a, b) => (b.t0 || '').localeCompare(a.t0 || ''));
+  return '<div class="sec"><h2>جلسه‌ها</h2><span class="h">روی هر سطر بزنید تا مسیرش باز شود</span><span class="ln"></span></div>' +
+    '<div class="card"><table id="stbl"><tr><th>زمان</th><th>سن</th><th>کانال</th><th>مدت</th><th>صفحه</th>' +
+    '<th>گیر</th><th>ادامه</th><th>اعتماد</th></tr>' +
+    rows.map((s, i) => {
+      const d = s._d, e = s.end || {};
+      const go = { yes: ['بله','g'], maybe: ['شاید','y'], no: ['نه','r'] }[e.go];
+      return '<tr class="s-row" data-i="' + i + '">' +
+        '<td class="num">' + esc(when(s.t0)) + (s.done ? '' : ' <span class="pill">ناتمام</span>') + '</td>' +
+        '<td class="num">' + esc((s.seg || {}).age || '—') + '</td>' +
+        '<td>' + esc(TK.CHANNELS[s.c] || '—') + '</td>' +
+        '<td class="num">' + TK.mmss(d.ms) + '</td>' +
+        '<td class="num">' + fa(d.screens) + '</td>' +
+        '<td class="num">' + ((d.rage + d.dead) ? fa(d.rage + d.dead) : '—') + '</td>' +
+        '<td>' + (go ? '<span class="pill ' + go[1] + '">' + go[0] + '</span>' : '—') + '</td>' +
+        '<td class="num">' + (e.trust ? fa(e.trust) + '/۵' : '—') + '</td></tr>' +
+        '<tr class="s-det" data-d="' + i + '" hidden><td colspan="8">' + track(s) + '</td></tr>';
+    }).join('') + '</table>' +
+    '<p class="tiny" style="margin-top:12px">' + fa(rows.length) + ' جلسه · ' +
+    fa(rows.filter(s => !s.done).length) + ' تای آن نیمه‌کاره رها شده است.</p></div>';
+}
+function track(s){
+  const d = s._d;
+  const hot = {};
+  d.rages.forEach(t => hot[t.s] = 1); d.deads.forEach(t => hot[t.s] = (hot[t.s] || 0));
+  const chain = d.path.map(k =>
+    '<div class="st' + (hot[k] ? ' hot' : '') + '"><b>' + esc(TK.screenFa(k)) + '</b>' +
+    '<span class="num">' + TK.mmss(d.time[k] || 0) + '</span></div>').join('<span class="arw">←</span>');
+  const seg = s.seg || {};
+  const segTxt = [seg.age && (seg.age + ' سال'), seg.fx && ({ self:'قبلاً خودش دلاری کرده', help:'با کمک دیگری', never:'هرگز دلاری نکرده' })[seg.fx],
+    seg.crypto && ({ often:'رمزارز: مرتب', some:'رمزارز: کم', none:'رمزارز: هیچ' })[seg.crypto],
+    seg.where && ({ bank:'پس‌انداز در بانک', usd:'در دلار/طلا', crypto:'در رمزارز', none:'بدون پس‌انداز', skip:'نگفت' })[seg.where]
+  ].filter(Boolean).join(' · ');
+  return '<div class="tiny" style="padding:6px 8px 0">' + esc(segTxt) + '</div><div class="track">' + (chain || '<span class="tiny">مسیری ثبت نشده</span>') + '</div>';
+}
+function bindSessions(){
+  TK.$$('#stbl .s-row').forEach(r => r.addEventListener('click', () => {
+    const d = document.querySelector('#stbl .s-det[data-d="' + r.dataset.i + '"]');
+    if (d) d.hidden = !d.hidden;
+  }));
+}
+function when(iso){
+  try { return new Intl.DateTimeFormat('fa-IR', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }).format(new Date(iso)); }
+  catch (e) { return iso || '—'; }
+}
+
+/* ── بیرون بردن ─────────────────────────────────────────────────── */
+function exportCsv(){
+  const rows = SEL.map(s => {
+    const d = s._d, e = s.end || {}, g = s.seg || {};
+    return {
+      id: s.id, version: s.ver, round: s.r, channel: TK.CHANNELS[s.c] || s.c,
+      started: s.t0, completed: s.done ? 1 : 0, seconds: Math.round(d.ms / 1000),
+      age: g.age || '', fx: g.fx || '', crypto: g.crypto || '', savings: g.where || '',
+      trust: e.trust || '', go: e.go || '', stop: e.stop || '',
+      screens: d.screens, taps: d.taps.length, rage: d.rage, dead: d.dead,
+      deepest: d.deepest, path: d.path.join(' > '),
+      confuse: e.confuse || '', change: e.change || '',
+      feedback: (s.fb || []).map(f => (f.mood || '') + ':' + (f.text || '')).join(' | ')
+    };
+  });
+  TK.download('mohajer-test-v' + $('f-ver').value + '.csv', TK.csv(rows), 'text/csv');
+}
+function exportJson(){
+  TK.download('mohajer-test-v' + $('f-ver').value + '.json',
+    JSON.stringify(SEL.map(s => { const c = { ...s }; delete c._d; return c; }), null, 1));
+}
+</script>
+</body>
+</html>

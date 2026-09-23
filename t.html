@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>مهاجر · نمونهٔ آزمایشی</title>
+<meta name="theme-color" content="#0B0D10">
+<meta name="robots" content="noindex">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" href="./icons/icon-192.png">
+<!--
+  ════════════════════════════════════════════════════════════════════════
+  مهاجر · اجرای تست برای شرکت‌کننده
+  t.html?v=4.5&r=2&c=tg      نسخه · راند · کانال
+
+  Five minutes of someone's attention, so the shape is fixed:
+      خوش‌آمد → چهار سؤال کوتاه (اول سن) → کار شما → خودِ اپ → پنج سؤال پایانی
+
+  While they use the prototype, this page is reading inside the iframe —
+  same origin, so every screen change, tap, dead tap and rage tap is
+  visible without touching a single line of the prototype itself. That is
+  why an old frozen build like v4 can be tested exactly as it shipped.
+
+  Nothing personal is asked. What leaves this page is: age band, three
+  behaviour answers, what they tapped, and what they wrote.
+  ════════════════════════════════════════════════════════════════════════
+-->
+<style>
+@font-face{font-family:Dana;src:url('./fonts/Dana-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-DemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+
+:root{
+  --f:Dana,system-ui,sans-serif;
+  --gold:#D5A45C;--ok:#3FBF8F;--bad:#E06C5B;
+  --w1:#fff;--w2:rgba(255,255,255,.7);--w3:rgba(255,255,255,.44);
+  --surf:rgba(255,255,255,.055);--surf2:rgba(255,255,255,.085);--brd:rgba(255,255,255,.12);
+  --spring:cubic-bezier(.16,1,.3,1);--swift:cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}   /* .sent is inline-flex, which otherwise beats [hidden] */
+html,body{height:100%}
+body{font-family:var(--f);color:var(--w1);background:#0B0D10;line-height:1.65;
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 620px at 82% -12%,rgba(213,164,92,.15),transparent 62%),
+             radial-gradient(700px 520px at 0% 108%,rgba(63,191,143,.055),transparent 60%),
+             linear-gradient(168deg,#1A1F26,#0B0D10 56%,#12161B)}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+
+/* ── progress ───────────────────────────────────────────────────── */
+#prog{position:fixed;top:0;inset-inline:0;height:2px;z-index:40;background:rgba(255,255,255,.07)}
+#prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .5s var(--spring)}
+
+/* ── step frame ─────────────────────────────────────────────────── */
+#steps{position:relative;z-index:1;height:100%;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch}
+.step{display:none;min-height:100%;flex-direction:column;
+  max-width:460px;margin:0 auto;padding:max(34px,env(safe-area-inset-top)) 22px max(26px,env(safe-area-inset-bottom))}
+.step.on{display:flex;animation:in .5s var(--spring) both}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.step.on{animation:none}}
+
+.mark{display:flex;align-items:center;gap:9px;margin-bottom:26px;flex:none}
+.mark .lg{width:30px;height:30px;border-radius:10px;background:rgba(255,255,255,.08);display:grid;place-items:center}
+.mark .nm{font-size:14px;font-weight:600;letter-spacing:-.02em}
+.mark .tag{margin-inline-start:auto;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--gold)}
+
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:.16em;color:var(--gold);margin-bottom:12px}
+h1{font-size:clamp(23px,6.4vw,31px);font-weight:700;letter-spacing:-.035em;line-height:1.3}
+h1 em{font-style:normal;color:var(--gold)}
+.lead{font-size:14.5px;color:var(--w2);margin-top:13px;line-height:1.85}
+.tiny{font-size:11.5px;color:var(--w3);line-height:1.8}
+
+.facts{margin-top:24px;display:flex;flex-direction:column;gap:11px}
+.fact{display:flex;gap:11px;align-items:flex-start;font-size:13.5px;color:var(--w2);line-height:1.7}
+.fact svg{width:17px;height:17px;flex:none;margin-top:3px;stroke:var(--ok);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.grow{flex:1;min-height:20px}
+
+/* ── options ────────────────────────────────────────────────────── */
+.opts{display:flex;flex-direction:column;gap:9px;margin-top:22px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:13px 16px;
+  background:var(--surf);border:1px solid var(--brd);border-radius:15px;color:var(--w1);
+  font:500 14.5px/1.5 var(--f);text-align:start;cursor:pointer;transition:.2s var(--swift)}
+.opt:active{transform:scale(.985)}
+.opt .rd{width:19px;height:19px;border-radius:50%;border:1.6px solid rgba(255,255,255,.3);flex:none;
+  display:grid;place-items:center;transition:.2s var(--swift)}
+.opt .rd::after{content:'';width:8px;height:8px;border-radius:50%;background:#0B0D10;transform:scale(0);transition:.24s var(--spring)}
+.opt[aria-pressed=true]{background:rgba(213,164,92,.13);border-color:var(--gold)}
+.opt[aria-pressed=true] .rd{background:var(--gold);border-color:var(--gold)}
+.opt[aria-pressed=true] .rd::after{transform:scale(1)}
+.opt .n{margin-inline-start:auto;font-size:12px;color:var(--w3)}
+
+.scale{display:flex;gap:7px;margin-top:22px}
+.scale button{flex:1;aspect-ratio:1/1.05;max-height:74px;border-radius:14px;background:var(--surf);
+  border:1px solid var(--brd);color:var(--w1);font:700 17px/1 var(--f);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:.2s var(--swift)}
+.scale button i{font-style:normal;font-size:9.5px;font-weight:500;color:var(--w3);letter-spacing:-.01em}
+.scale button[aria-pressed=true]{background:rgba(213,164,92,.16);border-color:var(--gold)}
+.scale-lb{display:flex;justify-content:space-between;margin-top:9px;font-size:11px;color:var(--w3)}
+
+textarea{width:100%;margin-top:20px;min-height:132px;background:var(--surf);border:1px solid var(--brd);
+  border-radius:15px;padding:15px;color:var(--w1);font:400 14.5px/1.8 var(--f);resize:none;outline:none;
+  transition:.2s var(--swift)}
+textarea:focus{border-color:var(--gold);background:var(--surf2)}
+textarea::placeholder{color:var(--w3)}
+
+/* ── buttons ────────────────────────────────────────────────────── */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:54px;
+  border:none;border-radius:15px;font:600 15.5px/1 var(--f);cursor:pointer;transition:.2s var(--swift)}
+.btn:active{transform:scale(.985)}
+.btn-primary{background:var(--gold);color:#0B0D10}
+.btn-primary[disabled]{opacity:.35;pointer-events:none}
+.btn-ghost{background:transparent;color:var(--w2);border:1px solid var(--brd);min-height:48px;font-size:14px}
+.btn-row{display:flex;flex-direction:column;gap:10px;margin-top:22px;flex:none}
+.skip{background:none;border:none;color:var(--w3);font:500 13px var(--f);cursor:pointer;padding:12px;margin-top:2px}
+
+/* ── the app ────────────────────────────────────────────────────── */
+#appwrap{position:fixed;inset:0;z-index:20;display:none;flex-direction:column;background:#0B0D10}
+#appwrap.on{display:flex}
+.appbar{flex:none;display:flex;align-items:center;gap:8px;height:44px;padding:0 12px 0 10px;
+  padding-top:env(safe-area-inset-top);height:calc(44px + env(safe-area-inset-top));
+  background:#0B0D10;border-bottom:1px solid rgba(255,255,255,.07)}
+.appbar .who{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--w3);min-width:0}
+.appbar .who b{font-weight:600;color:var(--w2)}
+.appbar .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex:none;
+  animation:pulse 2.4s var(--swift) infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.appbar .sp{flex:1}
+.abtn{border:1px solid var(--brd);background:var(--surf);color:var(--w2);border-radius:99px;
+  font:600 12px/1 var(--f);padding:9px 13px;cursor:pointer;white-space:nowrap;transition:.2s var(--swift)}
+.abtn:active{transform:scale(.96)}
+.abtn.gold{background:var(--gold);border-color:var(--gold);color:#0B0D10}
+.abtn.gold.nudge{animation:nudge 1.7s var(--spring) 3}
+@keyframes nudge{0%,100%{transform:none;box-shadow:0 0 0 0 rgba(213,164,92,.5)}
+  22%{transform:scale(1.06);box-shadow:0 0 0 9px rgba(213,164,92,0)}}
+#app{flex:1;width:100%;border:0;display:block;background:#0B0D10}
+
+/* ── the mid-use sheet ──────────────────────────────────────────── */
+#sheet{position:fixed;inset:0;z-index:30;display:none;align-items:flex-end;justify-content:center}
+#sheet.on{display:flex}
+#sheet .scrim{position:absolute;inset:0;background:rgba(6,8,10,.62);backdrop-filter:blur(3px);animation:fade .3s var(--swift)}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+#sheet .card{position:relative;width:100%;max-width:460px;background:#14181D;border:1px solid var(--brd);
+  border-radius:24px 24px 0 0;padding:10px 20px max(22px,env(safe-area-inset-bottom));
+  animation:up .42s var(--spring)}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+#sheet .grip{width:38px;height:4px;border-radius:99px;background:rgba(255,255,255,.18);margin:0 auto 16px}
+#sheet h2{font-size:17px;font-weight:600;letter-spacing:-.02em}
+#sheet .where{font-size:11.5px;color:var(--w3);margin-top:5px}
+.moods{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.mood{border:1px solid var(--brd);background:var(--surf);color:var(--w2);border-radius:99px;
+  font:500 13px/1 var(--f);padding:11px 15px;cursor:pointer;transition:.2s var(--swift)}
+.mood[aria-pressed=true]{background:rgba(213,164,92,.15);border-color:var(--gold);color:var(--w1)}
+#sheet textarea{min-height:82px;margin-top:12px}
+
+/* ── the end ────────────────────────────────────────────────────── */
+.seal{width:62px;height:62px;border-radius:22px;background:rgba(63,191,143,.14);display:grid;place-items:center;margin-bottom:20px}
+.seal svg{width:30px;height:30px;stroke:var(--ok);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.code{margin-top:18px;background:var(--surf);border:1px solid var(--brd);border-radius:15px;padding:14px}
+.code .k{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:8px}
+.code textarea{margin-top:0;min-height:96px;font:400 11px/1.6 ui-monospace,Menlo,monospace;direction:ltr;text-align:left}
+.sent{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ok);margin-top:16px}
+.sent svg{width:15px;height:15px;stroke:var(--ok);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+</style>
+</head>
+<body>
+
+<div id="prog"><i id="prog-i"></i></div>
+
+<div id="steps">
+
+  <!-- ── خوش‌آمد ─────────────────────────────────────────────── -->
+  <section class="step on" id="s-welcome">
+    <div class="mark">
+      <div class="lg"><svg viewBox="0 0 49.33 39.99" width="15" height="15" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></div>
+      <div class="nm">مهاجر</div>
+      <div class="tag" id="vtag"></div>
+    </div>
+    <div class="eyebrow">آزمایش محصول</div>
+    <h1 id="w-h1">چند دقیقه‌ای وقت دارید<br>به ما کمک کنید؟</h1>
+    <p class="lead" id="w-lead">می‌خواهیم نمونهٔ آزمایشی یک اپ را به شما نشان دهیم و ببینیم بدون هیچ توضیحی چقدر قابل فهم است. حدود پنج تا هشت دقیقه طول می‌کشد.</p>
+    <div class="facts">
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="w-f1">هیچ پول واقعی‌ای جابه‌جا نمی‌شود؛ همه‌چیز شبیه‌سازی است.</span></div>
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="w-f2">نام، شمارهٔ تماس و اطلاعات بانکی از شما نمی‌پرسیم.</span></div>
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="w-f3">اگر جایی گیر کنید، ایراد از طراحی ماست؛ همان لحظه برای ما ارزشمند است.</span></div>
+    </div>
+    <div class="grow"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="begin()">شروع می‌کنم</button>
+      <p class="tiny" style="text-align:center">با ادامه‌دادن موافقت می‌کنید پاسخ‌ها و نحوهٔ استفاده‌تان به‌صورت بی‌نام ثبت شود.</p>
+    </div>
+  </section>
+
+  <!-- ── سؤال‌ها (هم غربالگری، هم پایانی) ───────────────────── -->
+  <section class="step" id="s-ask">
+    <div class="eyebrow" id="a-kicker"></div>
+    <h1 id="a-title"></h1>
+    <p class="lead" id="a-sub" hidden></p>
+    <div id="a-body"></div>
+    <div class="grow"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="a-next" onclick="askNext()" disabled>ادامه</button>
+      <button class="skip" id="a-skip" onclick="askSkip()" hidden>رد کردن این سؤال</button>
+    </div>
+  </section>
+
+  <!-- ── کار شما ─────────────────────────────────────────────── -->
+  <section class="step" id="s-brief">
+    <div class="eyebrow">کار شما</div>
+    <h1 id="b-title">فرض کنید این اپ<br>واقعاً مال شماست.</h1>
+    <p class="lead" id="b-task">می‌خواهید بخشی از پول‌تان را از ریال خارج کنید و دلاری نگه دارید. هر کاری لازم است، در اپ انجام دهید.</p>
+    <div class="facts">
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg><span id="b-f1">هیچ راهنمایی‌ای در کار نیست — همان‌طور که با یک اپ واقعی روبه‌رو می‌شوید.</span></div>
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M12 8v5M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><span id="b-f2">هر جا گیج شدید یا شک کردید، بالای صفحه دکمهٔ «گیر کردم» هست.</span></div>
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span id="b-f3">هر وقت خواستید تمام کنید، دکمهٔ «تمام شد» را بزنید.</span></div>
+    </div>
+    <div class="grow"></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="openApp()">باز کردن اپ</button></div>
+  </section>
+
+  <!-- ── پایان ───────────────────────────────────────────────── -->
+  <section class="step" id="s-done">
+    <div class="seal"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <h1 id="d-title">ممنون از وقتی که گذاشتید.</h1>
+    <p class="lead" id="d-lead">پاسخ‌های شما ثبت شد. همین نکته‌هاست که نسخهٔ بعدی را ساده‌تر می‌کند.</p>
+    <div id="d-sent" class="sent" hidden><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>ارسال شد</span></div>
+    <div id="d-code" class="code" hidden>
+      <div class="k">یک قدم کوتاه مانده</div>
+      <p class="tiny" id="d-code-h">اتصال برقرار نشد. لطفاً این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند، برای ما بفرستید.</p>
+      <textarea id="d-blob" readonly></textarea>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn btn-primary" id="d-copy" onclick="copyBlob()">کپی کردن</button>
+      </div>
+    </div>
+    <div class="grow"></div>
+    <p class="tiny" style="text-align:center">مهاجر · نمونهٔ آزمایشی · بدون پول واقعی</p>
+  </section>
+</div>
+
+<!-- ── خودِ اپ ────────────────────────────────────────────────── -->
+<div id="appwrap">
+  <div class="appbar">
+    <span class="who"><span class="dot"></span><b>نمونهٔ آزمایشی</b></span>
+    <span class="sp"></span>
+    <button class="abtn" onclick="openSheet()">گیر کردم</button>
+    <button class="abtn gold" id="fin" onclick="finishApp()">تمام شد</button>
+  </div>
+  <iframe id="app" title="اپ آزمایشی مهاجر"></iframe>
+</div>
+
+<!-- ── شیت نظر ────────────────────────────────────────────────── -->
+<div id="sheet">
+  <div class="scrim" onclick="closeSheet()"></div>
+  <div class="card">
+    <div class="grip"></div>
+    <h2>همین‌جا چه اتفاقی افتاد؟</h2>
+    <div class="where" id="sh-where"></div>
+    <div class="moods" id="sh-moods"></div>
+    <textarea id="sh-text" placeholder="اگر دوست دارید بنویسید… (اختیاری)"></textarea>
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-primary" onclick="saveFb()">ثبت و ادامه</button>
+      <button class="btn btn-ghost" onclick="closeSheet()">بی‌خیال</button>
+    </div>
+  </div>
+</div>
+
+<script src="./test-kit.js"></script>
+<script>
+/* ════════ متن‌ها ════════════════════════════════════════════════
+   هر جملهٔ این صفحه اینجاست. برای تغییر، یا همین‌جا را عوض کنید یا در
+   test-config.json داخل "text" همان کلید را بنویسید — فایل بر این غلبه
+   می‌کند و برای تغییر متن لازم نیست کسی به کد دست بزند. */
+const TXT = {
+  wH1:  'چند دقیقه‌ای وقت دارید<br>به ما کمک کنید؟',
+  wLead:'می‌خواهیم نمونهٔ آزمایشی یک اپ را به شما نشان دهیم و ببینیم بدون هیچ توضیحی چقدر قابل فهم است. حدود پنج تا هشت دقیقه طول می‌کشد.',
+  wF1:  'هیچ پول واقعی‌ای جابه‌جا نمی‌شود؛ همه‌چیز شبیه‌سازی است.',
+  wF2:  'نام، شمارهٔ تماس و اطلاعات بانکی از شما نمی‌پرسیم.',
+  wF3:  'اگر جایی گیر کنید، ایراد از طراحی ماست؛ همان لحظه برای ما ارزشمند است.',
+  bTitle:'فرض کنید این اپ<br>واقعاً مال شماست.',
+  bTask:'می‌خواهید بخشی از پول‌تان را از ریال خارج کنید و دلاری نگه دارید. هر کاری لازم است، در اپ انجام دهید.',
+  dTitle:'ممنون از وقتی که گذاشتید.',
+  dLead:'پاسخ‌های شما ثبت شد. همین نکته‌هاست که نسخهٔ بعدی را ساده‌تر می‌کند.'
+};
+
+/* ════════ سؤال‌ها ═══════════════════════════════════════════════
+   چهار سؤال اول، سگمنت را می‌سازد. سن اول است و تنها سؤال اجباری،
+   چون تحلیل نهایی روی همین محور بریده می‌شود.
+   پنج سؤال آخر، در همهٔ راندها یکسان می‌ماند تا نسخه‌ها با هم مقایسه‌شدنی
+   بمانند؛ سه‌تای اول یک ضربه‌اند، دوتای آخر اختیاری‌اند. */
+const SEG = [
+  { id:'age', kicker:'۱ از ۴', q:'چند سالتان است؟', req:true,
+    opts: TK.AGES.map(a => ({ v:a, l:a })) },
+  { id:'fx', kicker:'۲ از ۴', q:'تا حالا بخشی از پول‌تان را دلاری نگه داشته‌اید؟',
+    opts:[ {v:'self',l:'بله، خودم انجام دادم'},
+           {v:'help',l:'بله، با کمک یک نفر دیگر'},
+           {v:'never',l:'نه، تا حالا این کار را نکرده‌ام'} ] },
+  { id:'crypto', kicker:'۳ از ۴', q:'با رمزارز چقدر کار کرده‌اید؟',
+    opts:[ {v:'often',l:'مرتب؛ خودم خرید و فروش می‌کنم'},
+           {v:'some',l:'کم؛ چند باری امتحان کرده‌ام'},
+           {v:'none',l:'اصلاً'} ] },
+  { id:'where', kicker:'۴ از ۴', q:'الان پس‌اندازتان بیشتر کجاست؟',
+    opts:[ {v:'bank',l:'حساب بانکی'},
+           {v:'usd',l:'دلار یا طلا'},
+           {v:'crypto',l:'رمزارز'},
+           {v:'none',l:'پس‌انداز خاصی ندارم'},
+           {v:'skip',l:'ترجیح می‌دهم نگویم'} ] }
+];
+
+const END = [
+  { id:'trust', kicker:'۱ از ۵', q:'اگر این سرویس واقعی بود، چقدر به آن اعتماد می‌کردید؟',
+    type:'scale', lo:'اصلاً', hi:'کامل' },
+  { id:'go', kicker:'۲ از ۵', q:'اگر واقعی بود، ادامه می‌دادید؟',
+    opts:[ {v:'yes',l:'بله'}, {v:'maybe',l:'شاید'}, {v:'no',l:'نه'} ] },
+  { id:'stop', kicker:'۳ از ۵', q:'اگر جایی مکث کردید، نزدیک‌ترین دلیلش کدام بود؟',
+    opts:[ {v:'none',l:'جایی گیر نکردم'},
+           {v:'value',l:'نفهمیدم اصلاً به چه دردم می‌خورد'},
+           {v:'usability',l:'فهمیدم، ولی نمی‌دانستم چطور انجامش دهم'},
+           {v:'trust',l:'بلد بودم، ولی مطمئن نبودم'},
+           {v:'motivation',l:'مطمئن بودم، ولی برایم مهم نبود'} ] },
+  { id:'confuse', kicker:'۴ از ۵', q:'چه چیزی گیج‌کننده یا مشکوک بود؟',
+    type:'text', ph:'هر چیزی که به ذهنتان می‌رسد…', opt:true },
+  { id:'change', kicker:'۵ از ۵', q:'اگر فقط یک چیز را می‌شد عوض کرد، چه بود؟',
+    type:'text', ph:'یک جمله کافی است…', opt:true }
+];
+
+const MOODS = [
+  {v:'confused', l:'گیج شدم'},
+  {v:'distrust', l:'اعتماد نکردم'},
+  {v:'lost',     l:'نمی‌دانم کجا بزنم'},
+  {v:'slow',     l:'کند بود'},
+  {v:'liked',    l:'خوشم آمد'}
+];
+
+/* ════════ حالت ═════════════════════════════════════════════════ */
+const $ = TK.$;
+let CFG = {}, VERS = [], VER = null;
+let S = null;               /* جلسهٔ جاری */
+let phase = 'seg', qi = 0, pick = null, moodPick = null;
+let t0 = Date.now(), awayAt = 0, lastSave = 0, sentOnce = false;
+
+const ver = TK.qs('v', '4.5');
+const round = TK.qs('r', '1');
+const chan = TK.qs('c', 'x');
+
+/* ════════ راه‌اندازی ════════════════════════════════════════════ */
+(async function boot(){
+  CFG = await TK.config();
+  VERS = await TK.versions();
+  VER = VERS.find(x => x.id === ver) || VERS.find(x => x.status === 'current') || VERS[0]
+     || { id: ver, file: 'wallet-v' + ver + '.html', name: 'مهاجر v' + ver };
+
+  Object.assign(TXT, CFG.text || {});
+  $('w-h1').innerHTML = TXT.wH1; $('w-lead').innerHTML = TXT.wLead;
+  $('w-f1').textContent = TXT.wF1; $('w-f2').textContent = TXT.wF2; $('w-f3').textContent = TXT.wF3;
+  $('b-title').innerHTML = TXT.bTitle; $('b-task').innerHTML = (CFG.task || TXT.bTask);
+  $('d-title').innerHTML = TXT.dTitle; $('d-lead').innerHTML = TXT.dLead;
+  $('vtag').textContent = 'نسخهٔ ' + TK.fa(VER.id);
+
+  S = {
+    v: 1, id: TK.uid(), r: round, ver: VER.id, c: chan,
+    t0: new Date().toISOString(), t1: null, ms: 0,
+    seg: {}, end: {}, fb: [], ev: [], dev: TK.device(),
+    phase: 'welcome', done: false
+  };
+  TK.flush(CFG.endpoint);            /* هر جلسهٔ نفرستادهٔ قبلی */
+  $('sh-moods').innerHTML = MOODS.map(m =>
+    '<button class="mood" aria-pressed="false" data-v="' + m.v + '" onclick="pickMood(this)">' + m.l + '</button>').join('');
+  resume();
+})();
+
+/* اگر صفحه تصادفی بسته یا نو شده باشد، پاسخ‌های قبلی به صفر برنمی‌گردند.
+   خودِ اپ از اول باز می‌شود — آنچه داخل آن ساخته شده بود برگشتنی نیست، و
+   وانمود کردن به آن فقط شرکت‌کننده را گیج می‌کند. */
+function resume(){
+  const prev = TK.store.get('sess', null);
+  if (!(prev && prev.s && !prev.s.done && Date.now() - prev.at < 90 * 60000
+        && prev.s.ver === S.ver && String(prev.s.r) === String(S.r))) return;
+  S = prev.s;
+  if (S.phase === 'seg') {
+    phase = 'seg'; qi = Math.min(Object.keys(S.seg).length, SEG.length - 1); return renderAsk();
+  }
+  if (S.phase === 'brief' || S.phase === 'app') return show('s-brief');
+  if (S.phase === 'end') {
+    phase = 'end'; qi = Math.min(Object.keys(S.end).length, END.length - 1); return renderAsk();
+  }
+}
+
+function progress(p){ $('prog-i').style.width = Math.round(p * 100) + '%'; }
+function show(id){
+  TK.$$('.step').forEach(s => s.classList.toggle('on', s.id === id));
+  $('steps').scrollTop = 0;
+}
+
+/* ════════ سؤال‌ها ═══════════════════════════════════════════════ */
+function begin(){ phase = 'seg'; qi = 0; S.phase = 'seg'; renderAsk(); }
+
+function questions(){ return phase === 'seg' ? SEG : END; }
+
+function renderAsk(){
+  const list = questions(), q = list[qi];
+  pick = null;
+  $('a-kicker').textContent = q.kicker || '';
+  $('a-title').innerHTML = q.q;
+  $('a-sub').hidden = !q.sub; if (q.sub) $('a-sub').innerHTML = q.sub;
+  $('a-next').disabled = !(q.type === 'text' && q.opt);
+  $('a-next').textContent = (phase === 'end' && qi === list.length - 1) ? 'پایان' : 'ادامه';
+  $('a-skip').hidden = !q.opt;
+
+  const b = $('a-body');
+  if (q.type === 'text') {
+    b.innerHTML = '<textarea id="a-text" placeholder="' + TK.esc(q.ph || '') + '"></textarea>';
+  } else if (q.type === 'scale') {
+    b.innerHTML = '<div class="scale">' + [1,2,3,4,5].map(n =>
+        '<button aria-pressed="false" data-v="' + n + '" onclick="choose(this)">' + TK.fa(n) + '</button>').join('') +
+      '</div><div class="scale-lb"><span>' + TK.esc(q.lo) + '</span><span>' + TK.esc(q.hi) + '</span></div>';
+  } else {
+    b.innerHTML = '<div class="opts">' + q.opts.map(o =>
+      '<button class="opt" aria-pressed="false" data-v="' + TK.esc(o.v) + '" onclick="choose(this)">' +
+      '<span class="rd"></span><span>' + TK.esc(o.l) + '</span></button>').join('') + '</div>';
+  }
+  const total = SEG.length + END.length + 2;
+  const at = (phase === 'seg' ? qi + 1 : SEG.length + 2 + qi);
+  progress(at / total);
+  show('s-ask');
+}
+
+function choose(btn){
+  [...btn.parentElement.children].forEach(x => x.setAttribute('aria-pressed', 'false'));
+  btn.setAttribute('aria-pressed', 'true');
+  pick = btn.dataset.v;
+  $('a-next').disabled = false;
+}
+
+function askNext(){
+  const list = questions(), q = list[qi];
+  let val = pick;
+  if (q.type === 'text') val = ($('a-text') && $('a-text').value || '').trim().slice(0, 600);
+  if (q.req && !val) return;
+  if (val) (phase === 'seg' ? S.seg : S.end)[q.id] = val;
+  step();
+}
+function askSkip(){ step(); }
+
+function step(){
+  qi++;
+  const list = questions();
+  if (qi < list.length) { save(); return renderAsk(); }
+  if (phase === 'seg') { S.phase = 'brief'; save(); progress(SEG.length / (SEG.length + END.length + 2)); return show('s-brief'); }
+  finish();
+}
+
+/* ════════ اپ ════════════════════════════════════════════════════ */
+function openApp(){
+  S.phase = 'app'; save();
+  t0 = Date.now();
+  $('appwrap').classList.add('on');
+  const f = $('app');
+  f.src = './' + VER.file + '?t=' + Date.now();
+  f.onload = () => { try { instrument(f.contentWindow, f.contentDocument); } catch (e) { mark('e', 'probe:' + e.message); } };
+  progress((SEG.length + 1) / (SEG.length + END.length + 2));
+}
+
+function finishApp(){
+  S.ms = Date.now() - t0;
+  $('appwrap').classList.remove('on');
+  $('app').src = 'about:blank';
+  phase = 'end'; qi = 0; S.phase = 'end'; save();
+  renderAsk();
+}
+
+/* ════════ کاوشگر ════════════════════════════════════════════════
+   همان صفحه، همان مبدأ: بی آنکه یک خط از پروتوتایپ عوض شود، می‌شود
+   دید کاربر کجا رفت، کجا زد و کجا روی هیچ‌چیز زد. مختصات به ۰…۱۰۰۰
+   نرمال می‌شود تا روی هر اندازه گوشی قابل مقایسه بماند. */
+function mark(kind, ...rest){
+  if (!S) return;
+  if (S.ev.length > 1400 && kind !== TK.EV.screen && kind !== TK.EV.fb) return;
+  S.ev.push([kind, Date.now() - t0, ...rest]);
+}
+
+function instrument(win, doc){
+  if (!doc) return;
+  /* کنترل تسهیل‌گر برای شرکت‌کنندهٔ واقعی پنهان می‌شود */
+  const st = doc.createElement('style');
+  st.textContent = '#dev-fab,#chrome,.hint{display:none!important}';
+  doc.head.appendChild(st);
+
+  const box = () => doc.getElementById('phone') || doc.documentElement;
+  const cur = () => {
+    const a = doc.querySelector('.screen.active');
+    return (a && (a.dataset.screen || a.id)) || win.current || '';
+  };
+  const norm = (e) => {
+    const r = box().getBoundingClientRect();
+    return [ Math.round(TK.clamp((e.clientX - r.left) / (r.width  || 1), 0, 1) * 1000),
+             Math.round(TK.clamp((e.clientY - r.top)  / (r.height || 1), 0, 1) * 1000) ];
+  };
+
+  let last = '';
+  const tick = () => { const c = cur(); if (c && c !== last) { last = c; mark(TK.EV.screen, c); } };
+  tick();
+  try {
+    new win.MutationObserver(tick).observe(doc.getElementById('viewport') || doc.body,
+      { attributes: true, attributeFilter: ['class'], subtree: true });
+  } catch (e) {}
+  setInterval(tick, 500);
+
+  const HIT = 'button,a,input,select,textarea,label,[onclick],[role="button"],.opt,.tab,.chip,.linkrow,.key,.preset,.act,.item';
+  let burst = [];
+  doc.addEventListener('pointerdown', (e) => {
+    const [x, y] = norm(e), s = cur();
+    const hit = e.target.closest && e.target.closest(HIT);
+    const label = hit ? ((hit.getAttribute('aria-label') || hit.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 42)) : '';
+    if (hit) mark(TK.EV.tap, x, y, s, label); else mark(TK.EV.dead, x, y, s);
+
+    const now = Date.now();
+    burst = burst.filter(b => now - b.t < 900 && Math.hypot(b.x - x, b.y - y) < 60);
+    burst.push({ t: now, x, y });
+    if (burst.length >= 3) { mark(TK.EV.rage, x, y, s); burst = []; }
+  }, true);
+
+  win.addEventListener('error', (e) => mark(TK.EV.err, String(e.message || '').slice(0, 120)));
+
+  /* پس از رسیدن به یک صفحهٔ نتیجه، دکمهٔ «تمام شد» یک بار نبض می‌زند */
+  const nudge = setInterval(() => {
+    if (/status/.test(last)) { $('fin').classList.add('nudge'); clearInterval(nudge); }
+  }, 1200);
+  setTimeout(() => $('fin').classList.add('nudge'), 7 * 60000);
+}
+
+/* ════════ شیت نظر ═══════════════════════════════════════════════ */
+function openSheet(){
+  const f = $('app');
+  let s = '';
+  try { const a = f.contentDocument.querySelector('.screen.active'); s = a && (a.dataset.screen || a.id) || ''; } catch (e) {}
+  $('sheet').dataset.screen = s;
+  $('sh-where').textContent = s ? 'صفحهٔ «' + TK.screenFa(s) + '»' : '';
+  $('sh-text').value = ''; moodPick = null;
+  TK.$$('#sh-moods .mood').forEach(m => m.setAttribute('aria-pressed', 'false'));
+  $('sheet').classList.add('on');
+}
+function closeSheet(){ $('sheet').classList.remove('on'); }
+function pickMood(b){
+  const on = b.getAttribute('aria-pressed') === 'true';
+  TK.$$('#sh-moods .mood').forEach(m => m.setAttribute('aria-pressed', 'false'));
+  b.setAttribute('aria-pressed', on ? 'false' : 'true');
+  moodPick = on ? null : b.dataset.v;
+}
+function saveFb(){
+  const text = ($('sh-text').value || '').trim().slice(0, 400);
+  const s = $('sheet').dataset.screen || '';
+  if (moodPick || text) {
+    S.fb.push({ t: Date.now() - t0, s, mood: moodPick || '', text });
+    mark(TK.EV.fb, s, moodPick || '', text);
+    save();
+  }
+  closeSheet();
+}
+
+/* ════════ پایان و ارسال ═════════════════════════════════════════ */
+async function finish(){
+  S.done = true; S.phase = 'done';
+  S.t1 = new Date().toISOString();
+  if (!S.ms) S.ms = Date.now() - t0;
+  progress(1); show('s-done');
+  const ok = await send(false);
+  if (ok) { $('d-sent').hidden = false; }
+  else {
+    $('d-code').hidden = false;
+    $('d-code-h').textContent = CFG.endpoint
+      ? 'اتصال برقرار نشد. لطفاً این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند، برای ما بفرستید.'
+      : 'این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند برای ما بفرستید — پاسخ‌های شما داخل همین متن است.';
+    const lite = Object.assign({}, S); lite.ev = S.ev.slice(0, 400);
+    $('d-blob').value = TK.pack(lite);
+    TK.queue(S);
+  }
+  TK.store.del('sess');
+}
+
+async function send(partial){
+  if (!CFG.endpoint) return false;
+  const body = Object.assign({}, S, { partial: !!partial });
+  if (JSON.stringify(body).length > 55000) body.ev = S.ev.slice(-300);   /* sendBeacon has a ceiling */
+  try { return await TK.post(CFG.endpoint, body, !!partial); } catch (e) { return false; }
+}
+async function copyBlob(){
+  const ok = await TK.copy($('d-blob').value);
+  $('d-copy').textContent = ok ? 'کپی شد ✓' : 'انتخاب و کپی کنید';
+  setTimeout(() => $('d-copy').textContent = 'کپی کردن', 2200);
+}
+
+/* ذخیرهٔ محلی: اگر وسط کار صفحه بسته شود، چیزی از دست نمی‌رود. */
+function save(){
+  if (!S) return;
+  const now = Date.now();
+  if (now - lastSave < 1200) return;
+  lastSave = now;
+  TK.store.set('sess', { at: now, s: S });
+}
+
+/* رفتنِ نیمه‌کاره هم خودش داده است: نیمی از افت‌ها اینجا دیده می‌شود. */
+addEventListener('visibilitychange', () => {
+  if (!S) return;
+  if (document.visibilityState === 'hidden') {
+    awayAt = Date.now();
+    if (S.phase === 'app' || S.phase === 'end') { S.ms = Date.now() - t0; save(); send(true); }
+  } else if (awayAt) {
+    const gone = Date.now() - awayAt; awayAt = 0;
+    if (gone > 1500) mark(TK.EV.away, gone);     /* a flicker is not "away" */
+  }
+});
+addEventListener('pagehide', () => { if (S && !S.done) { S.ms = Date.now() - t0; send(true); } });
+</script>
+</body>
+</html>

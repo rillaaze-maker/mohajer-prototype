@@ -27,12 +27,37 @@ Archived, kept to show the build path: `wallet-v0-2.html`, `wallet-v0.html`, `we
 
 The client deck uses these to embed live variants. With no query string it opens in P1 with the facilitator panel available.
 
-## For a test session
+## Field testing — one link per round
+
+| File | What it is |
+|---|---|
+| `test.html` | **Console.** Pick a version, take the link, watch the counts |
+| `t.html` | **What the participant opens.** Four questions (age first) → the app → five closing questions |
+| `test-insights.html` | **Results.** Layers, age, funnel, tap heatmap on the live screen, verbatims, CSV/JSON |
+| `test-versions.json` | The list of testable builds — add a line, a new version becomes testable |
+| `test-config.json` | The only file you edit: where sessions are sent, and the target |
+| `test-collector.gs` | Paste into Google Apps Script to collect sessions into a Sheet |
+| `test-kit.js` | Shared runtime for the three pages |
+
+The link carries everything: `t.html?v=4.5&r=2&c=tg` — version, round, channel.
+Nothing else is created or saved, so there is no study to author and no state
+to sync.
+
+`t.html` frames the wallet build from the same origin, so it can record screen
+changes, taps, dead taps and rage taps **without modifying the prototype** —
+which is how a frozen build like `wallet-v4.html` can be tested exactly as it
+shipped.
+
+With `endpoint` empty, sessions still work: the participant gets a code to send
+back and you paste it into the console. Set the endpoint before sending the link
+to a hundred people.
+
+## For a moderated session
 
 Give participants the **direct prototype link**, not the landing page:
 
 ```
-https://USERNAME.github.io/REPO/first-funding-v1.html
+https://USERNAME.github.io/REPO/wallet-v4.5.html
 ```
 
 The landing page lists other artefacts and will prime them.

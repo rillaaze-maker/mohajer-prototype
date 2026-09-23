@@ -1205,7 +1205,13 @@ whole screen dimmed and blurred, one region crisp and magnified in a gold lens
 with a short note. Lens regions are the app's own 390×844 coordinates,
 **measured with getBoundingClientRect in the harness, not read off a
 screenshot** (eyeballing a grid was ~40px off). Forward navigation is the LEFT
-button/arrow — reading direction. Content order: the workstream map with product as the parallel
+button/arrow — reading direction. **The deck has its own editor**: «✎ ویرایش»
+makes every sentence contenteditable in place (214 elements incl. spotlight
+notes), autosaves to localStorage, «خروجی» copies a JSON of overrides to paste
+into `prototype/deck-copy.json`, which the deck fetches over http and applies
+for everyone. Keys are `s<slide>-<index>` in DOM order — stable as long as the
+slide markup is not reordered; if a slide is restructured, its overrides must
+be re-keyed. Content order: the workstream map with product as the parallel
 lane, the wedge, the five hypotheses, a seven-version timeline, round-1
 learnings, the vocabulary/آشیانه argument and its protective rule, v3's three
 anchors, the false claim → custody-as-state, the text budget, depth-on-demand,
@@ -1218,6 +1224,126 @@ renders at 2×, the crops are defined in the same session's python.
 Note: on 2026-09-15 the three v4.5 files were found deleted from
 `prototype/` (they were in the Recycle Bin, last written 02:08). They were
 restored from there for this deck; nothing in them changed.
+
+## 10i. Field testing rebuilt — one link per version (2026-09-23)
+
+**Where it lives: the prototype repo, not the سنجه repo.** That is the decision
+everything else follows from. `t.html` and `wallet-*.html` are served from the
+same origin, so the runner can read *inside* the prototype's iframe — every
+screen change, tap, dead tap and rage tap — **without changing one line of the
+prototype**. Cross-origin, as سنجه framed it, none of that is readable. It also
+means a frozen build (v4) is testable exactly as it shipped.
+
+**سنجه is not replaced.** It stays what it is: a general, product-agnostic tool
+for *moderated* sessions — screener, Mom Test linter, facilitator console,
+evidence board. This is the unmoderated, at-scale sibling for Mohajer: send a
+link to a hundred people and watch the numbers arrive.
+
+### The redesign, in one line
+
+**A test is a link, not a document.** `t.html?v=4.5&r=2&c=tg` — version, round,
+channel. Nothing is authored, saved or synced. The old flow demanded a *study*
+before it would produce a link, and a study built in a browser produced a link
+that worked only in that browser.
+
+| File | Role |
+|---|---|
+| `test.html` | Console: pick a version, take the link, watch the counts |
+| `t.html` | What the participant opens (short URL on purpose) |
+| `test-insights.html` | Results, visual first |
+| `test-kit.js` | Shared runtime: storage, sending, reading, `derive()` |
+| `test-versions.json` | The testable builds — **one line adds a future version** |
+| `test-config.json` | The only file to edit: `endpoint`, `target`, `task`, `text` |
+| `test-collector.gs` | Paste into Google Apps Script → sessions land in a Sheet |
+
+### The participant's five minutes
+
+خوش‌آمد → **چهار سؤال** (سن اول و تنها سؤال اجباری، بعد: تا حالا دلاری نگه
+داشته‌اید؟ · رمزارز؟ · پس‌انداز کجاست؟) → کار شما → **خودِ اپ تمام‌صفحه** →
+**پنج سؤال** (اعتماد ۱–۵ · ادامه می‌دادید؟ · کدام لایه متوقفتان کرد · چه چیزی
+گیج‌کننده بود · یک چیز را عوض کنید).
+
+Age is first and required because every slice of the result is cut on it. The
+closing five are identical in every round, so versions stay comparable — the
+same reason سنجه built its three questions in rather than letting them be
+authored. The four-layer model (ارزش / کاربردپذیری / اعتماد / انگیزه) carries
+over unchanged.
+
+During the app there is a top strip with **«گیر کردم»** — a sheet that records
+the mood and the sentence *against the screen they are on*. That is the single
+richest field in the whole dataset: a verbatim with a location.
+
+### What is recorded, and what is not
+
+Recorded: age band, three behaviour answers, screen path with time per screen,
+taps normalised to 0…1000 of the device box, dead taps, rage taps (three inside
+900 ms and 60 units), errors thrown by the prototype, time away, and everything
+they wrote. **Not** asked: name, phone, bank details — so there is nothing of
+that kind to leak.
+
+Events are arrays, not objects (`['t', 11411, 498, 945, 'home', 'بعدی']`),
+because a 200-tap session has to fit in one spreadsheet cell. `TK.derive()` is
+the only place that reads them; every number on the dashboard comes from it, so
+a figure shown twice is the same figure.
+
+### Collection — the honest part
+
+Static site, no server. `test-config.json → endpoint` is any URL that accepts a
+POST; `test-collector.gs` is a ready Apps Script (≈5 minutes, Sheet included).
+Sending is `text/plain`, deliberately: that is a "simple request", so no CORS
+preflight — which is the only reason an Apps Script can receive it at all.
+Reading back is **JSONP**, also deliberately: `/exec` redirects to another host
+and a cross-origin `fetch` of that redirect is unreliable; a script tag never
+has the problem. Verified end to end against a static JSONP stand-in.
+
+With `endpoint` empty nothing breaks: the participant gets a base64 blob to send
+back, the console imports pasted blobs, and the dashboard merges them with
+whatever came from the server. A failed send is queued and retried the next time
+any test page opens on that device. A half-finished session posts itself on
+`pagehide`, so **drop-offs are measured, not guessed**.
+
+**Before sending to a hundred people, press «تست اتصال» on the participants'
+own network.** Google endpoints are not reliably reachable from every Iranian
+connection, and finding that out on session 40 would cost the round.
+
+### The results page
+
+Order is the order of decisions: چند نفر → کجا گیر کردند → **سن** → مسیر و ریزش
+→ **نقشهٔ ضربه‌ها** → حرف‌ها → تک‌تک جلسه‌ها.
+
+- **Age** is a row per band: bar width = how many, colour = «ادامه می‌دادم»,
+  with completion, trust and stuck counts beside it.
+- **The funnel orders itself** from the median position of each screen in the
+  real paths, so a future version needs no edit here to appear correctly.
+- **The tap heatmap renders on the live prototype**: the iframe is told
+  `go(screen)` and the taps are painted over it — grey density mapped to a
+  colour ramp in `getImageData`, no library. Red ring = rage, dashed = dead tap.
+  This is the "Clarity-like" part, and same-origin is what buys it.
+- **Versions side by side** appears only when more than one version is in the
+  field; everything else shows one version, because averaging v3 and v4.5 into
+  one bar hides the only thing worth seeing.
+- Below three sessions the layer verdict refuses to speak (same rule as سنجه).
+
+### Two bugs worth remembering
+
+- `.sent` is `display:inline-flex`, which **beats `[hidden]`** — the "sent"
+  line and the fallback code box showed at the same time. `[hidden]{display:none
+  !important}` now sits at the top of the sheet.
+- `.num{direction:ltr}` is right for `$1,500` and **wrong for Persian digits in
+  a Persian sentence**: "۵ نفر" and "۱۸ تا ۲۴" came out reordered in the tables.
+  Persian digits need no LTR override at all; `.num` is now only
+  `unicode-bidi:isolate` + tabular numerals, and `.en` carries true LTR.
+
+### Open
+
+- `platform/studies/mohajer-ws0.json` still points tasks at v3 screens; سنجه's
+  own study list is untouched by this work.
+- `SCREEN_FA` in `test-kit.js` names the screens of v2…v4.5; a screen added in a
+  future build shows its raw id until a line is added.
+- The task shown to participants is one open task by default. If a round needs
+  three specific tasks, that is the next thing to add — the layer questions
+  already support being asked per task.
+
 
 ## 11. Blu Bank — the reference
 

@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مهاجر · کنسول تست</title>
+<meta name="theme-color" content="#0B0D10">
+<meta name="robots" content="noindex">
+<link rel="icon" href="./icons/icon-192.png">
+<!--
+  ════════════════════════════════════════════════════════════════════════
+  مهاجر · کنسول تست میدانی
+  یک نسخه را انتخاب کن، لینک را بردار، بفرست، و همین‌جا ببین چند نفر آمدند.
+
+  A round is nothing but a link. There is no study to author, nothing to
+  save and nothing to sync — which is the entire redesign: the old platform
+  asked for a study before it would give you a link.
+  ════════════════════════════════════════════════════════════════════════
+-->
+<style>
+@font-face{font-family:Dana;src:url('./fonts/Dana-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-DemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+
+:root{
+  --f:Dana,system-ui,sans-serif;
+  --gold:#D5A45C;--ok:#3FBF8F;--bad:#E06C5B;
+  --w1:#fff;--w2:rgba(255,255,255,.7);--w3:rgba(255,255,255,.44);
+  --surf:rgba(255,255,255,.05);--surf2:rgba(255,255,255,.08);--brd:rgba(255,255,255,.11);
+  --spring:cubic-bezier(.16,1,.3,1);--swift:cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--f);color:var(--w1);background:#0B0D10;line-height:1.65;
+  -webkit-font-smoothing:antialiased;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 82% -10%,rgba(213,164,92,.13),transparent 62%),
+             radial-gradient(700px 500px at 2% 108%,rgba(63,191,143,.05),transparent 60%),
+             linear-gradient(168deg,#1A1F26,#0B0D10 56%,#12161B)}
+.wrap{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:44px 22px 80px}
+.num{unicode-bidi:isolate;font-variant-numeric:tabular-nums}   /* Persian digits in Persian text: no LTR override */
+.en{direction:ltr;unicode-bidi:isolate}
+
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:30px}
+.brand .mk{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.08);display:grid;place-items:center}
+.brand .nm{font-size:16px;font-weight:600;letter-spacing:-.02em}
+.brand .ph{margin-inline-start:auto;font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--gold)}
+.brand a{color:var(--w3);font-size:12px;text-decoration:none;transition:.2s}
+.brand a:hover{color:var(--gold)}
+
+h1{font-size:clamp(25px,5vw,36px);font-weight:700;letter-spacing:-.035em;line-height:1.2}
+.lead{font-size:14.5px;color:var(--w2);margin-top:12px;max-width:56ch;line-height:1.85}
+
+.sec{display:flex;align-items:center;gap:10px;font-size:10px;font-weight:700;letter-spacing:.14em;
+  color:var(--w3);margin:42px 0 14px}
+.sec .n{width:19px;height:19px;border-radius:50%;background:rgba(213,164,92,.16);color:var(--gold);
+  display:grid;place-items:center;font-size:10px;letter-spacing:0;flex:none}
+.sec .ln{flex:1;height:1px;background:var(--brd)}
+
+.tiny{font-size:11.5px;color:var(--w3);line-height:1.8}
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:18px;padding:20px}
+
+/* ── versions ───────────────────────────────────────────────────── */
+.vers{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.ver{position:relative;text-align:start;background:var(--surf);border:1px solid var(--brd);border-radius:16px;
+  padding:16px 17px;cursor:pointer;color:var(--w1);font-family:var(--f);transition:.22s var(--spring)}
+.ver:hover{border-color:rgba(213,164,92,.4);transform:translateY(-2px)}
+.ver[aria-pressed=true]{background:linear-gradient(150deg,rgba(213,164,92,.16),rgba(213,164,92,.03));border-color:var(--gold)}
+.ver .t{font-size:15px;font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:7px}
+.ver .d{font-size:12px;color:var(--w3);margin-top:4px;line-height:1.6}
+.ver .m{font-size:10.5px;color:var(--w3);margin-top:9px;display:flex;gap:9px;align-items:center}
+.pill{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.08);color:var(--w3);letter-spacing:.03em}
+.pill.g{background:rgba(63,191,143,.15);color:var(--ok)}
+.pill.y{background:rgba(213,164,92,.17);color:var(--gold)}
+.pill.r{background:rgba(224,108,91,.16);color:var(--bad)}
+
+/* ── fields ─────────────────────────────────────────────────────── */
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.fld{flex:1;min-width:150px}
+.fld label{display:block;font-size:11.5px;color:var(--w3);margin-bottom:7px}
+input[type=text],input[type=number],textarea,select{width:100%;background:var(--surf);border:1px solid var(--brd);
+  border-radius:12px;padding:12px 14px;color:var(--w1);font:400 14px/1.7 var(--f);outline:none;transition:.2s var(--swift)}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(--surf2)}
+textarea{resize:vertical;min-height:90px}
+select{appearance:none;cursor:pointer}
+option{background:#14181D}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1px solid var(--brd);background:var(--surf);color:var(--w2);border-radius:99px;
+  font:500 12.5px/1 var(--f);padding:10px 14px;cursor:pointer;transition:.2s var(--swift)}
+.chip[aria-pressed=true]{background:rgba(213,164,92,.15);border-color:var(--gold);color:var(--w1)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--brd);
+  background:var(--surf2);color:var(--w1);border-radius:99px;font:600 13px/1 var(--f);padding:12px 18px;
+  cursor:pointer;transition:.2s var(--swift);text-decoration:none}
+.btn:hover{border-color:rgba(213,164,92,.45)}
+.btn:active{transform:scale(.97)}
+.btn.p{background:var(--gold);border-color:var(--gold);color:#0B0D10}
+.btn.sm{padding:9px 14px;font-size:12px}
+
+/* ── the link ───────────────────────────────────────────────────── */
+.link{display:flex;align-items:center;gap:10px;background:#0E1216;border:1px solid var(--brd);
+  border-radius:14px;padding:13px 15px;margin-top:10px;flex-wrap:wrap}
+.link code{flex:1;min-width:200px;font:500 12.5px/1.7 ui-monospace,Menlo,monospace;color:var(--gold);
+  direction:ltr;unicode-bidi:isolate;word-break:break-all;text-align:left}
+.link .who{font-size:11.5px;color:var(--w3);flex:none}
+
+/* ── live ───────────────────────────────────────────────────────── */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px}
+.kpi{background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:16px 17px}
+.kpi .v{font-size:26px;font-weight:700;letter-spacing:-.03em;line-height:1.2}
+.kpi .l{font-size:11.5px;color:var(--w3);margin-top:3px}
+.kpi.gold .v{color:var(--gold)}
+
+.bar{height:9px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;margin-top:14px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#E8C48A);width:0;
+  transition:width .8s var(--spring)}
+.legend{display:flex;justify-content:space-between;font-size:11.5px;color:var(--w3);margin-top:8px}
+
+table{width:100%;border-collapse:collapse;margin-top:6px}
+th,td{text-align:start;padding:10px 8px;font-size:12.5px;border-bottom:1px solid rgba(255,255,255,.06)}
+th{font-size:10.5px;font-weight:700;letter-spacing:.08em;color:var(--w3)}
+td b{font-weight:600}
+
+.note{display:flex;gap:11px;align-items:flex-start;background:rgba(213,164,92,.07);
+  border:1px solid rgba(213,164,92,.22);border-radius:14px;padding:14px 16px;margin-top:14px}
+.note svg{width:17px;height:17px;flex:none;margin-top:3px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round}
+.note p{font-size:12.5px;color:var(--w2);line-height:1.8}
+.note b{color:#fff;font-weight:600}
+
+details{margin-top:12px;background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:0 18px}
+details[open]{padding-bottom:18px}
+summary{cursor:pointer;padding:16px 0;font-size:13.5px;font-weight:600;list-style:none;display:flex;align-items:center;gap:9px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:'+';color:var(--gold);font-size:16px;font-weight:700;width:14px}
+details[open] summary::before{content:'−'}
+ol{padding-inline-start:20px;font-size:13px;color:var(--w2);line-height:2}
+ol li{margin-bottom:6px}
+code.inline{font:500 11.5px ui-monospace,Menlo,monospace;background:rgba(255,255,255,.08);
+  padding:2px 7px;border-radius:5px;direction:ltr;unicode-bidi:isolate;display:inline-block;color:var(--gold)}
+pre{background:#0E1216;border:1px solid var(--brd);border-radius:12px;padding:14px;overflow:auto;
+  font:400 11.5px/1.8 ui-monospace,Menlo,monospace;color:var(--w2);direction:ltr;text-align:left;margin-top:10px}
+
+footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-size:11.5px;color:var(--w3)}
+
+/* ── phone ── */
+@media(max-width:700px){
+  .wrap{padding:26px 15px 70px}
+  .vers{grid-template-columns:1fr}
+  .link code{font-size:11px;min-width:0}
+  table{display:block;overflow-x:auto;white-space:nowrap}
+}
+.flash{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);z-index:50;
+  background:#14181D;border:1px solid var(--brd);border-radius:99px;padding:11px 20px;font-size:13px;
+  opacity:0;pointer-events:none;transition:.3s var(--spring)}
+.flash.on{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="mk"><svg viewBox="0 0 49.33 39.99" width="16" height="16" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></div>
+    <div class="nm">مهاجر · کنسول تست</div>
+    <a href="./index.html">داشبورد</a>
+    <div class="ph">PHASE 3</div>
+  </div>
+
+  <h1>یک نسخه انتخاب کنید،<br>لینکش را بفرستید.</h1>
+  <p class="lead">هر تست فقط یک لینک است. چیزی ساخته یا ذخیره نمی‌شود. شرکت‌کننده لینک را باز می‌کند، چهار سؤال کوتاه جواب می‌دهد، با اپ کار می‌کند، و نتیجه همین‌جا بالا می‌آید.</p>
+
+  <!-- ── ۱ نسخه ─────────────────────────────────────────────── -->
+  <div class="sec"><span class="n num">۱</span>کدام نسخه تست شود؟<span class="ln"></span></div>
+  <div class="vers" id="vers"></div>
+
+  <!-- ── ۲ لینک ─────────────────────────────────────────────── -->
+  <div class="sec"><span class="n num">۲</span>لینک‌ها<span class="ln"></span></div>
+  <div class="card">
+    <div class="row">
+      <div class="fld" style="max-width:130px">
+        <label for="round">شمارهٔ راند</label>
+        <input type="text" id="round" value="1" oninput="paint()">
+      </div>
+      <div class="fld">
+        <label>از چه راه‌هایی می‌فرستید؟ <span style="color:var(--w3)">(برای هرکدام یک لینک جدا)</span></label>
+        <div class="chips" id="chans"></div>
+      </div>
+    </div>
+    <div id="links"></div>
+    <div class="note">
+      <svg viewBox="0 0 24 24"><path d="M12 16v-4M12 8h.01M12 22a10 10 0 100-20 10 10 0 000 20z"/></svg>
+      <p>لینک هر کانال جداست تا بعداً بدانید <b>کدام کانال چه آدم‌هایی آورد</b> — همان یک حرف آخر لینک این کار را می‌کند. برای ۱۰۰ نفر لازم نیست ۱۰۰ لینک بسازید؛ یک لینک را برای همه بفرستید.</p>
+    </div>
+  </div>
+
+  <div class="sec"><span class="n num">۳</span>پیام دعوت<span class="ln"></span></div>
+  <div class="card">
+    <p class="tiny">متن آماده برای فرستادن. لینکِ کانال انتخاب‌شده داخلش هست.</p>
+    <textarea id="invite" style="margin-top:12px;min-height:150px"></textarea>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn p" onclick="copyText('invite',this)">کپی پیام</button>
+      <button class="btn" onclick="resetInvite()">متن پیش‌فرض</button>
+    </div>
+  </div>
+
+  <!-- ── ۴ نتیجه ────────────────────────────────────────────── -->
+  <div class="sec"><span class="n num">۴</span>همین حالا<span class="ln"></span></div>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+      <span class="pill" id="conn">در حال بررسی اتصال…</span>
+      <span class="tiny" id="conn-h"></span>
+      <span style="flex:1"></span>
+      <button class="btn sm" onclick="refresh()">تازه‌سازی</button>
+      <a class="btn sm p" id="go-insights" href="./test-insights.html">دیدن نتیجه‌ها</a>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="bar"><i id="bar-i"></i></div>
+    <div class="legend"><span id="bar-l">—</span><span id="bar-r">—</span></div>
+    <table id="rounds"></table>
+  </div>
+
+  <!-- ── راه‌اندازی ─────────────────────────────────────────── -->
+  <div class="sec"><span class="n">⚙</span>راه‌اندازی جمع‌آوری<span class="ln"></span></div>
+
+  <details id="setup">
+    <summary>اتصال به یک صفحهٔ گوگل‌شیت — یک‌بار، حدود پنج دقیقه</summary>
+    <p class="tiny">تا وقتی این کار انجام نشده، سیستم کار می‌کند ولی هر شرکت‌کننده در پایان یک متن می‌گیرد و باید برای شما بفرستد. برای ۱۰۰ نفر، این را وصل کنید.</p>
+    <ol>
+      <li>در <span class="en">Google Sheets</span> یک صفحهٔ خالی بسازید.</li>
+      <li>از منو: <span class="en">Extensions → Apps Script</span>.</li>
+      <li>محتوای فایل <code class="inline">test-collector.gs</code> را در ویرایشگر بچسبانید (جای کد قبلی).</li>
+      <li><span class="en">Deploy → New deployment → Web app</span>؛ گزینهٔ <span class="en">Execute as: Me</span> و <span class="en">Who has access: Anyone</span>.</li>
+      <li>آدرسی که می‌دهد (به <code class="inline">/exec</code> ختم می‌شود) را کپی کنید.</li>
+      <li>در گیت‌هاب فایل <code class="inline">prototype/test-config.json</code> را باز کنید و همان آدرس را جلوی <code class="inline">"endpoint"</code> بگذارید و <span class="en">Commit</span> کنید.</li>
+    </ol>
+    <p class="tiny">گوگل اجباری نیست: هر آدرسی که <span class="en">POST</span> قبول کند کار می‌کند. فقط همان را در <code class="inline">endpoint</code> بگذارید.</p>
+    <div class="note">
+      <svg viewBox="0 0 24 24"><path d="M12 16v-4M12 8h.01M12 22a10 10 0 100-20 10 10 0 000 20z"/></svg>
+      <p>قبل از فرستادن برای ۱۰۰ نفر، یک بار روی <b>اینترنت خودِ شرکت‌کننده‌ها</b> امتحان کنید: همین صفحه را روی گوشی باز کنید و ببینید بالا نوشته «متصل». اگر نه، سیستم خودش به مسیر «کد را بفرستید» برمی‌گردد و هیچ جلسه‌ای گم نمی‌شود.</p>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <div class="fld">
+        <label for="ep">آدرس فعلی (از test-config.json خوانده می‌شود)</label>
+        <input type="text" id="ep" placeholder="هنوز خالی است" readonly>
+      </div>
+      <button class="btn" onclick="ping()">تست اتصال</button>
+    </div>
+  </details>
+
+  <details>
+    <summary>وارد کردن دستیِ کدهایی که فرستاده‌اند</summary>
+    <p class="tiny">اگر کسی در پایان «کد» گرفته و برای شما فرستاده، اینجا بچسبانید — هر کد در یک خط. روی همین مرورگر ذخیره می‌شود و در صفحهٔ نتیجه‌ها با بقیه یکجا دیده می‌شود.</p>
+    <textarea id="blobs" placeholder="یک کد در هر خط…"></textarea>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn p" onclick="importBlobs()">افزودن</button>
+      <span class="tiny" id="imp-n"></span>
+    </div>
+  </details>
+
+  <footer>
+    داده‌ها بی‌نام‌اند: بازهٔ سنی، سه پاسخ رفتاری، مسیر صفحه‌ها و آنچه نوشته‌اند. نام، شماره و اطلاعات بانکی پرسیده نمی‌شود.
+  </footer>
+</div>
+
+<div class="flash" id="flash"></div>
+
+<script src="./test-kit.js"></script>
+<script>
+const $ = TK.$;
+let CFG = {}, VERS = [], sel = null, chans = ['tg'], rows = [], DEFAULT_INVITE = '';
+
+const base = () => location.href.replace(/[^/]*$/, '');
+
+(async function boot(){
+  CFG = await TK.config();
+  VERS = await TK.versions();
+  sel = (VERS.find(v => v.status === 'current') || VERS[0] || {}).id;
+  $('ep').value = CFG.endpoint || '';
+  $('chans').innerHTML = Object.keys(TK.CHANNELS).map(k =>
+    '<button class="chip" aria-pressed="' + (k === 'tg') + '" data-k="' + k + '" onclick="toggleChan(this)">' +
+    TK.CHANNELS[k] + '</button>').join('');
+  paintVers(); paint(); resetInvite();
+  TK.flush(CFG.endpoint);
+  refresh();
+  setInterval(refresh, 60000);
+})();
+
+function paintVers(){
+  $('vers').innerHTML = VERS.map(v =>
+    '<button class="ver" aria-pressed="' + (v.id === sel) + '" data-id="' + v.id + '" onclick="pickVer(this)">' +
+      '<div class="t">' + TK.esc(v.name) +
+        (v.status === 'current' ? '<span class="pill y">نسخهٔ تست</span>' : '<span class="pill">بایگانی</span>') + '</div>' +
+      '<div class="d">' + TK.esc(v.sub || '') + '</div>' +
+      '<div class="m"><span class="num">' + TK.esc(v.date || '') + '</span>' +
+        '<span class="n-' + v.id + '" data-count>—</span></div>' +
+    '</button>').join('');
+  countsOnVers();
+}
+function pickVer(b){ sel = b.dataset.id; paintVers(); paint(); resetInvite(); }
+function toggleChan(b){
+  const k = b.dataset.k, on = b.getAttribute('aria-pressed') === 'true';
+  b.setAttribute('aria-pressed', !on);
+  chans = TK.$$('#chans .chip').filter(c => c.getAttribute('aria-pressed') === 'true').map(c => c.dataset.k);
+  if (!chans.length) { chans = ['x']; }
+  paint(); resetInvite();
+}
+
+function linkFor(c){
+  return base() + 't.html?v=' + encodeURIComponent(sel) + '&r=' + encodeURIComponent(($('round').value || '1').trim()) +
+    (c && c !== 'x' ? '&c=' + c : '');
+}
+function paint(){
+  $('links').innerHTML = (chans.length ? chans : ['x']).map(c =>
+    '<div class="link"><span class="who">' + (TK.CHANNELS[c] || '') + '</span>' +
+    '<code>' + TK.esc(linkFor(c)) + '</code>' +
+    '<button class="btn sm" onclick="copyLink(this,\'' + c + '\')">کپی</button>' +
+    '<a class="btn sm" href="' + TK.esc(linkFor(c)) + '" target="_blank" rel="noopener">باز کردن</a></div>').join('');
+  $('go-insights').href = './test-insights.html?v=' + encodeURIComponent(sel);
+}
+async function copyLink(btn, c){
+  const ok = await TK.copy(linkFor(c));
+  btn.textContent = ok ? 'کپی شد ✓' : 'نشد';
+  setTimeout(() => btn.textContent = 'کپی', 1800);
+}
+function resetInvite(){
+  const v = VERS.find(x => x.id === sel) || {};
+  DEFAULT_INVITE =
+'سلام 👋\n' +
+'داریم روی یک اپ کار می‌کنیم که کمک می‌کند آدم‌ها ارزش پولشان را حفظ کنند.\n\n' +
+'می‌شود پنج دقیقه با نمونهٔ آزمایشی‌اش کار کنید و بگویید کجا گیج‌کننده است؟\n' +
+'هیچ پول واقعی‌ای جابه‌جا نمی‌شود و نام و شماره‌ای هم پرسیده نمی‌شود.\n\n' +
+linkFor(chans[0] || 'x') + '\n\n' +
+'روی گوشی باز کنید. هر جا گیر کردید همان‌جا دکمهٔ «گیر کردم» هست — دقیقاً همان چیزی است که دنبالش هستیم.';
+  $('invite').value = DEFAULT_INVITE;
+}
+async function copyText(id, btn){
+  const ok = await TK.copy($(id).value);
+  flash(ok ? 'کپی شد' : 'کپی نشد؛ دستی انتخاب کنید');
+}
+function flash(t){
+  const f = $('flash'); f.textContent = t; f.classList.add('on');
+  setTimeout(() => f.classList.remove('on'), 2200);
+}
+
+/* ── live ───────────────────────────────────────────────────────── */
+function localSessions(){ return TK.store.get('local', []); }
+
+async function refresh(){
+  const conn = $('conn');
+  let remote = [];
+  if (CFG.endpoint) {
+    conn.textContent = 'در حال بررسی…'; conn.className = 'pill';
+    try {
+      const r = await TK.read(CFG.endpoint, { sum: 1 }, 20000);
+      remote = (r && r.sessions) || [];
+      conn.textContent = 'متصل'; conn.className = 'pill g';
+      $('conn-h').textContent = TK.fa(remote.length) + ' جلسه روی سرور';
+    } catch (e) {
+      conn.textContent = 'اتصال برقرار نشد'; conn.className = 'pill r';
+      $('conn-h').textContent = 'فعلاً از مسیر «کد را بفرستید» کار می‌کند.';
+    }
+  } else {
+    conn.textContent = 'بدون جمع‌آوری خودکار'; conn.className = 'pill';
+    $('conn-h').textContent = 'برای ۱۰۰ نفر، بخش راه‌اندازی پایین همین صفحه.';
+  }
+  const loc = localSessions().map(s => ({ id:s.id, r:s.r, ver:s.ver, c:s.c, age:(s.seg||{}).age, done:s.done?1:0, at:s.t0, ms:s.ms }));
+  const seen = new Set(remote.map(x => x.id));
+  rows = remote.concat(loc.filter(x => !seen.has(x.id)));
+  paintLive();
+  countsOnVers();
+}
+
+function paintLive(){
+  const target = CFG.target || 100;
+  const mine = rows.filter(x => String(x.ver) === String(sel));
+  const done = mine.filter(x => +x.done === 1);
+  const ages = new Set(mine.map(x => x.age).filter(Boolean));
+  const avg = done.length ? done.reduce((a, b) => a + (+b.ms || 0), 0) / done.length : 0;
+
+  $('kpis').innerHTML = [
+    ['شروع کرده‌اند', TK.fa(mine.length), ''],
+    ['تا آخر رفته‌اند', TK.fa(done.length), 'gold'],
+    ['میانگین زمان', done.length ? TK.mmss(avg) : '—', ''],
+    ['بازه‌های سنی', TK.fa(ages.size) + ' از ' + TK.fa(TK.AGES.length), '']
+  ].map(([l, v, c]) => '<div class="kpi ' + c + '"><div class="v num">' + v + '</div><div class="l">' + l + '</div></div>').join('');
+
+  $('bar-i').style.width = Math.min(100, done.length / target * 100) + '%';
+  $('bar-l').textContent = 'هدف این راند: ' + TK.fa(target) + ' نفر';
+  $('bar-r').textContent = TK.fa(done.length) + ' نفر کامل';
+
+  const by = {};
+  rows.forEach(x => {
+    const k = (x.ver || '?') + '|' + (x.r || '?');
+    by[k] = by[k] || { ver: x.ver, r: x.r, n: 0, d: 0 };
+    by[k].n++; if (+x.done === 1) by[k].d++;
+  });
+  const list = Object.values(by).sort((a, b) => b.n - a.n);
+  $('rounds').innerHTML = list.length
+    ? '<tr><th>نسخه</th><th>راند</th><th>شروع</th><th>کامل</th><th></th></tr>' + list.map(x =>
+        '<tr><td><b>' + TK.esc((VERS.find(v => v.id === x.ver) || {}).name || ('v' + x.ver)) + '</b></td>' +
+        '<td class="num">' + TK.fa(x.r) + '</td><td class="num">' + TK.fa(x.n) + '</td>' +
+        '<td class="num">' + TK.fa(x.d) + '</td>' +
+        '<td style="text-align:end"><a class="btn sm" href="./test-insights.html?v=' + encodeURIComponent(x.ver) +
+          '&r=' + encodeURIComponent(x.r) + '">نتیجه</a></td></tr>').join('')
+    : '<tr><td class="tiny" style="padding:18px 0">هنوز جلسه‌ای ثبت نشده. لینک را بفرستید و همین‌جا منتظر بمانید.</td></tr>';
+}
+
+function countsOnVers(){
+  TK.$$('[data-count]').forEach(el => {
+    const id = el.className.replace('n-', '');
+    const n = rows.filter(x => String(x.ver) === id).length;
+    el.textContent = n ? TK.fa(n) + ' جلسه' : '';
+  });
+}
+
+async function ping(){
+  const url = ($('ep').value || '').trim();
+  if (!url) return flash('آدرسی در test-config.json نیست');
+  try { const r = await TK.read(url, { ping: 1 }, 15000); flash(r && r.ok ? 'اتصال برقرار است ✓' : 'پاسخ نامفهوم بود'); }
+  catch (e) { flash('اتصال برقرار نشد — ' + e.message); }
+}
+
+function importBlobs(){
+  const lines = ($('blobs').value || '').split(/\s*\n\s*/).filter(Boolean);
+  const cur = localSessions(); const have = new Set(cur.map(s => s.id));
+  let n = 0, bad = 0;
+  lines.forEach(l => {
+    const o = TK.unpack(l);
+    if (o && o.id) { if (!have.has(o.id)) { cur.push(o); have.add(o.id); n++; } }
+    else bad++;
+  });
+  TK.store.set('local', cur);
+  $('imp-n').textContent = TK.fa(n) + ' جلسه اضافه شد' + (bad ? ' · ' + TK.fa(bad) + ' کد خوانده نشد' : '');
+  $('blobs').value = '';
+  refresh();
+}
+</script>
+</body>
+</html>
