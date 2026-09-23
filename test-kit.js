@@ -167,6 +167,7 @@
     const map = new Map();
     const merge = (arr) => (arr || []).forEach(s => {
       if (!s || !s.id) return;
+      if (String(s.id).indexOf('TEST-') === 0) return;   /* ردیف‌های آزمایشِ اتصال، داده نیستند */
       const cur = map.get(s.id);
       if (!cur || (!cur.done && s.done)) map.set(s.id, s);
     });

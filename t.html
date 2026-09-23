@@ -459,6 +459,10 @@ function step(){
 /* ════════ اپ ════════════════════════════════════════════════════ */
 function openApp(){
   S.phase = 'app'; save();
+  /* اولین درخواست به Apps Script بعد از بی‌کاری می‌تواند ۲۰ ثانیه طول بکشد.
+     همین‌جا — چند دقیقه پیش از پایان — یک ping می‌فرستیم تا وقتی جلسه تمام
+     شد، تأییدِ ارسال فوری باشد و شرکت‌کننده منتظر نماند. */
+  TK.eps(CFG).forEach(u => { try { TK.read(u, { ping: 1 }, 15000).catch(() => {}); } catch (e) {} });
   t0 = Date.now();
   $('appwrap').classList.add('on');
   const f = $('app');
@@ -512,18 +516,33 @@ function instrument(win, doc){
   } catch (e) {}
   setInterval(tick, 500);
 
+  /* یک ضربه وقتی ضربه است که انگشت جابه‌جا نشود. اسکرول و سوایپ هم با
+     pointerdown شروع می‌شوند، و اگر همان‌جا ثبتشان کنیم، «ضربه روی هیچ»
+     پر می‌شود از اسکرول‌های عادی — در چهار جلسهٔ اول دقیقاً همین شد.
+     پس تصمیم به pointerup موکول می‌شود و حرکتِ بیش از ۱۲ پیکسل، ضربه نیست. */
   const HIT = 'button,a,input,select,textarea,label,[onclick],[role="button"],.opt,.tab,.chip,.linkrow,.key,.preset,.act,.item';
-  let burst = [];
+  const MOVE = 12;
+  let burst = [], down = null;
+
   doc.addEventListener('pointerdown', (e) => {
-    const [x, y] = norm(e), s = cur();
-    const hit = e.target.closest && e.target.closest(HIT);
+    down = { cx: e.clientX, cy: e.clientY, target: e.target, s: cur(), at: Date.now() };
+  }, true);
+  doc.addEventListener('pointercancel', () => { down = null; }, true);
+  doc.addEventListener('pointerup', (e) => {
+    const d = down; down = null;
+    if (!d) return;
+    if (Math.hypot(e.clientX - d.cx, e.clientY - d.cy) > MOVE) return;     /* کشیدن بود، نه زدن */
+    if (Date.now() - d.at > 1200) return;                                  /* نگه‌داشتن طولانی */
+
+    const [x, y] = norm({ clientX: d.cx, clientY: d.cy });
+    const hit = d.target.closest && d.target.closest(HIT);
     const label = hit ? ((hit.getAttribute('aria-label') || hit.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 42)) : '';
-    if (hit) mark(TK.EV.tap, x, y, s, label); else mark(TK.EV.dead, x, y, s);
+    if (hit) mark(TK.EV.tap, x, y, d.s, label); else mark(TK.EV.dead, x, y, d.s);
 
     const now = Date.now();
     burst = burst.filter(b => now - b.t < 900 && Math.hypot(b.x - x, b.y - y) < 60);
     burst.push({ t: now, x, y });
-    if (burst.length >= 3) { mark(TK.EV.rage, x, y, s); burst = []; }
+    if (burst.length >= 3) { mark(TK.EV.rage, x, y, d.s); burst = []; }
   }, true);
 
   win.addEventListener('error', (e) => mark(TK.EV.err, String(e.message || '').slice(0, 120)));
@@ -585,7 +604,7 @@ async function finish(){
   if (tried) {
     $('d-sent').hidden = false;
     $('d-sent-t').textContent = 'در حال ارسال…';
-    ok = !!(await TK.verify(CFG, S.id, 7000));
+    ok = !!(await TK.verify(CFG, S.id, 12000));
   }
 
   if (ok) {

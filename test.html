@@ -235,6 +235,7 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
       <li>آدرسی که می‌دهد (به <code class="inline">/exec</code> ختم می‌شود) را کپی کنید.</li>
       <li>در گیت‌هاب فایل <code class="inline">prototype/test-config.json</code> را باز کنید و همان آدرس را جلوی <code class="inline">"endpoint"</code> بگذارید و <span class="en">Commit</span> کنید.</li>
       <li><b>همین کار را یک بار دیگر با یک شیت دوم تکرار کنید</b> و آدرسش را جلوی <code class="inline">"endpoint2"</code> بگذارید. هر جلسه به هر دو فرستاده می‌شود؛ اگر یکی از کار بیفتد، دیگری داده را دارد.</li>
+      <li>کد را که عوض کردید، دوباره منتشر کنید: <span class="en">Deploy → Manage deployments → ✎ → Version: New version → Deploy</span>. آدرس عوض نمی‌شود.</li>
     </ol>
     <p class="tiny">گوگل اجباری نیست: هر آدرسی که <span class="en">POST</span> قبول کند کار می‌کند. فقط همان را در <code class="inline">endpoint</code> یا <code class="inline">endpoint2</code> بگذارید.</p>
     <div class="note">
@@ -436,7 +437,8 @@ function countsOnVers(){
 async function ping(){
   const url = ($('ep').value || '').trim();
   if (!url) return flash('آدرسی در test-config.json نیست');
-  try { const r = await TK.read(url, { ping: 1 }, 15000); flash(r && r.ok ? 'اتصال برقرار است ✓' : 'پاسخ نامفهوم بود'); }
+  flash('در حال بررسی… اولین تماس با گوگل می‌تواند تا نیم دقیقه طول بکشد.');
+  try { const r = await TK.read(url, { ping: 1 }, 35000); flash(r && r.ok ? 'اتصال برقرار است ✓' : 'پاسخ نامفهوم بود'); }
   catch (e) { flash('اتصال برقرار نشد — ' + e.message); }
 }
 

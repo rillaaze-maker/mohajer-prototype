@@ -1346,6 +1346,42 @@ Order is the order of decisions: چند نفر → کجا گیر کردند → 
   one bar hides the only thing worth seeing.
 - Below three sessions the layer verdict refuses to speak (same rule as سنجه).
 
+### Wired to the live Sheet, and what the first real data taught (2026-09-23)
+
+`endpoint` now holds the user's deployed Apps Script. Confirmed live from the
+browser: JSONP ping answers, a POST lands, and the sheet already held **four
+real sessions** from their own testing before any of this was wired up.
+
+Three things that only showed up against a real deployment:
+
+- **Cold start.** The first call to an idle Apps Script can take over 20
+  seconds; the next ones are instant. A 7-second verify would therefore fail on
+  the first participant of the day and wrongly show the fallback. The runner now
+  **pings every endpoint when the app opens** — minutes before it needs the
+  answer — and the verify window is 12s. «تست اتصال» in the console waits 35s
+  and says so.
+- **Sheets coerces ids into numbers.** `ver: "4.5"` came back as `4.5`, and a
+  future `"5.0"` would come back as `5` and stop matching its own version. The
+  collector now writes id/round/version/channel as forced text.
+- **The sheet was unreadable by a human.** It held one giant JSON cell. It now
+  also carries `trust, go, stop, confuse, change, notes, screens, taps, rage,
+  dead` as their own columns, so the Sheet itself is sortable. `json` stays in
+  **column 9** deliberately, so sheets already filled by the older script keep
+  parsing; missing columns are appended to the header on next write.
+
+**The instrumentation bug the real data caught.** One of those four sessions
+logged 16 "dead taps" out of 22 events. They were not dead taps — they were
+**scrolls and swipes**. `pointerdown` fired, and a tap was recorded before it
+was known whether the finger moved. Classification now waits for `pointerup`
+and discards anything that moved more than 12px or was held over 1.2s. Verified:
+a drag now produces no event at all, a miss produces a dead tap, a hit produces
+a labelled tap. Had this shipped to 100 people, every scroller would have looked
+like a confused user, and «نقطه‌های گیر» would have ranked the longest screens
+highest — a metric that confidently points the wrong way.
+
+Rows whose id starts with `TEST-` are ignored everywhere, so a connection probe
+never becomes a data point.
+
 ### Copy rules the user set here (2026-09-23)
 
 - **No self-blame in participant copy.** «اگر جایی گیر کنید، ایراد از طراحی
