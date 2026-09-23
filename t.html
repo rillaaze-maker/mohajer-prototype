@@ -102,6 +102,13 @@ h1 em{font-style:normal;color:var(--gold)}
 .scale button[aria-pressed=true]{background:rgba(213,164,92,.16);border-color:var(--gold)}
 .scale-lb{display:flex;justify-content:space-between;margin-top:9px;font-size:11px;color:var(--w3)}
 
+.fields{display:flex;flex-direction:column;gap:9px;margin-top:22px}
+.fields input{width:100%;min-height:54px;background:var(--surf);border:1px solid var(--brd);
+  border-radius:15px;padding:0 16px;color:var(--w1);font:500 15px var(--f);outline:none;
+  transition:.2s var(--swift)}
+.fields input:focus{border-color:var(--gold);background:var(--surf2)}
+.fields input::placeholder{color:var(--w3);font-weight:400}
+
 textarea{width:100%;margin-top:20px;min-height:132px;background:var(--surf);border:1px solid var(--brd);
   border-radius:15px;padding:15px;color:var(--w1);font:400 14.5px/1.8 var(--f);resize:none;outline:none;
   transition:.2s var(--swift)}
@@ -185,7 +192,7 @@ textarea::placeholder{color:var(--w3)}
     <p class="lead" id="w-lead">می‌خواهیم نمونهٔ آزمایشی یک اپ را به شما نشان دهیم و ببینیم بدون هیچ توضیحی چقدر قابل فهم است. حدود پنج تا هشت دقیقه طول می‌کشد.</p>
     <div class="facts">
       <div class="fact"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="w-f1">این نسخه یک شبیه‌سازی است؛ هر عدد و هر مرحله‌ای که می‌بینید تمرینی است.</span></div>
-      <div class="fact"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="w-f2">نام، شمارهٔ تماس و اطلاعات بانکی از شما نمی‌پرسیم.</span></div>
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="w-f2">هیچ اطلاعات بانکی‌ای از شما نمی‌پرسیم. نام و شماره هم فقط اگر خودتان بخواهید، آن‌هم در پایان.</span></div>
       <div class="fact"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="w-f3">هر جا مکث کردید یا سؤالی برایتان پیش آمد، همان‌جا بگویید — دقیقاً همان چیزی است که دنبالش هستیم.</span></div>
     </div>
     <div class="grow"></div>
@@ -281,7 +288,7 @@ const TXT = {
   wH1:  'چند دقیقه‌ای وقت دارید<br>به ما کمک کنید؟',
   wLead:'می‌خواهیم نمونهٔ آزمایشی یک اپ را به شما نشان دهیم و ببینیم بدون هیچ توضیحی چقدر قابل فهم است. حدود پنج تا هشت دقیقه طول می‌کشد.',
   wF1:  'این نسخه یک شبیه‌سازی است؛ هر عدد و هر مرحله‌ای که می‌بینید تمرینی است.',
-  wF2:  'نام، شمارهٔ تماس و اطلاعات بانکی از شما نمی‌پرسیم.',
+  wF2:  'هیچ اطلاعات بانکی‌ای از شما نمی‌پرسیم. نام و شماره هم فقط اگر خودتان بخواهید، آن‌هم در پایان.',
   wF3:  'هر جا مکث کردید یا سؤالی برایتان پیش آمد، همان‌جا بگویید — دقیقاً همان چیزی است که دنبالش هستیم.',
   bTitle:'فرض کنید این اپ<br>واقعاً مال شماست.',
   bTask:'می‌خواهید بخشی از پول‌تان را از ریال خارج کنید و دلاری نگه دارید. هر کاری لازم است، در اپ انجام دهید.',
@@ -295,17 +302,17 @@ const TXT = {
    پنج سؤال آخر، در همهٔ راندها یکسان می‌ماند تا نسخه‌ها با هم مقایسه‌شدنی
    بمانند؛ سه‌تای اول یک ضربه‌اند، دوتای آخر اختیاری‌اند. */
 const SEG = [
-  { id:'age', kicker:'۱ از ۴', q:'چند سالتان است؟', req:true,
+  { id:'age', q:'چند سالتان است؟', req:true,
     opts: TK.AGES.map(a => ({ v:a, l:a })) },
-  { id:'fx', kicker:'۲ از ۴', q:'تا حالا بخشی از پول‌تان را دلاری نگه داشته‌اید؟',
+  { id:'fx', q:'تا حالا بخشی از پول‌تان را دلاری نگه داشته‌اید؟',
     opts:[ {v:'self',l:'بله، خودم انجام دادم'},
            {v:'help',l:'بله، با کمک یک نفر دیگر'},
            {v:'never',l:'نه، تا حالا این کار را نکرده‌ام'} ] },
-  { id:'crypto', kicker:'۳ از ۴', q:'با رمزارز چقدر کار کرده‌اید؟',
+  { id:'crypto', q:'با رمزارز چقدر کار کرده‌اید؟',
     opts:[ {v:'often',l:'مرتب؛ خودم خرید و فروش می‌کنم'},
            {v:'some',l:'کم؛ چند باری امتحان کرده‌ام'},
            {v:'none',l:'اصلاً'} ] },
-  { id:'where', kicker:'۴ از ۴', q:'الان پس‌اندازتان بیشتر کجاست؟',
+  { id:'where', q:'الان پس‌اندازتان بیشتر کجاست؟',
     opts:[ {v:'bank',l:'حساب بانکی'},
            {v:'usd',l:'دلار یا طلا'},
            {v:'crypto',l:'رمزارز'},
@@ -314,20 +321,23 @@ const SEG = [
 ];
 
 const END = [
-  { id:'trust', kicker:'۱ از ۵', q:'اگر این سرویس واقعی بود، چقدر به آن اعتماد می‌کردید؟',
+  { id:'trust', q:'اگر این سرویس واقعی بود، چقدر به آن اعتماد می‌کردید؟',
     type:'scale', lo:'اصلاً', hi:'کامل' },
-  { id:'go', kicker:'۲ از ۵', q:'اگر واقعی بود، ادامه می‌دادید؟',
+  { id:'go', q:'اگر واقعی بود، ادامه می‌دادید؟',
     opts:[ {v:'yes',l:'بله'}, {v:'maybe',l:'شاید'}, {v:'no',l:'نه'} ] },
-  { id:'stop', kicker:'۳ از ۵', q:'اگر جایی مکث کردید، نزدیک‌ترین دلیلش کدام بود؟',
+  { id:'stop', q:'اگر جایی مکث کردید، نزدیک‌ترین دلیلش کدام بود؟',
     opts:[ {v:'none',l:'جایی گیر نکردم'},
            {v:'value',l:'نفهمیدم اصلاً به چه دردم می‌خورد'},
            {v:'usability',l:'فهمیدم، ولی نمی‌دانستم چطور انجامش دهم'},
            {v:'trust',l:'بلد بودم، ولی مطمئن نبودم'},
            {v:'motivation',l:'مطمئن بودم، ولی برایم مهم نبود'} ] },
-  { id:'confuse', kicker:'۴ از ۵', q:'چه چیزی گیج‌کننده یا مشکوک بود؟',
+  { id:'confuse', q:'چه چیزی گیج‌کننده یا مشکوک بود؟',
     type:'text', ph:'هر چیزی که به ذهنتان می‌رسد…', opt:true },
-  { id:'change', kicker:'۵ از ۵', q:'اگر فقط یک چیز را می‌شد عوض کرد، چه بود؟',
-    type:'text', ph:'یک جمله کافی است…', opt:true }
+  { id:'change', q:'اگر فقط یک چیز را می‌شد عوض کرد، چه بود؟',
+    type:'text', ph:'یک جمله کافی است…', opt:true },
+  { id:'contact', q:'اگر دوست دارید که بیشتر راجع به تجربه و ایده‌هاتون صحبت کنید',
+    sub:'شماره تماس و نامتون رو برای ما بنویسید. <b style="color:var(--w2);font-weight:600">(کاملاً اختیاری)</b>',
+    type:'contact', opt:true, skipLabel:'بدون شماره تمام می‌کنم', nextLabel:'ثبت و پایان' }
 ];
 
 const MOODS = [
@@ -366,7 +376,7 @@ const chan = TK.qs('c', 'x');
   S = {
     v: 1, id: TK.uid(), r: round, ver: VER.id, c: chan,
     t0: new Date().toISOString(), t1: null, ms: 0,
-    seg: {}, end: {}, fb: [], ev: [], dev: TK.device(),
+    seg: {}, end: {}, contact: null, fb: [], ev: [], dev: TK.device(),
     phase: 'welcome', done: false
   };
   TK.flush(CFG);                     /* هر جلسهٔ نفرستادهٔ قبلی، به همهٔ مقصدها */
@@ -406,16 +416,23 @@ function questions(){ return phase === 'seg' ? SEG : END; }
 function renderAsk(){
   const list = questions(), q = list[qi];
   pick = null;
-  $('a-kicker').textContent = q.kicker || '';
+  $('a-kicker').textContent = TK.fa(qi + 1) + ' از ' + TK.fa(list.length);
   $('a-title').innerHTML = q.q;
   $('a-sub').hidden = !q.sub; if (q.sub) $('a-sub').innerHTML = q.sub;
-  $('a-next').disabled = !(q.type === 'text' && q.opt);
-  $('a-next').textContent = (phase === 'end' && qi === list.length - 1) ? 'پایان' : 'ادامه';
+  $('a-next').disabled = !((q.type === 'text' || q.type === 'contact') && q.opt);
+  $('a-next').textContent = q.nextLabel ||
+    ((phase === 'end' && qi === list.length - 1) ? 'پایان' : 'ادامه');
   $('a-skip').hidden = !q.opt;
+  $('a-skip').textContent = q.skipLabel || 'رد کردن این سؤال';
 
   const b = $('a-body');
   if (q.type === 'text') {
     b.innerHTML = '<textarea id="a-text" placeholder="' + TK.esc(q.ph || '') + '"></textarea>';
+  } else if (q.type === 'contact') {
+    b.innerHTML = '<div class="fields">' +
+      '<input id="c-name" type="text" autocomplete="name" placeholder="نام">' +
+      '<input id="c-tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="شمارهٔ تماس">' +
+      '</div>';
   } else if (q.type === 'scale') {
     b.innerHTML = '<div class="scale">' + [1,2,3,4,5].map(n =>
         '<button aria-pressed="false" data-v="' + n + '" onclick="choose(this)">' + TK.fa(n) + '</button>').join('') +
@@ -440,6 +457,14 @@ function choose(btn){
 
 function askNext(){
   const list = questions(), q = list[qi];
+  /* تنها جایی که چیزی شخصی ثبت می‌شود، و فقط اگر خودش نوشته باشد. جدا از
+     بقیهٔ پاسخ‌ها نگه داشته می‌شود تا در تحلیل و خروجی قابل تفکیک بماند. */
+  if (q.type === 'contact') {
+    const nm = (($('c-name') || {}).value || '').trim().slice(0, 60);
+    const tel = (($('c-tel') || {}).value || '').trim().slice(0, 30);
+    if (nm || tel) S.contact = { name: nm, tel: tel };
+    return step();
+  }
   let val = pick;
   if (q.type === 'text') val = ($('a-text') && $('a-text').value || '').trim().slice(0, 600);
   if (q.req && !val) return;

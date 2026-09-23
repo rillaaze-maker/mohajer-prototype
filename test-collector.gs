@@ -24,8 +24,10 @@
    صفحهٔ نتیجه‌ها از همان می‌خواند.
 
    چه چیزی ذخیره می‌شود: بازهٔ سنی، سه پاسخ رفتاری، مسیر صفحه‌ها، ضربه‌ها و
-   متن‌هایی که خود شرکت‌کننده نوشته است. نام، شماره و اطلاعات بانکی هرگز
-   پرسیده نمی‌شود، پس اینجا هم چیزی از آن‌ها نیست.
+   متن‌هایی که خود شرکت‌کننده نوشته است. اطلاعات بانکی هرگز پرسیده نمی‌شود.
+   دو ستون آخر (name و tel) فقط وقتی پر است که خودِ شرکت‌کننده در پایان
+   خواسته باشد با او تماس بگیرید — یعنی هر شماره‌ای که اینجاست، با رضایت
+   صریح صاحبش اینجاست. همان‌طور با آن رفتار کنید.
    ══════════════════════════════════════════════════════════════════════ */
 
 var SHEET = 'sessions';
@@ -34,7 +36,8 @@ var MAX_CELL = 45000;          /* سقف امن یک خانهٔ شیت */
 /* ستون json عمداً نهم مانده است: شیت‌هایی که با نسخهٔ قبلی این کد پر شده‌اند
    بدون دست‌خوردن خوانده می‌شوند و ستون‌های تازه بعد از آن اضافه می‌شوند. */
 var HEAD = ['at', 'id', 'round', 'version', 'channel', 'age', 'done', 'seconds', 'json',
-            'trust', 'go', 'stop', 'confuse', 'change', 'notes', 'screens', 'taps', 'rage', 'dead'];
+            'trust', 'go', 'stop', 'confuse', 'change', 'notes', 'screens', 'taps', 'rage', 'dead',
+            'name', 'tel'];
 
 function sheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -98,7 +101,8 @@ function doPost(e) {
       seg.age || '', s.done ? 1 : 0, Math.round((s.ms || 0) / 1000), json,
       end.trust || '', end.go || '', end.stop || '',
       end.confuse || '', end.change || '', notes,
-      Object.keys(screens).length, taps, rage, dead
+      Object.keys(screens).length, taps, rage, dead,
+      (s.contact && s.contact.name) || '', txt_((s.contact && s.contact.tel) || '')
     ]);
     return out_({ ok: true });
   } catch (err) {

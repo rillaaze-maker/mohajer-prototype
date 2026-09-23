@@ -1408,6 +1408,31 @@ a delete action behind it would let anyone holding the link erase a round.
 Emptying the sheet stays where only the owner can do it — in Google Sheets
 (duplicate the tab first, then delete rows 2+). The console says exactly this.
 
+### The optional contact step, and the promise it broke (2026-09-23)
+
+A sixth closing screen was added at the user's request, in their own words:
+«اگر دوست دارید که بیشتر راجع به تجربه و ایده‌هاتون صحبت کنید / شماره تماس و
+نامتون رو برای ما بنویسید. (کاملاً اختیاری)» — two fields, a «بدون شماره تمام
+می‌کنم» skip, and nothing required.
+
+**It contradicted the welcome screen**, which promised «نام، شمارهٔ تماس و
+اطلاعات بانکی از شما نمی‌پرسیم». Asking at the end while promising the opposite
+at the start is the exact move this product spent three versions removing, so
+the promise was rewritten instead: «هیچ اطلاعات بانکی‌ای از شما نمی‌پرسیم. نام و
+شماره هم فقط اگر خودتان بخواهید، آن‌هم در پایان.» The console footer and the
+invite message were corrected the same way.
+
+Contact lives in `S.contact`, **separate from `S.end`**, so it can be seen,
+exported and removed as a unit. It appears in the results as its own section —
+«می‌شود تماس گرفت», with the person's own closing sentence next to the number so
+a call starts from what they said — as two dedicated CSV columns, and as
+`name`/`tel` columns in the Sheet. Everyone in that list typed it themselves;
+the collector's header says so, because in six months nobody will remember.
+
+Question numbering («۱ از ۴») is now computed from the array length. It was
+hard-coded, and adding this screen would have left five questions labelled
+"of 5" while six were asked.
+
 ### Copy rules the user set here (2026-09-23)
 
 - **No self-blame in participant copy.** «اگر جایی گیر کنید، ایراد از طراحی

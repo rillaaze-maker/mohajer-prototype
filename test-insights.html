@@ -298,7 +298,8 @@ function render(){
     return;
   }
   $('body').innerHTML =
-    blockCompare() + blockKpis() + blockLayer() + blockAges() + blockFunnel() + blockHeat() + blockStuck() + blockQuotes() + blockSessions();
+    blockCompare() + blockKpis() + blockLayer() + blockAges() + blockFunnel() + blockHeat() + blockStuck() +
+    blockQuotes() + blockContacts() + blockSessions();
   paintHeat();
   bindSessions();
 }
@@ -601,6 +602,28 @@ function blockQuotes(){
     }).join('') + '</div>';
 }
 
+/* ── ۷/۵ کسانی که خواستند حرف بزنند ──────────────────────────────
+   تنها جای این صفحه که چیزی شخصی دارد. هر کس اینجاست، خودش در پایان تست
+   نوشته است؛ یعنی منتظر تماس است. با متنی که نوشته کنار هم می‌آید تا وقتی
+   زنگ می‌زنید بدانید دربارهٔ چه حرف می‌زند. */
+function blockContacts(){
+  const list = SEL.filter(s => s.contact && ((s.contact.name || '').trim() || (s.contact.tel || '').trim()));
+  if (!list.length) return '';
+  return '<div class="sec"><h2>می‌شود تماس گرفت</h2><span class="h">' + fa(list.length) +
+      ' نفر خودشان شماره گذاشتند</span><span class="ln"></span></div>' +
+    '<div class="card"><table><tr><th>نام</th><th>شماره</th><th>سن</th><th>راند</th><th>گفته بود</th></tr>' +
+    list.map(s => {
+      const e = s.end || {};
+      const said = (e.change || e.confuse || (s.fb || []).map(f => f.text).filter(Boolean)[0] || '');
+      return '<tr><td><b>' + esc((s.contact.name || '').trim() || '—') + '</b></td>' +
+        '<td class="num" style="direction:ltr;text-align:start">' + esc((s.contact.tel || '').trim() || '—') + '</td>' +
+        '<td class="num">' + esc((s.seg || {}).age || '—') + '</td>' +
+        '<td class="num">' + fa(s.r) + '</td>' +
+        '<td style="color:var(--w2)">' + esc(said.slice(0, 80)) + (said.length > 80 ? '…' : '') + '</td></tr>';
+    }).join('') + '</table>' +
+    '<p class="tiny" style="margin-top:12px">این تنها بخش این صفحه است که اطلاعات شخصی دارد. در خروجی CSV هم دو ستون جداست تا اگر خواستید، حذفش کنید.</p></div>';
+}
+
 /* ── ۸ جلسه‌ها ──────────────────────────────────────────────────── */
 function blockSessions(){
   const rows = SEL.slice().sort((a, b) => (b.t0 || '').localeCompare(a.t0 || ''));
@@ -658,6 +681,7 @@ function exportCsv(){
       started: s.t0, completed: s.done ? 1 : 0, seconds: Math.round(d.ms / 1000),
       age: g.age || '', fx: g.fx || '', crypto: g.crypto || '', savings: g.where || '',
       trust: e.trust || '', go: e.go || '', stop: e.stop || '',
+      name: (s.contact && s.contact.name) || '', tel: (s.contact && s.contact.tel) || '',
       screens: d.screens, taps: d.taps.length, rage: d.rage, dead: d.dead,
       deepest: d.deepest, path: d.path.join(' > '),
       confuse: e.confuse || '', change: e.change || '',
