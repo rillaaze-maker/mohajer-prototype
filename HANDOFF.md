@@ -1286,21 +1286,43 @@ because a 200-tap session has to fit in one spreadsheet cell. `TK.derive()` is
 the only place that reads them; every number on the dashboard comes from it, so
 a figure shown twice is the same figure.
 
-### Collection — the honest part
+### Collection — four places, because one is not a plan (revised 2026-09-23)
 
-Static site, no server. `test-config.json → endpoint` is any URL that accepts a
-POST; `test-collector.gs` is a ready Apps Script (≈5 minutes, Sheet included).
-Sending is `text/plain`, deliberately: that is a "simple request", so no CORS
-preflight — which is the only reason an Apps Script can receive it at all.
-Reading back is **JSONP**, also deliberately: `/exec` redirects to another host
-and a cross-origin `fetch` of that redirect is unreliable; a script tag never
-has the problem. Verified end to end against a static JSONP stand-in.
+The first build had a single endpoint. The user linked a Sheet, found it shaky,
+and asked for backups — correctly. **A session is now written to four places
+that fail for different reasons:**
 
-With `endpoint` empty nothing breaks: the participant gets a base64 blob to send
-back, the console imports pasted blobs, and the dashboard merges them with
-whatever came from the server. A failed send is queued and retried the next time
-any test page opens on that device. A half-finished session posts itself on
-`pagehide`, so **drop-offs are measured, not guessed**.
+1. `endpoint` — the main collector.
+2. `endpoint2` — a second, separate one. Both receive every session; a Google
+   outage, a filtered connection and a bad deployment do not happen together.
+3. **The participant's own device** (`TK.keepMine`), plus what they can send by
+   hand: a copy-able code, the system share sheet, and a **downloadable JSON
+   file** with the full event stream. `contact` in the config opens the channel
+   to send it to.
+4. **`test-sessions.json`, committed in the repo.** The console's «گرفتن
+   پشتیبان» merges every source and hands back that file; commit it and the
+   results read with every server down. It is also the only copy that lives in
+   version control, which is where the rest of this project's evidence lives.
+
+**"ارسال شد" is now a verified claim, not a hope.** A `no-cors` POST resolves
+even when nothing was written, so the runner asks the collector `?has=<id>` and
+only then says it was sent; otherwise it shows the code path and queues a retry.
+Both endpoints are posted and verified **in parallel**, capped at 7s, so a dead
+server cannot leave a participant staring at "در حال ارسال…". Older collectors
+that do not know `has` answer with the full list, which answers the same
+question — both shapes count.
+
+`text/plain` on the POST is deliberate: a "simple request", no CORS preflight,
+which is the only reason an Apps Script can receive it. Reading is **JSONP**,
+also deliberate: `/exec` redirects to another host and cross-origin `fetch` of
+that redirect is unreliable; a script tag never has the problem. Verified end to
+end against static JSONP stand-ins, including one live + one dead endpoint, the
+repo archive, the retry queue emptying on the next page open, and the
+unverified-send path.
+
+The console shows **each source as its own pill** («سرور ۱: ۱۲ جلسه · سرور ۲:
+قطع · آرشیو مخزن: ۸»), so a dead pipe is visible the day it dies rather than
+when the numbers run out. The results page states which sources it read from.
 
 **Before sending to a hundred people, press «تست اتصال» on the participants'
 own network.** Google endpoints are not reliably reachable from every Iranian
@@ -1323,6 +1345,16 @@ Order is the order of decisions: چند نفر → کجا گیر کردند → 
   field; everything else shows one version, because averaging v3 and v4.5 into
   one bar hides the only thing worth seeing.
 - Below three sessions the layer verdict refuses to speak (same rule as سنجه).
+
+### Copy rules the user set here (2026-09-23)
+
+- **No self-blame in participant copy.** «اگر جایی گیر کنید، ایراد از طراحی
+  ماست» was cut: inviting honesty must not be bought by running the product
+  down. It reads «هر جا مکث کردید یا سؤالی برایتان پیش آمد، همان‌جا بگویید —
+  دقیقاً همان چیزی است که دنبالش هستیم.»
+- **Frame it as a simulation, not as an absence.** Not «پول واقعی نیست» but
+  «این نسخه یک شبیه‌سازی است». Applied to the runner, the invite message and the
+  dashboard. The same rule should be applied to any new participant-facing copy.
 
 ### Two bugs worth remembering
 

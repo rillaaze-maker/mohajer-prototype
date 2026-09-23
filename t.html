@@ -184,9 +184,9 @@ textarea::placeholder{color:var(--w3)}
     <h1 id="w-h1">چند دقیقه‌ای وقت دارید<br>به ما کمک کنید؟</h1>
     <p class="lead" id="w-lead">می‌خواهیم نمونهٔ آزمایشی یک اپ را به شما نشان دهیم و ببینیم بدون هیچ توضیحی چقدر قابل فهم است. حدود پنج تا هشت دقیقه طول می‌کشد.</p>
     <div class="facts">
-      <div class="fact"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="w-f1">هیچ پول واقعی‌ای جابه‌جا نمی‌شود؛ همه‌چیز شبیه‌سازی است.</span></div>
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="w-f1">این نسخه یک شبیه‌سازی است؛ هر عدد و هر مرحله‌ای که می‌بینید تمرینی است.</span></div>
       <div class="fact"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="w-f2">نام، شمارهٔ تماس و اطلاعات بانکی از شما نمی‌پرسیم.</span></div>
-      <div class="fact"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="w-f3">اگر جایی گیر کنید، ایراد از طراحی ماست؛ همان لحظه برای ما ارزشمند است.</span></div>
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="w-f3">هر جا مکث کردید یا سؤالی برایتان پیش آمد، همان‌جا بگویید — دقیقاً همان چیزی است که دنبالش هستیم.</span></div>
     </div>
     <div class="grow"></div>
     <div class="btn-row">
@@ -227,17 +227,20 @@ textarea::placeholder{color:var(--w3)}
     <div class="seal"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
     <h1 id="d-title">ممنون از وقتی که گذاشتید.</h1>
     <p class="lead" id="d-lead">پاسخ‌های شما ثبت شد. همین نکته‌هاست که نسخهٔ بعدی را ساده‌تر می‌کند.</p>
-    <div id="d-sent" class="sent" hidden><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>ارسال شد</span></div>
+    <div id="d-sent" class="sent" hidden><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="d-sent-t">ارسال شد</span></div>
+    <button class="skip" id="d-more" hidden onclick="showCode()">یک نسخهٔ پشتیبان هم بفرستم</button>
     <div id="d-code" class="code" hidden>
-      <div class="k">یک قدم کوتاه مانده</div>
-      <p class="tiny" id="d-code-h">اتصال برقرار نشد. لطفاً این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند، برای ما بفرستید.</p>
+      <div class="k" id="d-code-k">یک قدم کوتاه مانده</div>
+      <p class="tiny" id="d-code-h">این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند برای ما بفرستید — پاسخ‌های شما داخل همین متن است.</p>
       <textarea id="d-blob" readonly></textarea>
       <div class="btn-row" style="margin-top:12px">
         <button class="btn btn-primary" id="d-copy" onclick="copyBlob()">کپی کردن</button>
+        <button class="btn btn-ghost" id="d-share" onclick="shareBlob()">فرستادن برای مهاجر</button>
+        <button class="btn btn-ghost" onclick="saveFile()">ذخیره به‌صورت فایل</button>
       </div>
     </div>
     <div class="grow"></div>
-    <p class="tiny" style="text-align:center">مهاجر · نمونهٔ آزمایشی · بدون پول واقعی</p>
+    <p class="tiny" style="text-align:center">مهاجر · نمونهٔ آزمایشی · شبیه‌سازی</p>
   </section>
 </div>
 
@@ -277,9 +280,9 @@ textarea::placeholder{color:var(--w3)}
 const TXT = {
   wH1:  'چند دقیقه‌ای وقت دارید<br>به ما کمک کنید؟',
   wLead:'می‌خواهیم نمونهٔ آزمایشی یک اپ را به شما نشان دهیم و ببینیم بدون هیچ توضیحی چقدر قابل فهم است. حدود پنج تا هشت دقیقه طول می‌کشد.',
-  wF1:  'هیچ پول واقعی‌ای جابه‌جا نمی‌شود؛ همه‌چیز شبیه‌سازی است.',
+  wF1:  'این نسخه یک شبیه‌سازی است؛ هر عدد و هر مرحله‌ای که می‌بینید تمرینی است.',
   wF2:  'نام، شمارهٔ تماس و اطلاعات بانکی از شما نمی‌پرسیم.',
-  wF3:  'اگر جایی گیر کنید، ایراد از طراحی ماست؛ همان لحظه برای ما ارزشمند است.',
+  wF3:  'هر جا مکث کردید یا سؤالی برایتان پیش آمد، همان‌جا بگویید — دقیقاً همان چیزی است که دنبالش هستیم.',
   bTitle:'فرض کنید این اپ<br>واقعاً مال شماست.',
   bTask:'می‌خواهید بخشی از پول‌تان را از ریال خارج کنید و دلاری نگه دارید. هر کاری لازم است، در اپ انجام دهید.',
   dTitle:'ممنون از وقتی که گذاشتید.',
@@ -366,7 +369,7 @@ const chan = TK.qs('c', 'x');
     seg: {}, end: {}, fb: [], ev: [], dev: TK.device(),
     phase: 'welcome', done: false
   };
-  TK.flush(CFG.endpoint);            /* هر جلسهٔ نفرستادهٔ قبلی */
+  TK.flush(CFG);                     /* هر جلسهٔ نفرستادهٔ قبلی، به همهٔ مقصدها */
   $('sh-moods').innerHTML = MOODS.map(m =>
     '<button class="mood" aria-pressed="false" data-v="' + m.v + '" onclick="pickMood(this)">' + m.l + '</button>').join('');
   resume();
@@ -562,35 +565,74 @@ function saveFb(){
 }
 
 /* ════════ پایان و ارسال ═════════════════════════════════════════ */
+/* ── پایان ───────────────────────────────────────────────────────────
+   یک لولهٔ ارسال کافی نیست. جلسه هم‌زمان به همهٔ مقصدها فرستاده می‌شود، روی
+   همین دستگاه می‌ماند، و به‌صورت کد و فایل در اختیار خود شرکت‌کننده است.
+   «ارسال شد» فقط وقتی نوشته می‌شود که سرور تأیید کند ردیف را دارد — یک
+   POSTِ بی‌پاسخ دلیلِ رسیدن نیست. */
 async function finish(){
   S.done = true; S.phase = 'done';
   S.t1 = new Date().toISOString();
   if (!S.ms) S.ms = Date.now() - t0;
   progress(1); show('s-done');
-  const ok = await send(false);
-  if (ok) { $('d-sent').hidden = false; }
-  else {
+
+  TK.keepMine(S);                                    /* ۱. نسخهٔ خودِ دستگاه */
+  const lite = Object.assign({}, S); lite.ev = S.ev.slice(0, 400);
+  $('d-blob').value = TK.pack(lite);                 /* ۲. کد، از همین حالا آماده */
+
+  const tried = await TK.postAll(CFG, S);            /* ۳. همهٔ سرورها */
+  let ok = false;
+  if (tried) {
+    $('d-sent').hidden = false;
+    $('d-sent-t').textContent = 'در حال ارسال…';
+    ok = !!(await TK.verify(CFG, S.id, 7000));
+  }
+
+  if (ok) {
+    $('d-sent-t').textContent = 'ارسال شد';
+    $('d-more').hidden = false;
+  } else {
+    $('d-sent').hidden = true;
     $('d-code').hidden = false;
-    $('d-code-h').textContent = CFG.endpoint
-      ? 'اتصال برقرار نشد. لطفاً این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند، برای ما بفرستید.'
-      : 'این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند برای ما بفرستید — پاسخ‌های شما داخل همین متن است.';
-    const lite = Object.assign({}, S); lite.ev = S.ev.slice(0, 400);
-    $('d-blob').value = TK.pack(lite);
-    TK.queue(S);
+    $('d-code-h').textContent = TK.eps(CFG).length
+      ? 'ارسال خودکار تأیید نشد. لطفاً این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند بفرستید — تمام پاسخ‌های شما داخل همین متن است.'
+      : 'این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند بفرستید — تمام پاسخ‌های شما داخل همین متن است.';
+    TK.queue(S);                                     /* ۴. دفعهٔ بعد دوباره تلاش می‌شود */
   }
   TK.store.del('sess');
 }
 
 async function send(partial){
-  if (!CFG.endpoint) return false;
+  if (!TK.eps(CFG).length) return false;
   const body = Object.assign({}, S, { partial: !!partial });
   if (JSON.stringify(body).length > 55000) body.ev = S.ev.slice(-300);   /* sendBeacon has a ceiling */
-  try { return await TK.post(CFG.endpoint, body, !!partial); } catch (e) { return false; }
+  try { return !!(await TK.postAll(CFG, body, !!partial)); } catch (e) { return false; }
 }
+
+function showCode(){ $('d-code').hidden = false; $('d-more').hidden = true;
+  $('d-code-k').textContent = 'نسخهٔ پشتیبان';
+  $('d-code-h').textContent = 'لازم نیست، ولی اگر بفرستید خیالمان راحت‌تر است.';
+  $('d-code').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+
 async function copyBlob(){
   const ok = await TK.copy($('d-blob').value);
   $('d-copy').textContent = ok ? 'کپی شد ✓' : 'انتخاب و کپی کنید';
   setTimeout(() => $('d-copy').textContent = 'کپی کردن', 2200);
+}
+/* روی گوشی، منوی اشتراک‌گذاری خودِ سیستم؛ وگرنه کپی و باز کردن راه ارتباطی. */
+async function shareBlob(){
+  const text = $('d-blob').value;
+  if (navigator.share) {
+    try { await navigator.share({ title: 'نتیجهٔ تست مهاجر', text }); return; } catch (e) {}
+  }
+  await TK.copy(text);
+  $('d-share').textContent = 'کپی شد — برای ما بفرستید';
+  if (CFG.contact) setTimeout(() => window.open(CFG.contact, '_blank', 'noopener'), 400);
+  setTimeout(() => $('d-share').textContent = 'فرستادن برای مهاجر', 3000);
+}
+/* فایل کامل، با همهٔ رویدادها — کامل‌تر از کدِ کوتاه. */
+function saveFile(){
+  TK.download('mohajer-test-' + S.ver + '-' + S.id + '.json', JSON.stringify(S));
 }
 
 /* ذخیرهٔ محلی: اگر وسط کار صفحه بسته شود، چیزی از دست نمی‌رود. */

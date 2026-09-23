@@ -207,13 +207,14 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
   <!-- ── ۴ نتیجه ────────────────────────────────────────────── -->
   <div class="sec"><span class="n num">۴</span>همین حالا<span class="ln"></span></div>
   <div class="card">
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px">
-      <span class="pill" id="conn">در حال بررسی اتصال…</span>
-      <span class="tiny" id="conn-h"></span>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+      <span id="conns" style="display:flex;gap:6px;flex-wrap:wrap"><span class="pill">در حال بررسی…</span></span>
       <span style="flex:1"></span>
       <button class="btn sm" onclick="refresh()">تازه‌سازی</button>
+      <button class="btn sm" onclick="backup()" id="bk-btn">گرفتن پشتیبان</button>
       <a class="btn sm p" id="go-insights" href="./test-insights.html">دیدن نتیجه‌ها</a>
     </div>
+    <p class="tiny" id="conn-h" style="margin-bottom:14px"></p>
     <div class="kpis" id="kpis"></div>
     <div class="bar"><i id="bar-i"></i></div>
     <div class="legend"><span id="bar-l">—</span><span id="bar-r">—</span></div>
@@ -233,11 +234,17 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
       <li><span class="en">Deploy → New deployment → Web app</span>؛ گزینهٔ <span class="en">Execute as: Me</span> و <span class="en">Who has access: Anyone</span>.</li>
       <li>آدرسی که می‌دهد (به <code class="inline">/exec</code> ختم می‌شود) را کپی کنید.</li>
       <li>در گیت‌هاب فایل <code class="inline">prototype/test-config.json</code> را باز کنید و همان آدرس را جلوی <code class="inline">"endpoint"</code> بگذارید و <span class="en">Commit</span> کنید.</li>
+      <li><b>همین کار را یک بار دیگر با یک شیت دوم تکرار کنید</b> و آدرسش را جلوی <code class="inline">"endpoint2"</code> بگذارید. هر جلسه به هر دو فرستاده می‌شود؛ اگر یکی از کار بیفتد، دیگری داده را دارد.</li>
     </ol>
-    <p class="tiny">گوگل اجباری نیست: هر آدرسی که <span class="en">POST</span> قبول کند کار می‌کند. فقط همان را در <code class="inline">endpoint</code> بگذارید.</p>
+    <p class="tiny">گوگل اجباری نیست: هر آدرسی که <span class="en">POST</span> قبول کند کار می‌کند. فقط همان را در <code class="inline">endpoint</code> یا <code class="inline">endpoint2</code> بگذارید.</p>
     <div class="note">
       <svg viewBox="0 0 24 24"><path d="M12 16v-4M12 8h.01M12 22a10 10 0 100-20 10 10 0 000 20z"/></svg>
       <p>قبل از فرستادن برای ۱۰۰ نفر، یک بار روی <b>اینترنت خودِ شرکت‌کننده‌ها</b> امتحان کنید: همین صفحه را روی گوشی باز کنید و ببینید بالا نوشته «متصل». اگر نه، سیستم خودش به مسیر «کد را بفرستید» برمی‌گردد و هیچ جلسه‌ای گم نمی‌شود.</p>
+    </div>
+
+    <div class="note">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      <p><b>لایهٔ سوم: آرشیو داخل مخزن.</b> هر چند روز یک‌بار دکمهٔ <b>«گرفتن پشتیبان»</b> را بزنید؛ فایل <code class="inline">test-sessions.json</code> دانلود می‌شود. همان را در گیت‌هاب در <code class="inline">prototype/</code> بگذارید و <span class="en">Commit</span> کنید. از آن به بعد نتیجه‌ها حتی اگر هر دو شیت از دسترس خارج شوند، از خودِ مخزن خوانده می‌شوند.</p>
     </div>
     <div class="row" style="margin-top:14px">
       <div class="fld">
@@ -281,7 +288,7 @@ const base = () => location.href.replace(/[^/]*$/, '');
     '<button class="chip" aria-pressed="' + (k === 'tg') + '" data-k="' + k + '" onclick="toggleChan(this)">' +
     TK.CHANNELS[k] + '</button>').join('');
   paintVers(); paint(); resetInvite();
-  TK.flush(CFG.endpoint);
+  TK.flush(CFG);
   refresh();
   setInterval(refresh, 60000);
 })();
@@ -329,7 +336,7 @@ function resetInvite(){
 'سلام 👋\n' +
 'داریم روی یک اپ کار می‌کنیم که کمک می‌کند آدم‌ها ارزش پولشان را حفظ کنند.\n\n' +
 'می‌شود پنج دقیقه با نمونهٔ آزمایشی‌اش کار کنید و بگویید کجا گیج‌کننده است؟\n' +
-'هیچ پول واقعی‌ای جابه‌جا نمی‌شود و نام و شماره‌ای هم پرسیده نمی‌شود.\n\n' +
+'همه‌چیز شبیه‌سازی است و نام و شماره‌ای هم از شما پرسیده نمی‌شود.\n\n' +
 linkFor(chans[0] || 'x') + '\n\n' +
 'روی گوشی باز کنید. هر جا گیر کردید همان‌جا دکمهٔ «گیر کردم» هست — دقیقاً همان چیزی است که دنبالش هستیم.';
   $('invite').value = DEFAULT_INVITE;
@@ -346,29 +353,41 @@ function flash(t){
 /* ── live ───────────────────────────────────────────────────────── */
 function localSessions(){ return TK.store.get('local', []); }
 
+/* هر منبع جداگانه گزارش می‌شود: اگر یکی بیفتد، باید همان لحظه دیده شود،
+   نه وقتی که عددها ته کشیدند. */
 async function refresh(){
-  const conn = $('conn');
-  let remote = [];
-  if (CFG.endpoint) {
-    conn.textContent = 'در حال بررسی…'; conn.className = 'pill';
-    try {
-      const r = await TK.read(CFG.endpoint, { sum: 1 }, 20000);
-      remote = (r && r.sessions) || [];
-      conn.textContent = 'متصل'; conn.className = 'pill g';
-      $('conn-h').textContent = TK.fa(remote.length) + ' جلسه روی سرور';
-    } catch (e) {
-      conn.textContent = 'اتصال برقرار نشد'; conn.className = 'pill r';
-      $('conn-h').textContent = 'فعلاً از مسیر «کد را بفرستید» کار می‌کند.';
-    }
-  } else {
-    conn.textContent = 'بدون جمع‌آوری خودکار'; conn.className = 'pill';
-    $('conn-h').textContent = 'برای ۱۰۰ نفر، بخش راه‌اندازی پایین همین صفحه.';
-  }
-  const loc = localSessions().map(s => ({ id:s.id, r:s.r, ver:s.ver, c:s.c, age:(s.seg||{}).age, done:s.done?1:0, at:s.t0, ms:s.ms }));
-  const seen = new Set(remote.map(x => x.id));
-  rows = remote.concat(loc.filter(x => !seen.has(x.id)));
+  $('conns').innerHTML = '<span class="pill">در حال بررسی…</span>';
+  const all = await TK.readAll(CFG, { sum: 1 });
+  rows = all.sessions.map(s => ({
+    id: s.id, r: s.r, ver: s.ver, c: s.c,
+    age: s.age || (s.seg || {}).age, done: s.done ? 1 : 0, at: s.at || s.t0, ms: s.ms
+  }));
+
+  const pills = [];
+  if (!TK.eps(CFG).length) pills.push('<span class="pill">بدون جمع‌آوری خودکار</span>');
+  all.status.forEach((st, i) => pills.push(
+    '<span class="pill ' + (st.ok ? 'g' : 'r') + '">سرور ' + TK.fa(i + 1) + ': ' +
+    (st.ok ? TK.fa(st.n) + ' جلسه' : 'قطع') + '</span>'));
+  pills.push('<span class="pill' + (all.repo ? ' y' : '') + '">آرشیو مخزن: ' + TK.fa(all.repo) + '</span>');
+  const mine = TK.store.get('mine', []).length + localSessions().length;
+  if (mine) pills.push('<span class="pill">این مرورگر: ' + TK.fa(mine) + '</span>');
+  $('conns').innerHTML = pills.join('');
+  $('conn-h').textContent = TK.eps(CFG).length
+    ? 'جمعاً ' + TK.fa(rows.length) + ' جلسهٔ یکتا از همهٔ منبع‌ها.'
+    : 'برای ۱۰۰ نفر، بخش راه‌اندازی پایین همین صفحه را انجام دهید.';
+
   paintLive();
   countsOnVers();
+}
+
+/* پشتیبان: همهٔ جلسه‌ها، کامل، در یک فایل — برای گذاشتن در خودِ مخزن. */
+async function backup(){
+  const b = $('bk-btn'); b.textContent = 'در حال جمع‌آوری…';
+  const all = await TK.readAll(CFG, { full: 1 });
+  const full = all.sessions.filter(s => s && s.ev);      /* فقط جلسه‌های کامل، نه خلاصه‌ها */
+  TK.download('test-sessions.json', JSON.stringify(full, null, 0));
+  b.textContent = 'گرفتن پشتیبان';
+  flash(TK.fa(full.length) + ' جلسه در فایل — همان را در prototype/ بگذارید و Commit کنید');
 }
 
 function paintLive(){

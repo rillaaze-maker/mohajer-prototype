@@ -37,6 +37,7 @@ The client deck uses these to embed live variants. With no query string it opens
 | `test-versions.json` | The list of testable builds — add a line, a new version becomes testable |
 | `test-config.json` | The only file you edit: where sessions are sent, and the target |
 | `test-collector.gs` | Paste into Google Apps Script to collect sessions into a Sheet |
+| `test-sessions.json` | The committed archive — the backup that needs no server |
 | `test-kit.js` | Shared runtime for the three pages |
 
 The link carries everything: `t.html?v=4.5&r=2&c=tg` — version, round, channel.
@@ -48,9 +49,23 @@ changes, taps, dead taps and rage taps **without modifying the prototype** —
 which is how a frozen build like `wallet-v4.html` can be tested exactly as it
 shipped.
 
-With `endpoint` empty, sessions still work: the participant gets a code to send
-back and you paste it into the console. Set the endpoint before sending the link
-to a hundred people.
+### A session is never trusted to one pipe
+
+Every finished session is written to **all** of these, and they fail for
+different reasons:
+
+1. `endpoint` — the main collector.
+2. `endpoint2` — a second, separate one. Both get every session.
+3. The participant's own device, plus a **code** and a **downloadable JSON file**
+   they can send you by hand.
+4. `test-sessions.json` in this repo — press «گرفتن پشتیبان» in the console,
+   commit the file it gives you. From then on the results read even with every
+   server down.
+
+The console shows each source separately, so a dead one is visible the day it
+dies rather than when the numbers run out. **"ارسال شد" is only shown after the
+server confirms it holds that session id** — a no-cors POST resolves even when
+nothing was written, so the POST alone is not evidence.
 
 ## For a moderated session
 

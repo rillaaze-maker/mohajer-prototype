@@ -223,7 +223,7 @@ footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--brd);font-siz
 <script src="./test-kit.js"></script>
 <script>
 const $ = TK.$, esc = TK.esc, fa = TK.fa;
-let CFG = {}, VERS = [], ALL = [], SEL = [], ageFilter = new Set(), heatScreen = null;
+let CFG = {}, VERS = [], ALL = [], SEL = [], SRC = null, ageFilter = new Set(), heatScreen = null;
 
 (async function boot(){
   CFG = await TK.config();
@@ -236,15 +236,12 @@ let CFG = {}, VERS = [], ALL = [], SEL = [], ageFilter = new Set(), heatScreen =
 /* ── data ───────────────────────────────────────────────────────── */
 async function load(){
   $('sub').textContent = 'در حال خواندن…';
-  let remote = [];
-  if (CFG.endpoint) {
-    try { const r = await TK.read(CFG.endpoint, { full: 1 }, 40000); remote = (r && r.sessions) || []; }
-    catch (e) { /* بدون سرور هم همین صفحه با کدهای واردشده کار می‌کند */ }
-  }
-  const loc = TK.store.get('local', []);
-  const seen = new Set(remote.map(s => s.id));
-  ALL = remote.concat(loc.filter(s => !seen.has(s.id)));
+  /* همهٔ منبع‌ها با هم: سرور اصلی، سرور پشتیبان، آرشیو داخل مخزن، کدهای
+     واردشده و جلسه‌های همین مرورگر. تکراری‌ها با id حذف می‌شوند. */
+  const got = await TK.readAll(CFG, { full: 1 });
+  ALL = got.sessions.filter(s => s && s.ev);            /* خلاصه‌ها تحلیل نمی‌شوند */
   ALL.forEach(s => { if (!s._d) s._d = TK.derive(s); });
+  SRC = got;
 
   const vers = [...new Set(ALL.map(s => String(s.ver)))];
   /* یک تازه‌سازی نباید انتخاب کاربر را به نسخهٔ داخل آدرس برگرداند */
@@ -269,9 +266,14 @@ function apply(){
 
   const nm = (VERS.find(x => x.id === v) || {}).name || ('v' + v);
   $('title').textContent = nm;
-  $('sub').textContent = SEL.length
+  const src = SRC ? [
+    ...SRC.status.map((st, i) => 'سرور ' + fa(i + 1) + (st.ok ? '' : ' (قطع)')),
+    SRC.repo ? 'آرشیو مخزن' : null
+  ].filter(Boolean).join(' · ') : '';
+  $('sub').innerHTML = SEL.length
     ? fa(SEL.length) + ' جلسه' + (r ? ' · راند ' + fa(r) : ' · همهٔ راندها') +
-      (ageFilter.size ? ' · فقط ' + [...ageFilter].join('، ') : '')
+      (ageFilter.size ? ' · فقط ' + [...ageFilter].join('، ') : '') +
+      (src ? '<span style="color:var(--w3)"> — از ' + esc(src) + '</span>' : '')
     : 'هنوز جلسه‌ای برای این فیلتر نیست.';
   render();
 }

@@ -16,9 +16,11 @@
    dead tap. That is the whole reason the test system lives in this repo and
    not in the platform repo — cross-origin, none of it would be readable.
 
-   Sessions go to ONE endpoint (test-config.json → endpoint), any URL that
-   accepts a POST — test-collector.gs is a ready Google Apps Script. No
-   endpoint? The participant gets a code to send back and nothing is lost.
+   A session is never entrusted to one pipe. It is POSTed to every endpoint
+   in test-config.json (endpoint + endpoint2), kept on the participant's own
+   device, offered to them as a code and as a file, and — once the operator
+   commits the backup — archived in test-sessions.json inside this repo.
+   "ارسال شد" is only shown after the server confirms it holds the id.
    ══════════════════════════════════════════════════════════════════════ */
 (function (g) {
 
@@ -95,6 +97,17 @@
     fr: 'آشنایان', lk: 'لینکدین', qr: 'کیوآر', x: 'سایر'
   };
 
+  /* ── where sessions go ──────────────────────────────────────────────
+     Never one pipe. A session is written to every configured endpoint, kept
+     on the participant's own device, and — when the operator commits the
+     backup file — to test-sessions.json inside the repo. Three places that
+     fail for different reasons: a Google outage, a blocked connection and a
+     lost browser do not fail together. */
+  const eps = (cfg) => [(cfg || {}).endpoint, (cfg || {}).endpoint2]
+    .concat(((cfg || {}).endpoints) || [])
+    .map(x => String(x || '').trim())
+    .filter((x, i, a) => x && a.indexOf(x) === i);
+
   /* ── sending ────────────────────────────────────────────────────────
      text/plain on purpose: it is a "simple request", so the browser sends
      it with no CORS preflight — which is what lets a Google Apps Script
@@ -113,17 +126,74 @@
     }).then(() => true).catch(() => false);
   }
 
+  async function postAll(cfg, payload, beacon) {
+    const r = await Promise.all(eps(cfg).map(u => post(u, payload, beacon)));
+    return r.filter(Boolean).length;
+  }
+
+  /* A no-cors POST resolves even when the server never wrote the row, so
+     "sent" is a claim we are not entitled to make from the POST alone. We
+     ask the server whether it actually has the id. Older collectors that do
+     not know `has` answer with the full list instead — which answers the
+     same question, so both shapes count. */
+  function verify(cfg, id, timeout) {
+    const list = eps(cfg);
+    if (!list.length) return Promise.resolve(null);
+    return new Promise(resolve => {
+      let left = list.length, settled = false;
+      const miss = () => { if (!--left && !settled) { settled = true; resolve(null); } };
+      list.forEach(u => {
+        read(u, { has: id }, timeout || 7000).then(r => {
+          if (!settled && r && (r.found === true || (r.sessions || []).some(x => x && x.id === id))) {
+            settled = true; resolve(u);
+          } else miss();
+        }).catch(miss);
+      });
+    });
+  }
+
+  /* The participant's own copy, on their device. Costs nothing and has
+     saved a session more than once: it is the only record that exists
+     before anything reaches the network. */
+  function keepMine(session) {
+    const mine = store.get('mine', []).filter(s => s.id !== session.id);
+    mine.push(session);
+    store.set('mine', mine.slice(-10));
+  }
+
+  /* Everything, from every source, deduplicated by id. A finished copy of a
+     session always beats a half-finished one, whichever source it came from. */
+  async function readAll(cfg, params) {
+    const map = new Map();
+    const merge = (arr) => (arr || []).forEach(s => {
+      if (!s || !s.id) return;
+      const cur = map.get(s.id);
+      if (!cur || (!cur.done && s.done)) map.set(s.id, s);
+    });
+    const status = [];
+    for (const u of eps(cfg)) {
+      try { const r = await read(u, params, 40000); merge(r && r.sessions); status.push({ url: u, ok: true, n: ((r && r.sessions) || []).length }); }
+      catch (e) { status.push({ url: u, ok: false, error: String(e.message || e) }); }
+    }
+    const repo = await json('./test-sessions.json', null);       /* آرشیو دستیِ داخل مخزن */
+    const repoList = Array.isArray(repo) ? repo : (repo && repo.sessions) || [];
+    merge(repoList);
+    merge(store.get('local', []));                               /* کدهایی که دستی وارد شده */
+    merge(store.get('mine', []));                                /* جلسه‌های همین دستگاه */
+    return { sessions: [...map.values()], status, repo: repoList.length };
+  }
+
   /* Anything that failed to send is kept and retried the next time any
      page of the test system is opened on that device. */
   function queue(payload) {
     const q = store.get('queue', []); q.push(payload);
     store.set('queue', q.slice(-30));
   }
-  async function flush(endpoint) {
+  async function flush(cfg) {
     const q = store.get('queue', []);
-    if (!endpoint || !q.length) return 0;
+    if (!eps(cfg).length || !q.length) return 0;
     let n = 0;
-    for (const p of q) { if (await post(endpoint, p)) n++; }
+    for (const p of q) { if (await postAll(cfg, p)) n++; }
     store.set('queue', []);
     return n;
   }
@@ -256,7 +326,8 @@
 
   g.TK = {
     $, $$, esc, fa, qs, mmss, secs, clamp, store, json, config, versions, uid, device,
-    LAYERS, AGES, CHANNELS, EV, post, queue, flush, read, pack, unpack,
+    LAYERS, AGES, CHANNELS, EV, eps, post, postAll, verify, readAll, keepMine,
+    queue, flush, read, pack, unpack,
     copy, download, csv, derive, screenFa, SCREEN_FA
   };
 })(window);
