@@ -55,6 +55,7 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;
   touch-action:manipulation}   /* kills the double-tap-to-zoom delay */
+[hidden]{display:none!important}   /* .center و .disc خودشان display دارند و [hidden] را می‌بلعیدند */
 body{font-family:var(--f);background:radial-gradient(900px 600px at 50% 0%,#FBFBF9,#E9E9E4 70%,#E2E2DC);
   min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:16px;padding:26px 16px;color:var(--ink);-webkit-font-smoothing:antialiased}
@@ -175,12 +176,14 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 .dbar i{display:block;height:100%;border-radius:99px;width:0;transition:width .55s var(--spring)}
 .dbar i.m{background:linear-gradient(90deg,#C8934A,#E8C48A)}
 .dbar i.y{background:linear-gradient(90deg,#3FBF8F,#7FE0B4)}
+.dbar i.g{background:linear-gradient(90deg,#8E5A2B,#C98A4B)}
 .dkeys{display:flex;gap:16px;margin-top:9px;flex-wrap:wrap}
 .dk{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:rgba(255,255,255,.6);
   transition:.2s var(--swift)}
 .dk b{width:8px;height:8px;border-radius:3px;flex:none}
 .dk b.m{background:var(--gold)}
 .dk b.y{background:#7FE0B4}
+.dk b.g{background:#C98A4B}
 .dk em{font-style:normal;font-weight:600;font-size:12.5px;color:#fff}
 .dk.off{opacity:.42}
 .dk.off em{color:rgba(255,255,255,.7)}
@@ -952,6 +955,25 @@ button,input,select,textarea{color:inherit}
 .exask{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:8px}
 .exask svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 
+/* پیش‌نمایش پیامک دعوت — عمداً شبیه خودِ پیامک، تا معلوم باشد چه چیزی
+   قرار است برای طرف مقابل برود. */
+.sms{position:relative;background:var(--ok-soft);border-radius:16px 16px 16px 5px;padding:13px 15px;margin-top:2px}
+.sms p{font-size:13.5px;line-height:1.85;color:var(--ink);margin:0}
+.sms .tail{position:absolute;bottom:0;inset-inline-start:-5px;width:12px;height:12px;background:var(--ok-soft);
+  clip-path:polygon(100% 0,100% 100%,0 100%)}
+
+/* وضعیت مخاطب: دارد، یا باید دعوت شود */
+.who{display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:var(--r-md);
+  padding:12px 14px;margin-top:12px;box-shadow:var(--sh)}
+.who .av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;
+  font:600 16px var(--f);background:var(--surface-2);color:var(--ink-2)}
+.who.yes .av{background:var(--ok-soft);color:var(--ok)}
+.who.no .av{background:var(--warn-soft);color:var(--warn)}
+.who .m{flex:1;min-width:0}
+.who .m .t{font-size:14px;font-weight:600}
+.who .m .d{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.who .act{flex:none}
+
 /* شمش‌های استاندارد. خرید طلای فیزیکی در واقعیت همین است: وزن‌های مشخص،
    نه هر عددی که به ذهن برسد — پس صفحه هم همان را می‌پرسد. */
 .bars{display:flex;flex-direction:column;gap:8px}
@@ -1169,17 +1191,18 @@ button,input,select,textarea{color:inherit}
                    کاربر پیش از آنکه پولی داشته باشد می‌فهمد پولش می‌تواند دو جا باشد. -->
               <div class="dist">
                 <div class="dhead" data-c="distLabel"></div>
-                <div class="dbar" id="h-dbar"><i class="m" id="h-dbar-m"></i><i class="y" id="h-dbar-y"></i></div>
+                <div class="dbar" id="h-dbar"><i class="m" id="h-dbar-m"></i><i class="y" id="h-dbar-y"></i><i class="g" id="h-dbar-g"></i></div>
                 <div class="dkeys">
                   <span class="dk" id="h-dk-m"><b class="m"></b><span data-c="cuSplitA"></span><em class="num" id="h-dm">$0</em></span>
                   <span class="dk" id="h-dk-y"><b class="y"></b><span data-c="cuSplitB"></span><em class="num" id="h-dy">$0</em></span>
+                  <span class="dk" id="h-dk-g" hidden><b class="g"></b><span data-c="cuSplitC"></span><em class="num" id="h-dg">$0</em></span>
                 </div>
               </div>
 
               <div class="split">
                 <div class="s"><div class="l" data-c="availLabel"></div><div class="v num" id="h-avail">$0</div></div>
                 <div class="s"><div class="l" data-c="investedLabel"></div><div class="v num" id="h-goals">$0</div></div>
-                <div class="s pend"><div class="l" data-c="pendingLabel"></div><div class="v num" id="h-pend">$0</div></div>
+                <div class="s pend" id="h-pend-box" hidden><div class="l" data-c="pendingLabel"></div><div class="v num" id="h-pend">$0</div></div>
               </div>
 
               <!-- the one custody sentence on home — generated from the state, never typed -->
@@ -1302,26 +1325,15 @@ button,input,select,textarea{color:inherit}
   <section class="screen tabbed" data-screen="t-who">
     <div class="hdr"><div class="t" data-c="sendTitle"></div></div>
     <div class="scroll">
-      <div class="field" style="margin-top:0">
+      <!-- جمله‌ای که در تست جا افتاده بود: انتقال فقط بین کاربران مهاجر -->
+      <p class="lead" style="margin-top:0" data-c="sendWho"></p>
+      <div class="field">
         <label data-c="recipientPhone"></label>
         <input id="t-phone" class="num" inputmode="tel" placeholder="۰۹۱۲۳۴۵۶۷۸۹" oninput="tLookup()">
       </div>
-      <div id="t-found" style="display:none">
-        <div class="card" style="margin-top:12px;display:flex;align-items:center;gap:12px">
-          <div style="width:42px;height:42px;border-radius:50%;background:var(--ok-soft);display:grid;place-items:center;font-size:16px;font-weight:600;color:var(--ok)">س</div>
-          <div style="flex:1"><div style="font-size:14px;font-weight:600">سارا رضایی</div></div>
-          <span class="badge b-ok" data-c="verified"></span>
-        </div>
-      </div>
-      <div class="sec" data-c="recent"></div>
-      <button class="opt" onclick="tPick('۰۹۱۲۳۴۵۶۷۸۹')">
-        <div class="ic" style="background:var(--ok-soft);color:var(--ok);font-weight:600">س</div>
-        <div class="m"><div class="t">سارا رضایی</div><div class="d num">۰۹۱۲۳۴۵۶۷۸۹</div></div>
-      </button>
-      <button class="opt" onclick="tPick('۰۹۳۵۱۱۱۲۲۳۳')">
-        <div class="ic" style="background:var(--surface-2);font-weight:600">م</div>
-        <div class="m"><div class="t">مهدی کریمی</div><div class="d num">۰۹۳۵۱۱۱۲۲۳۳</div></div>
-      </button>
+      <div id="t-found"></div>
+      <div class="sec" data-c="contactsSec"></div>
+      <div id="t-contacts"></div>
       <div style="height:12px"></div>
     </div>
     <div class="cta-slot hidden" id="t-cta1"><button class="btn btn-primary" onclick="go('t-amt')" data-c="next"></button></div>
@@ -1335,7 +1347,7 @@ button,input,select,textarea{color:inherit}
       <h2 data-c="amountTitle"></h2><span class="step num">۲/۳</span>
     </div>
     <div class="amt">
-      <div class="cur">به سارا رضایی</div>
+      <div class="cur" id="t-to">—</div>
       <div class="v num zero" id="t-val">$0<span class="caret"></span></div>
       <div class="sub" id="t-avail"></div>
     </div>
@@ -1357,8 +1369,8 @@ button,input,select,textarea{color:inherit}
     </div>
     <div class="scroll">
       <div class="card" style="padding:4px 18px">
-        <div class="row"><span class="k" data-c="recipient"></span><span class="v">سارا رضایی</span></div>
-        <div class="row"><span class="k" data-c="phone"></span><span class="v num">۰۹۱۲۳۴۵۶۷۸۹</span></div>
+        <div class="row"><span class="k" data-c="recipient"></span><span class="v" id="tc-name">—</span></div>
+        <div class="row"><span class="k" data-c="phone"></span><span class="v num" id="tc-phone">—</span></div>
         <div class="row"><span class="k" data-c="amount"></span><span class="v num" id="tc-amt">$0.00</span></div>
         <div class="row"><span class="k" data-c="fee"></span><span class="v num">$0.50</span></div>
         <div class="row total"><span class="k" data-c="deducted"></span><span class="v num" id="tc-total">$0.00</span></div>
@@ -1370,6 +1382,33 @@ button,input,select,textarea{color:inherit}
       <div style="height:12px"></div>
     </div>
     <button class="btn btn-primary" onclick="doTransfer()" data-c="confirmSend"></button>
+  </section>
+
+  <!-- ═══ TRANSFER · invite someone who is not on Mohajer yet ═══ -->
+  <section class="screen" data-screen="t-invite">
+    <div class="nav">
+      <button class="back" onclick="go('t-who')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 data-c="inviteT"></h2>
+    </div>
+    <div class="scroll" id="inv-body">
+      <p class="lead" style="margin-top:0" id="inv-line"></p>
+
+      <div class="sec" data-c="inviteSmsL"></div>
+      <div class="sms"><p id="inv-sms"></p><span class="tail"></span></div>
+
+      <div class="card" style="padding:4px 18px;margin-top:14px">
+        <div class="row"><span class="k" data-c="inviteCodeL"></span><span class="v num" id="inv-code">—</span></div>
+        <div class="row"><span class="k" data-c="phone"></span><span class="v num" id="inv-phone">—</span></div>
+      </div>
+      <p class="tiny" style="margin-top:12px;text-align:center" data-c="inviteFree"></p>
+      <div style="height:12px"></div>
+    </div>
+    <div class="center" id="inv-done" hidden>
+      <div class="disc ok"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <p class="lead" style="margin-top:10px" data-c="inviteSentT"></p>
+      <p class="tiny" id="inv-sent-b" style="margin-top:6px"></p>
+    </div>
+    <div id="inv-cta"></div>
   </section>
 
   <!-- ═══ TRANSFER · status ═══ -->
@@ -1527,7 +1566,7 @@ button,input,select,textarea{color:inherit}
         <div class="row"><span class="k" data-c="gramRate"></span><span class="v num" id="pa-rate">—</span></div>
         <div class="row"><span class="k" data-c="fee"></span><span class="v num">$2.50</span></div>
         <div class="row total"><span class="k" data-c="deducted"></span><span class="v num" id="pa-total">—</span></div>
-        <div class="row"><span class="k" data-c="whenDeducted"></span><span class="v" style="color:var(--ok)" data-c="atPickup"></span></div>
+        <div class="row"><span class="k" data-c="whenDeducted"></span><span class="v" style="color:var(--ok)" data-c="deductNow"></span></div>
       </div>
       <div class="custody" style="margin-top:12px"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.6-1.6 1.7-2.4 3-2.4s2.4.8 3 2.4M14.5 10h4M14.5 13.5h3"/></svg>
         <div><div class="ct" data-c="goldIdT"></div><p data-c="goldIdB"></p></div></div>
@@ -1555,7 +1594,7 @@ button,input,select,textarea{color:inherit}
         <div class="row"><span class="k" data-c="shop"></span><span class="v" id="pc-shop">—</span></div>
         <div class="row"><span class="k" data-c="youReceive"></span><span class="v" id="pc-amt">—</span></div>
         <div class="row"><span class="k" data-c="time"></span><span class="v" id="pc-slot">—</span></div>
-        <div class="row"><span class="k" data-c="deducted"></span><span class="v" style="color:var(--ok)" data-c="atPickup"></span></div>
+        <div class="row"><span class="k" data-c="deducted"></span><span class="v" style="color:var(--ok)" data-c="deductNow"></span></div>
       </div>
       <p class="tiny" style="margin-top:12px" data-c="codeExpires"></p>
       <div style="height:12px"></div>
@@ -2259,7 +2298,24 @@ const COPY_DEF={
   freeTrial:['conv','رایگان · آزمایشی'],
 
   /* transfer */
-  sendTitle:['send','انتقال'], recipientPhone:['send','شمارهٔ موبایل گیرنده'],
+  sendTitle:['send','انتقال'],
+  sendWho:['send','انتقال فقط به کسانی که خودشان هم در مهاجر حساب دارند.'],
+  contactsSec:['send','مخاطب‌ها'],
+  hasMohajer:['send','مهاجر دارد'],
+  noMohajer:['send','مهاجر ندارد'],
+  notInMohajer:['send','این شماره در مهاجر نیست'],
+  thisNumber:['send','این شماره'],
+  toWhom:['send','به'], txSendTo:['send','انتقال به'],
+  inviteBtn:['send','دعوت'],
+  inviteT:['send','دعوت به مهاجر'],
+  inviteL:['send','{name} هنوز در مهاجر حساب ندارد. با یک پیامک دعوتش کنید؛ بعد از ثبت‌نام می‌توانید برایش پول بفرستید.'],
+  inviteSmsL:['send','پیامکی که فرستاده می‌شود'],
+  inviteSms:['send','سلام! من ارزش پولم را با مهاجر دلاری نگه می‌دارم. با کد دعوت {code} تو هم می‌توانی شروع کنی.'],
+  inviteCodeL:['send','کد دعوت'],
+  inviteSend:['send','فرستادن پیامک دعوت'],
+  inviteSentT:['send','پیامک دعوت فرستاده شد.'],
+  inviteFree:['send','فرستادن دعوت رایگان است و چیزی از موجودی شما کم نمی‌شود.'],
+  inviteBack:['send','بازگشت به انتقال'], recipientPhone:['send','شمارهٔ موبایل گیرنده'],
   verified:['send','تأییدشده'], amountTitle:['send','مبلغ'], confirmTitle:['send','تأیید'],
   recipient:['send','گیرنده'], phone:['send','شماره'], amount:['send','مبلغ'], deducted:['send','از موجودی کم می‌شود'],
   irreversible:['send','<b>برگشت‌ناپذیر است.</b> شماره را دوباره ببینید.'],
@@ -2294,7 +2350,8 @@ const COPY_DEF={
   cuSelfC1:['cu','ریسک از دست دادن یا گم کردن کلید شخصی'],
   cuSelfCta:['cu','سفارش کلید'],
   cuActive:['cu','فعال'], cuHere:['cu','اینجاست'], cuReady:['cu','آماده'],
-  cuSplitA:['cu','نزد مهاجر'], cuSplitB:['cu','در کیف پول شخصی'], walletBox:['home','در کیف پول شخصی'],
+  cuSplitA:['cu','نزد مهاجر'], cuSplitB:['cu','در کیف پول شخصی'], cuSplitC:['cu','طلای فیزیکی'],
+  walletBox:['home','در کیف پول شخصی'],
   cuWhatQ:['cu','یعنی چی؟'],
 
   /* personal wallet */
@@ -2393,7 +2450,7 @@ const COPY_DEF={
   goldTitle:['gold','تحویل طلا'],
   gold1:['gold','دلار شما به شمش طلای ۱۸ عیار تبدیل می‌شود.'],
   gold2:['gold','از صرافی نزدیک، حضوری می‌گیرید.'],
-  gold3:['gold','تا لحظهٔ تحویل، پولی کم نمی‌شود.'],
+  gold3:['gold','مبلغ همین حالا کسر و طلا به نام شما کنار گذاشته می‌شود.'],
   goldWhyQ:['gold','نرخ و اعتبارش از کجاست؟'],
   goldStart:['gold','انتخاب صرافی'],
   pickShop:['gold','صرافی'], locating:['gold','پیدا کردن موقعیت شما…'], nearest:['gold','نزدیک‌ترین‌ها'],
@@ -2411,10 +2468,10 @@ const COPY_DEF={
   goldIdB:['gold','تحویل شمش فقط با کارت شناسایی خودتان انجام می‌شود.'],
   goldIdShort:['gold','الزامی'],
   goldResale:['gold','شمش استاندارد است؛ هر وقت خواستید، در بازار طلا قابل فروش است.'],
-  gramRate:['gold','نرخ هر گرم'], whenDeducted:['gold','زمان کسر'], atPickup:['gold','لحظهٔ تحویل'],
+  gramRate:['gold','نرخ هر گرم'], whenDeducted:['gold','زمان کسر'], deductNow:['gold','همین حالا'],
   pickupTime:['gold','زمان مراجعه'], confirmGold:['gold','ثبت درخواست'],
   pickupCode:['gold','کد تحویل'], oneTimeCode:['gold','کد یک‌بارمصرف'], showAtPickup:['gold','فقط موقع تحویل نشان دهید'],
-  shop:['gold','صرافی'], youReceive:['gold','تحویل می‌گیرید'], codeExpires:['gold','اعتبار کد: ۲۴ ساعت. اگر نروید، خودکار باطل می‌شود.'],
+  shop:['gold','صرافی'], youReceive:['gold','تحویل می‌گیرید'], codeExpires:['gold','اعتبار کد: ۲۴ ساعت. اگر نروید، سفارش لغو و کل مبلغ به موجودی شما برمی‌گردد.'],
   goldOverStock:['gold','این شعبه این‌قدر طلا ندارد. مقدار کمتر یا صرافی دیگر.'],
   cancel:['gold','لغو'],
 
@@ -2474,8 +2531,10 @@ const COPY_DEF={
   exSafe2:['ex','امکان انتخاب بین نگهداری دارایی توسط مهاجر، نگهداری در کیف پول شخصی و تبدیل به طلای فیزیکی.'],
   exSafe3:['ex','امکان همیشگی تبدیل دوباره به ریال و برداشت'],
   exDollarT:['ex','این دلار چیست؟'],
+  bitvanaT:['ex','بیت‌وانا چیست؟'],
+  bitvanaB:['ex','یک صرافی رمزارز ایرانیِ دارای مجوز که دارایی دلاری کاربران مهاجر را نگهداری می‌کند.'],
   exDollar1:['ex','دلار دیجیتال مهاجر پول نقد یا سپردهٔ بانکی نیست؛ نمایش سادهٔ دارایی دلاری شماست.'],
-  exDollar2:['ex','به‌ازای هر ۱ دلار دیجیتال، ۱ واحد تتر (USDT) در بیت‌وانا نگهداری و سهم شما ثبت می‌شود.'],
+  exDollar2:['ex','به‌ازای هر ۱ دلار دیجیتال، ۱ واحد تتر (USDT) در صرافی رمزارز بیت‌وانا نگهداری و سهم شما ثبت می‌شود.'],
   exDollar3:['ex','بیت‌وانا نگهداری و تبدیل را انجام می‌دهد؛ مهاجر موجودی و دسترسی شما را مدیریت می‌کند.'],
   exGoldWhyT:['ex','نرخ و اعتبار طلا'],
   exGoldWhy1:['ex','نرخ هر گرم، هر روز از بازار طلای تهران.'],
@@ -2493,7 +2552,7 @@ const COPY_DEF={
   exBasket2:['ex','سود ثابت ندارد. ارزش با بازار بالا و پایین می‌رود.'],
   exBasket3:['ex','قفل ندارد. هر وقت خواستید، بیرون بکشید.'],
   exCuBasicT:['ex','نگهداری توسط مهاجر یعنی چی؟'],
-  exCuBasic1:['ex','دارایی شما در کیف پول‌های امن بیت‌وانا، شریک نگهدارندهٔ مهاجر، نگهداری می‌شود.'],
+  exCuBasic1:['ex','دارایی شما در کیف پول‌های امن صرافی رمزارز بیت‌وانا، شریک مهاجر، نگهداری می‌شود.'],
   exCuBasic2:['ex','برداشت و استفاده از دارایی فقط از طریق اکانت شما در مهاجر انجام می‌شود.'],
   exCuBasic3:['ex','در صورت فراموشی یا گم شدن رمز ورود، قابلیت بازیابی با احراز هویت وجود دارد.'],
   exCuGoldT:['ex','طلای فیزیکی یعنی چی؟'],
@@ -2508,22 +2567,22 @@ const COPY_DEF={
   exMore:['ex','بیشتر توضیح بده'],
   /* the deep layer — opens only on request; precise words are allowed here */
   exSafeM1:['ex','دلار دیجیتال: هر واحد، معادل یک دلار و قابل تبدیل به تتر (USDT) و انتقال به کیف پول شخصی است.'],
-  exSafeM2:['ex','در حالت پایه، به‌ازای هر دلار دیجیتال، یک تتر (USDT) در بیت‌وانا نگهداری می‌شود.'],
+  exSafeM2:['ex','در حالت پایه، به‌ازای هر دلار دیجیتال، یک تتر (USDT) در صرافی رمزارز بیت‌وانا نگهداری می‌شود.'],
   exSafeM3:['ex','با کیف پول فیزیکی مهاجر، کلید کیف پول شخصی شما روی دستگاه ساخته می‌شود.'],
   exDollarM1:['ex','تتر برای حفظ ارزشی نزدیک به یک دلار طراحی شده، اما می‌تواند موقتاً کمتر یا بیشتر شود و سپردهٔ تضمین‌شدهٔ بانکی نیست.'],
   exDollarM2:['ex','می‌توانید دارایی را به ریال تبدیل کنید یا روی شبکهٔ TRON به کیف پول شخصی منتقل کنید؛ نرخ، کارمزد، زمان و مبلغ دریافتی پیش از تأیید نمایش داده می‌شود.'],
   exDollarM3:['ex','همهٔ عملیات در سابقهٔ حساب ثبت می‌شود؛ انتقال‌های روی شبکه شناسهٔ عمومی دارند و مستقل از مهاجر قابل پیگیری‌اند.'],
   exGoldWhyM1:['ex','نرخ گرم = قیمت جهانی اونس × نرخ دلار ÷ ۳۱٫۱ × عیار.'],
-  exGoldWhyM2:['ex','تا لحظهٔ تحویل، دلار شما فروخته نمی‌شود؛ نرخ روز تحویل ملاک است.'],
-  exGoldWhyM3:['ex','اگر ظرف ۴۸ ساعت مراجعه نکنید، سفارش بدون کسر لغو می‌شود.'],
+  exGoldWhyM2:['ex','نرخ در همان لحظهٔ ثبت درخواست قفل می‌شود؛ نوسان بعدی روی سفارش شما اثری ندارد.'],
+  exGoldWhyM3:['ex','اگر ظرف ۲۴ ساعت مراجعه نکنید، سفارش لغو و کل مبلغ به موجودی شما برمی‌گردد.'],
   exKeyDeepM1:['ex','کلید خصوصی در تراشهٔ امن دستگاه ساخته می‌شود و هیچ‌وقت از آن خارج نمی‌شود.'],
   exKeyDeepM2:['ex','۱۲ کلمهٔ بازیابی، استاندارد BIP-39 است؛ در هر کیف پول استاندارد قابل بازیابی است.'],
   exKeyDeepM3:['ex','هر برداشت روی خودِ دستگاه امضا می‌شود؛ گوشی فقط پیام امضاشده را می‌فرستد.'],
   exKeyDeepM4:['ex','مهاجر نه کلید دارد، نه نسخه‌ای از ۱۲ کلمه. هیچ‌وقت آن را از شما نمی‌پرسد.'],
   exBasketM1:['ex','ترکیب و سهم هر دارایی از پیش مشخص است و هر روز نمایش داده می‌شود.'],
   exBasketM2:['ex','کارمزد ورود ۰٫۵٪؛ خروج بدون کارمزد، با قیمت لحظه.'],
-  exBasketM3:['ex','دارایی‌های سبد نزد شریک نگهدارنده و به نام شما ثبت می‌شود.'],
-  exCuBasicM1:['ex','شریک نگهدارنده، مؤسسه‌ای دارای مجوز است که دارایی‌ها را در کیف پول‌های سرد (Cold wallet) و دارای امنیت بالا در مقابل حملات، نگهداری می‌کند.'],
+  exBasketM3:['ex','دارایی‌های سبد هم در صرافی رمزارز بیت‌وانا و به نام شما نگهداری می‌شود.'],
+  exCuBasicM1:['ex','صرافی رمزارز بیت‌وانا، شریک نگهدارندهٔ دارای مجوز، دارایی‌ها را در کیف پول‌های سرد (Cold wallet) و با امنیت بالا در مقابل حملات نگهداری می‌کند.'],
   exCuBasicM2:['ex','مهاجر بدون دستور شما نمی‌تواند برداشت کند؛ هر درخواست برداشت با احراز هویت شما ثبت می‌شود.'],
   exCuBasicM3:['ex',''],
   exCuGoldM1:['ex','طلا به صورت شمش یا سکهٔ ۱۸ عیار، با رسید کتبی صرافی تحویل می‌شود.'],
@@ -2570,7 +2629,7 @@ const COPY_NEST={
   pillowSay:'دارایی‌ات زیر بالشته.',
   cuAtYou:'پولت زیر بالشت خودته',
   cuAtBoth:'بخشی نزد مهاجر، بخشی زیر بالشت خودت',
-  txIn:'نشستن دلار در آشیانه', txSend:'پر کشیدن به سوی سارا رضایی',
+  txIn:'نشستن دلار در آشیانه', txSend:'پر کشیدن به سوی سارا رضایی', toWhom:'پر کشیدن به سوی', txSendTo:'پر کشیدن به سوی',
   investCta:'سرمایه‌گذاری در این لانه', goesIn:'وارد لانه می‌شود', mine:'لانه‌های شما',
   eggLine:'همهٔ تخم‌مرغ‌ها را توی یک سبد نگذار.', useInvestD:'لانه‌های سرمایه'
 };
@@ -2654,7 +2713,7 @@ const DIAG={
 
 /* ════════ state ════════ */
 const S={ available:0, pending:0, activity:[], failMode:false, eli:true, bars:{},
-  cRaw:'', tRaw:'', wRaw:'', tPhone:'',
+  cRaw:'', tRaw:'', wRaw:'', tPhone:'', to:null, invite:null,
   custody:'basic', cuBack:'home', exBack:'home', ex:null,
   nests:[], activeNest:'calm', key:null, lastBuy:null, pw:null, pwRaw:'', pbRaw:'', pwWords:null, pwMode:'soft',
   shop:'s1', slot:0, route:false, physical:null, quoteTimer:null, seq:4190,
@@ -2667,10 +2726,12 @@ const grp=n=>Math.round(n).toLocaleString('en-US');
 const toman=n=>fa(grp(n));
 const usd=n=>'$'+(+n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
 const usd0=n=>'$'+grp(n);
+const usdx=n=>Math.abs(n-Math.round(n))<0.005?usd0(n):usd(n);
 const $=id=>document.getElementById(id);
 const nestsTotal=()=>S.nests.reduce((a,h)=>a+h.amount,0);
 const pwBal=()=>S.pw?S.pw.bal:0;
-const total=()=>S.available+nestsTotal()+S.pending+pwBal();
+const goldHeld=()=>S.physical?goldUsd(S.physical.grams):0;   /* پرداخته‌شده، در انتظار تحویل */
+const total=()=>S.available+nestsTotal()+S.pending+pwBal()+goldHeld();
 const buyRate=()=>CONFIG.buyRate*(1+CONFIG.buySpread);
 const isTrial=amt=>amt>0 && (amt/buyRate())<=CONFIG.trialCapUsd;
 const buyFee=amt=>isTrial(amt)?0:CONFIG.buyFlatFee;
@@ -2721,6 +2782,8 @@ function go(name){
   if(name==='pw-wallet') renderPw();
   if(name==='home' && S.pillow && prev!=='home'){ S.lifted=false; S.lifting=false; applyPillow(); }
   if(name==='p-amt'){ renderBars(); renderSlots(); paCheck(); }
+  if(name==='t-amt'||name==='t-confirm'){ const t=S.to||{n:'—',p:''};
+    $('t-to').textContent=C('toWhom')+' '+t.n; $('tc-name').textContent=t.n; $('tc-phone').textContent=fa(t.p); }
   if(name==='k-order') koCheck();
   renderAnchor(); render();
 }
@@ -2743,9 +2806,12 @@ function render(){
   const irr=S.unit==='irr';
   $('h-total').textContent= irr ? toman(total()*CONFIG.buyRate)+' تومان' : usd(total());
   $('h-unit-alt').textContent= irr ? C('unitBack') : C('unitAlt');
-  $('h-avail').textContent= irr ? toman(S.available*CONFIG.buyRate) : usd0(S.available);
-  $('h-goals').textContent= irr ? toman(nestsTotal()*CONFIG.buyRate) : usd0(nestsTotal());
-  $('h-pend').textContent = irr ? toman(S.pending*CONFIG.buyRate) : usd0(S.pending);
+  $('h-avail').textContent= irr ? toman(S.available*CONFIG.buyRate) : usdx(S.available);
+  $('h-goals').textContent= irr ? toman(nestsTotal()*CONFIG.buyRate) : usdx(nestsTotal());
+  $('h-pend').textContent = irr ? toman(S.pending*CONFIG.buyRate) : usdx(S.pending);
+  /* «در حال تبدیل» وضعیت شبکه است، نه یک جای پول: تا چیزی در راه نباشد،
+     جعبه‌اش هم روی خانه نیست. */
+  $('h-pend-box').hidden = !(S.pending > 0);
   renderDist(); renderCuPill(); renderPw();
   $('t-avail').innerHTML=C('freeBal')+' '+N(usd(S.available));
   $('w-avail').innerHTML=C('freeBal')+' '+N(usd(S.available));
@@ -2811,14 +2877,72 @@ function doConvert(){
 }
 
 /* ════════ TRANSFER ════════ */
-function startTransfer(){ if(!guard()) return; S.tRaw=''; S.tPhone=''; $('t-phone').value='';
-  $('t-found').style.display='none'; $('t-cta1').classList.add('hidden'); go('t-who'); }
+/* یک دفترچهٔ مخاطبِ ساختگی، با همان چیزی که در واقعیت مهم است: چه کسی
+   مهاجر دارد و چه کسی ندارد. بدون این، هر شمارهٔ ده‌رقمی «تأییدشده» بود. */
+const CONTACTS=[
+  {n:'سارا رضایی',  rel:'دوست',  p:'09123456789', m:true },
+  {n:'مهدی کریمی',  rel:'همکار', p:'09351112233', m:true },
+  {n:'محمد رضایی',  rel:'پدر',   p:'09121112222', m:false},
+  {n:'فاطمه احمدی', rel:'مادر',  p:'09127778899', m:false},
+  {n:'علی رضایی',   rel:'برادر', p:'09195556677', m:false}
+];
 const toAscii=s=>String(s).replace(/[۰-۹]/g,d=>FA.indexOf(d));
-function tLookup(){
-  const v=toAscii($('t-phone').value).replace(/\D/g,''), ok=v.length>=10;
-  $('t-found').style.display=ok?'block':'none'; $('t-cta1').classList.toggle('hidden',!ok); S.tPhone=v;
+const findContact=p=>CONTACTS.find(c=>c.p===p)||null;
+
+function startTransfer(){ if(!guard()) return;
+  S.tRaw=''; S.tPhone=''; S.to=null; $('t-phone').value='';
+  renderContacts(); tLookup(); go('t-who'); }
+
+function renderContacts(){
+  $('t-contacts').innerHTML=CONTACTS.map(c=>
+    '<button class="opt" onclick="tPick(\''+c.p+'\')">'+
+      '<div class="ic" style="'+(c.m?'background:var(--ok-soft);color:var(--ok)':'background:var(--surface-2)')+';font-weight:600">'+c.n[0]+'</div>'+
+      '<div class="m"><div class="t">'+c.rel+' · '+c.n+'</div><div class="d num">'+fa(c.p)+'</div></div>'+
+      '<span class="badge '+(c.m?'b-ok':'b-warn')+'">'+C(c.m?'hasMohajer':'noMohajer')+'</span>'+
+    '</button>').join('');
 }
-function tPick(p){ $('t-phone').value=p; tLookup(); }
+
+function tLookup(){
+  const v=toAscii($('t-phone').value).replace(/\D/g,''), full=v.length>=10;
+  S.tPhone=v;
+  const c=full?findContact(v):null;
+  const box=$('t-found');
+  if(!full){ box.innerHTML=''; S.to=null; $('t-cta1').classList.add('hidden'); return; }
+  if(c&&c.m){
+    S.to=c;
+    box.innerHTML='<div class="who yes"><div class="av">'+c.n[0]+'</div>'+
+      '<div class="m"><div class="t">'+c.n+'</div><div class="d">'+c.rel+'</div></div>'+
+      '<span class="badge b-ok act">'+C('hasMohajer')+'</span></div>';
+    $('t-cta1').classList.remove('hidden');
+  } else {
+    S.to=null;
+    const nm=c?c.n:C('notInMohajer'), sub=c?c.rel+' · '+C('noMohajer'):fa(v);
+    box.innerHTML='<div class="who no"><div class="av">'+(c?c.n[0]:'؟')+'</div>'+
+      '<div class="m"><div class="t">'+nm+'</div><div class="d">'+sub+'</div></div>'+
+      '<button class="btn btn-soft act" style="min-height:40px;padding:0 14px" onclick="openInvite('+(c?"'"+c.p+"'":'null')+')">'+C('inviteBtn')+'</button></div>';
+    $('t-cta1').classList.add('hidden');
+  }
+}
+function tPick(p){ $('t-phone').value=fa(p); tLookup(); const c=findContact(p); if(c&&!c.m) openInvite(p); }
+
+/* دعوت: چیزی خرج نمی‌شود، ولی باید دیده شود که دقیقاً چه پیامی می‌رود. */
+function openInvite(p){
+  const c=p?findContact(p):null, phone=p||S.tPhone;
+  S.invite={p:phone,n:c?c.n:'',code:'MHJ-'+String(Math.floor(1000+Math.random()*9000))};
+  $('inv-line').innerHTML=C('inviteL').replace('{name}',c?'<b>'+c.rel+' ('+c.n+')</b>':C('thisNumber'));
+  $('inv-sms').textContent=C('inviteSms').replace('{code}',S.invite.code);
+  $('inv-code').textContent=S.invite.code;
+  $('inv-phone').textContent=fa(phone);
+  $('inv-body').hidden=false; $('inv-done').hidden=true;
+  $('inv-cta').innerHTML='<button class="btn btn-primary" onclick="sendInvite()">'+C('inviteSend')+'</button>';
+  go('t-invite');
+}
+function sendInvite(){
+  const i=S.invite||{};
+  $('inv-body').hidden=true; $('inv-done').hidden=false;
+  $('inv-sent-b').innerHTML=(i.n?i.n+' · ':'')+'<span class="num">'+fa(i.p||'')+'</span>';
+  $('inv-cta').innerHTML='<button class="btn btn-primary" onclick="go(\'t-who\')">'+C('inviteBack')+'</button>';
+}
 function tKey(k){ if(k==='del') S.tRaw=S.tRaw.slice(0,-1);
   else if(S.tRaw.length<7) S.tRaw=(S.tRaw==='0'?'':S.tRaw)+k; render(); }
 function doTransfer(){
@@ -2834,12 +2958,12 @@ function doTransfer(){
       $('ts-note').innerHTML=NOTE('bad',C('sendFailNote'));
       $('ts-actions').innerHTML=`<button class="btn btn-primary" onclick="go('t-who')">${C('retry')}</button>
         <button class="btn btn-ghost" onclick="openSheet('support')">${C('contactSupport')}</button>`;
-      addTx({kind:'transfer',ck:'txSend',amount:amt,dir:'out',status:'refunded'});
+      addTx({kind:'transfer',title:C('txSendTo')+' '+((S.to&&S.to.n)||''),amount:amt,dir:'out',status:'refunded'});
     }else{
       setStatus('ts','ok',C('sendOk'),C('doneB')); $('ts-note').innerHTML='';
       $('ts-actions').innerHTML=`<button class="btn btn-primary" onclick="showReceipt(S.activity[0])">${C('receipt')}</button>
         <button class="btn btn-ghost" onclick="go('home')">${C('home')}</button>`;
-      addTx({kind:'transfer',ck:'txSend',amount:amt,dir:'out',status:'done',
+      addTx({kind:'transfer',title:C('txSendTo')+' '+((S.to&&S.to.n)||''),amount:amt,dir:'out',status:'done',
         rows:[[C('recipient'),'سارا رضایی'],[C('phone'),'۰۹۱۲۳۴۵۶۷۸۹'],[C('fee'),'$0.50']]});
     }
     render();
@@ -3026,17 +3150,21 @@ function doPhysical(){
   const g=barGrams(), n=barCount(), t=shop(S.shop), val=goldUsd(g), tot=val+CONFIG.goldDeliveryFee;
   /* همان جمله‌ای که سرِ تحویل باید بخواند: چند شمش، چند گرم، چه عیاری */
   const what=C('barsPicked').replace('{n}',fa(n)).replace('{g}',faG(g))+' طلای '+CONFIG.goldCarat;
+  S.available-=tot;                     /* همین‌جا خرج شد، نه سرِ تحویل */
   S.physical={shop:t.id,grams:g,bars:Object.assign({},S.bars),count:n,amount:tot,slot:SLOTS[S.slot],
     code:String(Math.floor(1000+Math.random()*9000))};
   $('pc-code').textContent=fa(S.physical.code.split('').join(' ')); $('pc-shop').textContent=t.n;
   $('pc-amt').innerHTML=N(what); $('pc-slot').textContent=S.physical.slot;
   addTx({kind:'physical',title:C('txGold')+' · '+t.n,amount:tot,dir:'out',status:'pending',
-    rows:[[C('youReceive'),what],[C('shop'),t.n],[C('gramRate'),usd(CONFIG.goldUsdPerGram)],[C('fee'),usd(CONFIG.goldDeliveryFee)],[C('time'),S.physical.slot],[C('whenDeducted'),C('atPickup')],[C('goldIdT'),C('goldIdShort')]]});
+    rows:[[C('youReceive'),what],[C('shop'),t.n],[C('gramRate'),usd(CONFIG.goldUsdPerGram)],[C('fee'),usd(CONFIG.goldDeliveryFee)],[C('time'),S.physical.slot],[C('whenDeducted'),C('deductNow')],[C('goldIdT'),C('goldIdShort')]]});
   render(); go('p-status');
 }
 function cancelPhysical(){
-  if(S.activity[0]&&S.activity[0].kind==='physical') S.activity[0].status='cancelled';
-  S.physical=null; render(); go('use');
+  if(!S.physical) return go('use');
+  S.available+=S.physical.amount;        /* پولی که کسر شده بود، کامل برمی‌گردد */
+  const tx=S.activity.find(t=>t.kind==='physical'&&t.status==='pending');
+  if(tx) tx.status='refunded';
+  S.physical=null; S.bars={}; render(); go('use');
 }
 
 /* ════════ KEY · self-custody device ════════ */
@@ -3263,14 +3391,15 @@ function renderCustody(){
    اینکه کلیدِ پول دست کیست — «در راه» هم تا وقتی نرسیده، نزد مهاجر است. */
 function renderDist(){
   const irr=S.unit==='irr';
-  const you=pwBal(), here=S.available+nestsTotal()+S.pending, t=here+you;
-  const f=v=> irr ? toman(v*CONFIG.buyRate) : usd0(v);
-  $('h-dm').textContent=f(here); $('h-dy').textContent=f(you);
-  const pm=t>0 ? Math.round(here/t*100) : 0;
-  $('h-dbar-m').style.width=(t>0?pm:0)+'%';
-  $('h-dbar-y').style.width=(t>0?100-pm:0)+'%';
+  const you=pwBal(), gold=goldHeld(), here=S.available+nestsTotal()+S.pending, t=here+you+gold;
+  const f=v=> irr ? toman(v*CONFIG.buyRate) : usdx(v);
+  $('h-dm').textContent=f(here); $('h-dy').textContent=f(you); $('h-dg').textContent=f(gold);
+  const p=v=>(t>0 ? Math.round(v/t*100) : 0)+'%';
+  $('h-dbar-m').style.width=p(here); $('h-dbar-y').style.width=p(you); $('h-dbar-g').style.width=p(gold);
   $('h-dk-m').classList.toggle('off',here<=0);
   $('h-dk-y').classList.toggle('off',you<=0);
+  /* طلا یک اتفاق است، نه حالتی همیشگی: تا وقتی نیست، ردیفش هم نیست */
+  $('h-dk-g').hidden=gold<=0;
 }
 function renderCuPill(){
   const p=$('h-cupill'); if(!p) return;
@@ -3301,11 +3430,11 @@ const EXPLAIN={
   /* `more` is the deep layer: it appends under the three rows only when asked,
      so the person who wants the mechanics gets them and nobody else sees them. */
   safe:   {t:'exSafeT',   vis:'safe',   steps:['exSafe1','exSafe2','exSafe3'],       more:['exSafeM1','exSafeM2','exSafeM3'], eg:'egSafe'},
-  dollar: {t:'exDollarT', vis:'dollar', steps:['exDollar1','exDollar2','exDollar3'], more:['exDollarM1','exDollarM2','exDollarM3'], eg:'egDollar'},
+  dollar: {t:'exDollarT', vis:'dollar', steps:['exDollar1','exDollar2','exDollar3'], more:['exDollarM1','exDollarM2','exDollarM3'], eg:'egDollar', note:{t:'bitvanaT',b:'bitvanaB'}},
   goldWhy:{t:'exGoldWhyT',vis:'gold',   steps:['exGoldWhy1','exGoldWhy2','exGoldWhy3'],more:['exGoldWhyM1','exGoldWhyM2','exGoldWhyM3'], eg:'egGold'},
   keyDeep:{t:'exKeyDeepT',vis:'key',    steps:['exKeyDeep1','exKeyDeep2','exKeyDeep3','exKeyDeep4','exKeyDeep5','exKeyDeep6'], more:['exKeyDeepM1','exKeyDeepM2','exKeyDeepM3','exKeyDeepM4']},
-  basket: {t:'exBasketT', vis:'basket', steps:['exBasket1','exBasket2','exBasket3'], more:['exBasketM1','exBasketM2','exBasketM3'], eg:'egBasket'},
-  cuBasic:{t:'exCuBasicT',vis:'states', steps:['exCuBasic1','exCuBasic2','exCuBasic3'],more:['exCuBasicM1','exCuBasicM2','exCuBasicM3'], eg:'egCuBasic'},
+  basket: {t:'exBasketT', vis:'basket', steps:['exBasket1','exBasket2','exBasket3'], more:['exBasketM1','exBasketM2','exBasketM3'], eg:'egBasket', note:{t:'bitvanaT',b:'bitvanaB'}},
+  cuBasic:{t:'exCuBasicT',vis:'states', steps:['exCuBasic1','exCuBasic2','exCuBasic3'],more:['exCuBasicM1','exCuBasicM2','exCuBasicM3'], eg:'egCuBasic', note:{t:'bitvanaT',b:'bitvanaB'}},
   cuGold: {t:'exCuGoldT', vis:'gold',   steps:['exCuGold1','exCuGold2','exCuGold3'],   more:['exCuGoldM1','exCuGoldM2','exCuGoldM3'], eg:'egCuGold'},
   pwDeep: {t:'exPwDeepT', vis:'pw',     steps:['exPwDeep1','exPwDeep2','exPwDeep3','exPwDeep4','exPwDeep5','exPwDeep6'], more:['exPwDeepM1','exPwDeepM2','exPwDeepM3','exPwDeepM4'], eg:'egPw'},
   pwCompare:{t:'exPwCompT',vis:'modes', steps:['exPwComp1','exPwComp2','exPwComp3'], more:['exPwCompM1','exPwCompM2','exPwCompM3'], eg:'egMode'},
@@ -3318,7 +3447,11 @@ function openExplain(id,from){
   $('ex-title').textContent=C(e.t); $('ex-vis').innerHTML=DIAG[e.vis]?DIAG[e.vis]():'';
   const fill=t=>t.replace('{addr}','<span class="num" style="direction:ltr;display:inline-block;word-break:break-all">'+(S.pw?S.pw.addr:'—')+'</span>').replace('{type}',S.pw?C(S.pw.mode==='hard'?'pwTypeHard':'pwTypeSoft'):'—');
   $('ex-steps').innerHTML=e.steps.map((k,i)=>'<div class="step3'+(e.deep?' deep':'')+'"><span class="n num">'+fa(i+1)+'</span><span class="t">'+fill(C(k))+'</span></div>').join('');
-  $('ex-extra').innerHTML=e.more?'<button class="btn btn-soft exmore" onclick="exMore()">'+C('exMore')+IC.down+'</button>':'';
+  /* «بیشتر توضیح بده» باید بلافاصله بعد از ردیف‌ها دیده شود؛ کارتِ معرفی
+     شریک، پانویس است و آخر می‌آید. */
+  $('ex-extra').innerHTML=
+    (e.more?'<button class="btn btn-soft exmore" onclick="exMore()">'+C('exMore')+IC.down+'</button>':'')+
+    (e.note?'<div class="custody">'+IC.info+'<div><div class="ct">'+C(e.note.t)+'</div><p>'+C(e.note.b)+'</p></div></div>':'');
   renderEg();
   $('ex-cta').innerHTML='<button class="btn btn-primary" onclick="go(S.exBack)">'+C('exGotIt')+'</button>';
   go('explain');

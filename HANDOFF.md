@@ -1545,6 +1545,86 @@ would have kept rendering the old columns under the new headers and quietly
 lied. Re-verified all four rows after the move: بدون نیاز به ما (نه/بله/بله) ·
 بازیابی رمز (بله/نه/—) · خرج مستقیم (بله/بله/نه) · نگهداری شخصی (نه/بله/بله).
 
+### انتقال — the test finding that any number was "verified" (2026-09-24)
+
+Testers stopped at the transfer screen and asked **«این شماره را از کجا بیاورم؟»**
+The screen asked for a mobile number with no explanation, and `tLookup()`
+declared *any* ten-digit number a verified «سارا رضایی». The prototype was
+teaching something false about how transfers work.
+
+Three changes:
+
+- **The missing sentence**, at the top of the screen: «انتقال فقط به کسانی که
+  خودشان هم در مهاجر حساب دارند.» That is the rule testers had to guess.
+- **A contact book** (`CONTACTS`): دوست، همکار، **پدر، مادر، برادر** — two on
+  Mohajer, three not, each with a green «مهاجر دارد» or amber «مهاجر ندارد»
+  chip. Family names were the founder's ask and they carry the point better
+  than two strangers: the people you actually send money to are mostly not on
+  the app yet.
+- **Invite instead of a dead end.** A contact without Mohajer — or any unknown
+  number — opens `t-invite`: who it is, **the actual SMS that will be sent**
+  rendered as a message bubble, an invite code (`MHJ-####`), the number, and
+  «فرستادن دعوت رایگان است». Sending switches the screen to a confirmation.
+  Nothing is charged and no money moves.
+
+The recipient is now real state (`S.to`) instead of three hard-coded copies of
+«سارا رضایی»: the amount screen, the confirm rows and the activity title all
+follow the person actually chosen, and «ادامه» only unlocks for someone who has
+Mohajer. Verified: $2,000 → $50 to a Mohajer contact → $1,949.50 with the fee,
+activity reads «انتقال به مهدی کریمی».
+
+**The `[hidden]` trap, again.** `#inv-done` is a `.center`, which sets
+`display:flex` and beat the `hidden` attribute — the invite screen showed the
+SMS preview and the "sent" confirmation at once. `[hidden]{display:none
+!important}` is now in the reset, where it should have been from the start.
+Same bug, same cause, third file (`t.html` had it too). Re-checked the pillow
+flip and the pw signing screens, which also toggle `hidden` on styled elements.
+
+### Gold is paid for when it is ordered (2026-09-24, third pass)
+
+«زمان کسر: لحظهٔ تحویل» was wrong — the money is spent when the order is placed,
+so `doPhysical()` now deducts it there and the row reads «همین حالا».
+
+That forced two honest consequences:
+
+- **Cancelling refunds in full** (`cancelPhysical`), including the $2.50 delivery
+  fee, because nothing was delivered. The transaction goes to «برگشت», not
+  «لغو شد». `codeExpires` and `exGoldWhyM3` now say the money comes back, and
+  the two of them finally agree on 24 hours (one said 48).
+- **The gold has to appear somewhere.** Deducting without showing it would just
+  look like the balance shrank. `goldHeld()` joins `total()` and the
+  distribution bar gains a third bronze band, «طلای فیزیکی», which appears only
+  while an order exists — gold is an event, not a standing state like the other
+  two. Verified: $2,000 → order $450.50 → available $1,549.50, gold $448,
+  headline $1,997.50 (down by exactly the fee, which really is spent) → cancel →
+  $2,000 and the band disappears.
+
+The rate is now locked at order time, so `exGoldWhyM2` says that instead of
+"the delivery-day rate applies".
+
+### Two home corrections
+
+- **A rounding lie.** Home showed سرمایه‌گذاری as **$100** where the basket
+  screen showed **$99.50** — `usd0` rounds, and a 0.5% entry fee lands exactly on
+  the half. One number, two answers, on two screens the user compares. `usdx`
+  now rounds only when rounding changes nothing, so $200 stays short and $99.50
+  stays true. Applied to all three home boxes and the distribution legend.
+- **«در حال تبدیل» only when something is converting.** It is a network state,
+  not a place money lives, and a permanent «$0» box taught nothing. It is hidden
+  at zero and appears while a conversion is in flight — which is the only moment
+  it means anything.
+
+### بیت‌وانا, named properly
+
+«بیت‌وانا» alone means nothing to someone who has not heard of it. First mention
+in each surface is now **«صرافی رمزارز بیت‌وانا»**, and the dollar, custody and
+basket explainers carry a footnote card — **«ⓘ بیت‌وانا چیست؟» — «یک صرافی رمزارز
+ایرانیِ دارای مجوز که دارایی دلاری کاربران مهاجر را نگهداری می‌کند.»** It is a
+card inside the same explainer, not a new screen: an explainer that opens another
+explainer loses the reader. The basket explainer also now says the basket's
+assets sit at the same custodian (`exBasketM3`), which someone will ask the
+moment they read the dollar page.
+
 ### «این دلار چیست؟» moved one screen earlier
 
 It lived on the confirm screen — after the user had already decided. It now also
