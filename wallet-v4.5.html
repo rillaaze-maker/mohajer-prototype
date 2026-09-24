@@ -167,7 +167,25 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
   margin-top:6px;position:relative;line-height:1.02}
 .nest-card .tot::first-letter{color:var(--gold)}
 .bal-card .rial{font-size:11.5px;color:rgba(255,255,255,.42);margin-top:5px;position:relative}
-.split{display:flex;gap:8px;margin-top:18px;position:relative}
+/* توزیع دارایی — یک نوار، دو رنگ. تا وقتی پولی نیست، نوار خالی و «نزد شما»
+   کم‌رنگ است: نه ادعای دروغ، نه پنهان‌کردنِ انتخابی که وجود دارد. */
+.dist{margin-top:18px;position:relative}
+.dist .dhead{font-size:10.5px;font-weight:600;letter-spacing:.02em;color:rgba(255,255,255,.5);margin-bottom:8px}
+.dbar{display:flex;gap:3px;height:8px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden}
+.dbar i{display:block;height:100%;border-radius:99px;width:0;transition:width .55s var(--spring)}
+.dbar i.m{background:linear-gradient(90deg,#C8934A,#E8C48A)}
+.dbar i.y{background:linear-gradient(90deg,#3FBF8F,#7FE0B4)}
+.dkeys{display:flex;gap:16px;margin-top:9px;flex-wrap:wrap}
+.dk{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:rgba(255,255,255,.6);
+  transition:.2s var(--swift)}
+.dk b{width:8px;height:8px;border-radius:3px;flex:none}
+.dk b.m{background:var(--gold)}
+.dk b.y{background:#7FE0B4}
+.dk em{font-style:normal;font-weight:600;font-size:12.5px;color:#fff}
+.dk.off{opacity:.42}
+.dk.off em{color:rgba(255,255,255,.7)}
+
+.split{display:flex;gap:8px;margin-top:16px;position:relative}
 .split .s{flex:1;background:rgba(255,255,255,.07);border-radius:var(--r-sm);padding:10px 11px}
 .split .s .l{font-size:10px;color:rgba(255,255,255,.48)}
 .split .s .v{font-size:14.5px;font-weight:600;margin-top:3px;letter-spacing:-.02em}
@@ -690,6 +708,7 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
   .acts{gap:8px}
   .act{padding:12px}
   .presets{margin-top:9px}
+  .linkmini{margin-top:7px;min-height:36px;padding:7px 13px}
   .quote-head .v{font-size:29px}
   .disc{width:66px;height:66px;margin-bottom:15px}
   .disc svg{width:29px;height:29px}
@@ -809,6 +828,13 @@ button,input,select,textarea{color:inherit}
   background:var(--surface);border:none;border-radius:var(--r-md);box-shadow:var(--sh);
   font-family:inherit;color:inherit;text-align:start;cursor:pointer;transition:.2s var(--spring)}
 .linkrow:active{transform:scale(.985)}
+/* همان پرسش، یک صفحه زودتر و کم‌صداتر: روی صفحهٔ مبلغ، جای یک ردیف کامل نیست */
+.linkmini{display:flex;align-items:center;justify-content:center;gap:7px;width:fit-content;margin:10px auto 0;
+  padding:9px 14px;min-height:40px;border:none;border-radius:99px;background:var(--surface);box-shadow:var(--sh);
+  font-family:inherit;font-size:12.5px;font-weight:500;color:var(--ink-2);cursor:pointer;transition:.2s var(--spring)}
+.linkmini:active{transform:scale(.96)}
+.linkmini .ic{display:grid;place-items:center;flex:none}
+.linkmini .ic svg{width:15px;height:15px;stroke:var(--ink-3);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .linkrow .ic{width:30px;height:30px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;flex:none}
 .linkrow .ic svg{width:15px;height:15px;stroke:var(--ink-2);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .linkrow .t{flex:1;font-size:13.5px;font-weight:500}
@@ -816,14 +842,15 @@ button,input,select,textarea{color:inherit}
 
 /* the one custody sentence on the balance card */
 .totbtn{background:none;border:none;padding:0;font-family:inherit;color:inherit;display:block;text-align:start;cursor:pointer}
-.cupill{display:inline-flex;align-items:center;gap:8px;margin-top:14px;position:relative;
-  background:rgba(255,255,255,.10);border:none;border-radius:99px;padding:11px 14px;min-height:40px;
-  font-family:inherit;font-size:12px;font-weight:500;color:rgba(255,255,255,.9);cursor:pointer;
-  transition:.2s var(--spring);max-width:100%}
-.cupill:active{transform:scale(.97)}
-.cupill i{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none}
-.cupill.self i{background:var(--ok)}
-.cupill .go{opacity:.7}
+.curow{display:flex;align-items:center;gap:10px;width:100%;margin-top:16px;position:relative;
+  background:rgba(255,255,255,.10);border:none;border-radius:var(--r-md);padding:13px 14px;min-height:48px;
+  font-family:inherit;font-size:13px;font-weight:600;letter-spacing:-.01em;color:#fff;cursor:pointer;
+  text-align:start;transition:.2s var(--spring)}
+.curow:active{transform:scale(.985)}
+.curow i{width:8px;height:8px;border-radius:50%;background:var(--gold);flex:none}
+.curow.self i{background:var(--ok)}
+.curow .v{flex:1;min-width:0}
+.curow .go{opacity:.6;flex:none}
 .go svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block}
 .allbtn{width:100%;border:none;background:none;font-family:inherit;color:var(--ink-2);font-size:12px;
   font-weight:500;padding:12px;min-height:44px;cursor:pointer}
@@ -925,6 +952,23 @@ button,input,select,textarea{color:inherit}
 .exask{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:8px}
 .exask svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 
+/* شمش‌های استاندارد. خرید طلای فیزیکی در واقعیت همین است: وزن‌های مشخص،
+   نه هر عددی که به ذهن برسد — پس صفحه هم همان را می‌پرسد. */
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar{display:flex;align-items:center;gap:11px;background:var(--surface);border-radius:var(--r-md);
+  padding:8px 10px 8px 8px;box-shadow:var(--sh);transition:.2s var(--swift)}
+.bar.on{box-shadow:0 0 0 1.5px var(--warn) inset,var(--sh)}
+.bar .bi{width:34px;height:34px;border-radius:10px;background:var(--warn-soft);display:grid;place-items:center;flex:none}
+.bar .bi svg{width:19px;height:19px;stroke:var(--warn);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.bar .bn{flex:1;min-width:0;font-size:14px;font-weight:600;letter-spacing:-.015em}
+.bar .bn small{display:block;font-size:11px;font-weight:400;color:var(--ink-3);margin-top:2px}
+.bar .bs{display:flex;align-items:center;gap:2px;flex:none}
+.bar .st{width:44px;height:44px;border-radius:50%;border:none;background:var(--surface-2);color:var(--ink);
+  font:400 19px/1 var(--f);cursor:pointer;display:grid;place-items:center;transition:.18s var(--swift)}
+.bar .st:active{transform:scale(.9)}
+.bar .st[disabled]{opacity:.3;pointer-events:none}
+.bar .bc{min-width:24px;text-align:center;font-size:15px;font-weight:700}
+
 /* «مثلاً» — the example box. One everyday picture for one hard idea. It is the
    thing an eight-year-old would understand; the rows above it are for adults. */
 .eg{display:flex;gap:12px;align-items:flex-start;padding:14px 15px;border-radius:var(--r-md);background:var(--warn-soft);margin-top:12px}
@@ -954,7 +998,6 @@ button,input,select,textarea{color:inherit}
 .whyrow .d{display:block;font-size:12.5px;color:var(--ink-2);margin-top:2px;line-height:1.55}
 
 /* personal wallet */
-.split .s.you .v{color:#7FE0B4}
 .words{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;direction:ltr}
 .word{background:var(--surface);border-radius:12px;padding:10px 9px;box-shadow:var(--sh);display:flex;gap:7px;align-items:center;font:600 13px/1 ui-monospace,Consolas,monospace;color:var(--ink)}
 .word b{font:600 10px var(--f);color:var(--ink-3);min-width:14px}
@@ -1121,14 +1164,26 @@ button,input,select,textarea{color:inherit}
               <div class="unit-hint"><span id="h-unit-alt"></span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h13l-3-3M17 14H4l3 3"/></svg>
               </div>
+              <!-- توزیع دارایی: چه مقدار کجا نگهداری می‌شود. مثل خودِ حضانت، از
+                   وضعیت ساخته می‌شود نه تایپ؛ و چون از اولین لحظه دیده می‌شود،
+                   کاربر پیش از آنکه پولی داشته باشد می‌فهمد پولش می‌تواند دو جا باشد. -->
+              <div class="dist">
+                <div class="dhead" data-c="distLabel"></div>
+                <div class="dbar" id="h-dbar"><i class="m" id="h-dbar-m"></i><i class="y" id="h-dbar-y"></i></div>
+                <div class="dkeys">
+                  <span class="dk" id="h-dk-m"><b class="m"></b><span data-c="cuSplitA"></span><em class="num" id="h-dm">$0</em></span>
+                  <span class="dk" id="h-dk-y"><b class="y"></b><span data-c="cuSplitB"></span><em class="num" id="h-dy">$0</em></span>
+                </div>
+              </div>
+
               <div class="split">
                 <div class="s"><div class="l" data-c="availLabel"></div><div class="v num" id="h-avail">$0</div></div>
                 <div class="s"><div class="l" data-c="investedLabel"></div><div class="v num" id="h-goals">$0</div></div>
                 <div class="s pend"><div class="l" data-c="pendingLabel"></div><div class="v num" id="h-pend">$0</div></div>
-                <div class="s you" id="h-you-box" hidden><div class="l" data-c="walletBox"></div><div class="v num" id="h-you">$0</div></div>
               </div>
+
               <!-- the one custody sentence on home — generated from the state, never typed -->
-              <button class="cupill" id="h-cupill" onclick="openCustody('home')"><i></i><span id="h-cutxt"></span><span class="go" data-ic="chev"></span></button>
+              <button class="curow" id="h-cupill" onclick="openCustody('home')"><i></i><span class="v" id="h-cutxt"></span><span class="go" data-ic="chev"></span></button>
             </div>
           </div>
         </div>
@@ -1181,6 +1236,9 @@ button,input,select,textarea{color:inherit}
       <button class="preset num" onclick="cSet(50000000)">۵۰ م</button>
       <button class="preset num" onclick="cSet(100000000)">۱۰۰ م</button>
     </div>
+    <button class="linkmini" onclick="openExplain('dollar','convert')">
+      <span class="ic" data-ic="info"></span><span data-c="whatIsDollarQ"></span>
+    </button>
     <div class="keypad">
       <button class="key num" onclick="cKey('1')">1</button><button class="key num" onclick="cKey('2')">2</button><button class="key num" onclick="cKey('3')">3</button>
       <button class="key num" onclick="cKey('4')">4</button><button class="key num" onclick="cKey('5')">5</button><button class="key num" onclick="cKey('6')">6</button>
@@ -1462,14 +1520,17 @@ button,input,select,textarea{color:inherit}
       <h2 data-c="goldAmtTitle"></h2>
     </div>
     <div class="scroll">
-      <div class="field" style="margin-top:0"><label data-c="howManyGrams"></label>
-        <input id="pa-amt" class="input num" inputmode="decimal" value="3" oninput="paCheck()"></div>
-      <div class="card" style="padding:4px 16px;margin-top:12px">
+      <div class="sec" style="margin-top:0" data-c="howManyGrams"></div>
+      <div class="bars" id="pa-bars"></div>
+      <div class="card" style="padding:4px 16px;margin-top:14px">
+        <div class="row"><span class="k" data-c="barsSum"></span><span class="v" id="pa-sum">—</span></div>
         <div class="row"><span class="k" data-c="gramRate"></span><span class="v num" id="pa-rate">—</span></div>
         <div class="row"><span class="k" data-c="fee"></span><span class="v num">$2.50</span></div>
         <div class="row total"><span class="k" data-c="deducted"></span><span class="v num" id="pa-total">—</span></div>
         <div class="row"><span class="k" data-c="whenDeducted"></span><span class="v" style="color:var(--ok)" data-c="atPickup"></span></div>
       </div>
+      <div class="custody" style="margin-top:12px"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.6-1.6 1.7-2.4 3-2.4s2.4.8 3 2.4M14.5 10h4M14.5 13.5h3"/></svg>
+        <div><div class="ct" data-c="goldIdT"></div><p data-c="goldIdB"></p></div></div>
       <div id="pa-warn"></div>
       <div class="sec" data-c="pickupTime"></div>
       <div id="pa-slots"></div>
@@ -2168,13 +2229,15 @@ const COPY_DEF={
   /* home */
   homeTitle:['home','خانه'],
   walletLabel:['home','دارایی شما'],
-  availLabel:['home','قابل استفاده'], investedLabel:['home','سرمایه‌گذاری'], pendingLabel:['home','در حال پردازش'],
+  availLabel:['home','قابل استفاده'], investedLabel:['home','سرمایه‌گذاری'], pendingLabel:['home','در حال تبدیل'],
   unitAlt:['home','به تومان'], unitBack:['home','به دلار'],
   qSend:['home','انتقال'], qInvest:['home','سرمایه‌گذاری'], qGold:['home','تحویل طلا'], qOut:['home','برداشت'],
   homeEmpty:['home',''],
   homeCta:['home','امن کردنِ دارایی'],
   recent:['home','اخیر'], seeAll:['home','همه'],
+  distLabel:['home','توزیع دارایی'],
   cuAtMohajer:['home','نگهداری دارایی توسط مهاجر'],
+  cuAtBoth:['home','نگهداری دارایی توسط مهاجر و خودتان'],
   cuAtYou:['home','پول شما زیر بالشت خودتان است'],
   pillowSay:['home','دارایی شما زیر بالش است.'],
   pillowSub:['home','تا بالش را برندارید، نمایش داده نمی‌شود.'],
@@ -2231,7 +2294,7 @@ const COPY_DEF={
   cuSelfC1:['cu','ریسک از دست دادن یا گم کردن کلید شخصی'],
   cuSelfCta:['cu','سفارش کلید'],
   cuActive:['cu','فعال'], cuHere:['cu','اینجاست'], cuReady:['cu','آماده'],
-  cuSplitA:['cu','نزد مهاجر'], cuSplitB:['cu','نزد شما'], walletBox:['home','نزد شما'],
+  cuSplitA:['cu','نزد مهاجر'], cuSplitB:['cu','در کیف پول شخصی'], walletBox:['home','در کیف پول شخصی'],
   cuWhatQ:['cu','یعنی چی؟'],
 
   /* personal wallet */
@@ -2328,7 +2391,7 @@ const COPY_DEF={
 
   /* gold */
   goldTitle:['gold','تحویل طلا'],
-  gold1:['gold','دلار شما به طلای ۱۸ عیار تبدیل می‌شود.'],
+  gold1:['gold','دلار شما به شمش طلای ۱۸ عیار تبدیل می‌شود.'],
   gold2:['gold','از صرافی نزدیک، حضوری می‌گیرید.'],
   gold3:['gold','تا لحظهٔ تحویل، پولی کم نمی‌شود.'],
   goldWhyQ:['gold','نرخ و اعتبارش از کجاست؟'],
@@ -2339,7 +2402,15 @@ const COPY_DEF={
   routeBtn:['gold','مسیر'], routeClose:['gold','بستن مسیر'], callShop:['gold','تماس'], route:['gold','مسیر'],
   partnerShop:['gold','طرف قرارداد مهاجر'], licenseReview:['gold','مجوز · در حال بررسی'],
   pickThisShop:['gold','از این صرافی'],
-  goldAmtTitle:['gold','مقدار طلا'], howManyGrams:['gold','چند گرم؟'],
+  goldAmtTitle:['gold','مقدار طلا'], howManyGrams:['gold','مقدار طلا را انتخاب کنید'],
+  barLabel:['gold','شمش {g} گرمی'],
+  barsSum:['gold','انتخاب شما'],
+  barsPicked:['gold','{n} شمش · {g} گرم'],
+  barsNone:['gold','هنوز شمشی انتخاب نکرده‌اید'],
+  goldIdT:['gold','کارت شناسایی همراهتان باشد'],
+  goldIdB:['gold','تحویل شمش فقط با کارت شناسایی خودتان انجام می‌شود.'],
+  goldIdShort:['gold','الزامی'],
+  goldResale:['gold','شمش استاندارد است؛ هر وقت خواستید، در بازار طلا قابل فروش است.'],
   gramRate:['gold','نرخ هر گرم'], whenDeducted:['gold','زمان کسر'], atPickup:['gold','لحظهٔ تحویل'],
   pickupTime:['gold','زمان مراجعه'], confirmGold:['gold','ثبت درخواست'],
   pickupCode:['gold','کد تحویل'], oneTimeCode:['gold','کد یک‌بارمصرف'], showAtPickup:['gold','فقط موقع تحویل نشان دهید'],
@@ -2403,9 +2474,9 @@ const COPY_DEF={
   exSafe2:['ex','امکان انتخاب بین نگهداری دارایی توسط مهاجر، نگهداری در کیف پول شخصی و تبدیل به طلای فیزیکی.'],
   exSafe3:['ex','امکان همیشگی تبدیل دوباره به ریال و برداشت'],
   exDollarT:['ex','این دلار چیست؟'],
-  exDollar1:['ex','یک دلار دیجیتال است؛ ارزشش همیشه یک دلار.'],
-  exDollar2:['ex','نزد شریک نگهدارندهٔ دارای مجوز نگه داشته می‌شود، جدا از حساب‌های مهاجر.'],
-  exDollar3:['ex','با کلید مهاجر می‌توانید کلیدش را به خودتان منتقل کنید.'],
+  exDollar1:['ex','دلار دیجیتال مهاجر پول نقد یا سپردهٔ بانکی نیست؛ نمایش سادهٔ دارایی دلاری شماست.'],
+  exDollar2:['ex','به‌ازای هر ۱ دلار دیجیتال، ۱ واحد تتر (USDT) در بیت‌وانا نگهداری و سهم شما ثبت می‌شود.'],
+  exDollar3:['ex','بیت‌وانا نگهداری و تبدیل را انجام می‌دهد؛ مهاجر موجودی و دسترسی شما را مدیریت می‌کند.'],
   exGoldWhyT:['ex','نرخ و اعتبار طلا'],
   exGoldWhy1:['ex','نرخ هر گرم، هر روز از بازار طلای تهران.'],
   exGoldWhy2:['ex','صرافی طرف قرارداد، با رسید کتبی و کد یک‌بارمصرف.'],
@@ -2422,7 +2493,7 @@ const COPY_DEF={
   exBasket2:['ex','سود ثابت ندارد. ارزش با بازار بالا و پایین می‌رود.'],
   exBasket3:['ex','قفل ندارد. هر وقت خواستید، بیرون بکشید.'],
   exCuBasicT:['ex','نگهداری توسط مهاجر یعنی چی؟'],
-  exCuBasic1:['ex','دارایی شما در کیف پول‌های امن صرافی دیجیتال شریک مهاجر نگهداری می‌شود.'],
+  exCuBasic1:['ex','دارایی شما در کیف پول‌های امن بیت‌وانا، شریک نگهدارندهٔ مهاجر، نگهداری می‌شود.'],
   exCuBasic2:['ex','برداشت و استفاده از دارایی فقط از طریق اکانت شما در مهاجر انجام می‌شود.'],
   exCuBasic3:['ex','در صورت فراموشی یا گم شدن رمز ورود، قابلیت بازیابی با احراز هویت وجود دارد.'],
   exCuGoldT:['ex','طلای فیزیکی یعنی چی؟'],
@@ -2437,11 +2508,11 @@ const COPY_DEF={
   exMore:['ex','بیشتر توضیح بده'],
   /* the deep layer — opens only on request; precise words are allowed here */
   exSafeM1:['ex','دلار دیجیتال: هر واحد، معادل یک دلار و قابل تبدیل به تتر (USDT) و انتقال به کیف پول شخصی است.'],
-  exSafeM2:['ex','در حالت پایه، موجودی دلار دیجیتال در کیف پول‌های امن صرافی دیجیتال دارای مجوز نگهداری می‌شود.'],
+  exSafeM2:['ex','در حالت پایه، به‌ازای هر دلار دیجیتال، یک تتر (USDT) در بیت‌وانا نگهداری می‌شود.'],
   exSafeM3:['ex','با کیف پول فیزیکی مهاجر، کلید کیف پول شخصی شما روی دستگاه ساخته می‌شود.'],
-  exDollarM1:['ex','یک دلار دیجیتال با پشتوانهٔ یک‌به‌یک؛ نوع آن در رسید هر تراکنش نوشته می‌شود.'],
-  exDollarM2:['ex','انتقال در چند دقیقه و با کارمزد ثابت انجام می‌شود، بدون واسطهٔ بانکی.'],
-  exDollarM3:['ex','هر تراکنش شناسهٔ عمومی دارد و از بیرون مهاجر هم قابل پیگیری است.'],
+  exDollarM1:['ex','تتر برای حفظ ارزشی نزدیک به یک دلار طراحی شده، اما می‌تواند موقتاً کمتر یا بیشتر شود و سپردهٔ تضمین‌شدهٔ بانکی نیست.'],
+  exDollarM2:['ex','می‌توانید دارایی را به ریال تبدیل کنید یا روی شبکهٔ TRON به کیف پول شخصی منتقل کنید؛ نرخ، کارمزد، زمان و مبلغ دریافتی پیش از تأیید نمایش داده می‌شود.'],
+  exDollarM3:['ex','همهٔ عملیات در سابقهٔ حساب ثبت می‌شود؛ انتقال‌های روی شبکه شناسهٔ عمومی دارند و مستقل از مهاجر قابل پیگیری‌اند.'],
   exGoldWhyM1:['ex','نرخ گرم = قیمت جهانی اونس × نرخ دلار ÷ ۳۱٫۱ × عیار.'],
   exGoldWhyM2:['ex','تا لحظهٔ تحویل، دلار شما فروخته نمی‌شود؛ نرخ روز تحویل ملاک است.'],
   exGoldWhyM3:['ex','اگر ظرف ۴۸ ساعت مراجعه نکنید، سفارش بدون کسر لغو می‌شود.'],
@@ -2498,6 +2569,7 @@ const COPY_NEST={
   homeEmpty:'آشیانه هنوز خالی است.',
   pillowSay:'دارایی‌ات زیر بالشته.',
   cuAtYou:'پولت زیر بالشت خودته',
+  cuAtBoth:'بخشی نزد مهاجر، بخشی زیر بالشت خودت',
   txIn:'نشستن دلار در آشیانه', txSend:'پر کشیدن به سوی سارا رضایی',
   investCta:'سرمایه‌گذاری در این لانه', goesIn:'وارد لانه می‌شود', mine:'لانه‌های شما',
   eggLine:'همهٔ تخم‌مرغ‌ها را توی یک سبد نگذار.', useInvestD:'لانه‌های سرمایه'
@@ -2547,6 +2619,7 @@ const IC={
   eye:   '<svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>',
   nocam: '<svg viewBox="0 0 24 24"><path d="M9 5l1.5-2h3L15 5h4a2 2 0 012 2v10M3.5 7.5A2 2 0 015 7h1M3 19h13"/><circle cx="12" cy="13" r="3.5"/><path d="M4 4l16 16" class="bad"/></svg>',
   words: '<svg viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="2.5"/><path d="M8 8.5h8M8 12h8M8 15.5h5"/></svg>',
+  ingot: '<svg viewBox="0 0 24 24"><path d="M9.2 5h5.6l1.5 4H7.7z"/><path d="M3.6 13.5h5.6l1.5 4H2.1z"/><path d="M14.8 13.5h5.6l1.5 4h-8.6z"/></svg>',
   bulb:  '<svg viewBox="0 0 24 24"><path d="M9.5 18h5M10.5 21h3M12 3a6 6 0 00-3.8 10.6c.6.6.8 1.4.8 2.4h6c0-1 .2-1.8.8-2.4A6 6 0 0012 3z"/></svg>',
   phone: '<svg viewBox="0 0 24 24"><path d="M5.5 3.5h3l1.5 4-2 1.5a11 11 0 006.5 6.5l1.5-2 4 1.5v3a2 2 0 01-2 2A15.5 15.5 0 013.5 5.5a2 2 0 012-2z"/></svg>'
 };
@@ -2580,7 +2653,7 @@ const DIAG={
 };
 
 /* ════════ state ════════ */
-const S={ available:0, pending:0, activity:[], failMode:false, eli:true,
+const S={ available:0, pending:0, activity:[], failMode:false, eli:true, bars:{},
   cRaw:'', tRaw:'', wRaw:'', tPhone:'',
   custody:'basic', cuBack:'home', exBack:'home', ex:null,
   nests:[], activeNest:'calm', key:null, lastBuy:null, pw:null, pwRaw:'', pbRaw:'', pwWords:null, pwMode:'soft',
@@ -2647,7 +2720,7 @@ function go(name){
   if(name==='pw-sign'){ S.signed=false; const h=S.pw&&S.pw.mode==='hard'; $('sign-soft').hidden=h; $('sign-hard').hidden=!h; $('sign-msg').innerHTML=''; $('holdbtn').className='holdbtn'; }
   if(name==='pw-wallet') renderPw();
   if(name==='home' && S.pillow && prev!=='home'){ S.lifted=false; S.lifting=false; applyPillow(); }
-  if(name==='p-amt'){ renderSlots(); paCheck(); }
+  if(name==='p-amt'){ renderBars(); renderSlots(); paCheck(); }
   if(name==='k-order') koCheck();
   renderAnchor(); render();
 }
@@ -2673,8 +2746,7 @@ function render(){
   $('h-avail').textContent= irr ? toman(S.available*CONFIG.buyRate) : usd0(S.available);
   $('h-goals').textContent= irr ? toman(nestsTotal()*CONFIG.buyRate) : usd0(nestsTotal());
   $('h-pend').textContent = irr ? toman(S.pending*CONFIG.buyRate) : usd0(S.pending);
-  $('h-you-box').hidden=!S.pw; $('h-you').textContent= irr ? toman(pwBal()*CONFIG.buyRate) : usd0(pwBal());
-  renderCuPill(); renderPw();
+  renderDist(); renderCuPill(); renderPw();
   $('t-avail').innerHTML=C('freeBal')+' '+N(usd(S.available));
   $('w-avail').innerHTML=C('freeBal')+' '+N(usd(S.available));
   $('home-empty').style.display=S.activity.length?'none':'block';
@@ -2917,24 +2989,49 @@ function toggleRoute(){
       '<div>وارد '+road+' شوید.</div>','<div>'+t.n+'، سمت راست.</div>'].join(''); }
 }
 const goldUsd=g=>g*CONFIG.goldUsdPerGram;
+/* وزن‌های استانداردِ شمش. کم و زیادکردنِ همین‌ها مقدار را می‌سازد. */
+const BARS=[0.5,1,2,2.5,5,10];
+const barGrams=()=>BARS.reduce((a,g)=>a+g*(S.bars[g]||0),0);
+const barCount=()=>BARS.reduce((a,g)=>a+(S.bars[g]||0),0);
+const faG=g=>fa(String(g).replace('.','٫'));
+function barStep(g,d){
+  const n=(S.bars[g]||0)+d; if(n<0) return;
+  S.bars[g]=n; renderBars(); paCheck();
+}
+function renderBars(){
+  const cap=shop(S.shop).capG;
+  $('pa-bars').innerHTML=BARS.map(g=>{
+    const n=S.bars[g]||0, full=barGrams()+g>cap;
+    return '<div class="bar'+(n?' on':'')+'"><span class="bi">'+IC.ingot+'</span>'+
+      '<span class="bn">'+C('barLabel').replace('{g}',faG(g))+'<small class="num">'+usd0(goldUsd(g))+'</small></span>'+
+      '<span class="bs"><button class="st" onclick="barStep('+g+',-1)" aria-label="کمتر"'+(n?'':' disabled')+'>−</button>'+
+      '<span class="bc num">'+fa(n)+'</span>'+
+      '<button class="st" onclick="barStep('+g+',1)" aria-label="بیشتر"'+(full?' disabled':'')+'>+</button></span></div>';
+  }).join('');
+}
 function paCheck(){
-  const g=parseFloat($('pa-amt').value)||0, t=shop(S.shop);
+  const g=barGrams(), n=barCount(), t=shop(S.shop);
   const val=goldUsd(g), tot=val+CONFIG.goldDeliveryFee, over=tot>S.available, cap=g>t.capG;
-  $('pa-rate').textContent=usd(CONFIG.goldUsdPerGram); $('pa-total').textContent=usd(tot);
+  $('pa-sum').innerHTML=n? N(C('barsPicked').replace('{n}',fa(n)).replace('{g}',faG(g))) : C('barsNone');
+  $('pa-rate').textContent=usd(CONFIG.goldUsdPerGram);
+  $('pa-total').textContent=n?usd(tot):'—';
   $('pa-warn').innerHTML= over ? NOTE('bad',C('notEnough')+' '+N(usd(S.available))) : cap ? NOTE('warn',C('goldOverStock')) : '';
-  $('pa-cta').disabled=over||cap||g<1;
+  $('pa-cta').disabled=over||cap||n<1;
 }
 function renderSlots(){
   $('pa-slots').innerHTML=SLOTS.map((sl,i)=>'<button class="opt" aria-pressed="'+(i===S.slot)+'" onclick="S.slot='+i+';renderSlots()">'+
     '<div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="m"><div class="t">'+sl+'</div></div><div class="radio"></div></button>').join('');
 }
 function doPhysical(){
-  const g=parseFloat($('pa-amt').value)||0, t=shop(S.shop), val=goldUsd(g), tot=val+CONFIG.goldDeliveryFee;
-  S.physical={shop:t.id,grams:g,amount:tot,slot:SLOTS[S.slot],code:String(Math.floor(1000+Math.random()*9000))};
+  const g=barGrams(), n=barCount(), t=shop(S.shop), val=goldUsd(g), tot=val+CONFIG.goldDeliveryFee;
+  /* همان جمله‌ای که سرِ تحویل باید بخواند: چند شمش، چند گرم، چه عیاری */
+  const what=C('barsPicked').replace('{n}',fa(n)).replace('{g}',faG(g))+' طلای '+CONFIG.goldCarat;
+  S.physical={shop:t.id,grams:g,bars:Object.assign({},S.bars),count:n,amount:tot,slot:SLOTS[S.slot],
+    code:String(Math.floor(1000+Math.random()*9000))};
   $('pc-code').textContent=fa(S.physical.code.split('').join(' ')); $('pc-shop').textContent=t.n;
-  $('pc-amt').innerHTML=N(fa(g))+' گرم طلای '+CONFIG.goldCarat; $('pc-slot').textContent=S.physical.slot;
+  $('pc-amt').innerHTML=N(what); $('pc-slot').textContent=S.physical.slot;
   addTx({kind:'physical',title:C('txGold')+' · '+t.n,amount:tot,dir:'out',status:'pending',
-    rows:[[C('youReceive'),fa(g)+' گرم طلای '+CONFIG.goldCarat],[C('shop'),t.n],[C('gramRate'),usd(CONFIG.goldUsdPerGram)],[C('fee'),usd(CONFIG.goldDeliveryFee)],[C('time'),S.physical.slot],[C('whenDeducted'),C('atPickup')]]});
+    rows:[[C('youReceive'),what],[C('shop'),t.n],[C('gramRate'),usd(CONFIG.goldUsdPerGram)],[C('fee'),usd(CONFIG.goldDeliveryFee)],[C('time'),S.physical.slot],[C('whenDeducted'),C('atPickup')],[C('goldIdT'),C('goldIdShort')]]});
   render(); go('p-status');
 }
 function cancelPhysical(){
@@ -3136,10 +3233,10 @@ const STATE_DEF={
   gold: {cls:'s-gold', ic:'gold', n:'cuGoldN', l:'cuGoldL', pros:['cuGoldP1','cuGoldP2'],cons:['cuGoldC1','cuGoldC2'],cta:{c:'cuGoldCta',go:"go('p-tut')"},ex:'cuGold'},
   self: {cls:'s-self', ic:'key',  n:'cuSelfN', l:'cuSelfL', pros:['cuSelfP1','cuSelfP2'],cons:['cuSelfC1'],cta:{c:'cuSelfCta',go:"go('k-tut')"},ex:'cuSelf'}
 };
-const CU_ORDER=['basic','gold','self'];
-/* one row per question, one column per place; 1 = yes */
+const CU_ORDER=['basic','self','gold'];
+/* one row per question, one column per place — in CU_ORDER's order */
 /* 1 = yes, 0 = no, 2 = does not apply (a dash) */
-const CMP=[{c:'cmp1',v:[0,1,1]},{c:'cmp2',v:[1,2,0]},{c:'cmp3',v:[1,0,1]},{c:'cmp4',v:[0,1,1]}];
+const CMP=[{c:'cmp1',v:[0,1,1]},{c:'cmp2',v:[1,0,2]},{c:'cmp3',v:[1,1,0]},{c:'cmp4',v:[0,1,1]}];
 function openCustody(from){ S.cuBack=from||'home'; renderCustody(); go('custody'); }
 function renderCustody(){
   const host=$('cu-states'); if(!host) return;
@@ -3162,12 +3259,26 @@ function renderCustody(){
     ${CMP.map(r=>`<tr><td>${C(r.c)}</td>${r.v.map((v,i)=>`<td class="${CU_ORDER[i]===S.custody?'on':''}"><span class="${v===2?'na':v?'y':'n'}">${v===2?IC.dash:v?IC.check:IC.x}</span></td>`).join('')}</tr>`).join('')}
   </table>`;
 }
+/* نوار توزیع. عددها همان عددهای بالای کارت‌اند، فقط تقسیم‌شده بر اساس
+   اینکه کلیدِ پول دست کیست — «در راه» هم تا وقتی نرسیده، نزد مهاجر است. */
+function renderDist(){
+  const irr=S.unit==='irr';
+  const you=pwBal(), here=S.available+nestsTotal()+S.pending, t=here+you;
+  const f=v=> irr ? toman(v*CONFIG.buyRate) : usd0(v);
+  $('h-dm').textContent=f(here); $('h-dy').textContent=f(you);
+  const pm=t>0 ? Math.round(here/t*100) : 0;
+  $('h-dbar-m').style.width=(t>0?pm:0)+'%';
+  $('h-dbar-y').style.width=(t>0?100-pm:0)+'%';
+  $('h-dk-m').classList.toggle('off',here<=0);
+  $('h-dk-y').classList.toggle('off',you<=0);
+}
 function renderCuPill(){
   const p=$('h-cupill'); if(!p) return;
-  const you=pwBal(), here=S.available+nestsTotal(), self=you>0;
+  const you=pwBal(), here=S.available+nestsTotal()+S.pending, self=you>0;
   S.custody=self?'self':'basic';
   p.classList.toggle('self',self);
-  $('h-cutxt').innerHTML=!self?C('cuAtMohajer'):(here<=0?C('cuAtYou'):N(usd0(here))+' '+C('cuSplitA')+' · '+N(usd0(you))+' '+C('cuSplitB'));
+  /* عددها در نوار توزیع‌اند؛ این سطر فقط می‌گوید کلید دست کیست */
+  $('h-cutxt').innerHTML=!self?C('cuAtMohajer'):(here<=0?C('cuAtYou'):C('cuAtBoth'));
   const cb=$('cu-btn'); if(cb) cb.textContent='پول: '+(self?C('cuSelfN'):C('cuBasicN'));
   const kc=$('ks-cu'); if(kc) kc.textContent=self?C('cuSelfN'):C('cuBasicN')+' · '+C('untilActivate');
 }

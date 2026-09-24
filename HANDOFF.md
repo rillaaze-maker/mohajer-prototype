@@ -1464,6 +1464,96 @@ hard-coded, and adding this screen would have left five questions labelled
   already support being asked per task.
 
 
+## 10j. v4.5 — distribution, bars, and what the dollar actually is (2026-09-24)
+
+Four changes to `wallet-v4.5.html`, all from the same complaint: the product's
+real proposition — **you choose where your money is kept** — was not visible
+where it mattered.
+
+### توزیع دارایی on home
+
+Home showed *allocation* (قابل استفاده / سرمایه‌گذاری / در حال پردازش) but never
+*custody*. Added a two-colour bar directly under the balance with «نزد مهاجر» and
+«نزد شما» and their amounts, and the custody pill became a **full-width row**:
+gold dot + «نگهداری دارایی توسط مهاجر», 48px, semibold. Three states, all
+generated from `pwBal()` and never typed:
+
+| state | row |
+|---|---|
+| all at Mohajer | نگهداری دارایی توسط مهاجر |
+| split | نگهداری دارایی توسط مهاجر و خودتان (`cuAtBoth`, new) |
+| all self | پول شما زیر بالشت خودتان است |
+
+The bar is shown **at zero too**, empty and dimmed: it teaches that money can
+live in two places before the user has any. Numbers moved out of the row into
+the bar, so the row states *who holds the key* and the bar states *how much*.
+The fourth «نزد شما» box was removed — the bar replaced it. The legend is a
+readout, not buttons: it used to be two 30px tap targets 20px above a 48px row
+that opened the same page. JTBD unchanged: balance, then one action.
+
+### طلای فیزیکی is now شمش, per Milli / Wallgold
+
+The screen asked «چند گرم؟» with a free decimal — you cannot buy 3.7 grams of
+gold. It now picks **standard bars**: ۰٫۵ / ۱ / ۲ / ۲٫۵ / ۵ / ۱۰ گرمی, each with
+its price and a −/+ stepper, summing to «۳ شمش · ۷ گرم». The shop's stock caps
+the + button per row. The pickup screen and the receipt carry the same sentence,
+plus **کارت شناسایی — الزامی**, which is how the real services do it. Verified:
+1×5g + 2×1g = 7g → $450.50 ($64/g + $2.50), identical on screen and receipt.
+
+Bar denominations are a business parameter (`BARS`), not a design decision.
+Milli enforces a 5g minimum; we do not, because it would block small test
+sessions — **WS3 should confirm both.**
+
+### ماهیت دارایی — the team's six statements, verbatim
+
+The colleague's note was right: «به شکل تعدادی استیبل‌کوین در بیت‌وانا» is not
+transparency. The team chose the **single-asset model** for MVP (1 digital
+dollar = 1 USDT at Bitvana), not a basket. Their six sentences map exactly onto
+the explainer's shape — three rows, then three behind «بیشتر توضیح بده»:
+
+1. not cash, not a bank deposit · 2. 1:1 USDT at Bitvana, your share recorded ·
+3. Bitvana custodies and converts, Mohajer manages balance and access ·
+4. USDT targets ~$1 but can drift, and is not a guaranteed deposit ·
+5. out to rial, or to your own wallet over TRON; rate/fee/time shown first ·
+6. everything logged; on-chain transfers have public ids, verifiable without us.
+
+Statement 4 is the one that matters: it is the first place the product admits a
+risk in its own instrument. **Bitvana is now named in every place that talks
+about custody** (`exCuBasic1`, `exSafeM2`, `exCuBasicM1`, `dgPartner`) — layer
+one names the institution, layer two names the token, which keeps USDT on an
+on-request surface as decision 3 requires.
+
+The basket copy (`exBasket*`) is untouched — that is the *investment* product,
+a different thing from the dollar's backing, and nothing claims otherwise.
+
+### Labels that name the thing, and gold last (2026-09-24, second pass)
+
+Two corrections from the founder, both about a word being vaguer than the state
+behind it:
+
+- **«در حال پردازش» → «در حال تبدیل».** "Processing" could be read as a pending
+  gold pickup; it is only ever money mid-conversion. A gold order deducts at
+  pickup, so it is *not* in this bucket and must not look like it is.
+- **«نزد شما» → «در کیف پول شخصی».** "With you" is a feeling; the wallet is a
+  place. Applied to the distribution legend and `walletBox`.
+
+**طلای فیزیکی moved to third** on «پول شما کجاست؟» (`CU_ORDER` is now
+`['basic','self','gold']`), so the two digital custody states sit together and
+the physical one closes the list. `CMP`'s rows are positional against
+`CU_ORDER`, so every row was permuted with it — otherwise the comparison table
+would have kept rendering the old columns under the new headers and quietly
+lied. Re-verified all four rows after the move: بدون نیاز به ما (نه/بله/بله) ·
+بازیابی رمز (بله/نه/—) · خرج مستقیم (بله/بله/نه) · نگهداری شخصی (نه/بله/بله).
+
+### «این دلار چیست؟» moved one screen earlier
+
+It lived on the confirm screen — after the user had already decided. It now also
+sits on the amount screen, under the presets and above the keypad, as a compact
+40px pill, so the question can be asked **while the toman is being typed**. It
+stays on confirm as the last check before paying.
+
+---
+
 ## 11. Blu Bank — the reference
 
 The team keeps pointing at Blu (بلوبانک, by Saman Bank) and it is now the primary
