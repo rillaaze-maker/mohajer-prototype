@@ -1573,6 +1573,26 @@ follow the person actually chosen, and «ادامه» only unlocks for someone w
 Mohajer. Verified: $2,000 → $50 to a Mohajer contact → $1,949.50 with the fee,
 activity reads «انتقال به مهدی کریمی».
 
+**Second pass, after the founder saw it (same day).** The «دعوت» button was a
+`.btn`, which in this design system is `width:100%` — it crushed the row and the
+name wrapped one letter per line. Beyond the bug, picking a recipient did not
+*look* like picking a recipient, and an irreversible transfer should say who it
+is going to more than once. Now:
+
+- **Two sections.** «کاربران مهاجر» are solid cards with a radio; «هنوز مهاجر
+  ندارند» are hollow dashed cards with a «دعوت» pill and a line saying you
+  cannot send to them yet. A non-user row is not a row you can select by
+  accident — the only thing tappable on it is دعوت.
+- **The recipient is stated three times before any amount is typed**: a green
+  «گیرنده» card with name and number and a «تغییر» button, the chosen row
+  badged «گیرنده», and the CTA itself reading **«ادامه · سارا رضایی»**. The
+  confirm screen (۳/۳) then restates it with «برگشت‌ناپذیر است».
+- `.mini` is the new in-row button (auto width, 38px); `.btn` stays full-width
+  where it belongs.
+
+Verified at 360px: no overflow, invite round-trip leaves the recipient card
+intact (the reported bug), «تغییر» clears selection, field and CTA together.
+
 **The `[hidden]` trap, again.** `#inv-done` is a `.center`, which sets
 `display:flex` and beat the `hidden` attribute — the invite screen showed the
 SMS preview and the "sent" confirmation at once. `[hidden]{display:none
