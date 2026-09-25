@@ -1654,6 +1654,112 @@ stays on confirm as the last check before paying.
 
 ---
 
+## 10k. Fee policy v1.0 and live rates (2026-09-25)
+
+From `Mohajer_v4_5_Fee_Pricing_Implementation_Spec_v1_0.md`. The spec's core
+finding was right and damning: the quote screen showed a **$4.58 fee on a
+$1.50 flat fee** because the displayed "fee" silently folded in a 0.9% spread.
+Numbers on one screen contradicted each other.
+
+**One config, one formula per service.** `FEES` at the top of the file now holds
+every number; no page computes its own.
+
+| service | rule |
+|---|---|
+| خرید | ۰٫۷۵٪ of gross, floor $0.50, min purchase $50 |
+| فروش | ۰٫۷۵٪ of sold USD, floor $0.50 |
+| انتقال داخلی | **صفر** (was $0.50 — an internal ledger move cannot carry a network-shaped fee) |
+| کیف پول شخصی | ۰٫۲٪ capped $5 + the real network cost, on separate lines |
+| سرمایه‌گذاری | ۰٫۵٪ on entry; exit and periodic **zero in this version** |
+| طلا | metal + partner fabrication + ۰٫۵٪ service, floor $2.50 — three visible lines |
+| دستگاه | $49 labelled «قیمت نمونه» |
+
+**One execution rate in both directions.** The old build bought at 146,305 and
+sold at 143,405 — a hidden 2% round trip *on top of* the stated fee. There is
+now a single «نرخ اجرا» and the whole cost sits in the fee row, which is what
+makes «هزینه کل چطور حساب شد؟» (a new explainer) able to tell the truth.
+
+**Rates are today's market** (۳ مهر ۱۴۰۵, tgju): **۲۳۴٬۶۱۵ تومان** per dollar and
+**$102.80** per gram of 18k gold — the two are internally consistent (24.1m
+toman/gram ÷ 234,615 = $102.8, and 18k at ~$4.3k/oz gives $103.7).
+
+**The spec shipped its own test oracle** (§5) and all eight examples reproduce
+exactly: 50M toman → gross 344.827586, fee 2.586207, net $342.24 · $100 buy →
+$99.25 · $50 buy → floor, $49.50 · sell $100 → 14,391,250 toman · internal $100
+→ costs $100 · invest $100 → $99.50 · 0.5g bar → $32 + $2.50 · 10g bar → $640 +
+$3.20. End-to-end at live rates: 50M → $211.52, transfer $50 costs exactly $50,
+0.5g gold costs $55.90 and leaves $51.40 of metal in the distribution.
+
+**Two invented numbers to replace before anyone quotes them.** The partner
+fabrication line is a **$2.00-per-bar placeholder**, and the network fee for a
+personal-wallet transfer is **$0.80**. Both are shown as their own rows, as the
+spec demands, but neither comes from a partner quote. The `۵ دلار · امتحان`
+path is below the $50 minimum by design and is labelled «مسیر آموزشی؛ هزینهٔ
+این یکی را مهاجر داده است»; typing any digit leaves that mode.
+
+### Persian consistency pass on طلا and کیف پول شخصی
+
+35 lines rewritten to one rule: **every row is a complete sentence with a verb,
+addressed to «شما», ending in a period.** Fragments became sentences («همین
+الان. کلید در فضای امن گوشی.» → «کلید همین حالا و در فضای امن همین گوشی ساخته
+می‌شود.»), missing ezafe added («لحظه تحویل» → «لحظهٔ تحویل»), and colloquial
+ellipsis regularised («هر مقدار خواستید» → «هر مقدار که بخواهید»).
+
+The question-answer form in the deep rows («گوشی گم شد؟ …») was **kept**: it is
+used identically in the key and personal-wallet explainers, so it is a pattern,
+not an inconsistency. Changing one of them would have created the problem this
+pass was meant to remove.
+
+Two lines the founder flagged separately:
+- The gold rate row said «نرخ هر گرم، هر روز از بازار طلای تهران» — a claim with
+  no timing. It now says where the rate comes from **and when it locks**, which
+  matches what the flow actually does since gold is paid for at order time.
+- `exPwDeepM1` carried raw English chip names — «(Secure Enclave / StrongBox)».
+  Gone. A Persian-speaking participant learns nothing from a brand name; the
+  line now says the key is made inside the phone's hardware-secure area or the
+  device's secure chip and never leaves it. `Secure Enclave`/`StrongBox` no
+  longer appear anywhere in the build.
+
+### Baskets rebuilt on the team's proposed mixes (2026-09-25)
+
+The old mixes were BTC-heavy and the «جسور» basket held 75% crypto. Replaced
+with the team's table, crypto capped at ۰٪ / ۵٪ / ۲۵٪:
+
+| | دلار | طلا | نقره | بیت‌کوین | اتریوم |
+|---|---|---|---|---|---|
+| آرام | ۷۵ | ۲۲ | ۳ | — | — |
+| متعادل | ۵۵ | ۳۵ | ۵ | ۴ | ۱ |
+| پویا | ۳۰ | ۳۵ | ۱۰ | ۱۸ | ۷ |
+
+**نقره is a new asset** in the product (its own colour, `#9AA5AD`), and «جسور»
+became **«پویا»** to match the team's naming. All three sum to 100.
+
+**The 12-month figure is now derived, not typed.** It used to be a hand-written
+number per basket (۱۸٪ / ۳۴٪ / ۶۱٪) sitting next to a mix it had no connection
+to — change the weights and the number silently lies. `nestYear()` is now the
+weighted sum of a per-asset table (`CONFIG.asset12m`), so the two can never
+disagree. The chart's drift and spread read from the same function.
+
+**The assumption table is mine, and it inverts the ranking.** Per-asset trailing
+twelve months in dollars, estimated from market reporting (Sept 2026): دلار ۰،
+طلا +۲۵، نقره +۳۵، بیت‌کوین −۳۰، اتریوم −۴۵. That yields **+۷٪ / +۹٪ / +۴٪** —
+the *riskiest* basket shows the *lowest* trailing return, because crypto fell
+over the window. This is truthful for this market and it teaches the right
+lesson (risk is not a promise of more), but it is the opposite of what the old
+numbers implied, so **the team should confirm it before the round** and replace
+`asset12m` with measured data.
+
+### Still open from the two specs
+
+`Mohajer_Hypothesis_Validation_Test_and_Dashboard_Spec_v1.0.md` is not started:
+the primary-task definition, scenarios A/B, the ~15 structured end questions
+across H1–H5, the event list, and the hypothesis-validation dashboard with its
+Business tab. The runner's segmentation (age, dollar history, crypto, savings)
+already matches the spec's S1–S4. Also pending: the founder's four closing voice
+questions, and spotlighted screenshots for the "did you notice this?" questions.
+
+---
+
 ## 11. Blu Bank — the reference
 
 The team keeps pointing at Blu (بلوبانک, by Saman Bank) and it is now the primary

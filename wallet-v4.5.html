@@ -1271,6 +1271,7 @@ button,input,select,textarea{color:inherit}
       <div class="v num zero" id="c-amt">0<span class="caret"></span></div>
       <div class="sub" id="c-out"></div>
     </div>
+    <div id="c-warn" style="padding:0 20px"></div>
     <div class="presets">
       <button class="preset trial" onclick="cTrial()" data-c="presetTrial"></button>
       <button class="preset num" onclick="cSet(50000000)">۵۰ م</button>
@@ -1306,11 +1307,16 @@ button,input,select,textarea{color:inherit}
       </div>
       <div class="card" style="margin-top:12px;padding:4px 18px">
         <div class="row"><span class="k" data-c="youPay"></span><span class="v num" id="q-pay">۰</span></div>
-        <div class="row"><span class="k" data-c="rate"></span><span class="v num" id="q-rate">۰</span></div>
-        <div class="row"><span class="k" data-c="fee"></span><span class="v num" id="q-feeall">—</span></div>
+        <div class="row"><span class="k" data-c="execRate"></span><span class="v num" id="q-rate">۰</span></div>
+        <div class="row"><span class="k" data-c="grossUsd"></span><span class="v num" id="q-gross">$0.00</span></div>
+        <div class="row"><span class="k" data-c="feeMohajer"></span><span class="v num" id="q-fee">—</span></div>
         <div class="row"><span class="k" data-c="time"></span><span class="v" data-c="convTime"></span></div>
         <div class="row total"><span class="k" data-c="youGetFinal"></span><span class="v num" id="q-net">$0.00</span></div>
       </div>
+      <p class="tiny" id="q-feenote" style="margin-top:8px" hidden></p>
+      <button class="linkmini" onclick="openExplain('fees','c-quote')">
+        <span class="ic" data-ic="info"></span><span data-c="feeHowQ"></span>
+      </button>
       <div class="sec" data-c="payFrom"></div>
       <button class="opt" aria-pressed="true">
         <div class="ic" data-ic="card"></div>
@@ -1392,7 +1398,7 @@ button,input,select,textarea{color:inherit}
         <div class="row"><span class="k" data-c="recipient"></span><span class="v" id="tc-name">—</span></div>
         <div class="row"><span class="k" data-c="phone"></span><span class="v num" id="tc-phone">—</span></div>
         <div class="row"><span class="k" data-c="amount"></span><span class="v num" id="tc-amt">$0.00</span></div>
-        <div class="row"><span class="k" data-c="fee"></span><span class="v num">$0.50</span></div>
+        <div class="row"><span class="k" data-c="feeMohajer"></span><span class="v num" id="tc-fee">—</span></div>
         <div class="row total"><span class="k" data-c="deducted"></span><span class="v num" id="tc-total">$0.00</span></div>
       </div>
       <div class="note warn">
@@ -1584,7 +1590,9 @@ button,input,select,textarea{color:inherit}
       <div class="card" style="padding:4px 16px;margin-top:14px">
         <div class="row"><span class="k" data-c="barsSum"></span><span class="v" id="pa-sum">—</span></div>
         <div class="row"><span class="k" data-c="gramRate"></span><span class="v num" id="pa-rate">—</span></div>
-        <div class="row"><span class="k" data-c="fee"></span><span class="v num">$2.50</span></div>
+        <div class="row"><span class="k" data-c="goldMetal"></span><span class="v num" id="pa-metal">—</span></div>
+        <div class="row"><span class="k" data-c="goldFab"></span><span class="v num" id="pa-fab">—</span></div>
+        <div class="row"><span class="k" data-c="goldMohajer"></span><span class="v num" id="pa-fee">—</span></div>
         <div class="row total"><span class="k" data-c="deducted"></span><span class="v num" id="pa-total">—</span></div>
         <div class="row"><span class="k" data-c="whenDeducted"></span><span class="v" style="color:var(--ok)" data-c="deductNow"></span></div>
       </div>
@@ -2092,11 +2100,15 @@ button,input,select,textarea{color:inherit}
       </div>
       <div class="card" style="margin-top:12px;padding:4px 18px">
         <div class="row"><span class="k" data-c="amount"></span><span class="v num" id="wq-amt">$0.00</span></div>
-        <div class="row"><span class="k" data-c="rate"></span><span class="v num" id="wq-rate">۰</span></div>
-        <div class="row"><span class="k" data-c="fee"></span><span class="v num">$2.00</span></div>
+        <div class="row"><span class="k" data-c="feeMohajer"></span><span class="v num" id="wq-fee">$0.00</span></div>
+        <div class="row"><span class="k" data-c="execRate"></span><span class="v num" id="wq-rate">۰</span></div>
         <div class="row"><span class="k" data-c="time"></span><span class="v" data-c="withdrawTime"></span></div>
         <div class="row total"><span class="k" data-c="youGetFinal"></span><span class="v num" id="wq-net">۰ تومان</span></div>
       </div>
+      <p class="tiny" id="wq-feenote" style="margin-top:8px" hidden></p>
+      <button class="linkmini" onclick="openExplain('fees','w-quote')">
+        <span class="ic" data-ic="info"></span><span data-c="feeHowQ"></span>
+      </button>
       <div class="sec" data-c="depositTo"></div>
       <button class="opt" aria-pressed="true">
         <div class="ic" data-ic="bank"></div>
@@ -2237,27 +2249,42 @@ button,input,select,textarea{color:inherit}
 
 <script>
 /* ════════ CONFIG — every mock number lives here ════════ */
+/* تعرفهٔ آزمایشی v1.0 — هر عدد اینجا عوض شود، همهٔ صفحه‌ها عوض می‌شوند.
+   اعداد تجاری نیستند؛ پس از قرارداد شریک بازبینی می‌شوند. */
+const FEES={
+  ver:'fee-v1.0-test',
+  buyPct:0.0075, buyFloor:0.50, minBuyUsd:50,
+  sellPct:0.0075, sellFloor:0.50,
+  transferPct:0,                      /* انتقال داخلی: کارمزد مهاجر صفر */
+  pwPct:0.002, pwCap:5.00, pwNetwork:0.80,   /* سهم مهاجر + هزینهٔ واقعی شبکه */
+  investPct:0.005, investExitPct:0,
+  goldPct:0.005, goldFloor:2.50, goldFabPerBar:2.00,
+  devicePrice:49
+};
 const CONFIG={
-  buyRate:145000, buySpread:0.009, buyFlatFee:1.50,
-  goldUsdPerGram:64, goldCarat:'۱۸ عیار', goldDeliveryFee:2.50,
-  trialCapUsd:10,
-  sellSpread:0.011, sellFlatFee:2.00,
-  transferFee:0.50,
-  pwFee:1.20,
+  /* نرخ بازار آزاد، ۳ مهر ۱۴۰۵ · یک نرخ اجرا برای خرید و فروش، تا هزینه
+     فقط در ردیف کارمزد باشد و نه پنهان در اختلاف نرخ. */
+  buyRate:234615, goldUsdPerGram:102.80, goldCarat:'۱۸ عیار',
+  ratesAsOf:'۳ مهر ۱۴۰۵',
+  trialUsd:5,
   quoteSeconds:90,
+  /* بازده ۱۲ ماه هر دارایی، برحسب دلار. برآورد آزمایشی از گزارش‌های بازار
+     (سپتامبر ۲۰۲۶)، نه داده اندازه‌گیری‌شده — پیش از عرضه با داده واقعی
+     جایگزین شود. دلار نسبت به خودش صفر است. */
+  asset12m:{'دلار':0,'طلا':25,'نقره':35,'بیت‌کوین':-30,'اتریوم':-45},
   nests:[
     {id:'calm', t:'لانهٔ آرام', tStd:'سبد آرام', cls:'n-calm',
-     sub:'بیشترش دلار و طلا. کم بالا و پایین می‌رود.',
-     risk:'کم', riskLv:1, year:'۱۸٪', yearNum:18,
-     mix:[{k:'دلار',v:55,c:'#4C8C6E'},{k:'طلا',v:30,c:'#D5A45C'},{k:'بیت‌کوین',v:15,c:'#E08A3C'}]},
+     sub:'سه‌چهارم دلار، بقیه طلا و نقره. رمزارز ندارد.',
+     risk:'کم', riskLv:1,
+     mix:[{k:'دلار',v:75,c:'#4C8C6E'},{k:'طلا',v:22,c:'#D5A45C'},{k:'نقره',v:3,c:'#9AA5AD'}]},
     {id:'mid', t:'لانهٔ متعادل', tStd:'سبد متعادل', cls:'n-mid',
-     sub:'نصف آرام، نصف رشدی.',
-     risk:'متوسط', riskLv:2, year:'۳۴٪', yearNum:34,
-     mix:[{k:'دلار',v:30,c:'#4C8C6E'},{k:'طلا',v:25,c:'#D5A45C'},{k:'بیت‌کوین',v:30,c:'#E08A3C'},{k:'اتریوم',v:15,c:'#6E7BC4'}]},
-    {id:'bold', t:'لانهٔ جسور', tStd:'سبد جسور', cls:'n-bold',
-     sub:'بیشترش رمزارز. زیاد بالا و پایین می‌رود.',
-     risk:'زیاد', riskLv:3, year:'۶۱٪', yearNum:61,
-     mix:[{k:'بیت‌کوین',v:40,c:'#E08A3C'},{k:'اتریوم',v:35,c:'#6E7BC4'},{k:'طلا',v:15,c:'#D5A45C'},{k:'دلار',v:10,c:'#4C8C6E'}]}
+     sub:'بیشترش دلار و طلا، با ۵٪ رمزارز.',
+     risk:'متوسط', riskLv:2,
+     mix:[{k:'دلار',v:55,c:'#4C8C6E'},{k:'طلا',v:35,c:'#D5A45C'},{k:'نقره',v:5,c:'#9AA5AD'},{k:'بیت‌کوین',v:4,c:'#E08A3C'},{k:'اتریوم',v:1,c:'#6E7BC4'}]},
+    {id:'bold', t:'لانهٔ پویا', tStd:'سبد پویا', cls:'n-bold',
+     sub:'یک‌چهارم رمزارز، بقیه دلار و فلزهای گران‌بها.',
+     risk:'زیاد', riskLv:3,
+     mix:[{k:'دلار',v:30,c:'#4C8C6E'},{k:'طلا',v:35,c:'#D5A45C'},{k:'نقره',v:10,c:'#9AA5AD'},{k:'بیت‌کوین',v:18,c:'#E08A3C'},{k:'اتریوم',v:7,c:'#6E7BC4'}]}
   ]
 };
 
@@ -2309,6 +2336,19 @@ const COPY_DEF={
   getRate:['conv','دریافت نرخ'], quoteTitle:['conv','بررسی نرخ'],
   youGet:['conv','دریافت می‌کنید'], rateValid:['conv','اعتبار نرخ'], seconds:['conv','ثانیه'],
   youPay:['conv','می‌پردازید'], rate:['conv','نرخ'], fee:['conv','کارمزد'], time:['conv','زمان'],
+  execRate:['conv','نرخ اجرا'],
+  grossUsd:['conv','دلار ناخالص'],
+  feeMohajer:['conv','کارمزد مهاجر'],
+  feeZero:['conv','صفر'],
+  feeFloorNote:['conv','کف کارمزد نیم دلار اعمال شد.'],
+  trialNote:['conv','مسیر آموزشی؛ هزینهٔ این یکی را مهاجر داده است.'],
+  minBuyWarn:['conv','حداقل خرید، معادل ۵۰ دلار است.'],
+  feeHowQ:['conv','هزینه کل چطور حساب شد؟'],
+  goldMetal:['conv','قیمت طلا'],
+  goldFab:['conv','ساخت و تحویل شریک'],
+  goldMohajer:['conv','خدمت مهاجر'],
+  samplePrice:['conv','قیمت نمونه'],
+  networkFee:['conv','هزینهٔ شبکه'],
   convTime:['conv','کمتر از ۵ دقیقه'], youGetFinal:['conv','دریافتی نهایی'],
   payFrom:['conv','پرداخت از'], ownVerified:['conv','به نام خودتان'],
   whatIsDollarQ:['conv','این دلار چیست و کجاست؟'],
@@ -2366,7 +2406,7 @@ const COPY_DEF={
   cuGoldN:['cu','طلای فیزیکی'],
   cuGoldL:['cu','مقدار مورد نظر از دارایی‌تان تبدیل به طلا به صورت فیزیکی به شما تحویل داده می‌شود.'],
   cuGoldP1:['cu','نگهداری شخصی'], cuGoldP2:['cu','بدون وابستگی به مهاجر'],
-  cuGoldC1:['cu','ریسک‌های نگهداری شخصی طلا'], cuGoldC2:['cu','محدودیت در استفاده از خدمات دیگر مهاجر'],
+  cuGoldC1:['cu','مسئولیت و ریسک نگهداری شخصی طلا'], cuGoldC2:['cu','محدودیت در استفاده از خدمات دیگر مهاجر'],
   cuGoldCta:['cu','تحویل طلا'],
   cuSelfN:['cu','کیف پول شخصی'],
   cuSelfL:['cu','نگهداری شخصی کلید دسترسی به دارایی دیجیتال'],
@@ -2381,13 +2421,13 @@ const COPY_DEF={
   /* personal wallet */
   pwTitle:['pw','کیف پول شخصی'],
   pw1:['pw','کلید دسترسی به دارایی دلاری را خودتان نگه می‌دارید؛ روی گوشی یا یک دستگاه کوچک.'],
-  pw2:['pw','هر مقدار خواستید منتقل می‌کنید. بقیه نزد مهاجر می‌ماند.'],
-  pw3:['pw','بدون کلید شخصی، هیچ‌کس (حتی مهاجر) نمی‌تواند دارایی شما را جابه‌جا کند.'],
+  pw2:['pw','هر مقدار که بخواهید منتقل می‌کنید و بقیه نزد مهاجر می‌ماند.'],
+  pw3:['pw','بدون کلید شخصی شما، هیچ‌کس — حتی مهاجر — نمی‌تواند دارایی را جابه‌جا کند.'],
   pwMake:['pw','ساخت کیف پول'],
   pwModeT:['pw','روی گوشی یا دستگاه؟'],
-  pwSoft:['pw','روی گوشی'], pwSoftD:['pw','همین الان. کلید در فضای امن گوشی.'], pwSoftB:['pw','سریع'],
-  pwHard:['pw','دستگاه فیزیکی'], pwHardD:['pw','کلید داخل یک دستگاه جدا. ۵ تا ۷ روز.'], pwHardB:['pw','اختیاری'],
-  pwModeNote:['pw','هر دو، کلید را به شما می‌دهد. دستگاه، از گوشی جداست.'],
+  pwSoft:['pw','روی گوشی'], pwSoftD:['pw','کلید همین حالا و در فضای امن همین گوشی ساخته می‌شود.'], pwSoftB:['pw','سریع'],
+  pwHard:['pw','دستگاه فیزیکی'], pwHardD:['pw','کلید داخل یک دستگاه جدا ساخته می‌شود و ۵ تا ۷ روز زمان می‌برد.'], pwHardB:['pw','اختیاری'],
+  pwModeNote:['pw','هر دو روش کلید را به خود شما می‌دهند؛ تفاوت در جای نگهداری کلید است.'],
   pwCompareQ:['pw','فرقشان چیست؟'],
   pmT:['pw','در یک نگاه'],
   pm1:['pw','کلید کجا ساخته می‌شود'], pm1a:['pw','داخل گوشی'], pm1b:['pw','داخل دستگاه'],
@@ -2398,15 +2438,15 @@ const COPY_DEF={
   pm6:['pw','هزینه'], pm6a:['pw','رایگان'], pm6b:['pw','<span class="num">$49</span>'],
   pwDeepQ:['pw','دقیق‌تر چطور کار می‌کند؟'],
   pwReadyT:['pw','قبل از شروع'],
-  pwR1:['pw','جای خلوت'], pwR1d:['pw','کسی صفحه را نبیند.'],
-  pwR2:['pw','بدون عکس'], pwR2d:['pw','فقط روی کاغذ بنویسید.'],
-  pwR3:['pw','۱۲ کلمه، خودِ کلید است'], pwR3d:['pw','هر کس داشته باشد، پول را دارد.'],
+  pwR1:['pw','جای خلوت'], pwR1d:['pw','جایی بنشینید که کسی صفحه را نبیند.'],
+  pwR2:['pw','بدون عکس'], pwR2d:['pw','کلمه‌ها را فقط روی کاغذ بنویسید و از آن‌ها عکس نگیرید.'],
+  pwR3:['pw','۱۲ کلمه، خودِ کلید است'], pwR3d:['pw','هر کس این کلمه‌ها را داشته باشد، به دارایی شما دسترسی دارد.'],
   pwReadyCta:['pw','آماده‌ام'],
-  pwWordsT:['pw','۱۲ کلمهٔ شما'], pwWordsL:['pw','فقط روی کاغذ. مهاجر آن‌ها را نمی‌بیند.'], pwWrote:['pw','نوشتم'],
+  pwWordsT:['pw','۱۲ کلمهٔ شما'], pwWordsL:['pw','کلمه‌ها را فقط روی کاغذ بنویسید؛ مهاجر آن‌ها را نمی‌بیند.'], pwWrote:['pw','نوشتم'],
   pwCheckT:['pw','یک بررسی کوتاه'], pwCheckQ:['pw','کلمهٔ شمارهٔ {n} کدام بود؟'],
   pwWrong:['pw','نه. دوباره کلمات را ببینید.'], pwCheckOk:['pw','درست است.'],
   pwActivate:['pw','تأیید و فعال‌سازی'], pwSeeWords:['pw','دیدن دوبارهٔ کلمات'],
-  pwWalletT:['pw','کیف پول شخصی'], pwBalL:['pw','موجودی کیف پول شما'], pwSync:['pw','آخرین بررسی: همین الان'],
+  pwWalletT:['pw','کیف پول شخصی'], pwBalL:['pw','موجودی کیف پول شما'], pwSync:['pw','آخرین بررسی: همین حالا'],
   pwType:['pw','نوع'], pwTypeSoft:['pw','روی گوشی'], pwTypeHard:['pw','دستگاه فیزیکی'],
   pwBackup:['pw','پشتیبان'], pwBackupV:['pw','۱۲ کلمه · تأییدشده'],
   pwAddr:['pw','نشانی'], pwCopy:['pw','کپی'], pwCopied:['pw','کپی شد'],
@@ -2415,35 +2455,35 @@ const COPY_DEF={
   pwAmtT:['pw','انتقال به کیف پول'], pwAll:['pw','همه'], pwReview:['pw','بررسی'],
   pwQuoteT:['pw','بررسی انتقال'], pwArrives:['pw','به کیف پول شما می‌رسد'], pwFrom:['pw','از نزد مهاجر کم می‌شود'],
   pwFee:['pw','هزینهٔ انتقال'], pwDest:['pw','مقصد'], pwDestV:['pw','کیف پول شما'], pwTime:['pw','حدود ۳ دقیقه'],
-  pwIrr:['pw','<b>برگشت‌ناپذیر است.</b> بعد از این، فقط کلید شما.'], pwConfirm:['pw','تأیید انتقال'],
+  pwIrr:['pw','<b>این انتقال برگشت‌ناپذیر است.</b> از این پس فقط کلید شما کار می‌کند.'], pwConfirm:['pw','تأیید انتقال'],
   pwS1:['pw','ثبت شد'], pwS2:['pw','در راه'], pwS3:['pw','رسید'],
-  pwSending:['pw','در راه…'], pwArrivedMsg:['pw','رسید. حالا زیر بالشت شماست.'],
-  pwFailed:['pw','قبل از ارسال متوقف شد.'], pwFailNote:['pw','<b>مبلغ برگشت.</b> هزینه‌ای کم نشد.'],
+  pwSending:['pw','در راه…'], pwArrivedMsg:['pw','رسید. دارایی حالا زیر بالشت خودتان است.'],
+  pwFailed:['pw','پیش از ارسال متوقف شد.'], pwFailNote:['pw','<b>مبلغ به موجودی شما برگشت.</b> هزینه‌ای کسر نشد.'],
   goWallet:['pw','کیف پول شخصی'],
   pwBackT:['pw','بازگرداندن به مهاجر'], pwBackArrives:['pw','به حساب شما نزد مهاجر می‌رسد'], pwBackFrom:['pw','از کیف پول شما'],
-  pwBackDestV:['pw','حساب خودتان نزد مهاجر'], pwBackFixed:['pw','مقصد ثابت است؛ فقط حساب خودتان.'],
-  pwSignNote:['pw','با کلید شما امضا می‌شود. مهاجر نمی‌تواند به‌جای شما.'], pwSignCta:['pw','تأیید با کلید'],
-  pwSignT:['pw','تأیید با کلید شما'], pwHoldSoft:['pw','نگه دارید'], pwHoldSoftD:['pw','انگشت را روی دکمه نگه دارید.'],
+  pwBackDestV:['pw','حساب خودتان نزد مهاجر'], pwBackFixed:['pw','مقصد ثابت است و فقط حساب خودتان را می‌پذیرد.'],
+  pwSignNote:['pw','انتقال با کلید شما امضا می‌شود؛ مهاجر نمی‌تواند به‌جای شما امضا کند.'], pwSignCta:['pw','تأیید با کلید'],
+  pwSignT:['pw','تأیید با کلید شما'], pwHoldSoft:['pw','نگه دارید'], pwHoldSoftD:['pw','انگشتتان را روی دکمه نگه دارید تا امضا کامل شود.'],
   pwHoldHard:['pw','دکمهٔ دستگاه را فشار دهید'], pwHoldHardBtn:['pw','شبیه‌سازی: فشار دکمه'],
-  pwSigned:['pw','امضا شد'], pwSignFail:['pw','امضا رد شد. چیزی تغییر نکرد.'],
+  pwSigned:['pw','امضا شد'], pwSignFail:['pw','امضا رد شد و چیزی تغییر نکرد.'],
   pwB1:['pw','امضا شد'], pwB2:['pw','در راه'], pwB3:['pw','به مهاجر رسید'], pwBackArrivedMsg:['pw','به حساب شما نزد مهاجر اضافه شد.'],
   txPwOut:['pw','انتقال به کیف پول شخصی'], txPwIn:['pw','بازگشت از کیف پول شخصی'], txPwMake:['pw','ساخت کیف پول شخصی'],
   txRef:['pw','شناسهٔ انتقال'], techRow:['pw','جزئیات فنی'],
   /* the one place the technical names are said, by request, a layer down */
   exPwDeepT:['ex','کیف پول شخصی، دقیق‌تر'],
   exPwDeep1:['ex','کیف پول دیجیتال شخصی برای شما ساخته شده، مقدار دلخواه از موجودی دلار دیجیتال به تتر (USDT) تبدیل می‌شود و به آدرس کیف پول شخصی شما انتقال می‌یابد.'],
-  exPwDeep2:['ex','۱۲ کلمه، نسخهٔ پشتیبان کلید است. روی کاغذ بنویسید؛ عکس نگیرید.'],
+  exPwDeep2:['ex','۱۲ کلمه نسخهٔ پشتیبان کلید است؛ روی کاغذ بنویسید و عکس نگیرید.'],
   exPwDeep3:['ex','این روش نگهداری معمولاً برای نگهداری بلندمدت دارایی مناسب است.'],
   exPwDeep4:['ex','گوشی یا دستگاه گم شد؟ یکی نو بگیرید و ۱۲ کلمه را وارد کنید.'],
   exPwDeep5:['ex','مهاجر نبود؟ ۱۲ کلمه در هر کیف پول استاندارد دیگری کار می‌کند.'],
   exPwDeep6:['ex','گوشی/دستگاه و ۱۲ کلمه هر دو گم شدند؟ پول برنمی‌گردد. این قانون خودِ این روش است.'],
-  exPwDeepM1:['ex','کلید خصوصی در فضای امن گوشی (Secure Enclave / StrongBox) یا تراشهٔ امن دستگاه ساخته می‌شود و خارج نمی‌شود.'],
+  exPwDeepM1:['ex','کلید خصوصی در بخش امنِ سخت‌افزاری گوشی یا داخل تراشهٔ امن دستگاه ساخته می‌شود و هیچ‌وقت از آن بیرون نمی‌آید.'],
   exPwDeepM2:['ex','۱۲ کلمه، استاندارد BIP-39 است؛ همین کیف پول در هر کیف پول استاندارد قابل بازیابی است.'],
   exPwDeepM3:['ex','هر انتقال روی خودِ گوشی یا دستگاه امضا می‌شود؛ فقط پیام امضاشده به شبکه می‌رود.'],
   exPwDeepM4:['ex','موجودی از خودِ شبکه خوانده می‌شود؛ خرج از بیرون اپ هم دیده می‌شود. مهاجر نه کلید دارد، نه کلمات.'],
   exPwCompT:['ex','گوشی یا دستگاه؟'],
   exPwComp1:['ex','هر دو، کلید را به شما می‌دهد. فرق، جای کلید است: داخل گوشی، یا داخل یک دستگاه جدا.'],
-  exPwComp2:['ex','گوشی: همین الان و رایگان. اگر گوشی هک شود، کلید در خطر است.'],
+  exPwComp2:['ex','گوشی: همین حالا و رایگان است؛ اگر گوشی هک شود، کلید در خطر است.'],
   exPwComp3:['ex','دستگاه: کلید هرگز به گوشی نمی‌آید؛ هر انتقال با دکمهٔ دستگاه. <span class="num">$49</span>، ۵ تا ۷ روز.'],
   exPwCompM1:['ex','برای مبلغ کم و شروع: گوشی. برای مبلغ زیاد یا نگهداری بلندمدت: دستگاه.'],
   exPwCompM2:['ex','می‌توانید با گوشی شروع کنید و بعداً دستگاه بگیرید؛ کیف پول همان می‌ماند.'],
@@ -2473,8 +2513,8 @@ const COPY_DEF={
   /* gold */
   goldTitle:['gold','تحویل طلا'],
   gold1:['gold','دلار شما به شمش طلای ۱۸ عیار تبدیل می‌شود.'],
-  gold2:['gold','از صرافی نزدیک، حضوری می‌گیرید.'],
-  gold3:['gold','مبلغ همین حالا کسر و طلا به نام شما کنار گذاشته می‌شود.'],
+  gold2:['gold','شمش را حضوری و از صرافی نزدیک خودتان تحویل می‌گیرید.'],
+  gold3:['gold','مبلغ همین حالا کسر می‌شود و شمش به نام شما کنار گذاشته می‌شود.'],
   goldWhyQ:['gold','نرخ و اعتبارش از کجاست؟'],
   goldStart:['gold','انتخاب صرافی'],
   pickShop:['gold','صرافی'], locating:['gold','پیدا کردن موقعیت شما…'], nearest:['gold','نزدیک‌ترین‌ها'],
@@ -2487,7 +2527,7 @@ const COPY_DEF={
   barLabel:['gold','شمش {g} گرمی'],
   barsSum:['gold','انتخاب شما'],
   barsPicked:['gold','{n} شمش · {g} گرم'],
-  barsNone:['gold','هنوز شمشی انتخاب نکرده‌اید'],
+  barsNone:['gold','هنوز شمشی انتخاب نکرده‌اید.'],
   goldIdT:['gold','کارت شناسایی همراهتان باشد'],
   goldIdB:['gold','تحویل شمش فقط با کارت شناسایی خودتان انجام می‌شود.'],
   goldIdShort:['gold','الزامی'],
@@ -2496,17 +2536,17 @@ const COPY_DEF={
   pickupTime:['gold','زمان مراجعه'], confirmGold:['gold','ثبت درخواست'],
   pickupCode:['gold','کد تحویل'], oneTimeCode:['gold','کد یک‌بارمصرف'], showAtPickup:['gold','فقط موقع تحویل نشان دهید'],
   shop:['gold','صرافی'], youReceive:['gold','تحویل می‌گیرید'], codeExpires:['gold','اعتبار کد: ۲۴ ساعت. اگر نروید، سفارش لغو و کل مبلغ به موجودی شما برمی‌گردد.'],
-  goldOverStock:['gold','این شعبه این‌قدر طلا ندارد. مقدار کمتر یا صرافی دیگر.'],
+  goldOverStock:['gold','موجودی این شعبه کمتر از این مقدار است. مقدار کمتری انتخاب کنید یا صرافی دیگری را ببینید.'],
   cancel:['gold','لغو'],
 
   /* key */
   keyTitle:['key','کلید مهاجر'],
-  key1:['key','یک دستگاه کوچک، مثل فلش.'],
+  key1:['key','کلید مهاجر دستگاهی کوچک است، به اندازهٔ یک فلش.'],
   key2:['key','کلید پول شما فقط داخل آن ساخته می‌شود.'],
   key3:['key','بدون تأیید روی دستگاه، پول جابه‌جا نمی‌شود. مهاجر کلیدی ندارد.'],
   prosCons:['key','مزایا و مسئولیت‌ها'],
   keyP1:['key','نگهداری با کلید شخصی'], keyP2:['key','عدم وابستگی به مهاجر در نگهداری'], keyP3:['key','دسترسی به دارایی دیجیتال حتی بدون مهاجر'],
-  keyC1:['key','مسئولیت نگهداری شخصی'], keyC2:['key','کلید و ۱۲ کلمه گم شود، امکان بازیابی وجود ندارد.'], keyC3:['key','در صورت انتخاب دستگاه، برای هر برداشت دستگاه لازم است.'],
+  keyC1:['key','مسئولیت نگهداری شخصی'], keyC2:['key','اگر کلید و ۱۲ کلمه هر دو گم شوند، بازیابی ممکن نیست.'], keyC3:['key','در صورت انتخاب دستگاه، برای هر برداشت دستگاه لازم است.'],
   keyDeepQ:['key','دقیق‌تر چطور کار می‌کند؟'],
   keySeeDevice:['key','دیدن دستگاه'],
   keyName:['key','کلید مهاجر'],
@@ -2515,7 +2555,7 @@ const COPY_DEF={
   keyLost:['key','دستگاه گم شد'], keyLostV:['key','با ۱۲ کلمه برمی‌گردد'],
   shipping:['key','ارسال'], shippingV:['key','رایگان · ۵ تا ۷ روز'],
   keyRiskT:['key','این را بدانید'],
-  keyRiskB:['key','اگر دستگاه و ۱۲ کلمه هر دو گم شوند، پول برنمی‌گردد. هیچ‌کس نمی‌تواند برگرداند.'],
+  keyRiskB:['key','اگر دستگاه و ۱۲ کلمه هر دو گم شوند، دارایی برنمی‌گردد و هیچ‌کس نمی‌تواند آن را برگرداند.'],
   orderKey:['key','سفارش کلید'],
   address:['key','نشانی'], moveToKey:['key','چقدر روی کلید برود؟ · دلار'], moveLater:['key','می‌توانید خالی بگذارید.'],
   devicePrice:['key','قیمت دستگاه'], free:['key','رایگان'], moveOnActivate:['key','در فعال‌سازی منتقل می‌شود'],
@@ -2554,6 +2594,13 @@ const COPY_DEF={
   exSafe1:['ex','ارزش دارایی دلاری شما در مقابل تورم حفظ می‌شود.'],
   exSafe2:['ex','امکان انتخاب بین نگهداری دارایی توسط مهاجر، نگهداری در کیف پول شخصی و تبدیل به طلای فیزیکی.'],
   exSafe3:['ex','امکان همیشگی تبدیل دوباره به ریال و برداشت'],
+  exFeeT:['ex','هزینه چطور حساب می‌شود؟'],
+  exFee1:['ex','کارمزد مهاجر روی همان صفحه نوشته می‌شود: ۰٫۷۵٪ مبلغ، با کف نیم دلار.'],
+  exFee2:['ex','نرخ خرید و فروش یکی است؛ سود پنهانی در اختلاف نرخ وجود ندارد.'],
+  exFee3:['ex','انتقال به کاربر دیگر مهاجر کارمزد ندارد و نگهداری پایه هم رایگان است.'],
+  exFeeM1:['ex','سرمایه‌گذاری: ۰٫۵٪ فقط هنگام ورود. در این نسخه کارمزد خروج و دوره‌ای صفر است.'],
+  exFeeM2:['ex','انتقال به کیف پول شخصی: ۰٫۲٪ سهم مهاجر با سقف ۵ دلار، به‌علاوهٔ هزینهٔ واقعی شبکه که جدا نوشته می‌شود.'],
+  exFeeM3:['ex','طلا: قیمت فلز + ساخت و تحویل شریک + ۰٫۵٪ خدمت مهاجر با کف ۲٫۵ دلار. این اعداد آزمایشی‌اند و با قرارداد شریک نهایی می‌شوند.'],
   exDollarT:['ex','این دلار چیست؟'],
   bitvanaT:['ex','بیت‌وانا چیست؟'],
   bitvanaB:['ex','یک صرافی رمزارز ایرانیِ دارای مجوز که دارایی دلاری کاربران مهاجر را نگهداری می‌کند.'],
@@ -2561,8 +2608,8 @@ const COPY_DEF={
   exDollar2:['ex','به‌ازای هر ۱ دلار دیجیتال، ۱ واحد تتر (USDT) در صرافی رمزارز بیت‌وانا نگهداری و سهم شما ثبت می‌شود.'],
   exDollar3:['ex','بیت‌وانا نگهداری و تبدیل را انجام می‌دهد؛ مهاجر موجودی و دسترسی شما را مدیریت می‌کند.'],
   exGoldWhyT:['ex','نرخ و اعتبار طلا'],
-  exGoldWhy1:['ex','نرخ هر گرم، هر روز از بازار طلای تهران.'],
-  exGoldWhy2:['ex','صرافی طرف قرارداد، با رسید کتبی و کد یک‌بارمصرف.'],
+  exGoldWhy1:['ex','نرخ هر گرم از قیمت روزِ بازار طلای تهران گرفته می‌شود و لحظهٔ ثبت درخواست قفل می‌شود.'],
+  exGoldWhy2:['ex','تحویل با صرافی طرف قرارداد، رسید کتبی و کد یک‌بارمصرف انجام می‌شود.'],
   exGoldWhy3:['ex','عیار روی رسید نوشته می‌شود: ۱۸.'],
   exKeyDeepT:['ex','کلید مهاجر، دقیق‌تر'],
   exKeyDeep1:['ex','دستگاه در اولین روشن‌شدن، کلید را داخل خودش می‌سازد. کلید هرگز بیرون نمی‌آید.'],
@@ -2581,12 +2628,12 @@ const COPY_DEF={
   exCuBasic3:['ex','در صورت فراموشی یا گم شدن رمز ورود، قابلیت بازیابی با احراز هویت وجود دارد.'],
   exCuGoldT:['ex','طلای فیزیکی یعنی چی؟'],
   exCuGold1:['ex','دلار دیجیتال به مقدار معادل تبدیل به طلا و به صورت فیزیکی به شما تحویل داده می‌شود.'],
-  exCuGold2:['ex','از لحظه تحویل مسئولیت نگهداری به شما منتقل می‌شود.'],
-  exCuGold3:['ex','برای استفاده از سایر خدمات مهاجر یا تبدیل دارایی به ریال، نیاز به فروش طلا وجود دارد.'],
+  exCuGold2:['ex','از لحظهٔ تحویل، مسئولیت نگهداری با شماست.'],
+  exCuGold3:['ex','برای استفاده از خدمات دیگر مهاجر یا تبدیل به ریال، باید طلا را بفروشید.'],
   exCuSelfT:['ex','کیف پول شخصی یعنی چی؟'],
   exCuSelf1:['ex','کلید دسترسی به دارایی فقط دست شماست: به صورت نرم‌افزاری روی گوشی یا سخت‌افزاری روی دستگاه.'],
   exCuSelf2:['ex','بدون کلید شخصی شما، هیچ‌کس نمی‌تواند پول را جابه‌جا کند.'],
-  exCuSelf3:['ex','در صورت گم‌شدن همزمان دستگاه و عبارت بازیابی (۱۲ کلمه) بازیابی دارایی امکان‌پذیر نیست'],
+  exCuSelf3:['ex','اگر دستگاه و عبارت بازیابی (۱۲ کلمه) هر دو گم شوند، بازیابی دارایی ممکن نیست.'],
   exGotIt:['ex','فهمیدم'],
   exMore:['ex','بیشتر توضیح بده'],
   /* the deep layer — opens only on request; precise words are allowed here */
@@ -2737,7 +2784,7 @@ const DIAG={
 
 /* ════════ state ════════ */
 const S={ available:0, pending:0, activity:[], failMode:false, eli:true, bars:{},
-  cRaw:'', tRaw:'', wRaw:'', tPhone:'', to:null, invite:null,
+  cRaw:'', tRaw:'', wRaw:'', tPhone:'', to:null, invite:null, trial:false,
   custody:'basic', cuBack:'home', exBack:'home', ex:null,
   nests:[], activeNest:'calm', key:null, lastBuy:null, pw:null, pwRaw:'', pbRaw:'', pwWords:null, pwMode:'soft',
   shop:'s1', slot:0, route:false, physical:null, quoteTimer:null, seq:4190,
@@ -2753,13 +2800,38 @@ const usd0=n=>'$'+grp(n);
 const usdx=n=>Math.abs(n-Math.round(n))<0.005?usd0(n):usd(n);
 const $=id=>document.getElementById(id);
 const nestsTotal=()=>S.nests.reduce((a,h)=>a+h.amount,0);
+/* بازده سبد = جمعِ وزنیِ بازده دارایی‌هایش. چون از خودِ ترکیب می‌آید،
+   عوض‌کردن درصدها هیچ‌وقت عددِ بازده را جا نمی‌گذارد. */
+const nestYear=n=>Math.round(n.mix.reduce((a,m)=>a+m.v*(CONFIG.asset12m[m.k]||0),0)/100);
+const nestYearTxt=n=>{const y=nestYear(n); return (y>0?'+':y<0?'−':'')+fa(Math.abs(y))+'٪';};
 const pwBal=()=>S.pw?S.pw.bal:0;
 const goldHeld=()=>S.physical?goldUsd(S.physical.grams):0;   /* پرداخته‌شده، در انتظار تحویل */
 const total=()=>S.available+nestsTotal()+S.pending+pwBal()+goldHeld();
-const buyRate=()=>CONFIG.buyRate*(1+CONFIG.buySpread);
-const isTrial=amt=>amt>0 && (amt/buyRate())<=CONFIG.trialCapUsd;
-const buyFee=amt=>isTrial(amt)?0:CONFIG.buyFlatFee;
-const sellRate=()=>CONFIG.buyRate*(1-CONFIG.sellSpread);
+/* یک نرخ، هر دو جهت */
+const buyRate=()=>CONFIG.buyRate;
+const sellRate=()=>CONFIG.buyRate;
+
+/* quoteِ خرید: هر عددی که روی صفحه می‌رود از همین یک تابع می‌آید، تا
+   کارمزد و دریافتی و نرخ هیچ‌وقت با هم نخوانند نداشته باشند. */
+function quoteBuy(tomanBudget){
+  const gross=tomanBudget/buyRate();
+  const trial=S.trial && gross<FEES.minBuyUsd;
+  const raw=FEES.buyPct*gross;
+  const fee=trial?0:Math.max(FEES.buyFloor,raw);
+  return {gross, fee, raw, trial, floored:!trial&&raw<FEES.buyFloor,
+          net:Math.max(0,gross-fee), toman:tomanBudget,
+          tooSmall:!trial&&gross<FEES.minBuyUsd};
+}
+function quoteSell(usdAmount){
+  const raw=FEES.sellPct*usdAmount;
+  const fee=usdAmount>0?Math.max(FEES.sellFloor,raw):0;
+  const netUsd=Math.max(0,usdAmount-fee);
+  return {usd:usdAmount, fee, raw, floored:raw<FEES.sellFloor,
+          netUsd, toman:netUsd*sellRate()};
+}
+/* انتقال بیرونی: سهم مهاجر سقف دارد، هزینهٔ شبکه ندارد و جدا نوشته می‌شود */
+const pwFeeOf=a=>Math.min(FEES.pwPct*a, FEES.pwCap);
+const pwTotalOf=a=>a+pwFeeOf(a)+FEES.pwNetwork;
 const nextId=()=>'MHJ-'+(++S.seq);
 const N=s=>'<span class="num">'+s+'</span>';
 const NOTE=(kind,html)=>'<div class="note '+kind+'" style="text-align:start"><svg viewBox="0 0 24 24">'+
@@ -2843,43 +2915,54 @@ function render(){
   $('home-activity').style.display=S.activity.length?'block':'none';
   if(S.activity.length) $('home-tx').innerHTML=S.activity.slice(0,3).map(txRow).join('');
 
-  const cAmt=+S.cRaw||0, gross=cAmt/buyRate(), fee=buyFee(cAmt), net=Math.max(0,gross-fee);
+  /* خرید — همهٔ ردیف‌ها از یک quote */
+  const cAmt=+S.cRaw||0, q=quoteBuy(cAmt);
   const cd=$('c-amt'); cd.innerHTML=(S.cRaw?toman(+S.cRaw):'۰')+'<span class="caret"></span>';
   cd.classList.toggle('zero',!S.cRaw);
-  $('c-out').innerHTML=C('youGetApprox')+' '+N(usd(net));
-  $('c-cta').classList.toggle('hidden',!(gross>=1));
-  /* one number, in the currency the user is about to hold: spread + flat, in dollars */
-  const feeUsd=Math.max(0,cAmt/CONFIG.buyRate-net);
-  $('q-feeall').innerHTML = fee===0
+  $('c-out').innerHTML=C('youGetApprox')+' '+N(usd(q.net));
+  $('c-warn').innerHTML = q.tooSmall&&cAmt>0 ? NOTE('warn',C('minBuyWarn')) : '';
+  $('c-cta').classList.toggle('hidden',!(q.gross>0&&!q.tooSmall));
+  $('q-pay').textContent=toman(cAmt)+' تومان';
+  $('q-rate').textContent=toman(buyRate());
+  $('q-gross').textContent=usd(q.gross);
+  $('q-fee').innerHTML = q.trial
     ? '<span style="color:var(--ok)">'+C('freeTrial')+'</span>'
-    : N(usd(feeUsd));
-  $('q-get').textContent=usd(net); $('q-net').textContent=usd(net);
-  $('q-pay').textContent=toman(cAmt)+' تومان'; $('q-rate').textContent=toman(buyRate());
+    : N(usd(q.fee));
+  $('q-feenote').innerHTML = q.trial ? C('trialNote') : (q.floored ? C('feeFloorNote') : '');
+  $('q-feenote').hidden = !(q.trial||q.floored);
+  $('q-get').textContent=usd(q.net); $('q-net').textContent=usd(q.net);
 
-  const tAmt=+S.tRaw||0;
+  /* انتقال داخلی — کارمزد مهاجر صفر، کسر دقیقاً همان مبلغ */
+  const tAmt=+S.tRaw||0, tFee=FEES.transferPct*tAmt;
   const td=$('t-val'); td.innerHTML='$'+(S.tRaw?grp(tAmt):'0')+'<span class="caret"></span>';
   td.classList.toggle('zero',!S.tRaw);
-  $('t-cta2').classList.toggle('hidden',!(tAmt>0 && tAmt+CONFIG.transferFee<=S.available));
-  $('tc-amt').textContent=usd(tAmt); $('tc-total').textContent=usd(tAmt+CONFIG.transferFee);
+  $('t-cta2').classList.toggle('hidden',!(tAmt>0 && tAmt+tFee<=S.available));
+  $('tc-amt').textContent=usd(tAmt);
+  $('tc-fee').innerHTML=tFee?N(usd(tFee)):'<span style="color:var(--ok)">'+C('feeZero')+'</span>';
+  $('tc-total').textContent=usd(tAmt+tFee);
 
-  const wAmt=+S.wRaw||0;
+  /* فروش */
+  const wAmt=+S.wRaw||0, wq=quoteSell(wAmt);
   const wd=$('w-val'); wd.innerHTML='$'+(S.wRaw?grp(wAmt):'0')+'<span class="caret"></span>';
   wd.classList.toggle('zero',!S.wRaw);
   $('w-cta').classList.toggle('hidden',!(wAmt>0&&wAmt<=S.available));
-  const wNet=Math.max(0,(wAmt-CONFIG.sellFlatFee))*sellRate();
-  $('w-get').textContent=toman(wNet)+' تومان'; $('wq-net').textContent=toman(wNet)+' تومان';
+  $('w-get').textContent=toman(wq.toman)+' تومان'; $('wq-net').textContent=toman(wq.toman)+' تومان';
   $('wq-amt').textContent=usd(wAmt); $('wq-rate').textContent=toman(sellRate());
+  $('wq-fee').textContent=usd(wq.fee);
+  $('wq-feenote').innerHTML=wq.floored?C('feeFloorNote'):''; $('wq-feenote').hidden=!wq.floored;
   if(current==='use') renderUse();
 }
 
 /* ════════ CONVERT ════════ */
-function cKey(k){ if(k==='del') S.cRaw=S.cRaw.slice(0,-1);
+function cKey(k){ S.trial=false; if(k==='del') S.cRaw=S.cRaw.slice(0,-1);
   else if(S.cRaw.length<13) S.cRaw=(S.cRaw==='0'?'':S.cRaw)+k; render(); }
 function cSet(n){ S.cRaw=String(n); render(); }
-function cTrial(){ S.cRaw=String(Math.ceil(5*buyRate()/1000)*1000); render(); }
+/* مسیر آموزشی: زیر حداقلِ خرید است و عمداً بی‌کارمزد. هر رقمی که کاربر
+   بعدش بزند، دوباره خریدِ واقعی است. */
+function cTrial(){ S.trial=true; S.cRaw=String(Math.ceil(FEES.trialUsd*buyRate()/1000)*1000); render(); }
 function doConvert(){
   stopQuote();
-  const cAmt=+S.cRaw||0, net=Math.max(0,cAmt/buyRate()-buyFee(cAmt));
+  const cAmt=+S.cRaw||0, cq=quoteBuy(cAmt), net=cq.net;
   go('c-status'); $('cs-amt').textContent=usd(net);
   setStatus('cs','pend',C('convPending'),C('pending')); $('cs-actions').innerHTML='';
   setTimeout(()=>{
@@ -2895,7 +2978,7 @@ function doConvert(){
     $('cs-actions').innerHTML=`<button class="btn btn-primary" onclick="go('home')">${C('home')}</button>
       <button class="btn btn-ghost" onclick="showReceipt(S.activity[0])">${C('receipt')}</button>`;
     addTx({kind:'convert',ck:'txIn',amount:net,dir:'in',status:'done',
-      rows:[[C('youPay'),toman(cAmt)+' تومان'],[C('rate'),toman(buyRate())],[C('fee'),buyFee(cAmt)===0?C('freeTrial'):'$1.50']]});
+      rows:[[C('youPay'),toman(cAmt)+' تومان'],[C('execRate'),toman(buyRate())],[C('grossUsd'),usd(cq.gross)],[C('feeMohajer'),cq.trial?C('freeTrial'):usd(cq.fee)],[C('youGetFinal'),usd(cq.net)]]});
     render();
   },1900);
 }
@@ -2983,7 +3066,7 @@ function sendInvite(){
 function tKey(k){ if(k==='del') S.tRaw=S.tRaw.slice(0,-1);
   else if(S.tRaw.length<7) S.tRaw=(S.tRaw==='0'?'':S.tRaw)+k; render(); }
 function doTransfer(){
-  const amt=+S.tRaw||0, tot=amt+CONFIG.transferFee;
+  const amt=+S.tRaw||0, tot=amt+FEES.transferPct*amt;
   S.available-=tot; S.pending+=amt;
   go('t-status'); $('ts-amt').textContent=usd(amt);
   setStatus('ts','pend',C('sendPending'),C('pending')); $('ts-actions').innerHTML=''; render();
@@ -3012,7 +3095,7 @@ const nest=id=>CONFIG.nests.find(n=>n.id===id)||CONFIG.nests[0];
 const nName=n=>S.lex==='std'?(n.tStd||n.t):n.t;
 function series(id,months){
   const seed=[...id].reduce((a,c)=>a+c.charCodeAt(0),0);
-  const n=nest(id), drift=n.yearNum/100/12, vol=[0,.030,.065,.12][n.riskLv];
+  const n=nest(id), drift=nestYear(n)/100/12, vol=[0,.030,.065,.12][n.riskLv];
   let v=100; const out=[v];
   for(let i=1;i<=months;i++){ const r=Math.sin(seed*1.7+i*2.3)*Math.cos(seed*0.6+i*1.1);
     v=v*(1+drift+r*vol); out.push(Math.max(12,v)); }
@@ -3026,7 +3109,7 @@ function drawChart(id,months){
   const line='M'+pts.join(' L');
   const area=line+' L'+fx(data.length-1).toFixed(1)+','+H+' L'+fx(0).toFixed(1)+','+H+' Z';
   const last=data[data.length-1], n=nest(id);
-  const k=n.yearNum/100*(months/12), w=[0,.10,.20,.34][n.riskLv];
+  const k=nestYear(n)/100*(months/12), w=[0,.10,.20,.34][n.riskLv];
   const x0=fx(data.length-1), x1=W-pad;
   const clamp=v=>Math.max(lo-span*0.6,Math.min(hi+span*0.6,v));
   const mid=clamp(last*(1+k/2)), up=clamp(last*(1+k/2+w)), dn=clamp(last*(1+k/2-w));
@@ -3046,7 +3129,7 @@ function renderNests(){
   const host=$('nest-list'); if(!host) return;
   host.innerHTML=CONFIG.nests.map(n=>'<button class="nest" onclick="openNest(\''+n.id+'\')">'+
     '<div class="top"><span class="t">'+nName(n)+'</span><span class="riskdots">'+[1,2,3].map(i=>'<i class="'+(i<=n.riskLv?'on':'')+'"></i>').join('')+'</span></div>'+
-    '<div class="yr"><span class="v num">'+(n.yearNum>0?'+':'')+n.year+'</span><span class="k">'+C('yearCard')+'</span></div>'+
+    '<div class="yr"><span class="v num">'+nestYearTxt(n)+'</span><span class="k">'+C('yearCard')+'</span></div>'+
     '<div class="sub">'+n.sub+'</div><div class="mixbar">'+mixBar(n)+'</div>'+mixKey(n)+'</button>').join('');
   $('nest-mine').innerHTML=S.nests.length
     ? '<div class="sec" style="margin-top:0">'+C('mine')+'</div>'+S.nests.map(h=>{const n=nest(h.id);
@@ -3059,7 +3142,7 @@ function fillNest(id){
   S.activeNest=id; const n=nest(id);
   $('nd-title').textContent=nName(n); $('na-title').textContent=nName(n);
   $('nd-mix').innerHTML=mixBar(n); $('nd-key').innerHTML=mixKey(n);
-  $('nd-vol').textContent=n.risk; $('nd-year').textContent=(n.yearNum>0?'+':'')+n.year;
+  $('nd-vol').textContent=n.risk; $('nd-year').textContent=nestYearTxt(n);
   $('nd-warn').textContent=n.riskLv>=3?C('warnHigh'):n.riskLv===2?C('warnMid'):C('warnLow');
   $('nd-range').innerHTML=RANGES.map(r=>'<button aria-pressed="'+(r[0]===ndRange)+'" onclick="setRange('+r[0]+')">'+r[1]+'</button>').join('');
   $('nd-rangelab').textContent=RANGES.find(r=>r[0]===ndRange)[1]+' گذشته';
@@ -3170,11 +3253,22 @@ function renderBars(){
       '<button class="st" onclick="barStep('+g+',1)" aria-label="بیشتر"'+(full?' disabled':'')+'>+</button></span></div>';
   }).join('');
 }
+/* قیمت فلز، ساخت و تحویل شریک، و سهم مهاجر جدا دیده می‌شوند؛ «تحویل
+   رایگان» فقط وقتی مجاز است که هر سه واقعاً صفر باشند. */
+function goldQuote(){
+  const g=barGrams(), n=barCount(), metal=goldUsd(g);
+  const fab=n*FEES.goldFabPerBar;
+  const fee=g>0?Math.max(FEES.goldFloor,FEES.goldPct*metal):0;
+  return {g,n,metal,fab,fee,total:metal+fab+fee};
+}
 function paCheck(){
-  const g=barGrams(), n=barCount(), t=shop(S.shop);
-  const val=goldUsd(g), tot=val+CONFIG.goldDeliveryFee, over=tot>S.available, cap=g>t.capG;
+  const q=goldQuote(), g=q.g, n=q.n, t=shop(S.shop);
+  const tot=q.total, over=tot>S.available, cap=g>t.capG;
   $('pa-sum').innerHTML=n? N(C('barsPicked').replace('{n}',fa(n)).replace('{g}',faG(g))) : C('barsNone');
   $('pa-rate').textContent=usd(CONFIG.goldUsdPerGram);
+  $('pa-metal').textContent=n?usd(q.metal):'—';
+  $('pa-fab').textContent=n?usd(q.fab):'—';
+  $('pa-fee').textContent=n?usd(q.fee):'—';
   $('pa-total').textContent=n?usd(tot):'—';
   $('pa-warn').innerHTML= over ? NOTE('bad',C('notEnough')+' '+N(usd(S.available))) : cap ? NOTE('warn',C('goldOverStock')) : '';
   $('pa-cta').disabled=over||cap||n<1;
@@ -3184,7 +3278,7 @@ function renderSlots(){
     '<div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="m"><div class="t">'+sl+'</div></div><div class="radio"></div></button>').join('');
 }
 function doPhysical(){
-  const g=barGrams(), n=barCount(), t=shop(S.shop), val=goldUsd(g), tot=val+CONFIG.goldDeliveryFee;
+  const gq=goldQuote(), g=gq.g, n=gq.n, t=shop(S.shop), tot=gq.total;
   /* همان جمله‌ای که سرِ تحویل باید بخواند: چند شمش، چند گرم، چه عیاری */
   const what=C('barsPicked').replace('{n}',fa(n)).replace('{g}',faG(g))+' طلای '+CONFIG.goldCarat;
   S.available-=tot;                     /* همین‌جا خرج شد، نه سرِ تحویل */
@@ -3193,7 +3287,7 @@ function doPhysical(){
   $('pc-code').textContent=fa(S.physical.code.split('').join(' ')); $('pc-shop').textContent=t.n;
   $('pc-amt').innerHTML=N(what); $('pc-slot').textContent=S.physical.slot;
   addTx({kind:'physical',title:C('txGold')+' · '+t.n,amount:tot,dir:'out',status:'pending',
-    rows:[[C('youReceive'),what],[C('shop'),t.n],[C('gramRate'),usd(CONFIG.goldUsdPerGram)],[C('fee'),usd(CONFIG.goldDeliveryFee)],[C('time'),S.physical.slot],[C('whenDeducted'),C('deductNow')],[C('goldIdT'),C('goldIdShort')]]});
+    rows:[[C('youReceive'),what],[C('shop'),t.n],[C('gramRate'),usd(CONFIG.goldUsdPerGram)],[C('goldMetal'),usd(gq.metal)],[C('goldFab'),usd(gq.fab)],[C('goldMohajer'),usd(gq.fee)],[C('time'),S.physical.slot],[C('whenDeducted'),C('deductNow')],[C('goldIdT'),C('goldIdShort')]]});
   render(); go('p-status');
 }
 function cancelPhysical(){
@@ -3205,7 +3299,7 @@ function cancelPhysical(){
 }
 
 /* ════════ KEY · self-custody device ════════ */
-const KEY_PRICE=49;
+const KEY_PRICE=FEES.devicePrice;   /* قیمت نمونه تا انتخاب تأمین‌کننده */
 function koCheck(){
   const move=parseFloat($('ko-amt').value)||0, over=KEY_PRICE+move>S.available;
   $('ko-move').innerHTML=move>0?N(usd(move)):'—';
@@ -3219,7 +3313,7 @@ function doKeyOrder(){
   $('ks-code').textContent=fa(code.split('').join(' ')); $('ks-eta').textContent='۵ تا ۷ روز کاری';
   $('ks-move').innerHTML=move>0?N(usd(move)):'—';
   addTx({kind:'key',ck:'txKey',amount:KEY_PRICE,dir:'out',status:'done',
-    rows:[[C('devicePrice'),usd(KEY_PRICE)],[C('shipping'),C('shippingV')],[C('moveOnActivate'),move>0?usd(move):'—'],[C('activationCode'),fa(code)]]});
+    rows:[[C('devicePrice'),usd(KEY_PRICE)+' · '+C('samplePrice')],[C('shipping'),C('shippingV')],[C('moveOnActivate'),move>0?usd(move):'—'],[C('activationCode'),fa(code)]]});
   render(); go('k-status');
 }
 function cancelKey(){
@@ -3297,7 +3391,7 @@ function renderPw(){
   $('pw-outbtn').disabled=pwBal()<=0;
   $('pw-hardrow').hidden=S.pw.mode==='hard';
   /* amount in */
-  const a=+S.pwRaw||0, fee=CONFIG.pwFee, net=Math.max(0,a-fee);
+  const a=+S.pwRaw||0, fee=pwFeeOf(a)+FEES.pwNetwork, net=Math.max(0,a-fee);
   const v=$('pw-val'); v.innerHTML='$'+(S.pwRaw?grp(a):'0')+'<span class="caret"></span>'; v.classList.toggle('zero',!S.pwRaw);
   $('pw-avail').innerHTML=C('freeBal')+' '+N(usd(S.available));
   $('pw-cta').classList.toggle('hidden',!(a>fee&&a<=S.available));
@@ -3320,7 +3414,7 @@ const stages=(keys,at,bad)=>keys.map((k,i)=>'<div class="st '+(bad&&i===at?'bad'
 const techRows=()=>S.pw?[[C('pwDest'),pwShort()],[C('txRef'),'#'+Math.random().toString(16).slice(2,10)]]:[];
 /* A → the wallet: registered, on its way, arrived. Fails only before sending, and then nothing is lost. */
 function pwDoIn(){
-  const a=+S.pwRaw||0, fee=CONFIG.pwFee, net=a-fee; if(!(a>fee&&a<=S.available)) return;
+  const a=+S.pwRaw||0, fee=pwFeeOf(a)+FEES.pwNetwork, net=a-fee; if(!(a>fee&&a<=S.available)) return;
   S.available-=a; S.pending+=net;
   const tx={kind:'pwOut',ck:'txPwOut',amount:a,dir:'out',status:'pending',rows:[[C('pwFrom'),usd(a)],[C('pwFee'),usd(fee)],[C('pwArrives'),usd(net)]].concat(techRows()),tech:true};
   addTx(tx);
@@ -3355,7 +3449,7 @@ function signDone(){
 }
 function pwDoOut(){
   S.signed=false; $('holdbtn').className='holdbtn';
-  const b=+S.pbRaw||0, fee=CONFIG.pwFee, net=b-fee; if(!(b>fee&&b<=pwBal())) return;
+  const b=+S.pbRaw||0, fee=pwFeeOf(b)+FEES.pwNetwork, net=b-fee; if(!(b>fee&&b<=pwBal())) return;
   S.pw.bal-=b; S.pending+=net;
   const tx={kind:'pwIn',ck:'txPwIn',amount:net,dir:'in',status:'pending',rows:[[C('pwBackFrom'),usd(b)],[C('pwFee'),usd(fee)],[C('pwBackArrives'),usd(net)],[C('pwDest'),C('pwBackDestV')]].concat(techRows()),tech:true};
   addTx(tx);
@@ -3467,6 +3561,7 @@ const EXPLAIN={
   /* `more` is the deep layer: it appends under the three rows only when asked,
      so the person who wants the mechanics gets them and nobody else sees them. */
   safe:   {t:'exSafeT',   vis:'safe',   steps:['exSafe1','exSafe2','exSafe3'],       more:['exSafeM1','exSafeM2','exSafeM3'], eg:'egSafe'},
+  fees:   {t:'exFeeT',    vis:'dollar', steps:['exFee1','exFee2','exFee3'], more:['exFeeM1','exFeeM2','exFeeM3']},
   dollar: {t:'exDollarT', vis:'dollar', steps:['exDollar1','exDollar2','exDollar3'], more:['exDollarM1','exDollarM2','exDollarM3'], eg:'egDollar', note:{t:'bitvanaT',b:'bitvanaB'}},
   goldWhy:{t:'exGoldWhyT',vis:'gold',   steps:['exGoldWhy1','exGoldWhy2','exGoldWhy3'],more:['exGoldWhyM1','exGoldWhyM2','exGoldWhyM3'], eg:'egGold'},
   keyDeep:{t:'exKeyDeepT',vis:'key',    steps:['exKeyDeep1','exKeyDeep2','exKeyDeep3','exKeyDeep4','exKeyDeep5','exKeyDeep6'], more:['exKeyDeepM1','exKeyDeepM2','exKeyDeepM3','exKeyDeepM4']},
@@ -3522,7 +3617,7 @@ function wKey(k){ if(k==='del') S.wRaw=S.wRaw.slice(0,-1);
   else if(S.wRaw.length<7) S.wRaw=(S.wRaw==='0'?'':S.wRaw)+k; render(); }
 function doWithdraw(){
   stopQuote();
-  const amt=+S.wRaw||0, net=Math.max(0,(amt-CONFIG.sellFlatFee))*sellRate();
+  const amt=+S.wRaw||0, net=quoteSell(amt).toman;
   S.available-=amt; S.pending+=amt;
   go('w-status'); $('ws-amt').textContent=toman(net)+' تومان';
   setStatus('ws','pend',C('wdPending'),C('pending')); $('ws-actions').innerHTML=''; render();
