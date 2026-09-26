@@ -205,6 +205,17 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
       <button class="btn p" onclick="copyText('invite',this)">کپی پیام</button>
       <button class="btn" onclick="resetInvite()">متن پیش‌فرض</button>
     </div>
+    <!-- چهار پرسشِ ویس عمداً داخل تست نیست: آن‌جا فقط طولش می‌کرد و کسی
+         جوابش را نمی‌داد. برای هر کسی که در پایان گفته «ویس می‌فرستم»،
+         همین متن را بفرستید. -->
+    <div class="note" style="margin-top:16px">
+      <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v4"/></svg>
+      <p><b>پیام ویس.</b> در پایان تست، بعضی‌ها می‌زنند «یک ویس کوتاه می‌فرستم». نامشان در نتیجه‌ها زیر «اقدام‌های بعد از پایان» می‌آید؛ همین متن را برایشان بفرستید.</p>
+    </div>
+    <textarea id="voicemsg" style="margin-top:12px;min-height:170px"></textarea>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" onclick="copyText('voicemsg',this)">کپی پیام ویس</button>
+    </div>
   </div>
 
   <!-- ── ۴ نتیجه ────────────────────────────────────────────── -->
@@ -291,7 +302,7 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
 
 <div class="flash" id="flash"></div>
 
-<script src="./test-kit.js?v=20260926b"></script>
+<script src="./test-kit.js?v=20260927a"></script>
 <script>
 const $ = TK.$;
 let CFG = {}, VERS = [], sel = null, chans = ['tg'], rows = [], DEFAULT_INVITE = '';
@@ -340,10 +351,15 @@ function toggleChan(b){
   paint(); resetInvite();
 }
 
+/* پروتکل داخل لینک است تا اگر روزی نسخهٔ سؤال‌ها عوض شد، راندهای قبلی با
+   برچسبِ خودشان بمانند و داشبورد دو تعریف را روی هم نریزد. */
 function linkFor(c){
   return base() + 't.html?v=' + encodeURIComponent(sel) + '&r=' + encodeURIComponent(($('round').value || '1').trim()) +
-    (c && c !== 'x' ? '&c=' + c : '');
+    (c && c !== 'x' ? '&c=' + c : '') + '&p=' + TK.PROTOCOL;
 }
+/* همان لینک، با یک کلیدِ اضافه: دکمهٔ «کمک کردم» را نشان می‌دهد. فقط برای
+   وقتی خودتان بالای سرِ شرکت‌کننده هستید. */
+const linkFac = () => linkFor(chans[0] || 'x') + '&f=1';
 function paint(){
   $('links').innerHTML = (chans.length ? chans : ['x']).map(c =>
     '<div class="link"><span class="who">' + (TK.CHANNELS[c] || '') + '</span>' +
@@ -352,6 +368,14 @@ function paint(){
     '<a class="btn sm" href="' + TK.esc(linkFor(c)) + '" target="_blank" rel="noopener">باز کردن</a></div>').join('');
   $('go-insights').href = './test-insights.html?v=' + encodeURIComponent(sel) +
     '&r=' + encodeURIComponent(($('round').value || '1').trim());
+  $('links').innerHTML += '<div class="link"><span class="who">تسهیل‌گر</span><code>' +
+    TK.esc(linkFac()) + '</code><button class="btn sm" onclick="copyFac(this)">کپی</button>' +
+    '<a class="btn sm" href="' + TK.esc(linkFac()) + '" target="_blank" rel="noopener">باز کردن</a></div>';
+}
+async function copyFac(btn){
+  const ok = await TK.copy(linkFac());
+  btn.textContent = ok ? 'کپی شد ✓' : 'نشد';
+  setTimeout(() => btn.textContent = 'کپی', 1800);
 }
 async function copyLink(btn, c){
   const ok = await TK.copy(linkFor(c));
@@ -368,6 +392,14 @@ function resetInvite(){
 linkFor(chans[0] || 'x') + '\n\n' +
 'روی گوشی باز کنید. هر جا گیر کردید همان‌جا دکمهٔ «گیر کردم» هست — دقیقاً همان چیزی است که دنبالش هستیم.';
   $('invite').value = DEFAULT_INVITE;
+  $('voicemsg').value =
+'ممنون که وقت گذاشتید 🙏\n' +
+'گفتید یک ویس می‌فرستید — این چهار سؤال، هر کدام یک جمله کافی است:\n\n' +
+'۱. اگر بخواهید مهاجر را به یک دوست معرفی کنید، می‌گویید چیست و پولتان را چطور نگه می‌دارد؟\n' +
+'۲. کجای اپ حس خوبی داشتید و کجا مردد یا بی‌اعتماد شدید؟ چرا؟\n' +
+'۳. چه چیزی باعث می‌شود در مهاجر حساب بسازید؟\n' +
+'۴. برای واردکردن پول واقعی چه چیزی باید ببینید، خط قرمزتان چیست، و با چه مبلغی شروع می‌کنید؟\n\n' +
+'هر چقدر رُک‌تر، برای ما باارزش‌تر.';
 }
 async function copyText(id, btn){
   const ok = await TK.copy($(id).value);
@@ -407,10 +439,15 @@ async function refresh(){
   paintLive();
   countsOnVers();
 }
+/* خلاصهٔ سرور و جلسهٔ کاملِ محلی دو شکل دارند؛ هر دو به یک شکل خوانده
+   می‌شوند تا شمارش‌ها به منبع وابسته نباشد. */
 function paintRows(got){
   rows = got.sessions.map(s => ({
     id: s.id, r: s.r, ver: s.ver, c: s.c,
-    age: s.age || (s.seg || {}).age, done: s.done ? 1 : 0, at: s.at || s.t0, ms: s.ms
+    age: s.age || (s.seg || {}).age, done: s.done ? 1 : 0, at: s.at || s.t0, ms: s.ms,
+    p: String(s.protocol_version || s.p || s.protocol || '1.0'),
+    ans: +(s.answered !== undefined ? s.answered : ((s.score || {}).answered || 0)) || 0,
+    ok: (s.confirmed !== undefined ? +s.confirmed : (s.delivery_confirmed ? 1 : 0)) ? 1 : 0
   }));
   paintLive(); countsOnVers();
 }
@@ -453,19 +490,31 @@ function paintLive(){
   const mine = rows.filter(x => String(x.ver) === String(sel) && (scopeAll || String(x.r) === r));
   const older = rows.filter(x => String(x.ver) === String(sel) && String(x.r) !== r).length;
   $('scope-lb').textContent = scopeAll ? 'همهٔ راندها' : 'راند ' + TK.fa(r);
-  $('scope-h').textContent = (!scopeAll && older)
-    ? TK.fa(older) + ' جلسه در راندهای دیگر — در این عددها نیست'
-    : '';
   const done = mine.filter(x => +x.done === 1);
+  const part = mine.filter(x => +x.done !== 1);
+  const conf = mine.filter(x => x.ok === 1);
   const ages = new Set(mine.map(x => x.age).filter(Boolean));
   const avg = done.length ? done.reduce((a, b) => a + (+b.ms || 0), 0) / done.length : 0;
+  /* پیشرفتِ پاسخ‌ها: از هفت سؤال، به‌طور میانگین تا کجا رفته‌اند. اگر این
+     عدد وسط بماند، مشکل جای دیگری است نه در نرخ تکمیل. */
+  const ansd = mine.map(x => x.ans).filter(n => n > 0);
+  const avgAns = ansd.length ? ansd.reduce((a, b) => a + b, 0) / ansd.length : 0;
 
   $('kpis').innerHTML = [
     ['شروع کرده‌اند', TK.fa(mine.length), ''],
     ['تا آخر رفته‌اند', TK.fa(done.length), 'gold'],
+    ['نیمه‌کاره', TK.fa(part.length), ''],
+    ['تحویلِ تأییدشده', TK.fa(conf.length), conf.length === done.length && done.length ? 'ok' : ''],
+    ['پاسخ‌ها، میانگین', ansd.length ? TK.fa(Math.round(avgAns * 10) / 10) + ' از ۷' : '—', ''],
     ['میانگین زمان', done.length ? TK.mmss(avg) : '—', ''],
     ['بازه‌های سنی', TK.fa(ages.size) + ' از ' + TK.fa(TK.AGES.length), '']
   ].map(([l, v, c]) => '<div class="kpi ' + c + '"><div class="v num">' + v + '</div><div class="l">' + l + '</div></div>').join('');
+
+  /* نتیجه‌ای که تأیید نشده، یعنی ممکن است فقط روی گوشی خودش مانده باشد. */
+  const lost = done.length - conf.length;
+  $('scope-h').textContent = (!scopeAll && older)
+    ? TK.fa(older) + ' جلسه در راندهای دیگر — در این عددها نیست'
+    : (lost > 0 ? TK.fa(lost) + ' نتیجه تأیید نشده — کدهایی که فرستاده‌اند را در بخش پایین وارد کنید' : '');
 
   $('bar-i').style.width = Math.min(100, done.length / target * 100) + '%';
   $('bar-l').textContent = 'هدف این راند: ' + TK.fa(target) + ' نفر';
@@ -473,22 +522,25 @@ function paintLive(){
 
   const by = {};
   rows.forEach(x => {
-    const k = (x.ver || '?') + '|' + (x.r || '?');
-    by[k] = by[k] || { ver: x.ver, r: x.r, n: 0, d: 0 };
-    by[k].n++; if (+x.done === 1) by[k].d++;
+    /* راند و پروتکل با هم کلید می‌سازند: یک راند با دو پروتکل، دو سطر است. */
+    const k = (x.ver || '?') + '|' + (x.r || '?') + '|' + x.p;
+    by[k] = by[k] || { ver: x.ver, r: x.r, p: x.p, n: 0, d: 0, ok: 0 };
+    by[k].n++; if (+x.done === 1) by[k].d++; if (x.ok === 1) by[k].ok++;
   });
   const list = Object.values(by).sort((a, b) => b.n - a.n);
   $('rounds').innerHTML = list.length
-    ? '<tr><th>نسخه</th><th>راند</th><th>شروع</th><th>کامل</th><th></th></tr>' + list.map(x =>
+    ? '<tr><th>نسخه</th><th>راند</th><th>پروتکل</th><th>شروع</th><th>کامل</th><th>تأییدشده</th><th></th></tr>' + list.map(x =>
         /* شیت گاهی «4.5» را عدد برمی‌گرداند، پس مقایسه با String */
         '<tr' + (String(x.ver) === String(sel) && String(x.r) === r
           ? ' style="background:rgba(213,164,92,.08)"' : '') + '>' +
         '<td><b>' + TK.esc((VERS.find(v => String(v.id) === String(x.ver)) || {}).name || ('v' + x.ver)) + '</b>' +
         (String(x.ver) === String(sel) && String(x.r) === r ? ' <span class="pill y">راند جاری</span>' : '') + '</td>' +
-        '<td class="num">' + TK.fa(x.r) + '</td><td class="num">' + TK.fa(x.n) + '</td>' +
+        '<td class="num">' + TK.fa(x.r) + '</td><td class="num">' + TK.fa(x.p) + '</td>' +
+        '<td class="num">' + TK.fa(x.n) + '</td>' +
         '<td class="num">' + TK.fa(x.d) + '</td>' +
+        '<td class="num">' + (x.d ? TK.fa(x.ok) : '—') + '</td>' +
         '<td style="text-align:end"><a class="btn sm" href="./test-insights.html?v=' + encodeURIComponent(x.ver) +
-          '&r=' + encodeURIComponent(x.r) + '">نتیجه</a></td></tr>').join('')
+          '&r=' + encodeURIComponent(x.r) + '&p=' + encodeURIComponent(x.p) + '">نتیجه</a></td></tr>').join('')
     : '<tr><td class="tiny" style="padding:18px 0">هنوز جلسه‌ای ثبت نشده. لینک را بفرستید و همین‌جا منتظر بمانید.</td></tr>';
 }
 

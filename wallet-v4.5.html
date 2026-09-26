@@ -1160,7 +1160,7 @@ button,input,select,textarea{color:inherit}
       <div class="flipwrap" id="flipwrap" data-flipped="false">
         <div class="flipper">
           <div class="flipface front" id="pillow-face" hidden>
-            <button class="pillowbtn" onclick="liftPillow()" aria-label="برداشتن بالش">
+            <button class="pillowbtn" onclick="liftPillow()" aria-label="نمایش موجودی">
               <svg class="pillow-svg" viewBox="0 0 320 214" role="img" aria-hidden="true">
                 <defs>
                   <linearGradient id="pfab" x1="0.2" y1="0" x2="0.8" y2="1">
@@ -1203,7 +1203,7 @@ button,input,select,textarea{color:inherit}
               <div class="unit-hint"><span id="h-unit-alt"></span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h13l-3-3M17 14H4l3 3"/></svg>
               </div>
-              <!-- توزیع دارایی: چه مقدار کجا نگهداری می‌شود. مثل خودِ حضانت، از
+              <!-- توزیع دارایی: چه مقدار کجا نگه داشته می‌شود. مثل خودِ آن صفحه، از
                    وضعیت ساخته می‌شود نه تایپ؛ و چون از اولین لحظه دیده می‌شود،
                    کاربر پیش از آنکه پولی داشته باشد می‌فهمد پولش می‌تواند دو جا باشد. -->
               <div class="dist">
@@ -2206,7 +2206,7 @@ button,input,select,textarea{color:inherit}
   <button class="chip" id="lex-btn" aria-pressed="false" onclick="toggleLex()">واژگان: استاندارد</button>
   <button class="chip" id="theme-btn" aria-pressed="false" onclick="toggleTheme()">حالت: تاریک</button>
   <button class="chip" id="cu-btn" onclick="cycleCustody()">پول: نزد مهاجر</button>
-  <button class="chip" id="pillow-btn" aria-pressed="false" onclick="togglePillow()">بالش: خاموش</button>
+  <button class="chip" id="pillow-btn" aria-pressed="false" onclick="togglePillow()">پنهان‌کردن موجودی: خاموش</button>
   <button class="chip" id="anchor-btn" aria-pressed="false" onclick="toggleAnchor()">پشتوانهٔ نهادی: خاموش</button>
   <button class="chip" id="flag-btn" aria-pressed="false" onclick="toggleFlag()">نشان آزمایشی: خاموش</button>
   <button class="chip" id="eli-btn" aria-pressed="true" onclick="toggleEli()">مثال‌های ساده: روشن</button>
@@ -2299,17 +2299,17 @@ const COPY_GROUPS={
 };
 const COPY_DEF={
   /* intro */
-  introH:['intro','داراییتان را در آشیانه‌ای <em>امن</em><br>دیجیتال کنید'],
+  introH:['intro','پولتان را <em>امن</em> و دلاری<br>نگه دارید'],
   introH2:['intro','از خدمات سرمایه‌گذاری و تبدیل به طلای فیزیکی استفاده کنید.'],
-  introSub:['intro','نحوه‌ی نگهداری دارایی را خودتان انتخاب می‌کنید.'],
+  introSub:['intro','خودتان انتخاب می‌کنید پول کجا بماند.'],
   useSend:['intro','انتقال'], useSendD:['intro','به هر کاربر مهاجر'],
   useInvest:['intro','سرمایه‌گذاری'], useInvestD:['intro','سبد طلا و رمزارز'],
-  useKeep:['intro','زیر بالشت'], useKeepD:['intro','نگهداری شخصی'],
+  useKeep:['intro','پیش خودتان'], useKeepD:['intro','در کیف پول خودتان'],
   introSafeQ:['intro','«امن» یعنی چی؟'],
   introCta:['intro','شروع'], introNext:['intro','بعدی'],
   whyT:['intro','چرا مهاجر؟'],
-  why1:['intro','پول شما، جای انتخابی شما'], why1d:['intro','نزد ما، طلای فیزیکی، یا کیف پول خودتان.'],
-  why2:['intro','حضانت با خودتان'], why2d:['intro','هر مقدار خواستید، زیر بالشت خودتان.'],
+  why1:['intro','پول شما، جایی که خودتان بخواهید'], why1d:['intro','پیش ما، طلای فیزیکی، یا کیف پول خودتان.'],
+  why2:['intro','پول، دست خودتان'], why2d:['intro','هر مقدار که بخواهید، پیش خودتان می‌ماند.'],
   why3:['intro','هر وقت بخواهید، برداشت'], why3d:['intro','بدون قفل. بدون سؤال.'],
 
   /* home */
@@ -2322,12 +2322,12 @@ const COPY_DEF={
   homeCta:['home','امن کردنِ دارایی'],
   recent:['home','اخیر'], seeAll:['home','همه'],
   distLabel:['home','توزیع دارایی'],
-  cuAtMohajer:['home','نگهداری دارایی توسط مهاجر'],
-  cuAtBoth:['home','نگهداری دارایی توسط مهاجر و خودتان'],
-  cuAtYou:['home','پول شما زیر بالشت خودتان است'],
-  pillowSay:['home','دارایی شما زیر بالش است.'],
-  pillowSub:['home','تا بالش را برندارید، نمایش داده نمی‌شود.'],
-  pillowTap:['home','بالش را بردارید'],
+  cuAtMohajer:['home','دارایی شما پیش مهاجر نگه داشته می‌شود'],
+  cuAtBoth:['home','بخشی پیش مهاجر، بخشی دست خودتان'],
+  cuAtYou:['home','دارایی شما دست خودتان است'],
+  pillowSay:['home','موجودی شما پنهان است.'],
+  pillowSub:['home','تا خودتان نخواهید، عددی نمایش داده نمی‌شود.'],
+  pillowTap:['home','نمایش موجودی'],
 
   /* convert */
   convTitle:['conv','تبدیل'], dirIn:['conv','تومان به دلار'], dirOut:['conv','دلار به تومان'],
@@ -2392,29 +2392,29 @@ const COPY_DEF={
   whereNow:['use','پول شما الان'],
   uInvest:['use','سرمایه‌گذاری'], uInvestD:['use','طلا و رمزارز، در سه سبد آماده.'],
   uGold:['use','تحویل طلا'], uGoldD:['use','طلای فیزیکی، از صرافی نزدیک شما.'],
-  uKey:['use','کیف پول شخصی'], uKeyD:['use','پولتان زیر بالشت خودتان.'],
+  uKey:['use','کیف پول شخصی'], uKeyD:['use','پولتان دست خودتان.'],
   uBack:['use','برگرداندن به تومان'],
 
   /* custody page */
   cuTitle:['cu','پول شما کجاست؟'],
-  cuSub:['cu','سه انتخاب قابل تغییر برای روش نگهداری دارایی.'],
+  cuSub:['cu','سه انتخاب. هر وقت خواستید عوضش کنید.'],
   cuNow:['cu','روش فعال'],
-  cuBasicN:['cu','نگهداری توسط مهاجر'],
-  cuBasicL:['cu','نگهداری دارایی توسط مهاجر با قابلیت استفاده در خدمات دیگر مهاجر'],
-  cuBasicP1:['cu','امکان درخواست برداشت'], cuBasicP2:['cu','امکان بازیابی رمز در صورت فراموشی یا مفقودی'],
-  cuBasicC1:['cu','وابستگی به مهاجر در نگهداری'],
+  cuBasicN:['cu','پیش مهاجر'],
+  cuBasicL:['cu','پولتان پیش مهاجر می‌ماند و می‌توانید در خدمات دیگر مهاجر از آن استفاده کنید.'],
+  cuBasicP1:['cu','هر وقت بخواهید، برداشت'], cuBasicP2:['cu','رمز را فراموش کردید؟ برایتان بازیابی می‌شود'],
+  cuBasicC1:['cu','برای بیرون‌آوردن پول، به مهاجر وابسته‌اید'],
   cuGoldN:['cu','طلای فیزیکی'],
-  cuGoldL:['cu','مقدار مورد نظر از دارایی‌تان تبدیل به طلا به صورت فیزیکی به شما تحویل داده می‌شود.'],
-  cuGoldP1:['cu','نگهداری شخصی'], cuGoldP2:['cu','بدون وابستگی به مهاجر'],
-  cuGoldC1:['cu','مسئولیت و ریسک نگهداری شخصی طلا'], cuGoldC2:['cu','محدودیت در استفاده از خدمات دیگر مهاجر'],
+  cuGoldL:['cu','هر مقدار که بخواهید از دارایی‌تان طلا می‌شود و شمشش را تحویل می‌گیرید.'],
+  cuGoldP1:['cu','دست خودتان'], cuGoldP2:['cu','بی‌نیاز از اجازهٔ مهاجر'],
+  cuGoldC1:['cu','نگه‌داشتن طلا در خانه، مسئولیتش با خودتان است'], cuGoldC2:['cu','با طلا نمی‌شود از خدمات دیگر مهاجر استفاده کرد'],
   cuGoldCta:['cu','تحویل طلا'],
   cuSelfN:['cu','کیف پول شخصی'],
-  cuSelfL:['cu','نگهداری شخصی کلید دسترسی به دارایی دیجیتال'],
-  cuSelfP1:['cu','نگهداری شخصی'], cuSelfP2:['cu','بدون وابستگی به مهاجر'],
-  cuSelfC1:['cu','ریسک از دست دادن یا گم کردن کلید شخصی'],
+  cuSelfL:['cu','کلید دسترسی به پول، روی گوشیِ خودتان می‌ماند و از آن بیرون نمی‌رود.'],
+  cuSelfP1:['cu','دست خودتان'], cuSelfP2:['cu','بی‌نیاز از اجازهٔ مهاجر'],
+  cuSelfC1:['cu','اگر کلید را گم کنید، هیچ‌کس نمی‌تواند برش گرداند'],
   cuSelfCta:['cu','سفارش کلید'],
   cuActive:['cu','فعال'], cuHere:['cu','اینجاست'], cuReady:['cu','آماده'],
-  cuSplitA:['cu','نزد مهاجر'], cuSplitB:['cu','در کیف پول شخصی'], cuSplitC:['cu','طلای فیزیکی'],
+  cuSplitA:['cu','پیش مهاجر'], cuSplitB:['cu','دست خودتان'], cuSplitC:['cu','طلای فیزیکی'],
   walletBox:['home','در کیف پول شخصی'],
   cuWhatQ:['cu','یعنی چی؟'],
 
@@ -2457,7 +2457,7 @@ const COPY_DEF={
   pwFee:['pw','هزینهٔ انتقال'], pwDest:['pw','مقصد'], pwDestV:['pw','کیف پول شما'], pwTime:['pw','حدود ۳ دقیقه'],
   pwIrr:['pw','<b>این انتقال برگشت‌ناپذیر است.</b> از این پس فقط کلید شما کار می‌کند.'], pwConfirm:['pw','تأیید انتقال'],
   pwS1:['pw','ثبت شد'], pwS2:['pw','در راه'], pwS3:['pw','رسید'],
-  pwSending:['pw','در راه…'], pwArrivedMsg:['pw','رسید. دارایی حالا زیر بالشت خودتان است.'],
+  pwSending:['pw','در راه…'], pwArrivedMsg:['pw','رسید. دارایی حالا در کیف پول خودتان است.'],
   pwFailed:['pw','پیش از ارسال متوقف شد.'], pwFailNote:['pw','<b>مبلغ به موجودی شما برگشت.</b> هزینه‌ای کسر نشد.'],
   goWallet:['pw','کیف پول شخصی'],
   pwBackT:['pw','بازگرداندن به مهاجر'], pwBackArrives:['pw','به حساب شما نزد مهاجر می‌رسد'], pwBackFrom:['pw','از کیف پول شما'],
@@ -2670,7 +2670,7 @@ const COPY_DEF={
 
   /* comparison on the custody page */
   cmpTitle:['cu','در یک نگاه'],
-  cmp1:['cu','بدون نیاز به ما'], cmp2:['cu','رمز گم شد؟ بازیابی'], cmp3:['cu','خرج و انتقال، مستقیم'], cmp4:['cu','نگهداری شخصی'],
+  cmp1:['cu','بدون اجازهٔ ما'], cmp2:['cu','رمز گم شد؟ بازیابی'], cmp3:['cu','خرج و انتقال، مستقیم'], cmp4:['cu','دست خودتان'],
 
   /* misc */
   next:['misc','ادامه'], done:['misc','تمام'], back:['misc','بازگشت'], home:['misc','خانه'],
@@ -2695,12 +2695,12 @@ const COPY_DEF={
 };
 /* The Nest arm changes only narrative words, never facts. Kept small on purpose. */
 const COPY_NEST={
-  walletLabel:'آشیانهٔ دارایی شما', availLabel:'در آشیانه', investedLabel:'در لانه‌ها',
-  homeEmpty:'آشیانه هنوز خالی است.',
-  pillowSay:'دارایی‌ات زیر بالشته.',
-  cuAtYou:'پولت زیر بالشت خودته',
-  cuAtBoth:'بخشی نزد مهاجر، بخشی زیر بالشت خودت',
-  txIn:'نشستن دلار در آشیانه', txSend:'پر کشیدن به سوی سارا رضایی', toWhom:'پر کشیدن به سوی', txSendTo:'پر کشیدن به سوی',
+  walletLabel:'پول شما', availLabel:'قابل استفاده', investedLabel:'سرمایه‌گذاری‌شده',
+  homeEmpty:'هنوز خالی است.',
+  pillowSay:'موجودی‌ات پنهانه.',
+  cuAtYou:'پولت دست خودته',
+  cuAtBoth:'بخشی پیش مهاجر، بخشی دست خودت',
+  txIn:'دلار به حساب شما', txSend:'انتقال به سارا رضایی', toWhom:'انتقال به', txSendTo:'انتقال به',
   investCta:'سرمایه‌گذاری در این لانه', goesIn:'وارد لانه می‌شود', mine:'لانه‌های شما',
   eggLine:'همهٔ تخم‌مرغ‌ها را توی یک سبد نگذار.', useInvestD:'لانه‌های سرمایه'
 };
@@ -3719,7 +3719,7 @@ function liftPillow(){
   const w=$('flipwrap'), n=$('pillownote'); w.dataset.instant='false'; w.dataset.flipped='true'; if(n) n.dataset.gone='true';
   setTimeout(()=>{ S.lifted=true; S.lifting=false; applyPillow(); },940);
 }
-function togglePillow(){ S.pillow=!S.pillow; const b=$('pillow-btn'); b.setAttribute('aria-pressed',S.pillow); b.textContent='بالش: '+(S.pillow?'روشن':'خاموش'); applyPillow(); }
+function togglePillow(){ S.pillow=!S.pillow; const b=$('pillow-btn'); b.setAttribute('aria-pressed',S.pillow); b.textContent='پنهان‌کردن موجودی: '+(S.pillow?'روشن':'خاموش'); applyPillow(); }
 function applyPillow(){
   const face=$('pillow-face'), wrap=$('flipwrap'); if(!face||!wrap) return;
   const covered=S.pillow&&!S.lifted; face.hidden=!covered;
@@ -3729,7 +3729,7 @@ function applyPillow(){
 function toggleFlag(){ const f=$('testflag'); f.hidden=!f.hidden; const b=$('flag-btn'); b.setAttribute('aria-pressed',!f.hidden); b.textContent=f.hidden?'نشان آزمایشی: خاموش':'نشان آزمایشی: روشن'; }
 function applyLex(){
   applyCopy();
-  $('lex-btn').textContent=S.lex==='std'?'واژگان: استاندارد':'واژگان: آشیانه'; $('lex-btn').setAttribute('aria-pressed',S.lex==='nest');
+  $('lex-btn').textContent=S.lex==='std'?'واژگان: رسمی':'واژگان: خودمانی'; $('lex-btn').setAttribute('aria-pressed',S.lex==='nest');
   renderNests(); if(S.activeNest) fillNest(S.activeNest); renderActivity(); renderCustody(); renderUse(); render();
 }
 function toggleLex(){ S.lex=S.lex==='std'?'nest':'std'; applyLex(); }

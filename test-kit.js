@@ -175,11 +175,19 @@
   async function readAll(cfg, params, opts) {
     opts = opts || {};
     const map = new Map();
+    /* یک جلسه چند بار می‌رسد: نیمه‌کاره‌ها در راه، و نسخهٔ نهایی در پایان.
+       همه یک `id` دارند، پس دو نفر شمرده نمی‌شوند. برنده به ترتیب:
+       revision بالاتر → done → تأییدشده → به‌روزتر → بیشتر پاسخ‌داده. */
+    const rank = (x) => [ +(x.revision || 0), x.done ? 1 : 0, x.delivery_confirmed ? 1 : 0,
+                          Date.parse(x.updated_at || x.t1 || x.t0 || 0) || 0,
+                          ((x.score || {}).answered || 0) ];
+    const better = (a, b) => { const A = rank(a), B = rank(b);
+      for (let i = 0; i < A.length; i++) { if (A[i] !== B[i]) return A[i] > B[i]; } return false; };
     const merge = (arr) => (arr || []).forEach(s => {
       if (!s || !s.id) return;
       if (String(s.id).indexOf('TEST-') === 0) return;   /* ردیف‌های آزمایشِ اتصال، داده نیستند */
       const cur = map.get(s.id);
-      if (!cur || (!cur.done && s.done)) map.set(s.id, s);
+      if (!cur || better(s, cur)) map.set(s.id, s);
     });
 
     const cached = store.get(cacheKey(params), null);
@@ -308,8 +316,10 @@
        ['e', t, message]                the prototype threw
        ['h', t, ms]                     came back after being away ms          */
   const EV = { screen: 's', tap: 't', dead: 'd', rage: 'r', back: 'b', fb: 'f', err: 'e', away: 'h',
-    /* تست فرضیه‌ها: پرسش، پاسخ، تخصیص سناریو، و نتیجهٔ هر مأموریت */
-    q: 'q', ans: 'a', scen: 'x', p_done: 'P', p_left: 'L', s_start: 'B', s_done: 'D', s_none: 'N' };
+    /* پرسش، پاسخ، نتیجهٔ مأموریت، و کمکِ تسهیل‌گر */
+    q: 'q', ans: 'a', p_done: 'P', p_left: 'L', help: 'H',
+    /* پروتکل ۱.۰ این‌ها را داشت؛ فقط برای خواندنِ جلسه‌های قدیمی می‌مانند */
+    scen: 'x', s_start: 'B', s_done: 'D', s_none: 'N' };
 
   /* Per-session derived facts. Everything the dashboard shows is built from
      these, so the rules live in exactly one place. */
@@ -337,9 +347,117 @@
       rage: rages.length, dead: deads.length,
       screens: Object.keys(time).length,
       deepest: path[path.length - 1] || '',
-      ms: end
+      ms: end,
+      /* زمانِ فعال، نه زمانِ باز بودنِ تب: هر ثانیه‌ای که صفحه پنهان بوده
+         کسر می‌شود، وگرنه یک تماس تلفنی وسطِ تست شبیه «گیر کردن» می‌شود. */
+      activeMs: Math.max(0, end - away),
+      help: ev.some(e => e[0] === EV.help)
     };
   }
+
+  /* ── مسیرها ─────────────────────────────────────────────────────────
+     کدام خدمت را باز کرد، و تا کجا رفت. یک جا نوشته می‌شود تا هم t.html
+     و هم داشبورد یک تعریف داشته باشند. */
+  /* `screens` یعنی «وارد این مسیر شد»؛ `done` یعنی «تا جایی رفت که واقعاً
+     تصمیم می‌گیرد» — مبلغ، تأیید یا نتیجه. رسیدن به صفحهٔ آموزش، رفتن
+     نیست. شناسه‌ها عیناً از data-screen خودِ پروتوتایپ‌اند. */
+  const ROUTES = [
+    { id: 'withdraw',        screens: ['w-amt', 'w-quote', 'w-status'], done: ['w-quote', 'w-status'] },
+    { id: 'personal_wallet', screens: ['pw-tut', 'pw-mode', 'pw-ready', 'pw-words', 'pw-check', 'pw-wallet',
+                                       'pw-amt', 'pw-quote', 'pw-sign', 'pw-status',
+                                       'pw-back-amt', 'pw-back-quote', 'pw-back-status',
+                                       'k-intro', 'k-order', 'k-status'],
+                             done: ['pw-amt', 'pw-quote', 'pw-sign', 'pw-status', 'k-order', 'k-status'] },
+    { id: 'gold',            screens: ['p-tut', 'p-map', 'p-shop', 'p-amt', 'p-status'], done: ['p-amt', 'p-status'] },
+    { id: 'transfer',        screens: ['t-who', 't-amt', 't-confirm', 't-invite', 't-status'], done: ['t-amt', 't-confirm', 't-status'] },
+    { id: 'invest',          screens: ['invest', 'n-detail', 'n-amt', 'n-status'], done: ['n-amt', 'n-status'] }
+  ];
+  /* مسیرهایی که نشان می‌دهند کاربر برای رسیدن به پولش وابسته به مهاجر نیست */
+  const CONTROL_ROUTES = ['withdraw', 'personal_wallet', 'gold'];
+
+  /* «باز کردنِ صفحهٔ آموزش» مسیر رفتن نیست: ورود به مسیر یعنی رسیدن به
+     صفحه‌ای که در آن انتخاب یا مبلغ مطرح است. آموزش جدا شمرده می‌شود. */
+  const TUTS = ['pw-tut', 'p-tut', 'p-map', 'k-intro'];
+
+  function routesOf(path) {
+    const seen = [], deep = {};
+    let first = null;
+    (path || []).forEach(scr => {
+      const r = ROUTES.find(x => x.screens.indexOf(scr) >= 0);
+      if (!r) return;
+      if (seen.indexOf(r.id) < 0) seen.push(r.id);
+      if (!first && TUTS.indexOf(scr) < 0) first = r.id;
+      if (r.done.indexOf(scr) >= 0) deep[r.id] = 1;
+    });
+    return { seen, first: first || null, completed: Object.keys(deep), depth: seen.length };
+  }
+
+  /* ── امتیازدهی، یک جا و نسخه‌دار ───────────────────────────────────
+     قاعده‌ها نباید یک بار در runner و یک بار در داشبورد نوشته شوند؛ آن‌وقت
+     دو عددِ متفاوت از یک جلسه بیرون می‌آید و هیچ‌کس نمی‌فهمد کدام درست است.
+
+     یک قاعدهٔ سخت: پاسخِ نداده صفر نیست. اگر کسی سؤالی را ندیده، کلیدش
+     ساخته نمی‌شود و آن جلسه در مخرجِ آن شاخص نمی‌آید. */
+  const SCORING_VERSION = 2;
+  const CORE_Q = ['positioning_main', 'distinct_value', 'asset_understanding',
+                  'custody_understanding', 'feature_top2', 'trust', 'commitment_step'];
+  /* «تمایز نسبت به صرافی» فقط چیزهایی است که صرافی ندارد. تبدیل و کیف پول
+     شخصی در توزیع دیده می‌شوند، ولی خودشان تمایز نیستند. */
+  const DISTINCT_OK = ['custody', 'gold', 'invest', 'p2p', 'support'];
+
+  function scoreSession(s) {
+    const e = (s && s.end) || {}, sc = { scoring_version: SCORING_VERSION };
+    const has = (k) => { const v = e[k]; return !(v === undefined || v === null || v === '' || (Array.isArray(v) && !v.length)); };
+    sc.answered = CORE_Q.filter(has).length;
+
+    if (has('positioning_main')) sc.positioning_correct = e.positioning_main === 'value_control' ? 1 : 0;
+
+    if (has('distinct_value')) {
+      const dv = [].concat(e.distinct_value);
+      sc.distinct_value_recognized = dv.some(v => DISTINCT_OK.indexOf(v) >= 0) ? 1 : 0;
+      sc.no_distinct_value = dv.indexOf('none') >= 0 ? 1 : 0;
+    }
+    if (has('asset_understanding'))   sc.asset_correct   = e.asset_understanding === 'usdt_share' ? 1 : 0;
+    if (has('custody_understanding')) sc.custody_correct = e.custody_understanding === 'bitvana' ? 1 : 0;
+
+    sc.misconceptions = [];
+    if (e.asset_understanding === 'bank_usd')      sc.misconceptions.push('bank_deposit');
+    if (e.asset_understanding === 'issuer')        sc.misconceptions.push('mohajer_issuer');
+    if (e.custody_understanding === 'mohajer_bank')  sc.misconceptions.push('mohajer_direct_custodian');
+    if (e.custody_understanding === 'central_bank') sc.misconceptions.push('central_bank');
+
+    if (has('trust')) { const t = +e.trust; sc.trust_high = t >= 4 ? 1 : 0; sc.trust_low = (t > 0 && t <= 2) ? 1 : 0; }
+
+    if (has('commitment_step')) {
+      const c = e.commitment_step;
+      sc.practical_action = ['talk', 'signup', 'try_small', 'serious'].indexOf(c) >= 0 ? 1 : 0;
+      sc.money_intent     = ['try_small', 'serious'].indexOf(c) >= 0 ? 1 : 0;
+      sc.high_intent      = c === 'serious' ? 1 : 0;
+      sc.no_action        = c === 'nothing' ? 1 : 0;
+      sc.explore          = c === 'read' ? 1 : 0;      /* کاوش بیشتر: نه اقدام، نه بی‌اقدامی */
+    }
+    return sc;
+  }
+
+  /* رفتار، از رویدادها — بی‌نیاز از حضورِ iframe، پس داشبورد هم می‌تواند
+     همین را روی جلسه‌های ذخیره‌شده اجرا کند. */
+  function behaviorOf(s) {
+    const d = derive(s), r = routesOf(d.path);
+    const oc = (s && s.outcomes) || {};
+    return {
+      completed: !!oc.primary_completed,
+      independent: oc.primary_completed ? !d.help : false,
+      direct: !!oc.primary_direct,
+      activeMs: oc.primary_active_ms || d.activeMs,
+      routes: r.seen, first_route: r.first, routes_completed: r.completed,
+      control_route: r.completed.some(x => CONTROL_ROUTES.indexOf(x) >= 0),
+      help: d.help, rage: d.rage, dead: d.dead, deepest: d.deepest
+    };
+  }
+
+  /* پروتکلِ یک جلسه. جلسه‌های قبلِ ۱.۱ برچسب ندارند، پس ۱.۰ حساب می‌شوند —
+     و داشبورد شاخص‌های تغییرتعریف‌یافته را با هم جمع نمی‌زند. */
+  const protoOf = (s) => String((s && (s.protocol_version || s.p)) || '1.0');
 
   /* Screen ids are what the prototype calls them; these are what a person
      calls them. An unknown id falls back to itself — a screen added in a
@@ -357,7 +475,12 @@
     'pw-amt':'مبلغ انتقال به کیف شخصی', 'pw-quote':'نرخ انتقال', 'pw-sign':'امضا',
     'pw-status':'نتیجهٔ انتقال به کیف شخصی', 'pw-back-amt':'مبلغ بازگشت',
     'pw-back-quote':'نرخ بازگشت', 'pw-back-sign':'امضای بازگشت', 'pw-back-status':'نتیجهٔ بازگشت',
-    explain:'صفحهٔ توضیح', nest:'لانه', 'n-detail':'جزئیات لانه', call:'تماس با پشتیبانی'
+    explain:'صفحهٔ توضیح', nest:'سبد', 'n-detail':'جزئیات سبد', 'n-amt':'مبلغ سرمایه‌گذاری',
+    'n-status':'نتیجهٔ سرمایه‌گذاری', call:'تماس با پشتیبانی',
+    'p-map':'انتخاب صرافی', 'p-shop':'انتخاب شمش', 't-confirm':'تأیید انتقال', 't-invite':'دعوت از دوست',
+    'k-intro':'آموزش کلید مهاجر', receipt:'رسید',
+    'cu-basic':'نگهداری نزد مهاجر', 'cu-self':'کیف پول شخصی', 'cu-gold':'طلای فیزیکی',
+    dist:'توزیع دارایی', fees:'کارمزدها'
   };
   const screenFa = (id) => SCREEN_FA[id] || id || '—';
 
@@ -365,6 +488,9 @@
     $, $$, esc, fa, qs, mmss, secs, clamp, store, json, config, versions, uid, device,
     LAYERS, AGES, CHANNELS, EV, eps, post, postAll, verify, readAll, keepMine,
     queue, flush, read, pack, unpack,
-    copy, download, csv, derive, screenFa, SCREEN_FA, warm
+    copy, download, csv, derive, screenFa, SCREEN_FA, warm,
+    /* پروتکل ۱.۱ */
+    SCORING_VERSION, PROTOCOL: '1.1', QUESTION_SET: 'seven_core_v1', HYPOTHESIS_SET: 'validation_v1_1',
+    CORE_Q, DISTINCT_OK, ROUTES, CONTROL_ROUTES, routesOf, scoreSession, behaviorOf, protoOf
   };
 })(window);

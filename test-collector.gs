@@ -19,9 +19,14 @@
    Deploy → Manage deployments → ✎ (ویرایش) → Version: New version → Deploy.
    آدرس عوض نمی‌شود.
    ──────────────────────────────────────────────────────────────────────
-   شیت خودش خواندنی است: سن، اعتماد، «ادامه می‌دادم»، لایهٔ توقف و متن‌هایی
-   که نوشته‌اند هر کدام ستون خودشان را دارند. ستون json نسخهٔ کامل است و
-   صفحهٔ نتیجه‌ها از همان می‌خواند.
+   شیت خودش خواندنی است: سن، اعتماد، قدم بعدی، جایگاه، فهم دارایی و فهم
+   جای نگهداری، پیشرفتِ پاسخ‌ها (از هفت)، نتیجهٔ مأموریت و اقدام‌های پایان
+   هر کدام ستون خودشان را دارند. ستون json نسخهٔ کامل جلسه است و صفحهٔ
+   نتیجه‌ها از همان می‌خواند.
+
+   یک جلسه ممکن است چند سطر داشته باشد: نیمه‌کاره‌ها در راه و نسخهٔ نهایی
+   در پایان، همه با یک id. خواندن آخرین سطرِ هر id را برمی‌دارد، پس هیچ‌کس
+   دو بار شمرده نمی‌شود و هیچ نیمه‌کاره‌ای هم گم نمی‌شود.
 
    چه چیزی ذخیره می‌شود: بازهٔ سنی، سه پاسخ رفتاری، مسیر صفحه‌ها، ضربه‌ها و
    متن‌هایی که خود شرکت‌کننده نوشته است. اطلاعات بانکی هرگز پرسیده نمی‌شود.
@@ -36,8 +41,11 @@ var MAX_CELL = 45000;          /* سقف امن یک خانهٔ شیت */
 /* ستون json عمداً نهم مانده است: شیت‌هایی که با نسخهٔ قبلی این کد پر شده‌اند
    بدون دست‌خوردن خوانده می‌شوند و ستون‌های تازه بعد از آن اضافه می‌شوند. */
 var HEAD = ['at', 'id', 'round', 'version', 'channel', 'age', 'done', 'seconds', 'json',
-            'trust', 'go', 'stop', 'confuse', 'change', 'notes', 'screens', 'taps', 'rage', 'dead',
-            'name', 'tel'];
+            'trust', 'next_step', 'positioning', 'asset', 'custody', 'notes', 'screens', 'taps', 'rage', 'dead',
+            'name', 'tel',
+            /* ستون‌های پروتکل ۱.۱ — بعد از ستون‌های قبلی، تا شیت‌های پرشده دست‌نخورده بمانند */
+            'protocol', 'answered', 'confirmed', 'revision', 'updated',
+            'mission', 'independent', 'first_route', 'post_actions'];
 
 function sheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -54,6 +62,9 @@ function sheet_() {
     sh.getRange(1, 1, 1, HEAD.length).setValues([HEAD]);
     sh.setFrozenRows(1);
   }
+  /* ستون ۱۰ تا ۱۴ در نسخهٔ قبل go/stop/confuse/change بود و آن سؤال‌ها حذف
+     شده‌اند. سرسطر عوض می‌شود ولی ردیف‌های قدیمی سرِ جای خودشان می‌مانند:
+     برای خواندنِ آن‌ها ستون json هست، که همیشه کاملِ جلسه است. */
   return sh;
 }
 
@@ -84,6 +95,7 @@ function doPost(e) {
     }
 
     var seg = s.seg || {}, end = s.end || {}, ev = s.ev || [];
+    var oc = s.outcomes || {}, sc = s.score || {};
     var screens = {}, taps = 0, rage = 0, dead = 0;
     for (var i = 0; i < ev.length; i++) {
       var k = ev[i][0];
@@ -92,6 +104,18 @@ function doPost(e) {
       else if (k === 'r') rage++;
       else if (k === 'd') dead++;
     }
+    /* «چند تا از هفت سؤال» — اگر runner حسابش نکرده باشد، همین‌جا شمرده
+       می‌شود تا ستون هیچ‌وقت خالی نماند. */
+    var CORE = ['positioning_main','distinct_value','asset_understanding','custody_understanding',
+                'feature_top2','trust','commitment_step'];
+    var answered = sc.answered;
+    if (answered === undefined) {
+      answered = 0;
+      for (var a = 0; a < CORE.length; a++) {
+        var v = end[CORE[a]];
+        if (v !== undefined && v !== null && v !== '' && !(v.length === 0)) answered++;
+      }
+    }
     var notes = (s.fb || []).map(function (f) {
       return (f.mood || '') + (f.s ? '@' + f.s : '') + (f.text ? ': ' + f.text : '');
     }).join(' | ');
@@ -99,10 +123,14 @@ function doPost(e) {
     sheet_().appendRow([
       new Date(), txt_(s.id), txt_(s.r), txt_(s.ver), txt_(s.c),
       seg.age || '', s.done ? 1 : 0, Math.round((s.ms || 0) / 1000), json,
-      end.trust || '', end.go || '', end.stop || '',
-      end.confuse || '', end.change || '', notes,
+      end.trust || '', end.commitment_step || '', end.positioning_main || '',
+      end.asset_understanding || '', end.custody_understanding || '', notes,
       Object.keys(screens).length, taps, rage, dead,
-      (s.contact && s.contact.name) || '', txt_((s.contact && s.contact.tel) || '')
+      (s.contact && s.contact.name) || '', txt_((s.contact && s.contact.tel) || ''),
+      txt_(s.protocol_version || '1.0'), answered, s.delivery_confirmed ? 1 : 0,
+      s.revision || 0, s.updated_at || '',
+      oc.primary_completed ? 1 : 0, oc.primary_independent ? 1 : 0, oc.first_route || '',
+      (s.post_actions || []).join('+')
     ]);
     return out_({ ok: true });
   } catch (err) {
@@ -156,6 +184,11 @@ function doGet(e) {
         age: r[col.age === undefined ? 5 : col.age],
         done: r[col.done === undefined ? 6 : col.done],
         ms: (r[col.seconds === undefined ? 7 : col.seconds] || 0) * 1000,
+        /* کنسول از همین خلاصه شمارش می‌کند، پس پروتکل و پیشرفتِ پاسخ‌ها و
+           تأییدِ تحویل باید در خودِ خلاصه باشند، نه فقط داخل json. */
+        p: col.protocol === undefined ? '1.0' : String(r[col.protocol] || '1.0'),
+        answered: col.answered === undefined ? '' : r[col.answered],
+        confirmed: col.confirmed === undefined ? '' : r[col.confirmed],
         at: r[0]
       });
     }

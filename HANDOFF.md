@@ -1878,6 +1878,119 @@ appears now name the moment it matters: «پشتیبانی انسانی؛ وقت
 آدم جواب بدهد» in the feature questions, «می‌دانستم کسی جواب می‌دهد» as a trust
 driver.
 
+### Protocol 1.1 — seven questions, one mission, plain words (2026-09-27)
+
+Three pieces of feedback arrived together: the spec file v1.1, the colleague's
+review of the test itself, and a recorded rant about the product's vocabulary.
+They agree more than they look like they do — all three say the same thing,
+which is that we were asking people to do our work for us.
+
+**The second mission is gone.** The colleague's first note: a participant
+presses «تمام شد», and the system answers with *another* mission. That is where
+people quit. It also never paid for itself — the 50/50 `control_exit` /
+`next_use` assignment halved every behavioural denominator, and the framing we
+imposed ("now find a use") was not the behaviour we wanted to observe anyway.
+Now there is one free session. Which services the person opened, which one they
+carried to the point of a real decision, and whether they ever found a way to
+get their money *out* are all read from the events of that single session —
+`TK.routesOf(path)`, where `screens` means "entered" and `done` means "reached
+the amount / confirm / result step". Opening a tutorial is not walking a path.
+
+**Eighteen questions became seven**, exactly seven, with no conditionals: any
+answer produces the same seven pages, `۱ از ۷` to `۷ از ۷`. What was cut is the
+*asking*, not the *measuring*:
+
+| cut | measured instead by |
+|---|---|
+| «راه‌های خروج کدام‌اند؟» (C3) | reaching withdraw / personal-wallet / gold in the app |
+| «نبودِ کدام قابلیت؟» (F2) | Q5 plus the route actually walked |
+| «ادامه می‌دادید؟» (I1) | Q7, which separates people; "yes/maybe" never did |
+| «کجا گیر کردید؟» (U1) | friction evidence — and «علت گفته نشده» when nobody said |
+| trust driver / blocker (T2A/B) | optional voice; never a gate |
+| starting amount (I3) | out of scope this round |
+
+A tap is not a reason. Three taps on a dead spot might be confusion, distrust,
+or a slow page, and the click cannot tell us which — so the dashboard's causal
+layer (ارزش/کاربردپذیری/اعتماد/انگیزه split off one self-report) is deleted.
+What replaced it states only what was observed, and names the silence.
+
+**Voice and phone number moved past the finish line.** They are not numbered
+questions and they do not touch `done`, completion rate, or any gate. After
+«ثبت شد» the page offers three optional cards: a voice note, a pilot call, a
+next-version ping — the last two open the contact fields. Each one bumps
+`revision` and re-posts the same session id, so the row updates instead of
+multiplying. The four voice questions are **not shown in the test** — that was
+the colleague's third note — they live in the console as a ready-made message
+to send to whoever asked for it.
+
+**Facilitator help is now an explicit event.** The old `primary_independent`
+meant "completed and did not press a sad face", which is not independence. The
+console publishes a second link ending `&f=1` that shows a «کمک کردم» button in
+the runner's top bar; one press marks the session as assisted. Absence of
+complaint proves nothing; absence of that event does.
+
+**One scoring function, versioned.** `TK.scoreSession()` in `test-kit.js` is
+the only place the rules live, and both the runner and the dashboard call it —
+the dashboard recomputes rather than trusting what the runner stored, so a rule
+change reaches old sessions too. Its hard rule: **a missing answer is never a
+zero.** The key is simply not created, and that session is not in that KPI's
+denominator. Every KPI on the dashboard now prints its own `n=`, and a zero
+denominator renders `—`, never `۰٪`.
+
+Every session carries `protocol_version` (1.1), `question_set`
+(`seven_core_v1`), `scoring_version` (2), `revision` and `updated_at`. The
+dashboard filters by protocol and defaults to the newest one present; mixing
+1.0 and 1.1 is possible but prints a warning, because several KPIs changed
+definition between them. Old sessions stay readable and are never rewritten.
+
+### Words people actually use (2026-09-27)
+
+The recorded feedback, paraphrased: ask ten people on the street what «حضانت»
+means. «آشیانه» is poetry, not a product. And «زیر بالشت» was a bad example to
+begin with — the money is simply *in your pocket*.
+
+- «حضانت با خودتان» → «پول، دست خودتان»
+- «داراییتان را در آشیانه‌ای امن دیجیتال کنید» → «پولتان را امن و دلاری نگه دارید»
+- «پول شما زیر بالشت خودتان است» → «دارایی شما دست خودتان است»
+- «نگهداری توسط مهاجر» → «پیش مهاجر»; «نزد مهاجر / در کیف پول شخصی» → «پیش مهاجر / دست خودتان»
+- «نگهداری شخصی کلید دسترسی به دارایی دیجیتال» → «کلید دسترسی به پول، روی گوشیِ خودتان می‌ماند و از آن بیرون نمی‌رود.»
+- «وابستگی به مهاجر در نگهداری» → «برای بیرون‌آوردن پول، به مهاجر وابسته‌اید»
+- the pillow overlay keeps its mechanic but not its metaphor: «موجودی شما پنهان است.»
+
+Both `COPY_DEF` inside the app and `copy-v4.5.json` were changed together —
+change only one and the old wording comes straight back, because the JSON wins.
+
+The value proposition itself did not move: home still leads with where the
+money is kept and still shows توزیع دارایی. Only the vocabulary changed.
+
+### Verification (2026-09-27)
+
+Ran a full session at `t.html?v=4.5&r=p11&c=tg&p=1.1` in a 375×812 viewport:
+four segment questions → mission → convert 50m تومان (ledger: `convert/done`,
+$211.52) → walked into gold as far as `p-amt` → «تمام شد» landed directly on
+`۱ از ۷`, no second mission. The seven pages appeared in the spec's order and
+the last button read «پایان». Outcomes: completed, direct, independent,
+`first_route: gold`, `routes_completed: ['gold']`, `control_route: true`.
+Delivery confirmed, `delivery_confirmed: true`, `revision` 3 → 5 after the
+pilot card and the phone number. The dashboard rendered it with per-KPI `n`,
+source badges and no verdict ("شواهد کافی نیست · بیشترین n=۱"); the 37 legacy
+1.0 sessions still render under the protocol filter, with honest denominators
+(19 started the mission, 10 answered Q1, 15 answered trust).
+
+### Open
+
+- The Apps Script still needs its **new version** deployed. Until then the
+  console's summary rows have no `protocol`, `answered` or `confirmed`, so it
+  labels everything 1.0 and shows «تحویلِ تأییدشده ۰». The results page is
+  unaffected — it reads the full JSON.
+- `test-config.json` → `contact` is still empty. The voice card works without
+  it ("send it where you got the link"), but setting a Telegram link makes it
+  one tap.
+- The F1 spotlight image has no question to live on any more: Q5 lists six
+  features and the home screenshot only shows four of them, so lighting it
+  would tilt the answer. `spotHtml()` and `./test-home.png` stay; re-attaching
+  is one `spot:` key.
+
 ---
 
 ## 11. Blu Bank — the reference

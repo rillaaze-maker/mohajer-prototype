@@ -109,10 +109,6 @@ h1 em{font-style:normal;color:var(--gold)}
   box-shadow:0 0 0 2px var(--gold),0 0 0 6px rgba(213,164,92,.2)}
 .spot .win img{position:absolute;inset:auto;filter:none}
 
-.voiceq{display:flex;flex-direction:column;gap:11px;margin-top:20px}
-.voiceq li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--w2);line-height:1.75;list-style:none}
-.voiceq li b{flex:none;width:21px;height:21px;border-radius:50%;background:rgba(213,164,92,.16);color:var(--gold);
-  display:grid;place-items:center;font-size:11px;font-weight:700;margin-top:2px}
 
 .scale{display:flex;gap:7px;margin-top:22px}
 .scale button{flex:1;aspect-ratio:1/1.05;max-height:74px;border-radius:14px;background:var(--surf);
@@ -197,6 +193,18 @@ textarea::placeholder{color:var(--w3)}
 .code{margin-top:18px;background:var(--surf);border:1px solid var(--brd);border-radius:15px;padding:14px}
 .code .k{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:8px}
 .code textarea{margin-top:0;min-height:96px;font:400 11px/1.6 ui-monospace,Menlo,monospace;direction:ltr;text-align:left}
+/* پیشنهادهای بعد از ثبت: نه سؤال، نه شماره‌دار. هرکدام یک قدمِ اختیاری. */
+.post{margin-top:20px;display:flex;flex-direction:column;gap:9px}
+.pact{display:flex;align-items:center;gap:12px;text-align:start;width:100%;
+  border:1px solid var(--brd);background:var(--surf);color:var(--w1);border-radius:15px;
+  font:600 13.5px/1.5 var(--f);padding:15px 16px;cursor:pointer;transition:.2s var(--swift)}
+.pact:active{transform:scale(.99)}
+.pact[aria-pressed=true]{border-color:var(--gold);background:rgba(213,164,92,.1)}
+.pact .ic{width:32px;height:32px;border-radius:10px;flex:none;display:grid;place-items:center;
+  background:rgba(213,164,92,.13)}
+.pact .ic svg{width:16px;height:16px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.pact .tx{min-width:0}
+.pact .tx i{display:block;font-style:normal;font-weight:400;font-size:11.5px;color:var(--w3);margin-top:3px}
 .sent{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ok);margin-top:16px}
 .sent svg{width:15px;height:15px;stroke:var(--ok);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
@@ -246,7 +254,7 @@ textarea::placeholder{color:var(--w3)}
   <section class="step" id="s-brief">
     <div class="eyebrow">کار شما</div>
     <h1 id="b-title">فرض کنید این اپ<br>واقعاً مال شماست.</h1>
-    <p class="lead" id="b-task">می‌خواهید بخشی از پول‌تان را از ریال خارج کنید و دلاری نگه دارید. هر کاری لازم است، در اپ انجام دهید.</p>
+    <p class="lead" id="b-task">می‌خواهید بخشی از پول‌تان را از تومان خارج کنید و دلاری نگه دارید. هر کاری لازم است، در اپ انجام دهید.</p>
     <div class="facts">
       <div class="fact"><svg viewBox="0 0 24 24"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg><span id="b-f1">هیچ راهنمایی‌ای در کار نیست — همان‌طور که با یک اپ واقعی روبه‌رو می‌شوید.</span></div>
       <div class="fact"><svg viewBox="0 0 24 24"><path d="M12 8v5M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><span id="b-f2">هر جا گیج شدید یا شک کردید، بالای صفحه دکمهٔ «گیر کردم» هست.</span></div>
@@ -254,19 +262,6 @@ textarea::placeholder{color:var(--w3)}
     </div>
     <div class="grow"></div>
     <div class="btn-row"><button class="btn btn-primary" onclick="openApp()">باز کردن اپ</button></div>
-  </section>
-
-  <!-- ── مأموریت دوم ─────────────────────────────────────────── -->
-  <section class="step" id="s-brief2">
-    <div class="eyebrow" data-c="" id="b2-kicker">مأموریت دوم</div>
-    <h1 id="b2-title">—</h1>
-    <p class="lead" id="b2-task">—</p>
-    <div class="facts">
-      <div class="fact"><svg viewBox="0 0 24 24"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg><span>موجودی‌تان همان است؛ از همان‌جا ادامه دهید.</span></div>
-      <div class="fact"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span>لازم نیست چیزی را نهایی کنید؛ تا هر جا خواستید جلو بروید.</span></div>
-    </div>
-    <div class="grow"></div>
-    <div class="btn-row"><button class="btn btn-primary" onclick="openApp(true)">ادامه در اپ</button></div>
   </section>
 
   <!-- ── پایان ───────────────────────────────────────────────── -->
@@ -281,7 +276,30 @@ textarea::placeholder{color:var(--w3)}
     <h1 id="d-title" hidden>ممنون از وقتی که گذاشتید.</h1>
     <p class="lead" id="d-lead" hidden>پاسخ‌های شما ثبت شد. همین نکته‌هاست که نسخهٔ بعدی را ساده‌تر می‌کند.</p>
     <div id="d-sent" class="sent" hidden><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="d-sent-t">ارسال شد</span></div>
-    <button class="skip" id="d-more" hidden onclick="showCode()">یک نسخهٔ پشتیبان هم بفرستم</button>
+    <!-- بعد از ثبت. هیچ‌کدام اجباری نیست و هیچ‌کدام روی نتیجه اثر ندارد. -->
+    <div class="post" id="d-post" hidden>
+      <div class="k" style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--gold)">اگر وقت دارید</div>
+      <button class="pact" id="pa-voice" onclick="postAct('voice',this)">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v4"/></svg></span>
+        <span class="tx">یک ویس کوتاه می‌فرستم<i>چهار سؤال برایتان می‌فرستیم؛ همان‌ها را بگویید.</i></span></button>
+      <button class="pact" id="pa-pilot" onclick="postAct('pilot',this)">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.5 2.1L8.1 9.7a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.5c.9.3 1.8.5 2.7.6a2 2 0 011.9 2z"/></svg></span>
+        <span class="tx">برای پایلوت با من تماس بگیرید<i>نسخهٔ واقعی را قبل از همه امتحان می‌کنم.</i></span></button>
+      <button class="pact" id="pa-notify" onclick="postAct('notify',this)">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg></span>
+        <span class="tx">نسخهٔ بعدی را خبرم کنید<i>وقتی آماده شد، یک پیام.</i></span></button>
+      <div id="d-contact" hidden>
+        <p class="tiny" id="d-contact-h" style="margin:14px 0 10px">اگر دوست دارید که بیشتر راجع به تجربه و ایده‌هاتون صحبت کنید، شماره تماس و نامتون رو برای ما بنویسید. <b style="color:var(--w2);font-weight:600">(کاملاً اختیاری)</b></p>
+        <div class="fields">
+          <input id="c-name" type="text" autocomplete="name" placeholder="نام">
+          <input id="c-tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="شمارهٔ تماس">
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-primary" id="c-save" onclick="saveContact()">ثبت شماره</button>
+        </div>
+      </div>
+      <button class="skip" id="d-more" onclick="showCode()">یک نسخهٔ پشتیبان هم بفرستم</button>
+    </div>
     <div id="d-code" class="code" hidden>
       <div class="k" id="d-code-k">یک قدم کوتاه مانده</div>
       <p class="tiny" id="d-code-h">این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند برای ما بفرستید — پاسخ‌های شما داخل همین متن است.</p>
@@ -303,6 +321,9 @@ textarea::placeholder{color:var(--w3)}
     <span class="who"><span class="dot"></span><b>نمونهٔ آزمایشی</b></span>
     <span class="sp"></span>
     <button class="abtn" onclick="openSheet()">گیر کردم</button>
+    <!-- فقط در لینکِ تسهیل‌گر (‎?f=1‎) دیده می‌شود: «نبودنِ شکایت» دلیل استقلال
+         نیست، پس کمک باید صریح ثبت شود. -->
+    <button class="abtn" id="fhelp" hidden onclick="facHelp(this)">کمک کردم</button>
     <button class="abtn gold" id="fin" onclick="finishApp()">تمام شد</button>
   </div>
   <iframe id="app" title="اپ آزمایشی مهاجر"></iframe>
@@ -324,7 +345,7 @@ textarea::placeholder{color:var(--w3)}
   </div>
 </div>
 
-<script src="./test-kit.js?v=20260926b"></script>
+<script src="./test-kit.js?v=20260927a"></script>
 <script>
 /* ════════ متن‌ها ════════════════════════════════════════════════
    هر جملهٔ این صفحه اینجاست. برای تغییر، یا همین‌جا را عوض کنید یا در
@@ -337,7 +358,7 @@ const TXT = {
   wF2:  'هیچ اطلاعات بانکی‌ای از شما نمی‌پرسیم. نام و شماره هم فقط اگر خودتان بخواهید، آن‌هم در پایان.',
   wF3:  'هر جا مکث کردید یا سؤالی برایتان پیش آمد، همان‌جا بگویید — دقیقاً همان چیزی است که دنبالش هستیم.',
   bTitle:'فرض کنید این اپ<br>واقعاً مال شماست.',
-  bTask:'می‌خواهید بخشی از پول‌تان را از ریال خارج کنید و دلاری نگه دارید. هر کاری لازم است، در اپ انجام دهید.',
+  bTask:'می‌خواهید بخشی از پول‌تان را از تومان خارج کنید و دلاری نگه دارید. هر کاری لازم است، در اپ انجام دهید.',
   dTitle:'ممنون از وقتی که گذاشتید.',
   dLead:'پاسخ‌های شما ثبت شد. همین نکته‌هاست که نسخهٔ بعدی را ساده‌تر می‌کند.'
 };
@@ -366,10 +387,18 @@ const SEG = [
            {v:'skip',l:'ترجیح می‌دهم نگویم'} ] }
 ];
 
-/* ════════ پرسش‌های پایانی ══════════════════════════════════════
-   ترتیب از سند: جایگاه → ارزش متمایز → فهم → قابلیت → اعتماد → قصد →
-   کاربردپذیری. پرسش‌های اعتماد و اقدام عمداً بعد از فهم می‌آیند تا
-   پاسخ فهم را جهت‌دهی نکنند. */
+/* ════════ هفت پرسشِ پایانی ═════════════════════════════════════
+   دقیقاً هفت سؤال. نه شش، نه هشت، و هیچ سؤالی که از دلِ یک پاسخ بیرون
+   بیاید — هجده سؤالِ نسخهٔ قبل، آخرِ تست را به یک بازجویی تبدیل می‌کرد و
+   مردم همان‌جا رهایش می‌کردند.
+
+   آنچه حذف شد سؤال است، نه سنجه: «ادامه می‌دادید؟»، «راه‌های خروج کدام‌اند؟»
+   و «کجا گیر کردید؟» از رفتارِ واقعیِ داخل اپ خوانده می‌شوند، که شاهدِ
+   بهتری هم هست. علتِ اعتماد و بی‌اعتمادی پرسیده نمی‌شود چون سؤالِ شرطی
+   می‌سازد؛ هرکس خودش بخواهد، در ویس یا در «گیر کردم» می‌گوید.
+
+   ترتیب قطعی است: ارزش → فهم → قابلیت → اعتماد → اقدام. اعتماد عمداً بعد
+   از فهم می‌آید تا نمرهٔ فهم را جهت‌دهی نکند. */
 const END = [
   { id:'positioning_main', code:'P1', type:'single', req:true, rnd:true,
     q:'به نظر شما مهم‌ترین کاری که مهاجر انجام می‌دهد چیست؟',
@@ -383,8 +412,8 @@ const END = [
   { id:'distinct_value', code:'P2', type:'multi', req:true, max:2, rnd:true,
     q:'در مقایسه با خرید مستقیم تتر از یک صرافی، کدام بخش مهاجر برایتان ارزش اضافه می‌سازد؟',
     sub:'حداکثر دو مورد',
-    opts:[ {v:'convert', l:'تبدیل ساده ریال به دارایی دلاری و برعکس'},
-           {v:'custody', l:'انتخاب روش نگهداری دارایی'},
+    opts:[ {v:'convert', l:'تبدیل سادهٔ تومان به دارایی دلاری و برعکس'},
+           {v:'custody', l:'انتخاب این‌که پول کجا بماند'},
            {v:'pw',      l:'انتقال به کیف پول شخصی'},
            {v:'gold',    l:'تبدیل و دریافت طلای فیزیکی'},
            {v:'invest',  l:'استفاده از خدمات سرمایه‌گذاری'},
@@ -402,79 +431,26 @@ const END = [
            {v:'dunno',     l:'نمی‌دانم', last:true} ] },
 
   { id:'custody_understanding', code:'C2', type:'single', req:true, rnd:true,
-    q:'در حالت پیش‌فرض، دارایی پایهٔ شما کجا نگهداری می‌شود؟',
+    q:'اگر خودتان جایی را عوض نکنید، پولی که تبدیل کرده‌اید کجا می‌ماند؟',
     opts:[ {v:'mohajer_bank', l:'در حساب بانکی مهاجر'},
-           {v:'bitvana',      l:'نزد بیت‌وانا و دسترسی آن از طریق مهاجر مدیریت می‌شود'},
-           {v:'own_wallet',   l:'داخل کیف پول شخصی من'},
+           {v:'bitvana',      l:'نزد صرافی بیت‌وانا، و دسترسی‌اش از مهاجر مدیریت می‌شود'},
+           {v:'own_wallet',   l:'داخل کیف پول شخصی خودم'},
            {v:'central_bank', l:'نزد بانک مرکزی'},
            {v:'dunno',        l:'نمی‌دانم', last:true} ] },
-
-  { id:'exit_understanding', code:'C3', type:'multi', req:true, max:3, rnd:true,
-    q:'اگر نخواهید دارایی در حالت پیش‌فرض بماند، در نسخه‌ای که دیدید کدام گزینه‌ها وجود داشت؟',
-    sub:'حداکثر سه مورد',
-    opts:[ {v:'rial',      l:'تبدیل دوباره به ریال و برداشت'},
-           {v:'pw',        l:'انتقال دارایی به کیف پول شخصی'},
-           {v:'gold',      l:'تبدیل بخشی از دارایی و دریافت طلای فیزیکی'},
-           {v:'permission',l:'فقط با اجازهٔ مهاجر می‌توانم دارایی را خارج کنم'},
-           {v:'no_exit',   l:'امکان خروج از مهاجر وجود ندارد'},
-           {v:'dunno',     l:'نمی‌دانم', ex:true, last:true} ] },
 
   { id:'feature_top2', code:'F1', type:'multi', req:true, exact:2, rnd:true,
     q:'اگر در نسخهٔ اول مهاجر فقط دو قابلیت بماند، کدام دو مورد برایتان ضروری‌تر است؟',
     sub:'دقیقاً دو مورد',
-    /* تصویر فقط یادآوری است، نه راهنمایی: این پرسش پاسخ درست ندارد. */
-    spot:{img:'./test-home.png', x:18, y:461, w:354, h:76},
-    opts:[ {v:'convert', l:'تبدیل ریال به دارایی دلاری و برداشت دوباره'},
+    opts:[ {v:'convert', l:'تبدیل تومان به دارایی دلاری و برداشت دوباره'},
            {v:'pw',      l:'انتقال به کیف پول شخصی'},
            {v:'gold',    l:'دریافت طلای فیزیکی'},
            {v:'p2p',     l:'انتقال به کاربران دیگر'},
            {v:'invest',  l:'سرمایه‌گذاری'},
            {v:'support', l:'پشتیبانی انسانی؛ کسی که وقتی گیر کردم جواب بدهد'} ] },
 
-  { id:'feature_must_have', code:'F2', type:'single', req:true, rnd:true,
-    q:'نبودِ کدام قابلیت باعث می‌شود فعلاً از مهاجر استفاده نکنید؟',
-    opts:[ {v:'convert', l:'تبدیل و برداشت ساده'},
-           {v:'pw',      l:'کیف پول شخصی'},
-           {v:'gold',    l:'دریافت طلای فیزیکی'},
-           {v:'p2p',     l:'انتقال به کاربران دیگر'},
-           {v:'invest',  l:'سرمایه‌گذاری'},
-           {v:'support', l:'پشتیبانی انسانی؛ کسی که جواب بدهد وقتی مشکلی پیش آمد'},
-           {v:'none',    l:'هیچ‌کدام؛ نبودِ یک قابلیت خاص مانع من نیست', last:true},
-           {v:'never',   l:'در هر صورت فعلاً استفاده نمی‌کنم', last:true} ] },
-
-  { id:'trust', code:'T1', type:'scale', req:true, lo:'اصلاً', hi:'کامل',
+  { id:'trust', code:'T1', type:'scale', req:true,
+    lo:'اصلاً اعتماد نمی‌کردم', hi:'کاملاً اعتماد می‌کردم',
     q:'اگر این سرویس واقعی بود، چقدر به آن اعتماد می‌کردید؟' },
-
-  { id:'trust_driver', code:'T2A', type:'single', rnd:true,
-    when:e=>+e.trust>=4,
-    q:'اصلی‌ترین چیزی که باعث شد به مهاجر اعتماد کنید چه بود؟',
-    opts:[ {v:'fees',    l:'شفاف‌بودن نرخ و کارمزد'},
-           {v:'exit',    l:'امکان برداشت و تبدیل دوباره به ریال'},
-           {v:'pw',      l:'امکان انتقال به کیف پول شخصی'},
-           {v:'gold',    l:'امکان دریافت طلای فیزیکی'},
-           {v:'bitvana', l:'مشخص‌بودن نقش بیت‌وانا'},
-           {v:'support', l:'پشتیبانی انسانی؛ می‌دانستم کسی جواب می‌دهد'},
-           {v:'brand',   l:'اعتبار نام یا مجموعهٔ پشت مهاجر'},
-           {v:'ux',      l:'طراحی و تجربهٔ کاربری اپ'},
-           {v:'feeling', l:'دلیل مشخصی نداشت؛ حس کلی خوبی داشتم', last:true} ] },
-
-  { id:'trust_blocker', code:'T2B', type:'single', rnd:true,
-    when:e=>+e.trust>0 && +e.trust<=3,
-    q:'اصلی‌ترین مانع اعتماد شما چه بود؟',
-    opts:[ {v:'where',     l:'دقیقاً نمی‌دانم دارایی کجا نگهداری می‌شود'},
-           {v:'bitvana',   l:'بیت‌وانا را نمی‌شناسم یا به آن اعتماد ندارم'},
-           {v:'usdt',      l:'دربارهٔ تتر و ثبات ارزش آن مطمئن نیستم'},
-           {v:'withdraw',  l:'مطمئن نیستم بتوانم پولم را برداشت کنم'},
-           {v:'security',  l:'دربارهٔ امنیت حساب یا کیف پول نگرانم'},
-           {v:'legal',     l:'قوانین، مسئولیت‌ها و پاسخ‌گویی روشن نیست'},
-           {v:'no_anchor', l:'پشتوانهٔ نهادی یا برند معتبری ندیدم'},
-           {v:'fees',      l:'کارمزد یا نرخ تبدیل برایم روشن نبود'},
-           {v:'ux',        l:'تجربهٔ کاربری باعث بی‌اعتمادی شد'},
-           {v:'any_new',   l:'فعلاً به هیچ سرویس جدید مالی اعتماد نمی‌کنم', last:true} ] },
-
-  { id:'go', code:'I1', type:'single', req:true,
-    q:'اگر واقعی بود، ادامه می‌دادید؟',
-    opts:[ {v:'yes',l:'بله'}, {v:'maybe',l:'شاید'}, {v:'no',l:'نه'} ] },
 
   { id:'commitment_step', code:'I2', type:'single', req:true,
     q:'اگر مهاجر همین امروز واقعی و قابل استفاده بود، محتمل‌ترین قدم بعدی شما چه بود؟',
@@ -483,48 +459,7 @@ const END = [
            {v:'talk',     l:'با یک پشتیبان صحبت می‌کردم'},
            {v:'signup',   l:'حساب کاربری می‌ساختم'},
            {v:'try_small',l:'با مبلغ آزمایشی شروع می‌کردم'},
-           {v:'serious',  l:'با مبلغ جدی شروع می‌کردم'} ] },
-
-  { id:'starting_amount_band', code:'I3', type:'single',
-    when:e=>e.commitment_step==='try_small'||e.commitment_step==='serious',
-    q:'برای شروع، چه مبلغی برایتان قابل‌قبول بود؟',
-    opts:[ {v:'lt5',    l:'کمتر از ۵ میلیون تومان'},
-           {v:'5_20',   l:'۵ تا ۲۰ میلیون تومان'},
-           {v:'20_50',  l:'۲۰ تا ۵۰ میلیون تومان'},
-           {v:'50_100', l:'۵۰ تا ۱۰۰ میلیون تومان'},
-           {v:'gt100',  l:'بیشتر از ۱۰۰ میلیون تومان'} ] },
-
-  { id:'action_cta', code:'I4', type:'single',
-    when:e=>['talk','signup','try_small','serious'].indexOf(e.commitment_step)>=0,
-    q:'دوست دارید کدام قدم را واقعاً بردارید؟',
-    opts:[ {v:'pilot',  l:'در پایلوت نسخهٔ واقعی شرکت کنم'},
-           {v:'talk',   l:'با تیم مهاجر دربارهٔ تجربه‌ام صحبت کنم'},
-           {v:'notify', l:'وقتی نسخهٔ بعدی آماده شد خبرم کنید'},
-           {v:'none',   l:'فعلاً نمی‌خواهم اقدامی انجام دهم', last:true} ] },
-
-  { id:'stop', code:'U1', type:'single',
-    q:'اگر جایی مکث کردید، نزدیک‌ترین دلیلش کدام بود؟',
-    opts:[ {v:'none',      l:'جایی گیر نکردم'},
-           {v:'value',     l:'نفهمیدم اصلاً به چه دردم می‌خورد'},
-           {v:'usability', l:'فهمیدم، ولی نمی‌دانستم چطور انجامش دهم'},
-           {v:'trust',     l:'بلد بودم، ولی مطمئن نبودم'},
-           {v:'motivation',l:'مطمئن بودم، ولی برایم مهم نبود'} ] },
-
-  { id:'change', code:'U2', type:'text', opt:true,
-    q:'اگر فقط یک چیز را می‌شد عوض کرد، چه بود؟',
-    ph:'یک جمله کافی است…' },
-
-  /* خواستهٔ بنیان‌گذار: یک ویس کوتاه، بعد از همهٔ گزینه‌ای‌ها */
-  { id:'voice', code:'V', type:'voice', opt:true,
-    q:'اگر می‌شود، تجربه‌تان را در یک ویس کوتاه بگویید.',
-    sub:'محصول را چطور فهمیدید، چه حسی داشتید، و آیا خودتان از آن استفاده می‌کردید؟',
-    nextLabel:'ویس می‌فرستم', skipLabel:'ویس نمی‌فرستم' },
-
-  { id:'contact', code:'CT', type:'contact', opt:true,
-    when:e=>['pilot','talk','notify'].indexOf(e.action_cta)>=0,
-    q:'اگر دوست دارید که بیشتر راجع به تجربه و ایده‌هاتون صحبت کنید',
-    sub:'شماره تماس و نامتون رو برای ما بنویسید. <b style="color:var(--w2);font-weight:600">(کاملاً اختیاری)</b>',
-    skipLabel:'بدون شماره تمام می‌کنم', nextLabel:'ثبت و پایان' }
+           {v:'serious',  l:'با مبلغ جدی شروع می‌کردم'} ] }
 ];
 
 const MOODS = [
@@ -535,30 +470,8 @@ const MOODS = [
   {v:'liked',    l:'خوشم آمد'}
 ];
 
-/* دو سناریوی دوم، نصف‌نصف و پایدار بر اساس شناسهٔ جلسه */
-const SCEN = {
-  control_exit: { t:'کنترل و خروج',
-    task:'حالا فرض کنید می‌خواهید مطمئن شوید برای دسترسی به پول‌تان وابسته به مهاجر نمی‌مانید. در اپ بررسی کنید چه انتخاب‌هایی دارید و مسیری را که برایتان مناسب‌تر است پیدا کنید.' },
-  next_use: { t:'استفادهٔ بعدی',
-    task:'حالا فرض کنید تبدیل انجام شده و موجودی دلاری دارید. یک استفاده از این موجودی پیدا کنید که برایتان جذاب‌تر است و تا مرحلهٔ قبل از تأیید نهایی جلو بروید.' }
-};
-/* مسیرهای معتبرِ سناریوی دوم و صفحه‌ای که «انتخاب شد» یعنی همان */
-const ROUTES = [
-  { id:'withdraw', screens:['w-amt','w-quote'] },
-  { id:'personal_wallet', screens:['pw-tut','pw-mode','pw-ready','pw-wallet','pw-amt'] },
-  { id:'gold', screens:['p-tut','p-shop','p-amt'] },
-  { id:'transfer', screens:['t-who','t-amt','t-confirm'] },
-  { id:'invest', screens:['invest','n-detail','n-amt'] }
-];
-const DONE_SCREENS = ['w-quote','pw-mode','pw-ready','pw-wallet','p-shop','p-amt','t-confirm','n-amt'];
-
-/* چهار پرسشی که بنیان‌گذار می‌خواهد در ویس جواب داده شود */
-const VOICE_Q = [
-  'اگر بخواهید مهاجر را معرفی کنید، می‌گویید چیست و دارایی شما را چطور نگهداری می‌کند؟',
-  'کجای اپ حس خوبی داشتید و کجا مردد یا بی‌اعتماد شدید؟ چرا؟',
-  'چه چیزی باعث می‌شود در مهاجر حساب کاربری بسازید؟',
-  'برای واردکردن پول واقعی چه چیزی باید ببینید، خط قرمزتان چیست و با چه مبلغی شروع می‌کنید؟'
-];
+/* مسیرها و نام صفحه‌ها در test-kit.js است (TK.ROUTES)، چون داشبورد هم
+   باید با همان تعریف بخواند. */
 
 /* ════════ حالت ═════════════════════════════════════════════════ */
 const $ = TK.$;
@@ -570,6 +483,7 @@ let t0 = Date.now(), stageT0 = Date.now(), awayAt = 0, lastSave = 0, sentOnce = 
 const ver = TK.qs('v', '4.5');
 const round = TK.qs('r', '1');
 const chan = TK.qs('c', 'x');
+const proto = TK.qs('p', TK.PROTOCOL);
 
 /* ════════ راه‌اندازی ════════════════════════════════════════════ */
 (async function boot(){
@@ -587,15 +501,17 @@ const chan = TK.qs('c', 'x');
 
   S = {
     v: 1, id: TK.uid(), r: round, ver: VER.id, c: chan,
+    /* پروتکل روی خودِ جلسه می‌نشیند: شاخص‌هایی که تعریفشان عوض شده نباید با
+       دادهٔ راندهای قبل جمع شوند، و داشبورد از همین سه کلید می‌فهمد. */
+    protocol_version: proto, question_set: TK.QUESTION_SET,
+    hypothesis_set: TK.HYPOTHESIS_SET, scoring_version: TK.SCORING_VERSION,
     t0: new Date().toISOString(), t1: null, ms: 0,
-    seg: {}, end: {}, contact: null, fb: [], ev: [], dev: TK.device(),
-    stage: 'primary', assignment: null, outcomes: {}, score: null,
-    phase: 'welcome', done: false
+    updated_at: new Date().toISOString(), revision: 0,
+    seg: {}, end: {}, contact: null, post_actions: [], fb: [], ev: [], dev: TK.device(),
+    stage: 'welcome', outcomes: {}, score: null,
+    phase: 'welcome', done: false, delivery_confirmed: false
   };
-  /* تخصیص از روی شناسهٔ جلسه: با رفرش عوض نمی‌شود */
-  let h = 0; for (const ch of S.id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  S.assignment = (h % 2) ? 'control_exit' : 'next_use';
-  mark(TK.EV.scen, S.assignment);
+  if (TK.qs('f', '')) $('fhelp').hidden = false;      /* لینکِ تسهیل‌گر */
   TK.flush(CFG);                     /* هر جلسهٔ نفرستادهٔ قبلی، به همهٔ مقصدها */
   $('sh-moods').innerHTML = MOODS.map(m =>
     '<button class="mood" aria-pressed="false" data-v="' + m.v + '" onclick="pickMood(this)">' + m.l + '</button>').join('');
@@ -656,7 +572,7 @@ function renderAsk(){
   $('a-kicker').textContent = TK.fa(qi + 1) + ' از ' + TK.fa(list.length);
   $('a-title').innerHTML = q.q;
   $('a-sub').hidden = !q.sub; if (q.sub) $('a-sub').innerHTML = q.sub;
-  $('a-next').disabled = !((q.type === 'text' || q.type === 'contact') && q.opt);
+  $('a-next').disabled = !(q.type === 'text' && q.opt);
   $('a-next').textContent = q.nextLabel ||
     ((phase === 'end' && qi === list.length - 1) ? 'پایان' : 'ادامه');
   $('a-skip').hidden = !q.opt;
@@ -669,16 +585,8 @@ function renderAsk(){
       ' onclick="toggleMulti(this)"><span class="rd"></span><span>' + TK.esc(o.l) + '</span></button>').join('') +
       '</div><div class="picked-n" id="a-count"></div>';
     multiCount();
-  } else if (q.type === 'voice') {
-    b.innerHTML = '<ul class="voiceq">' + VOICE_Q.map((t, i) =>
-      '<li><b class="num">' + TK.fa(i + 1) + '</b><span>' + t + '</span></li>').join('') + '</ul>';
   } else if (q.type === 'text') {
     b.innerHTML = '<textarea id="a-text" placeholder="' + TK.esc(q.ph || '') + '"></textarea>';
-  } else if (q.type === 'contact') {
-    b.innerHTML = '<div class="fields">' +
-      '<input id="c-name" type="text" autocomplete="name" placeholder="نام">' +
-      '<input id="c-tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="شمارهٔ تماس">' +
-      '</div>';
   } else if (q.type === 'scale') {
     b.innerHTML = '<div class="scale">' + [1,2,3,4,5].map(n =>
         '<button aria-pressed="false" data-v="' + n + '" onclick="choose(this)">' + TK.fa(n) + '</button>').join('') +
@@ -689,7 +597,7 @@ function renderAsk(){
       '<span class="rd"></span><span>' + TK.esc(o.l) + '</span></button>').join('') + '</div>';
   }
   const total = SEG.length + END.length + 2;
-  const at = (phase === 'seg' ? qi + 1 : SEG.length + 2 + qi);
+  const at = (phase === 'seg' ? qi + 1 : SEG.length + 1 + qi);
   progress(at / total);
   show('s-ask');
 }
@@ -728,16 +636,6 @@ function askNext(){
   if (q.type === 'multi') { if (q.req && !(q.exact ? picks.length === q.exact : picks.length)) return;
     if (picks.length) (phase === 'seg' ? S.seg : S.end)[q.id] = picks.slice();
     mark(TK.EV.ans, q.code || q.id, picks.join(',')); partial(); return step(); }
-  if (q.type === 'voice') { S.end.voice = 'sent'; mark(TK.EV.ans, 'V', 'sent');
-    if (CFG.contact) window.open(CFG.contact, '_blank', 'noopener'); return step(); }
-  /* تنها جایی که چیزی شخصی ثبت می‌شود، و فقط اگر خودش نوشته باشد. جدا از
-     بقیهٔ پاسخ‌ها نگه داشته می‌شود تا در تحلیل و خروجی قابل تفکیک بماند. */
-  if (q.type === 'contact') {
-    const nm = (($('c-name') || {}).value || '').trim().slice(0, 60);
-    const tel = (($('c-tel') || {}).value || '').trim().slice(0, 30);
-    if (nm || tel) S.contact = { name: nm, tel: tel };
-    return step();
-  }
   let val = pick;
   if (q.type === 'text') val = ($('a-text') && $('a-text').value || '').trim().slice(0, 600);
   if (q.req && !val) return;
@@ -746,35 +644,29 @@ function askNext(){
   partial();
   step();
 }
-function askSkip(){
-  const q = questions()[qi];
-  if (q.type === 'voice') { S.end.voice = 'skipped'; mark(TK.EV.ans, 'V', 'skipped'); }
-  step();
-}
+function askSkip(){ step(); }
 
 function step(){
   qi++;
   const list = questions();
-  /* پرسش‌های شرطی: اگر شرطشان برقرار نیست، اصلاً دیده نمی‌شوند */
-  while (qi < list.length && list[qi].when && !list[qi].when(S.end)) qi++;
+  /* هیچ سؤالِ شرطی‌ای وجود ندارد: هفت سؤال، برای همه، به همان ترتیب. */
   if (qi < list.length) { save(); return renderAsk(); }
   if (phase === 'seg') { S.phase = 'brief'; save(); progress(SEG.length / (SEG.length + END.length + 2)); return show('s-brief'); }
   finish();
 }
 
 /* ════════ اپ ════════════════════════════════════════════════════ */
-function openApp(keepApp){
+function openApp(){
   S.phase = 'app'; save();
   /* اولین درخواست به Apps Script بعد از بی‌کاری می‌تواند ۲۰ ثانیه طول بکشد.
      همین‌جا — چند دقیقه پیش از پایان — یک ping می‌فرستیم تا وقتی جلسه تمام
      شد، تأییدِ ارسال فوری باشد و شرکت‌کننده منتظر نماند. */
   TK.eps(CFG).forEach(u => { try { TK.read(u, { ping: 1 }, 15000).catch(() => {}); } catch (e) {} });
-  if (!keepApp) t0 = Date.now();
+  t0 = Date.now();
   stageT0 = Date.now();
   $('appwrap').classList.add('on');
   const f = $('app');
-  progress((SEG.length + 1 + (keepApp ? 1 : 0)) / (SEG.length + END.length + 3));
-  if (keepApp) { $('fin').classList.remove('nudge'); return; }   /* همان اپ، همان موجودی */
+  progress((SEG.length + 1) / (SEG.length + END.length + 2));
   f.src = './' + VER.file + '?t=' + Date.now();
   f.onload = () => { try { instrument(f.contentWindow, f.contentDocument); } catch (e) { mark('e', 'probe:' + e.message); } };
 }
@@ -795,73 +687,49 @@ function convertedOk(){
   } catch (e) { return false; }
 }
 
+/* تسهیل‌گر یک بار می‌زند؛ همان یک بار کافی است تا این جلسه «مستقل» شمرده
+   نشود. نبودنِ شکایت، دلیلِ استقلال نبود. */
+function facHelp(b){
+  if (!S || S.outcomes.primary_help) return;
+  S.outcomes.primary_help = true;
+  mark(TK.EV.help, (TK.derive(S).deepest || ''));
+  b.textContent = 'ثبت شد'; b.disabled = true; save();
+}
+
+/* یک مأموریت، یک نشست. هرچه بعد از تبدیل در اپ گشته هم داده است: مسیرهایی
+   که باز کرده، مسیری که تا آخر برده، و این‌که آیا راهی برای بیرون‌آوردن
+   پولش پیدا کرده — همه از رویدادهای همان نشست، بدون مأموریتِ دومِ تحمیلی. */
 function finishApp(){
   S.ms = Date.now() - t0;
   const d = TK.derive(S);
-  if (S.stage === 'primary') {
-    const ok = convertedOk();
-    const path = d.path, iHome = path.indexOf('home');
-    const bad = (S.fb || []).some(f => ['confused','lost','distrust'].indexOf(f.mood) >= 0);
-    S.outcomes.primary_completed = ok;
-    S.outcomes.primary_direct = ok && iHome >= 0 && path[iHome + 1] === 'convert';
-    S.outcomes.primary_independent = ok && !bad;
-    S.outcomes.primary_duration_ms = Date.now() - stageT0;
-    S.outcomes.primary_dead = d.dead; S.outcomes.primary_rage = d.rage;
-    mark(ok ? TK.EV.p_done : TK.EV.p_left, Date.now() - stageT0, d.deepest);
-    /* مأموریت دوم */
-    S.stage = 'secondary'; S.phase = 'brief2'; save();
-    $('appwrap').classList.remove('on');
-    const sc = SCEN[S.assignment];
-    $('b2-title').textContent = sc.t; $('b2-task').textContent = sc.task;
-    progress((SEG.length + 2) / (SEG.length + END.length + 3));
-    mark(TK.EV.s_start, S.assignment);
-    return show('s-brief2');
-  }
-  /* پایانِ سناریوی دوم: کدام مسیر را رفت */
-  const after = d.path.slice(d.path.indexOf(d.path.find(x => true)) );
-  const seen = d.path;
-  let route = null, done = false;
-  for (const scr of seen) {
-    if (!route) { const r = ROUTES.find(x => x.screens.indexOf(scr) >= 0); if (r) route = r.id; }
-    if (DONE_SCREENS.indexOf(scr) >= 0) done = true;
-  }
-  S.outcomes.secondary_route = route || 'none';
-  S.outcomes.secondary_completed = done;
-  S.outcomes.secondary_duration_ms = Date.now() - stageT0;
-  mark(done ? TK.EV.s_done : TK.EV.s_none, S.assignment, route || '');
+  const ok = convertedOk();
+  const path = d.path, iHome = path.indexOf('home');
+  const r = TK.routesOf(path);
+
+  S.outcomes.primary_completed   = ok;
+  S.outcomes.primary_direct      = ok && iHome >= 0 && path[iHome + 1] === 'convert';
+  S.outcomes.primary_help        = !!S.outcomes.primary_help || d.help;
+  S.outcomes.primary_independent = ok && !S.outcomes.primary_help;
+  S.outcomes.primary_duration_ms = Date.now() - stageT0;
+  S.outcomes.primary_active_ms   = d.activeMs;
+  S.outcomes.routes              = r.seen;
+  S.outcomes.first_route         = r.first;
+  S.outcomes.routes_completed    = r.completed;
+  S.outcomes.control_route       = r.completed.some(x => TK.CONTROL_ROUTES.indexOf(x) >= 0);
+  S.outcomes.dead = d.dead; S.outcomes.rage = d.rage; S.outcomes.deepest = d.deepest;
+  mark(ok ? TK.EV.p_done : TK.EV.p_left, Date.now() - stageT0, d.deepest);
+
   $('appwrap').classList.remove('on');
   $('app').src = 'about:blank';
-  phase = 'end'; qi = 0; S.phase = 'end'; save();
+  phase = 'end'; qi = 0; S.phase = 'end'; S.stage = 'end'; save();
   /* یکی دو دقیقه تا پایان مانده: سرور را همین حالا بیدار کن تا ثبت نتیجه
      منتظر سرد بودنش نماند. */
   TK.warm(CFG);
   renderAsk();
 }
 
-/* امتیازها همین‌جا حساب می‌شوند تا داشبورد مجبور نباشد قاعده‌ها را دوباره بسازد */
-function scoreEnd(){
-  const e = S.end, sc = {};
-  sc.positioning_correct = e.positioning_main === 'value_control' ? 1 : 0;
-  const dv = e.distinct_value || [];
-  sc.distinct_value_recognized = dv.some(v => ['convert','custody','pw','gold','invest','p2p','support'].indexOf(v) >= 0) ? 1 : 0;
-  sc.no_distinct_value = dv.indexOf('none') >= 0 ? 1 : 0;
-  sc.asset_correct = e.asset_understanding === 'usdt_share' ? 1 : 0;
-  sc.custody_correct = e.custody_understanding === 'bitvana' ? 1 : 0;
-  const ex = e.exit_understanding || [];
-  const good = ex.filter(v => ['rial','pw','gold'].indexOf(v) >= 0).length;
-  sc.exit_correct = (good >= 2 && ex.indexOf('permission') < 0 && ex.indexOf('no_exit') < 0) ? 1 : 0;
-  sc.comprehension_score = sc.asset_correct + sc.custody_correct + sc.exit_correct;
-  sc.comprehension_pass = sc.comprehension_score >= 2 ? 1 : 0;
-  sc.misconceptions = [];
-  if (e.asset_understanding === 'bank_usd') sc.misconceptions.push('bank_deposit');
-  if (e.asset_understanding === 'issuer') sc.misconceptions.push('mohajer_issuer');
-  if (e.custody_understanding === 'mohajer_bank') sc.misconceptions.push('mohajer_direct_custodian');
-  if (e.custody_understanding === 'central_bank') sc.misconceptions.push('central_bank');
-  sc.practical_action = ['talk','signup','try_small','serious'].indexOf(e.commitment_step) >= 0 ? 1 : 0;
-  sc.money_intent = ['try_small','serious'].indexOf(e.commitment_step) >= 0 ? 1 : 0;
-  sc.high_commitment = (sc.money_intent && ['pilot','notify'].indexOf(e.action_cta) >= 0 && !!S.contact) ? 1 : 0;
-  return sc;
-}
+/* امتیازدهی در test-kit.js است و نسخه دارد، تا داشبورد مجبور نباشد همان
+   قاعده‌ها را دوباره بنویسد — دو پیاده‌سازی یعنی دو عددِ متفاوت. */
 
 /* ════════ کاوشگر ════════════════════════════════════════════════
    همان صفحه، همان مبدأ: بی آنکه یک خط از پروتوتایپ عوض شود، می‌شود
@@ -980,17 +848,57 @@ function deliverUi(step, msg, sub){
   if (sub !== undefined) $('d-send-sub').textContent = sub;
 }
 function deliverDone(){
-  S.delivered = true;
+  S.delivered = true; S.delivery_confirmed = true;
   $('d-send').hidden = true;
   $('d-seal').hidden = false; $('d-title').hidden = false; $('d-lead').hidden = false;
   $('d-sent').hidden = false; $('d-sent-t').textContent = 'ثبت شد';
-  $('d-more').hidden = false;
+  $('d-post').hidden = false;                        /* پیشنهادها، بعد از ثبت */
+  TK.keepMine(S);
   TK.store.del('sess');
+}
+
+/* اقدام‌های بعد از پایان. نه سؤال‌اند، نه شماره دارند، و نه روی `done` و
+   امتیاز فرضیه‌ها اثری دارند — هرکس نخواهد، تستش کامل است. */
+function postAct(kind, btn){
+  if (!S) return;
+  if ((S.post_actions || []).indexOf(kind) < 0) (S.post_actions = S.post_actions || []).push(kind);
+  btn.setAttribute('aria-pressed', 'true');
+  if (kind === 'voice') {
+    /* اگر راه ارتباطی تعریف شده باشد باز می‌شود؛ وگرنه همان‌جایی که لینک را
+       گرفته، خودش جای فرستادنِ ویس است. */
+    btn.querySelector('.tx').innerHTML = 'ممنون — چهار سؤال را همان‌جایی که این لینک را گرفتید برایتان می‌فرستیم<i>ویس را همان‌جا بفرستید.</i>';
+    if (CFG.contact) setTimeout(() => window.open(CFG.contact, '_blank', 'noopener'), 300);
+  } else {
+    $('d-contact').hidden = false;
+    $('d-contact').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => { try { $('c-name').focus(); } catch (e) {} }, 400);
+  }
+  resend();
+}
+/* تنها جایی که چیزی شخصی ثبت می‌شود، و فقط اگر خودش نوشته باشد. جدا از
+   پاسخ‌ها نگه داشته می‌شود تا در تحلیل و خروجی قابل تفکیک بماند. */
+function saveContact(){
+  const nm = (($('c-name') || {}).value || '').trim().slice(0, 60);
+  const tel = (($('c-tel') || {}).value || '').trim().slice(0, 30);
+  if (!nm && !tel) { $('d-contact').hidden = true; return; }
+  S.contact = { name: nm, tel: tel };
+  $('c-save').textContent = 'ثبت شد ✓'; $('c-save').disabled = true;
+  $('d-contact-h').textContent = 'ممنون. تماس می‌گیریم.';
+  resend();
+}
+/* نتیجه یک بار ثبت شده؛ این‌ها فقط همان ردیف را به‌روز می‌کنند. */
+function resend(){
+  S.revision = (S.revision || 0) + 1;
+  S.updated_at = new Date().toISOString();
+  TK.keepMine(S);
+  try { TK.postAll(CFG, S); } catch (e) {}
 }
 /* تا سرور تأیید نکند، تمام نشده است. */
 async function finish(){
-  S.done = true; S.phase = 'done'; S.score = scoreEnd();
+  S.done = true; S.phase = 'done'; S.stage = 'done';
+  S.score = TK.scoreSession(S);
   S.t1 = new Date().toISOString();
+  S.updated_at = S.t1; S.revision = (S.revision || 0) + 1;
   if (!S.ms) S.ms = Date.now() - t0;
   progress(1); show('s-done');
 
@@ -1025,6 +933,7 @@ async function finish(){
 function deliverFail(noServer){
   $('d-send').hidden = true;
   $('d-seal').hidden = false; $('d-title').hidden = false; $('d-lead').hidden = false;
+  $('d-post').hidden = false;
   $('d-code').hidden = false;
   $('d-code-h').textContent = noServer
     ? 'این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند بفرستید — تمام پاسخ‌های شما داخل همین متن است.'
@@ -1035,14 +944,18 @@ function deliverFail(noServer){
 
 async function send(partial){
   if (!TK.eps(CFG).length) return false;
-  const body = Object.assign({}, S, { partial: !!partial });
+  S.revision = (S.revision || 0) + 1;
+  S.updated_at = new Date().toISOString();
+  /* نسخهٔ نیمه‌کاره همان `id` را دارد، پس در ادغام یک جلسه شمرده می‌شود و
+     نسخهٔ نهایی رویش می‌نشیند. */
+  const body = Object.assign({}, S, { partial: !!partial, score: TK.scoreSession(S) });
   if (JSON.stringify(body).length > 55000) body.ev = S.ev.slice(-300);   /* sendBeacon has a ceiling */
   try { return !!(await TK.postAll(CFG, body, !!partial)); } catch (e) { return false; }
 }
 
 function showCode(){ $('d-code').hidden = false; $('d-more').hidden = true;
   $('d-code-k').textContent = 'نسخهٔ پشتیبان';
-  $('d-code-h').textContent = 'لازم نیست، ولی اگر بفرستید خیالمان راحت‌تر است.';
+  $('d-code-h').textContent = 'نتیجه‌تان ثبت شده. این متن همان نتیجه است، برای این‌که اگر روزی چیزی از سرور ما افتاد، وقتی که گذاشتید از بین نرود.';
   $('d-code').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
 
 async function copyBlob(){

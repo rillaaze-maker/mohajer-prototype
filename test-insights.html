@@ -93,13 +93,36 @@ option{background:#14181D}
 .hcard .hh .code{font-size:10.5px;font-weight:700;color:var(--w3);letter-spacing:.08em}
 .hcard .hl{font-size:26px;font-weight:700;letter-spacing:-.03em;margin:6px 0 2px}
 .hcard .hs{font-size:12px;color:var(--w3);margin-bottom:14px}
-.kpirow{display:grid;grid-template-columns:1fr 70px 58px 62px;gap:8px;align-items:center;
+.kpirow{display:grid;grid-template-columns:1fr 62px 54px 46px 58px;gap:8px;align-items:center;
   padding:9px 0;border-top:1px solid rgba(255,255,255,.06);font-size:12.5px}
 .kpirow .n{color:var(--w2)}
 .kpirow .v{font-weight:700;text-align:end}
 .kpirow .g{color:var(--w3);text-align:end;font-size:11.5px}
 .kpirow .st{text-align:end;font-size:10.5px;font-weight:700}
 .kpirow .st.ok{color:var(--ok)} .kpirow .st.near{color:var(--gold)} .kpirow .st.bad{color:var(--bad)}
+.kpirow .st.none{color:var(--w3)}
+.kpirow .nn{color:var(--w3);text-align:end;font-size:11px}
+.kpirow.diag{opacity:.78}
+.kpirow.diag .n:after{content:'تشخیصی';font-size:9px;color:var(--w3);margin-inline-start:6px;
+  border:1px solid var(--brd);border-radius:5px;padding:1px 4px;vertical-align:middle}
+.src{display:inline-block;font-size:9.5px;font-weight:700;border-radius:5px;padding:2px 5px;
+  margin-inline-start:6px;vertical-align:middle;white-space:nowrap}
+.src.b{background:rgba(74,155,232,.16);color:#4A9BE8}
+.src.a{background:rgba(139,111,212,.16);color:#8B6FD4}
+.src.c{background:rgba(63,191,143,.16);color:var(--ok)}
+/* نوار کیفیت داده: چند نفر، تا کجا — بالای هر دو tab */
+.dq{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.dq span{display:inline-flex;align-items:baseline;gap:6px;background:var(--surf);border:1px solid var(--brd);
+  border-radius:99px;padding:7px 12px;font-size:11.5px;color:var(--w3)}
+.dq span b{color:var(--w1);font-weight:700;font-size:13px}
+.dq span.warn{border-color:rgba(224,108,91,.45);color:var(--bad)}
+.sv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:10px}
+.sv .c{background:var(--surf);border:1px solid var(--brd);border-radius:15px;padding:15px}
+.sv .c .v{font-size:24px;font-weight:700;letter-spacing:-.03em}
+.sv .c .l{font-size:11.5px;color:var(--w2);margin-top:4px;line-height:1.6}
+.sv .c .m{font-size:10.5px;color:var(--w3);margin-top:7px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.sv .c.ok{border-color:rgba(63,191,143,.4)} .sv .c.bad{border-color:rgba(224,108,91,.4)}
+.sv .c.near{border-color:rgba(213,164,92,.4)}
 .hstat{display:inline-flex;align-items:center;gap:7px;border-radius:99px;padding:6px 13px;
   font-size:11.5px;font-weight:700;margin-top:14px}
 .hstat.ok{background:rgba(63,191,143,.15);color:var(--ok)}
@@ -227,6 +250,8 @@ footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--brd);font-siz
   .filters{position:static;padding:11px}
   .age{grid-template-columns:66px 1fr;gap:10px}
   .lay .r{grid-template-columns:78px 1fr 40px;gap:9px}
+  .kpirow{grid-template-columns:1fr repeat(4,auto);gap:5px;font-size:11px}
+  .kpirow .g,.kpirow .nn{font-size:10px}
   table{display:block;overflow-x:auto;white-space:nowrap}
 }
 </style>
@@ -244,12 +269,17 @@ footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--brd);font-siz
   <p class="lead" id="sub">در حال خواندن…</p>
 
   <div class="filters" style="margin-top:20px">
-    <span class="lb">نسخه</span><select id="f-ver" onchange="apply()"></select>
-    <span class="lb">راند</span><select id="f-round" onchange="apply()"></select>
+    <span class="lb">نسخه</span><select id="f-ver" onchange="touch();apply()"></select>
+    <span class="lb">راند</span><select id="f-round" onchange="touch();apply()"></select>
+    <span class="lb">پروتکل</span><select id="f-proto" onchange="touch();apply()"></select>
+    <span class="lb">وضعیت</span><select id="f-state" onchange="touch();apply()">
+      <option value="">همه</option><option value="done">کامل</option><option value="part">ناتمام</option>
+    </select>
     <span class="lb">سن</span><span id="f-ages" style="display:flex;gap:6px;flex-wrap:wrap"></span>
     <span style="flex:1"></span>
     <button class="btn" onclick="load()">تازه‌سازی</button>
-    <button class="btn" onclick="exportCsv()">CSV</button>
+    <button class="btn" onclick="exportCsv()">CSV جلسه‌ها</button>
+    <button class="btn" onclick="exportContacts()">CSV تماس‌ها</button>
     <button class="btn" onclick="exportJson()">JSON</button>
   </div>
 
@@ -262,10 +292,15 @@ footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--brd);font-siz
   <footer>هر عدد این صفحه از همان جریان رویدادها ساخته می‌شود؛ چیزی دوباره‌شماری یا تخمین نمی‌شود. زیر سه جلسه، این صفحه قضاوت نمی‌کند — فقط داده را نشان می‌دهد.</footer>
 </div>
 
-<script src="./test-kit.js?v=20260926b"></script>
+<script src="./test-kit.js?v=20260927a"></script>
 <script>
 const $ = TK.$, esc = TK.esc, fa = TK.fa;
 let CFG = {}, VERS = [], ALL = [], SEL = [], SRC = null, ageFilter = new Set(), heatScreen = null;
+let MIXED = false;
+/* راند و پروتکلِ داخل آدرس فقط تا وقتی حاکم‌اند که خودِ آدم چیزی را عوض
+   نکرده باشد؛ بعد از آن، هر تازه‌سازی نباید انتخابش را پس بگیرد. */
+let TOUCHED = false;
+function touch(){ TOUCHED = true; }
 
 (async function boot(){
   CFG = await TK.config();
@@ -289,7 +324,11 @@ async function load(){
 }
 function ingest(got, how){
   ALL = got.sessions.filter(s => s && s.ev);            /* خلاصه‌ها تحلیل نمی‌شوند */
-  ALL.forEach(s => { if (!s._d) s._d = TK.derive(s); });
+  /* امتیاز دوباره از قاعده‌های نسخهٔ جاری حساب می‌شود، نه از آنچه runner
+     ذخیره کرده: اگر قاعده‌ای عوض شود، جلسه‌های قبلی هم با همان تعریف
+     خوانده می‌شوند و دو عدد از یک داده بیرون نمی‌آید. */
+  ALL.forEach(s => { if (!s._d) s._d = TK.derive(s);
+    s._s = TK.scoreSession(s); s._b = TK.behaviorOf(s); });
   SRC = got; SRC.how = how;
 
   const vers = [...new Set(ALL.map(s => String(s.ver)))];
@@ -304,14 +343,27 @@ function ingest(got, how){
 function apply(){
   const v = $('f-ver').value;
   const rounds = [...new Set(ALL.filter(s => String(s.ver) === v).map(s => String(s.r)))].sort();
-  const wantR = $('f-round').value || TK.qs('r', '') || '';
+  const wantR = TOUCHED ? $('f-round').value : (TK.qs('r', '') || '');
   $('f-round').innerHTML = '<option value="">همه</option>' + rounds.map(r =>
     '<option value="' + esc(r) + '"' + (r === wantR ? ' selected' : '') + '>' + fa(r) + '</option>').join('');
   const r = $('f-round').value;
 
+  /* پروتکل: تعریفِ چند شاخص بین ۱.۰ و ۱.۱ عوض شده، پس پیش‌فرض تازه‌ترین
+     پروتکلِ موجود است و جمع‌کردنِ دو پروتکل باید انتخابِ صریحِ خودِ آدم باشد. */
+  const protos = [...new Set(ALL.filter(s => String(s.ver) === v).map(TK.protoOf))].sort().reverse();
+  const wantP = TOUCHED ? ($('f-proto').value || protos[0] || '')
+                        : (TK.qs('p', '') || protos[0] || TK.PROTOCOL);
+  $('f-proto').innerHTML = protos.map(p =>
+    '<option value="' + esc(p) + '"' + (p === wantP ? ' selected' : '') + '>' + fa(p) + '</option>').join('') +
+    '<option value="all"' + (wantP === 'all' ? ' selected' : '') + '>همه (مخلوط)</option>';
+  const p = $('f-proto').value, st = $('f-state').value;
+
   SEL = ALL.filter(s => String(s.ver) === v
     && (!r || String(s.r) === r)
+    && (p === 'all' || !p || TK.protoOf(s) === p)
+    && (!st || (st === 'done' ? !!s.done : !s.done))
     && (!ageFilter.size || ageFilter.has((s.seg || {}).age)));
+  MIXED = p === 'all' && protos.length > 1;
 
   const nm = (VERS.find(x => x.id === v) || {}).name || ('v' + v);
   $('title').textContent = nm;
@@ -350,8 +402,8 @@ function render(){
     return;
   }
   if (VIEW === 'hypo') { $('body').innerHTML = hypoView(); return; }
-  $('body').innerHTML =
-    blockCompare() + blockKpis() + blockLayer() + blockAges() + blockFunnel() + blockHeat() + blockStuck() +
+  $('body').innerHTML = dqBar() +
+    blockCompare() + blockKpis() + blockFriction() + blockAges() + blockFunnel() + blockHeat() + blockStuck() +
     blockQuotes() + blockContacts() + blockSessions();
   paintHeat();
   bindSessions();
@@ -367,7 +419,7 @@ function blockCompare(){
     const g = ALL.filter(s => String(s.ver) === id);
     const dn = g.filter(s => s.done);
     const tr = g.map(s => +(s.end || {}).trust).filter(n => n > 0);
-    const go = g.map(s => (s.end || {}).go).filter(Boolean);
+    const mi = g.filter(s => s._s.money_intent !== undefined);
     const cur = id === $('f-ver').value;
     return '<tr' + (cur ? ' style="background:rgba(213,164,92,.07)"' : '') + '>' +
       '<td><b>' + esc((VERS.find(x => x.id === id) || {}).name || ('v' + id)) + '</b>' +
@@ -375,11 +427,11 @@ function blockCompare(){
       '<td class="num">' + fa(g.length) + '</td>' +
       '<td class="num">' + fa(pct(dn.length, g.length)) + '٪</td>' +
       '<td class="num">' + (tr.length ? fa(Math.round(med(tr) * 10) / 10) : '—') + '</td>' +
-      '<td class="num">' + (go.length ? fa(pct(go.filter(x => x === 'yes').length, go.length)) + '٪' : '—') + '</td>' +
+      '<td class="num">' + (mi.length ? fa(pct(mi.filter(x => x._s.money_intent).length, mi.length)) + '٪' : '—') + '</td>' +
       '<td class="num">' + (dn.length ? TK.mmss(med(dn.map(s => s._d.ms))) : '—') + '</td></tr>';
   };
   return '<div class="sec"><h2>نسخه‌ها کنار هم</h2><span class="h">همهٔ راندها</span><span class="ln"></span></div>' +
-    '<div class="card"><table><tr><th>نسخه</th><th>شرکت‌کننده</th><th>تکمیل</th><th>اعتماد</th><th>«ادامه می‌دادم»</th><th>زمان میانه</th></tr>' +
+    '<div class="card"><table><tr><th>نسخه</th><th>شرکت‌کننده</th><th>تکمیل</th><th>اعتماد</th><th>قصد پول واقعی</th><th>زمان میانه</th></tr>' +
     ids.sort().reverse().map(row).join('') + '</table>' +
     '<p class="tiny" style="margin-top:12px">این جدول تنها جایی است که نسخه‌ها با هم جمع می‌شوند. بقیهٔ صفحه فقط نسخهٔ انتخاب‌شده را نشان می‌دهد.</p></div>';
 }
@@ -389,8 +441,7 @@ function blockKpis(){
   const done = SEL.filter(s => s.done);
   const times = done.map(s => s._d.ms).filter(Boolean);
   const trust = SEL.map(s => +(s.end || {}).trust).filter(n => n > 0);
-  const go = SEL.map(s => (s.end || {}).go).filter(Boolean);
-  const yes = go.filter(g => g === 'yes').length;
+  const mi = SEL.filter(s => s._s.money_intent !== undefined);
   const ages = new Set(SEL.map(s => (s.seg || {}).age).filter(Boolean));
   const target = CFG.target || 100;
 
@@ -403,55 +454,45 @@ function blockKpis(){
       kpi(fa(done.length), 'تا آخر رفته‌اند', fa(pct(done.length, SEL.length)) + '٪ تکمیل', 'gold') +
       kpi(times.length ? TK.mmss(med(times)) : '—', 'زمان میانهٔ کار با اپ', times.length ? 'کمینه ' + TK.mmss(Math.min(...times)) : '') +
       kpi(trust.length ? fa(Math.round(med(trust) * 10) / 10) : '—', 'اعتماد (از ۵)', trust.length ? fa(trust.length) + ' پاسخ' : '', 'ok') +
-      kpi(go.length ? fa(pct(yes, go.length)) + '٪' : '—', '«ادامه می‌دادم»', go.length ? fa(go.length) + ' پاسخ' : '') +
+      kpi(mi.length ? fa(pct(mi.filter(x => x._s.money_intent).length, mi.length)) + '٪' : '—',
+          'قصد پول واقعی', mi.length ? fa(mi.length) + ' پاسخ' : '') +
       kpi(fa(ages.size) + '/' + fa(TK.AGES.length), 'پوشش سنی', ages.size < 3 ? 'هنوز یک‌طرفه است' : 'متنوع') +
     '</div>';
 }
 
-/* ── ۲ لایه ─────────────────────────────────────────────────────── */
-function blockLayer(){
-  const t = { value: 0, usability: 0, trust: 0, motivation: 0 }; let clean = 0, n = 0;
-  SEL.forEach(s => { const v = (s.end || {}).stop; if (!v) return; n++;
-    if (v === 'none') clean++; else if (t[v] != null) t[v]++; });
-  const stops = n - clean;
-  const ranked = Object.keys(t).map(k => ({ k, n: t[k] })).sort((a, b) => b.n - a.n);
-  const top = ranked[0] && ranked[0].n ? ranked[0] : null;
+/* ── ۲ شواهد اصطکاک ─────────────────────────────────────────────
+   جای «کجا گیر کردند» بر اساس یک سؤالِ خوداظهاری. آن سؤال حذف شد چون
+   جواب‌هایش یک حدسِ آراسته بود: کسی که سه بار روی یک چیزِ غیرِقابل‌کلیک
+   زده، ممکن است گیج شده باشد یا بی‌اعتماد یا هیچ‌کدام — و کلیک این را
+   نمی‌گوید. اینجا فقط آنچه دیده شده نوشته می‌شود، و هرجا کسی خودش دلیلی
+   نگفته باشد، همان «علت گفته نشده» است. */
+function blockFriction(){
+  const n = SEL.length;
+  const act = SEL.map(s => s._d.activeMs).filter(Boolean).sort((a, b) => a - b);
+  const p75 = act.length ? act[Math.floor(act.length * .75)] : 0;
+  const withRage = SEL.filter(s => s._d.rage > 0).length;
+  const withDead = SEL.filter(s => s._d.dead > 0).length;
+  const helped = SEL.filter(s => s._d.help).length;
+  const said = SEL.filter(s => (s.fb || []).length).length;
+  const quiet = n - said;
 
-  const go = { yes: 0, maybe: 0, no: 0 };
-  SEL.forEach(s => { const g = (s.end || {}).go; if (go[g] != null) go[g]++; });
-  const gn = go.yes + go.maybe + go.no;
+  const cell = (v, l, sub) => '<div class="kpi"><div class="v num">' + v + '</div><div class="l">' + l + '</div>' +
+    (sub ? '<div class="s">' + sub + '</div>' : '') + '</div>';
 
-  return '<div class="sec"><h2>کجا گیر کردند</h2><span class="h">' + fa(stops) + ' مکث از ' + fa(n) + ' پاسخ</span><span class="ln"></span></div>' +
-    '<div class="card"><div class="lay">' +
-      ranked.map(r => {
-        const L = TK.LAYERS[r.k];
-        return '<div class="r"><div class="nm">' + L.label + '</div>' +
-          '<div class="tr"><i style="width:' + pct(r.n, stops || 1) + '%;background:' + L.color + '"></i></div>' +
-          '<div class="pc num">' + (stops ? fa(pct(r.n, stops)) + '٪' : '—') + '</div></div>';
-      }).join('') +
-      '<div class="r"><div class="nm" style="color:var(--w3)">جایی گیر نکردند</div>' +
-      '<div class="tr"><i style="width:' + pct(clean, n || 1) + '%;background:rgba(255,255,255,.22)"></i></div>' +
-      '<div class="pc num">' + (n ? fa(pct(clean, n)) + '٪' : '—') + '</div></div>' +
+  return '<div class="sec"><h2>شواهد اصطکاک</h2><span class="h">مشاهده، نه علت</span><span class="ln"></span></div>' +
+    '<div class="kpis">' +
+      cell(act.length ? TK.mmss(med(act)) : '—', 'زمان فعال، میانه', 'بدون زمانی که صفحه پنهان بوده') +
+      cell(act.length ? TK.mmss(p75) : '—', 'صدک ۷۵ زمان فعال', '') +
+      cell(n ? fa(pct(withRage, n)) + '٪' : '—', 'جلسه با ضربهٔ عصبی', fa(withRage) + ' از ' + fa(n)) +
+      cell(n ? fa(pct(withDead, n)) + '٪' : '—', 'جلسه با ضربهٔ بی‌هدف', fa(withDead) + ' از ' + fa(n)) +
+      cell(fa(helped), 'کمکِ تسهیل‌گر', helped ? 'این جلسه‌ها «مستقل» نیستند' : 'ثبت نشده') +
+      cell(fa(said), 'خودشان چیزی گفتند', quiet ? fa(quiet) + ' نفر: علت گفته نشده' : '') +
     '</div>' +
-    (SEL.length < 3
-      ? '<div class="verdict"><div><div class="big">هنوز قضاوت نمی‌کنیم</div><p>زیر سه جلسه، بزرگ‌ترین لایه معنایی ندارد. عددها را ببینید، نتیجه نگیرید.</p></div></div>'
-      : top
-        ? '<div class="verdict"><div><div class="big">گلوگاه: ' + TK.LAYERS[top.k].label +
-          ' <span class="pill y">' + fa(pct(top.n, stops)) + '٪ مکث‌ها</span></div>' +
-          '<p>این یعنی کار بعدی در <b>' + TK.LAYERS[top.k].fix + '</b> است، نه جای دیگر.</p></div></div>'
-        : '<div class="verdict"><div><div class="big">هیچ مکث معناداری ثبت نشده</div><p>یا مسیر واقعاً روان بوده، یا کار خواسته‌شده به‌قدر کافی سخت نبوده.</p></div></div>') +
-    '</div>' +
-    (gn ? '<div class="card"><div class="tiny" style="margin-bottom:10px">اگر واقعی بود، ادامه می‌دادید؟</div>' +
-      '<div class="stack">' +
-        '<i style="width:' + pct(go.yes, gn) + '%;background:var(--ok)"></i>' +
-        '<i style="width:' + pct(go.maybe, gn) + '%;background:var(--gold)"></i>' +
-        '<i style="width:' + pct(go.no, gn) + '%;background:var(--bad)"></i></div>' +
-      '<div class="keys"><span><b style="background:var(--ok)"></b>بله ' + fa(go.yes) + '</span>' +
-      '<span><b style="background:var(--gold)"></b>شاید ' + fa(go.maybe) + '</span>' +
-      '<span><b style="background:var(--bad)"></b>نه ' + fa(go.no) + '</span></div></div>' : '');
+    '<div class="card"><p class="tiny">می‌شود گفت «بیشترین اصطکاک روی صفحهٔ فلان دیده شد» — جدول پایین همان است. ' +
+    'نمی‌شود گفت «مشکل اصلی اعتماد بود»، مگر این‌که کسی خودش گفته باشد.</p></div>';
 }
 
-/* ── ۳ سن ───────────────────────────────────────────────────────── */
+/* ── ۳ سن ───/* ── ۳ سن ───────────────────────────────────────────────────────── */
 function blockAges(){
   const max = Math.max(1, ...TK.AGES.map(a => SEL.filter(s => (s.seg || {}).age === a).length));
   const rows = TK.AGES.map(a => {
@@ -459,10 +500,10 @@ function blockAges(){
     if (!g.length) return '<div class="age"><div class="b">' + a + '<small>—</small></div>' +
       '<div><div class="stack"><i style="width:100%;background:rgba(255,255,255,.05)"></i></div>' +
       '<div class="m">کسی از این بازه هنوز نیامده</div></div></div>';
-    const go = { yes: 0, maybe: 0, no: 0 };
-    g.forEach(s => { const x = (s.end || {}).go; if (go[x] != null) go[x]++; });
-    const gn = go.yes + go.maybe + go.no || 1;
     const tr = g.map(s => +(s.end || {}).trust).filter(n => n > 0);
+    const go = { yes: tr.filter(t => t >= 4).length, maybe: tr.filter(t => t === 3).length,
+                 no: tr.filter(t => t <= 2).length };
+    const gn = tr.length || 1;
     const dn = g.filter(s => s.done).length;
     const w = Math.round(g.length / max * 100);
     return '<div class="age"><div class="b">' + a + '<small class="num">' + fa(g.length) + ' نفر</small></div>' +
@@ -478,11 +519,11 @@ function blockAges(){
       '</div></div></div>';
   }).join('');
 
-  return '<div class="sec"><h2>سن</h2><span class="h">پهنای میله = تعداد · رنگ = «ادامه می‌دادم»</span><span class="ln"></span></div>' +
+  return '<div class="sec"><h2>سن</h2><span class="h">پهنای میله = تعداد · رنگ = اعتماد</span><span class="ln"></span></div>' +
     '<div class="card"><div class="ages">' + rows + '</div>' +
     '<div class="keys" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--brd)">' +
-      '<span><b style="background:var(--ok)"></b>بله</span><span><b style="background:var(--gold)"></b>شاید</span>' +
-      '<span><b style="background:var(--bad)"></b>نه</span></div></div>';
+      '<span><b style="background:var(--ok)"></b>اعتماد ۴ و ۵</span><span><b style="background:var(--gold)"></b>۳</span>' +
+      '<span><b style="background:var(--bad)"></b>۱ و ۲</span></div></div>';
 }
 
 /* ── ۴ قیف ──────────────────────────────────────────────────────── */
@@ -639,9 +680,6 @@ function blockQuotes(){
       kind: 'fb', mood: f.mood, text: f.text, screen: f.s, age,
       t: 'حین کار · ' + (f.s ? 'صفحهٔ ' + TK.screenFa(f.s) : '')
     }));
-    const e = s.end || {};
-    if (e.confuse) items.push({ kind: 'q', text: e.confuse, age, t: 'چه چیزی گیج‌کننده بود' });
-    if (e.change) items.push({ kind: 'q', text: e.change, age, t: 'اگر یک چیز عوض می‌شد' });
   });
   if (!items.length) return '';
   return '<div class="sec"><h2>حرف‌ها</h2><span class="h">' + fa(items.length) + ' مورد</span><span class="ln"></span></div>' +
@@ -680,25 +718,34 @@ function blockContacts(){
 /* ── ۸ جلسه‌ها ──────────────────────────────────────────────────── */
 function blockSessions(){
   const rows = SEL.slice().sort((a, b) => (b.t0 || '').localeCompare(a.t0 || ''));
+  const R = { withdraw:'برداشت', personal_wallet:'کیف شخصی', gold:'طلا', transfer:'انتقال', invest:'سرمایه‌گذاری' };
   return '<div class="sec"><h2>جلسه‌ها</h2><span class="h">روی هر سطر بزنید تا مسیرش باز شود</span><span class="ln"></span></div>' +
-    '<div class="card"><table id="stbl"><tr><th>زمان</th><th>سن</th><th>کانال</th><th>مدت</th><th>صفحه</th>' +
-    '<th>گیر</th><th>ادامه</th><th>اعتماد</th></tr>' +
+    '<div class="card"><table id="stbl"><tr><th>زمان</th><th>سن</th><th>کانال</th><th>پروتکل</th>' +
+    '<th>زمان فعال</th><th>مأموریت</th><th>مسیر اول</th><th>پاسخ</th><th>اعتماد</th><th>قدم بعدی</th><th>تحویل</th></tr>' +
     rows.map((s, i) => {
-      const d = s._d, e = s.end || {};
-      const go = { yes: ['بله','g'], maybe: ['شاید','y'], no: ['نه','r'] }[e.go];
+      const d = s._d, e = s.end || {}, b = s._b, sc = s._s;
+      const step = { nothing:['هیچ',''], read:['اطلاعات',''], talk:['پشتیبان','y'],
+                     signup:['حساب','y'], try_small:['آزمایشی','g'], serious:['جدی','g'] }[e.commitment_step];
+      const m = !b.completed ? '<span class="pill r">ناتمام</span>'
+        : b.independent ? '<span class="pill g">مستقل</span>' : '<span class="pill y">با کمک</span>';
       return '<tr class="s-row" data-i="' + i + '">' +
-        '<td class="num">' + esc(when(s.t0)) + (s.done ? '' : ' <span class="pill">ناتمام</span>') + '</td>' +
+        '<td class="num">' + esc(when(s.t0)) + (s.done ? '' : ' <span class="pill">رها شد</span>') + '</td>' +
         '<td class="num">' + esc((s.seg || {}).age || '—') + '</td>' +
         '<td>' + esc(TK.CHANNELS[s.c] || '—') + '</td>' +
-        '<td class="num">' + TK.mmss(d.ms) + '</td>' +
-        '<td class="num">' + fa(d.screens) + '</td>' +
-        '<td class="num">' + ((d.rage + d.dead) ? fa(d.rage + d.dead) : '—') + '</td>' +
-        '<td>' + (go ? '<span class="pill ' + go[1] + '">' + go[0] + '</span>' : '—') + '</td>' +
-        '<td class="num">' + (e.trust ? fa(e.trust) + '/۵' : '—') + '</td></tr>' +
-        '<tr class="s-det" data-d="' + i + '" hidden><td colspan="8">' + track(s) + '</td></tr>';
+        '<td class="num">' + fa(TK.protoOf(s)) + '</td>' +
+        '<td class="num">' + TK.mmss(d.activeMs) + '</td>' +
+        '<td>' + m + '</td>' +
+        '<td>' + esc(R[b.first_route] || '—') +
+          (b.routes_completed.length ? ' <span class="pill g">تا آخر</span>' : '') + '</td>' +
+        '<td class="num">' + fa(sc.answered || 0) + '/۷</td>' +
+        '<td class="num">' + (e.trust ? fa(e.trust) + '/۵' : '—') + '</td>' +
+        '<td>' + (step ? '<span class="pill ' + step[1] + '">' + step[0] + '</span>' : '—') + '</td>' +
+        '<td>' + (s.delivery_confirmed ? '<span class="pill g">تأیید</span>' : '<span class="pill">—</span>') + '</td></tr>' +
+        '<tr class="s-det" data-d="' + i + '" hidden><td colspan="11">' + track(s) + '</td></tr>';
     }).join('') + '</table>' +
     '<p class="tiny" style="margin-top:12px">' + fa(rows.length) + ' جلسه · ' +
-    fa(rows.filter(s => !s.done).length) + ' تای آن نیمه‌کاره رها شده است.</p></div>';
+    fa(rows.filter(s => !s.done).length) + ' تای آن نیمه‌کاره رها شده است. ' +
+    'اطلاعات تماس اینجا نیست؛ فقط در بخش «می‌شود تماس گرفت».</p></div>';
 }
 function track(s){
   const d = s._d;
@@ -729,12 +776,17 @@ function when(iso){
    Gateها عیناً از §۳۲ سند. هیچ میانگینی جای یک Gateِ افتاده را نمی‌گیرد:
    وضعیت هر کارت از بدترین شاخصش می‌آید، نه از میانگینشان. */
 const GATES = {
-  journey_completion:.80, journey_independent:.70, journey_direct:.70,
-  positioning_correct:.80, distinct_value:.60,
-  comprehension_pass:.80, asset_correct:.70, custody_correct:.70, exit_correct:.70,
-  critical_misconception_max:.20,
-  trust_4_5:.70, trust_median:4, trust_1_2_max:.15,
-  practical_action:.60, money_intent:.40, high_commitment:.30, no_action_max:.30
+  /* مأموریت اصلی — رفتاری */
+  completion:.80, independent:.70, direct:.70,
+  /* ارزش و جایگاه — پاسخ مستقیم */
+  positioning:.80, distinct:.60, no_distinct_max:.40,
+  /* قابلیت‌ها */
+  top_feature:.35,
+  /* فهم و اعتماد */
+  asset:.70, custody:.70, control_route:.70,
+  trust_45:.70, trust_median:4, trust_12_max:.15, misconception_max:.20,
+  /* قصد */
+  practical:.60, money:.40, no_action_max:.30
 };
 const SAMPLE = { none:10, directional:10, provisional:20, decision:30, target:100 };
 let VIEW = 'ux';
@@ -745,182 +797,297 @@ function setView(v){
   render();
 }
 
-const done = () => SEL.filter(x => x.done);
 const rate = (n, d) => d ? n / d : 0;
 const pctTxt = v => fa(Math.round(v * 100)) + '٪';
+const SRCB = { beh:['رفتاری','b'], ans:['پاسخ مستقیم','a'], act:['اقدام واقعی','c'] };
 
-/* یک ردیف KPI: مقدار، Gate، و فاصله‌اش تا Gate */
-function kpi(name, value, gate, dir, fmt){
-  const f = fmt || pctTxt;
-  const pass = dir === 'max' ? value <= gate : value >= gate;
-  const gap = dir === 'max' ? value - gate : gate - value;
-  const near = !pass && Math.abs(gap) <= (gate > 1 ? .5 : .10);
-  return { name, value, gate, pass, near,
-    html:'<div class="kpirow"><span class="n">'+name+'</span>' +
-      '<span class="v num">'+f(value)+'</span>' +
-      '<span class="g num">'+(dir==='max'?'≤ ':'≥ ')+f(gate)+'</span>' +
-      '<span class="st '+(pass?'ok':near?'near':'bad')+'">'+(pass?'رسیده':near?'نزدیک':'نرسیده')+'</span></div>' };
+/* ── یک ردیف شاخص ───────────────────────────────────────────────────
+   مخرجِ خودش، منبعِ خودش. مخرجِ صفر «—» است و نه «۰٪»: نبودِ پاسخ، پاسخِ
+   منفی نیست. شاخصِ تشخیصی کارت را رد یا تأیید نمی‌کند. */
+function kpi(name, num, den, gate, o){
+  o = o || {};
+  const f = o.fmt || pctTxt, dir = o.dir || 'min';
+  const has = den > 0;
+  const value = !has ? null : (o.raw ? num : num / den);
+  const pass = !has ? null : (dir === 'max' ? value <= gate : value >= gate);
+  const near = (has && !pass) && Math.abs(value - gate) <= (o.slack !== undefined ? o.slack : (gate > 1 ? .5 : .10));
+  const st = !has ? ['none','—'] : pass ? ['ok','رسیده'] : near ? ['near','نزدیک'] : ['bad','نرسیده'];
+  const src = SRCB[o.src || 'ans'];
+  return { name, value, den, pass, near, gate, diag: !!o.diag,
+    html:'<div class="kpirow' + (o.diag ? ' diag' : '') + '"><span class="n">' + name +
+      '<span class="src ' + src[1] + '">' + src[0] + '</span></span>' +
+      '<span class="v num">' + (has ? f(value) : '—') + '</span>' +
+      '<span class="g num">' + (dir === 'max' ? '≤ ' : '≥ ') + f(gate) + '</span>' +
+      '<span class="nn num">n=' + fa(den) + '</span>' +
+      '<span class="st ' + st[0] + '">' + st[1] + '</span></div>' };
 }
-function hstatus(rows, n){
-  if (n < SAMPLE.provisional) return ['none','شواهد کافی نیست · n='+fa(n)];
-  if (rows.every(r => r.pass)) return ['ok','تأیید شد'];
-  if (rows.every(r => r.pass || r.near)) return ['near','نیاز به اصلاح'];
+
+/* وضعیت کارت از بدترین شاخصِ Gate می‌آید، نه از میانگینشان — و تا وقتی
+   هیچ شاخصی به بیست پاسخ نرسیده، کارت قضاوت نمی‌کند. */
+function hstatus(rows){
+  const g = rows.filter(r => !r.diag && r.den > 0);
+  const ready = g.filter(r => r.den >= SAMPLE.provisional);
+  if (!g.length) return ['none','هنوز پاسخی برای این کارت نیست'];
+  if (!ready.length) return ['none','شواهد کافی نیست · بیشترین n=' + fa(Math.max(...g.map(r => r.den)))];
+  if (ready.every(r => r.pass)) return ['ok', ready.every(r => r.den >= SAMPLE.decision) ? 'تأیید شد' : 'تأیید مقدماتی'];
+  if (ready.every(r => r.pass || r.near)) return ['near','نیاز به اصلاح'];
   return ['bad','تأیید نشد'];
 }
-function hcard(code, title, headline, sub, rows, extra){
-  const n = done().length, st = hstatus(rows, n);
-  return '<div class="hcard"><div class="hh"><span class="code">'+code+'</span><h3>'+title+'</h3></div>' +
-    '<div class="hl num">'+headline+'</div><div class="hs">'+sub+'</div>' +
-    rows.map(r=>r.html).join('') +
-    '<div class="hstat '+st[0]+'">'+st[1]+'</div>' + (extra||'') + '</div>';
+function hcard(code, title, claim, srcKind, rows, extra){
+  const st = hstatus(rows);
+  const src = srcKind === 'mix' ? ['ترکیبی','c'] : SRCB[srcKind];
+  const lead = rows.find(r => !r.diag && r.den > 0);
+  return '<div class="hcard"><div class="hh"><span class="code">' + code + '</span><h3>' + title + '</h3>' +
+      '<span class="src ' + src[1] + '">' + src[0] + '</span></div>' +
+    '<div class="hl num">' + (lead && lead.value !== null ? pctTxt(lead.value) : '—') + '</div>' +
+    '<div class="hs">' + claim + '</div>' +
+    rows.map(r => r.html).join('') +
+    '<div class="hstat ' + st[0] + '">' + st[1] + '</div>' + (extra || '') + '</div>';
 }
-/* توزیع پاسخ‌ها: میله‌ای ساده، مرتب‌شده */
+/* توزیع پاسخ‌ها. مخرج همیشه نوشته می‌شود، چون در سؤال دوگزینه‌ای مخرج
+   «پاسخ‌دهنده» است و در سؤال دو-انتخابی جمعِ درصدها ۲۰۰٪ می‌شود. */
 function distBlock(title, counts, total, labels){
   const keys = Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
   if (!keys.length) return '';
-  return '<div class="dist"><div class="tiny" style="margin-bottom:6px">'+title+'</div>' +
+  return '<div class="dist"><div class="tiny" style="margin-bottom:6px">' + title +
+      ' <span style="color:var(--w3)">· n=' + fa(total) + '</span></div>' +
     keys.map(k=>'<div class="d"><div class="l">'+esc((labels&&labels[k])||k) +
       '<div class="b"><i style="width:'+Math.round(rate(counts[k],total)*100)+'%"></i></div></div>' +
       '<div class="p num">'+fa(counts[k])+'</div></div>').join('') + '</div>';
 }
 const tally = (arr) => arr.reduce((m,v)=>{ if(v==null||v==='') return m; m[v]=(m[v]||0)+1; return m; }, {});
-const tallyAll = (arrs) => arrs.reduce((m,list)=>{ (list||[]).forEach(v=>m[v]=(m[v]||0)+1); return m; }, {});
+const tallyAll = (arrs) => arrs.reduce((m,list)=>{ [].concat(list||[]).forEach(v=>m[v]=(m[v]||0)+1); return m; }, {});
 
 const L = {
   positioning:{value_control:'حفظ ارزش + کنترل و خروج', crypto_trade:'خرید و فروش رمزارز', guaranteed:'بازده تضمین‌شده', p2p:'انتقال بین کاربران', hold_app:'نگهداری در یک اپ', dunno:'هنوز متوجه نشدم'},
-  feat:{convert:'تبدیل و برداشت', pw:'کیف پول شخصی', gold:'طلای فیزیکی', p2p:'انتقال به دیگران', invest:'سرمایه‌گذاری', support:'پشتیبانی انسانی', none:'هیچ‌کدام', never:'در هر صورت نه', custody:'انتخاب روش نگهداری', unsure:'مطمئن نیستم'},
+  feat:{convert:'تبدیل و برداشت', pw:'کیف پول شخصی', gold:'طلای فیزیکی', p2p:'انتقال به دیگران', invest:'سرمایه‌گذاری', support:'پشتیبانی انسانی', custody:'انتخابِ جای پول', none:'تفاوتی نمی‌بینم', unsure:'مطمئن نیستم'},
   step:{nothing:'هیچ کاری نمی‌کردم', read:'اطلاعات بیشتر می‌خواندم', talk:'با پشتیبان حرف می‌زدم', signup:'حساب می‌ساختم', try_small:'با مبلغ آزمایشی', serious:'با مبلغ جدی'},
-  blocker:{where:'نمی‌دانم دارایی کجاست', bitvana:'بیت‌وانا را نمی‌شناسم', usdt:'تردید دربارهٔ تتر', withdraw:'تردید در برداشت', security:'نگرانی امنیتی', legal:'قوانین روشن نیست', no_anchor:'پشتوانهٔ نهادی ندیدم', fees:'کارمزد روشن نبود', ux:'تجربهٔ کاربری', any_new:'به سرویس جدید اعتماد ندارم'},
-  driver:{fees:'شفافیت نرخ و کارمزد', exit:'امکان برداشت', pw:'کیف پول شخصی', gold:'طلای فیزیکی', bitvana:'نقش روشن بیت‌وانا', support:'پشتیبانی انسانی', brand:'اعتبار برند', ux:'طراحی و تجربه', feeling:'حس کلی'},
-  route:{withdraw:'برداشت ریالی', personal_wallet:'کیف پول شخصی', gold:'طلای فیزیکی', transfer:'انتقال', invest:'سرمایه‌گذاری', none:'هیچ مسیری'},
+  asset:{bank_usd:'دلار بانکی به نامم', usdt_share:'تتر، و سهم من ثبت می‌شود', credit:'اعتبار داخلی مهاجر', issuer:'مهاجر خودش صادر می‌کند', dunno:'نمی‌دانم'},
+  custody:{mohajer_bank:'حساب بانکی مهاجر', bitvana:'نزد بیت‌وانا', own_wallet:'کیف پول خودم', central_bank:'بانک مرکزی', dunno:'نمی‌دانم'},
+  route:{withdraw:'برداشت تومانی', personal_wallet:'کیف پول شخصی', gold:'طلای فیزیکی', transfer:'انتقال', invest:'سرمایه‌گذاری'},
   mis:{bank_deposit:'سپردهٔ بانکی می‌داند', mohajer_issuer:'مهاجر را ناشر می‌داند', mohajer_direct_custodian:'مهاجر را نگهدارندهٔ مستقیم می‌داند', central_bank:'بانک مرکزی را نگهدارنده می‌داند'},
-  amount:{lt5:'کمتر از ۵ م', '5_20':'۵ تا ۲۰ م', '20_50':'۲۰ تا ۵۰ م', '50_100':'۵۰ تا ۱۰۰ م', gt100:'بیشتر از ۱۰۰ م'}
+  act:{voice:'ویس می‌فرستم', pilot:'برای پایلوت تماس بگیرید', notify:'نسخهٔ بعدی را خبرم کنید'}
 };
 
+/* ── نوار کیفیت داده ───────────────────────────────────────────────
+   قبل از هر عددی، این: چند نفر آمدند و هر کدام تا کجا رفتند. بدون این،
+   هر درصدی روی یک مخرجِ نامعلوم شنا می‌کند. */
+function dqBar(){
+  const n = SEL.length;
+  const started = SEL.filter(s => s._d.path.length > 0).length;
+  const battery = SEL.filter(s => (s._s.answered || 0) > 0).length;
+  const dn = SEL.filter(s => s.done).length;
+  const conf = SEL.filter(s => s.delivery_confirmed).length;
+  const help = SEL.filter(s => s._d.help).length;
+  const cell = (l, v, warn) => '<span' + (warn ? ' class="warn"' : '') + '><b class="num">' + fa(v) + '</b>' + l + '</span>';
+  return '<div class="dq">' +
+    cell('جلسهٔ یکتا', n) +
+    cell('مأموریت را شروع کرد', started) +
+    cell('به سؤال‌ها رسید', battery) +
+    cell('کامل', dn) +
+    cell('ناتمام', n - dn, n - dn > dn) +
+    cell('تحویلِ تأییدشده', conf) +
+    (help ? cell('با کمکِ تسهیل‌گر', help) : '') +
+    '</div>' +
+    (MIXED ? '<div class="qual" style="border-color:rgba(224,108,91,.4)"><svg viewBox="0 0 24 24" style="width:17px;height:17px;flex:none;margin-top:3px;stroke:var(--bad);fill:none;stroke-width:1.8"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><p><b>دو پروتکل با هم نمایش داده می‌شوند.</b> تعریفِ چند شاخص بین ۱.۰ و ۱.۱ عوض شده است؛ این عددها با هم جمع‌شدنی نیستند. برای تصمیم، از فیلترِ پروتکل یکی را انتخاب کنید.</p></div>' : '');
+}
+
+/* ── کارت‌های فرضیه ───────────────────────────────────────────────── */
 function hypoView(){
-  const all = SEL, d = done(), n = d.length;
-  if (!n) return '<div class="card empty"><h3>هنوز جلسهٔ کاملی نیست</h3>' +
-    '<p class="tiny">کارت‌های فرضیه وقتی پر می‌شوند که جلسه‌ها تا آخر بروند.</p></div>';
+  const all = SEL;
+  /* مخرج‌های رسمی: هر کدام جدا، و هیچ‌کدام «همهٔ جلسه‌ها» نیست. */
+  const startedS = all.filter(s => s._d.path.length > 0);          /* مأموریت را شروع کرد */
+  const ans = (k) => all.filter(s => (s.end || {})[k] !== undefined && (s.end || {})[k] !== '' &&
+    !(Array.isArray((s.end || {})[k]) && !(s.end || {})[k].length));
+  const scored = (k) => all.filter(s => s._s[k] !== undefined);
+  const dn = all.filter(s => s.done);
 
-  const sc = x => x.score || {}, oc = x => x.outcomes || {}, e = x => x.end || {};
-  const lic = n < SAMPLE.none ? 'زیر ۱۰ جلسه هیچ قضاوتی مجاز نیست'
-    : n < SAMPLE.provisional ? 'جهت‌دهنده است، نه تصمیم‌ساز'
-    : n < SAMPLE.decision ? 'مقدماتی؛ برای تصمیم نهایی کافی نیست'
-    : 'برای تصمیم کافی است';
+  if (!startedS.length && !dn.length) return dqBar() +
+    '<div class="card empty"><h3>هنوز جلسه‌ای نیست</h3>' +
+    '<p class="tiny">لینک این راند را از کنسول بردارید و بفرستید.</p></div>';
 
-  /* H1 Core Journey */
-  const comp = rate(d.filter(x=>oc(x).primary_completed).length, n);
-  const indep = rate(d.filter(x=>oc(x).primary_independent).length, n);
-  const direct = rate(d.filter(x=>oc(x).primary_direct).length, n);
-  const times = d.filter(x=>oc(x).primary_completed).map(x=>oc(x).primary_duration_ms).filter(Boolean).sort((a,b)=>a-b);
-  const medT = times.length ? times[times.length>>1] : 0;
-  const p75 = times.length ? times[Math.floor(times.length*.75)] : 0;
-  const rageRate = rate(d.filter(x=>(oc(x).primary_rage||0)>0).length, n);
-  const h1 = [ kpi('تکمیل مأموریت', comp, GATES.journey_completion),
-               kpi('تکمیل مستقل', indep, GATES.journey_independent),
-               kpi('مسیر مستقیم', direct, GATES.journey_direct),
-               kpi('زمان میانه', medT/60000, 3, 'max', v=>fa(Math.round(v*10)/10)+'د'),
-               kpi('صدک ۷۵ زمان', p75/60000, 5, 'max', v=>fa(Math.round(v*10)/10)+'د'),
-               kpi('جلسه با عصبانیت', rageRate, .20, 'max') ];
+  const cnt = (list, f) => list.filter(f).length;
 
-  /* H2 Value & Positioning */
-  const posR = rate(d.filter(x=>sc(x).positioning_correct).length, n);
-  const dvR = rate(d.filter(x=>sc(x).distinct_value_recognized).length, n);
-  const noDiff = rate(d.filter(x=>sc(x).no_distinct_value).length, n);
-  const h2 = [ kpi('تشخیص درست جایگاه', posR, GATES.positioning_correct),
-               kpi('تشخیص ارزش متمایز', dvR, GATES.distinct_value),
-               kpi('«تفاوتی نمی‌بینم»', noDiff, .40, 'max') ];
+  /* ── H1 مسیر اصلی — فقط رفتاری ───────────────────────────────── */
+  const nS = startedS.length;
+  const act = startedS.map(s => s._b.activeMs).filter(Boolean).sort((a,b)=>a-b);
+  const h1 = [
+    kpi('تکمیل مأموریت', cnt(startedS, s=>s._b.completed), nS, GATES.completion, {src:'beh'}),
+    kpi('تکمیل مستقل', cnt(startedS, s=>s._b.independent), nS, GATES.independent, {src:'beh'}),
+    kpi('مسیر مستقیم', cnt(startedS, s=>s._b.direct), nS, GATES.direct, {src:'beh'}),
+    kpi('زمان فعالِ میانه', act.length?med(act)/60000:0, act.length, 3,
+        {src:'beh', dir:'max', raw:true, diag:true, slack:.5, fmt:v=>fa(Math.round(v*10)/10)+'د'}),
+    kpi('صدک ۷۵ زمان فعال', act.length?act[Math.floor(act.length*.75)]/60000:0, act.length, 5,
+        {src:'beh', dir:'max', raw:true, diag:true, slack:.5, fmt:v=>fa(Math.round(v*10)/10)+'د'}),
+    kpi('جلسه با ضربهٔ عصبی', cnt(startedS, s=>s._d.rage>0), nS, .20, {src:'beh', dir:'max', diag:true})
+  ];
 
-  /* H3 Feature Validation */
-  const top2 = tallyAll(d.map(x=>e(x).feature_top2));
-  const must = tally(d.map(x=>e(x).feature_must_have));
-  const routes = tally(d.map(x=>oc(x).secondary_route));
-  const h3 = Object.keys(L.feat).filter(k=>top2[k]).map(k =>
-    kpi(L.feat[k]+' · Top-2', rate(top2[k],n), .35));
+  /* ── H2 ارزش و جایگاه ────────────────────────────────────────── */
+  const q1 = ans('positioning_main'), q2 = ans('distinct_value');
+  const h2 = [
+    kpi('تشخیص درست جایگاه', cnt(q1, s=>s._s.positioning_correct), q1.length, GATES.positioning),
+    kpi('تشخیص ارزش متمایز', cnt(q2, s=>s._s.distinct_value_recognized), q2.length, GATES.distinct),
+    kpi('«تفاوتی نمی‌بینم»', cnt(q2, s=>s._s.no_distinct_value), q2.length, GATES.no_distinct_max, {dir:'max'})
+  ];
 
-  /* H4 Comprehension & Trust */
-  const cPass = rate(d.filter(x=>sc(x).comprehension_pass).length, n);
-  const aC = rate(d.filter(x=>sc(x).asset_correct).length, n);
-  const cC = rate(d.filter(x=>sc(x).custody_correct).length, n);
-  const eC = rate(d.filter(x=>sc(x).exit_correct).length, n);
-  const trusts = d.map(x=>+e(x).trust).filter(v=>v>0).sort((a,b)=>a-b);
-  const tMed = trusts.length ? trusts[trusts.length>>1] : 0;
-  const t45 = rate(d.filter(x=>+e(x).trust>=4).length, n);
-  const t12 = rate(d.filter(x=>+e(x).trust>0&&+e(x).trust<=2).length, n);
-  const misAll = tallyAll(d.map(x=>sc(x).misconceptions));
-  const worstMis = Object.keys(misAll).reduce((a,k)=>Math.max(a, rate(misAll[k],n)), 0);
-  const h4 = [ kpi('فهم ۲ از ۳ یا بیشتر', cPass, GATES.comprehension_pass),
-               kpi('ماهیت دارایی', aC, GATES.asset_correct),
-               kpi('نگهداری پیش‌فرض', cC, GATES.custody_correct),
-               kpi('راه‌های خروج', eC, GATES.exit_correct),
-               kpi('اعتماد ۴ و ۵', t45, GATES.trust_4_5),
-               kpi('میانهٔ اعتماد', tMed, GATES.trust_median, 'min', v=>fa(v)),
-               kpi('اعتماد ۱ و ۲', t12, GATES.trust_1_2_max, 'max'),
-               kpi('بدترین کج‌فهمی', worstMis, GATES.critical_misconception_max, 'max') ];
+  /* ── H3 قابلیت‌ها ────────────────────────────────────────────── */
+  const q5 = ans('feature_top2');
+  const top2 = tallyAll(q5.map(s=>s.end.feature_top2));
+  const topKey = Object.keys(top2).sort((a,b)=>top2[b]-top2[a])[0];
+  const firstR = tally(startedS.map(s=>s._b.first_route));
+  const doneR = tallyAll(startedS.map(s=>s._b.routes_completed));
+  const h3 = [
+    kpi('سهم قابلیتِ اول در Top-2' + (topKey?' — '+esc(L.feat[topKey]||topKey):''),
+        topKey?top2[topKey]:0, q5.length, GATES.top_feature),
+    kpi('مسیری را در اپ تا آخر برد', cnt(startedS, s=>s._b.routes_completed.length>0), nS, .50,
+        {src:'beh', diag:true})
+  ];
 
-  /* H5 Behavioral Intent */
-  const goYM = rate(d.filter(x=>['yes','maybe'].indexOf(e(x).go)>=0).length, n);
-  const pract = rate(d.filter(x=>sc(x).practical_action).length, n);
-  const money = rate(d.filter(x=>sc(x).money_intent).length, n);
-  const high = rate(d.filter(x=>sc(x).high_commitment).length, n);
-  const noAct = rate(d.filter(x=>e(x).commitment_step==='nothing').length, n);
-  const h5 = [ kpi('بله یا شاید', goYM, .70),
-               kpi('اقدام عملی', pract, GATES.practical_action),
-               kpi('قصد پول واقعی', money, GATES.money_intent),
-               kpi('تعهد بالا', high, GATES.high_commitment),
-               kpi('هیچ اقدامی', noAct, GATES.no_action_max, 'max') ];
+  /* ── H4 فهم و اعتماد ─────────────────────────────────────────── */
+  const q3 = ans('asset_understanding'), q4 = ans('custody_understanding'), q6 = ans('trust');
+  const trusts = q6.map(s=>+s.end.trust).filter(v=>v>0).sort((a,b)=>a-b);
+  const misAll = tallyAll(all.map(s=>s._s.misconceptions));
+  const misDen = Math.max(q3.length, q4.length);
+  const worstMis = Object.keys(misAll).reduce((a,k)=>Math.max(a, rate(misAll[k], misDen)), 0);
+  const h4 = [
+    kpi('فهم ماهیت دارایی', cnt(q3, s=>s._s.asset_correct), q3.length, GATES.asset),
+    kpi('فهم جای نگهداری', cnt(q4, s=>s._s.custody_correct), q4.length, GATES.custody),
+    kpi('اعتماد ۴ یا ۵', cnt(q6, s=>s._s.trust_high), q6.length, GATES.trust_45),
+    kpi('میانهٔ اعتماد', trusts.length?med(trusts):0, trusts.length, GATES.trust_median,
+        {raw:true, slack:.5, fmt:v=>fa(Math.round(v*10)/10)}),
+    kpi('اعتماد ۱ یا ۲', cnt(q6, s=>s._s.trust_low), q6.length, GATES.trust_12_max, {dir:'max'}),
+    kpi('بدترین کج‌فهمی', worstMis, misDen, GATES.misconception_max, {raw:true, dir:'max'}),
+    /* مأموریتِ خروج حذف شد؛ این رفتار آزاد است، پس شاهدِ تشخیصی است نه Gate */
+    kpi('راهی برای بیرون‌آوردن پول پیدا کرد', cnt(startedS, s=>s._b.control_route), nS,
+        GATES.control_route, {src:'beh', diag:true})
+  ];
 
-  const allRows = [].concat(h1,h2,h4,h5);
-  const failed = allRows.filter(r=>!r.pass && !r.near).length;
+  /* ── H5 قصد ──────────────────────────────────────────────────── */
+  const q7 = ans('commitment_step');
+  const cta = dn.filter(s => s.delivery_confirmed);          /* CTA فقط بعد از ثبت دیده می‌شود */
+  const acts = tallyAll(cta.map(s=>s.post_actions));
+  const h5 = [
+    kpi('اقدام عملی', cnt(q7, s=>s._s.practical_action), q7.length, GATES.practical),
+    kpi('قصد پول واقعی', cnt(q7, s=>s._s.money_intent), q7.length, GATES.money),
+    kpi('هیچ اقدامی', cnt(q7, s=>s._s.no_action), q7.length, GATES.no_action_max, {dir:'max'}),
+    kpi('مبلغ جدی', cnt(q7, s=>s._s.high_intent), q7.length, .20, {diag:true}),
+    kpi('روی یکی از پیشنهادهای پایان زد', cnt(cta, s=>(s.post_actions||[]).length>0), cta.length, .30,
+        {src:'act', diag:true}),
+    kpi('خودش شماره گذاشت', cnt(cta, s=>s.contact && (s.contact.tel||s.contact.name)), cta.length, .15,
+        {src:'act', diag:true})
+  ];
 
-  return '<div class="qual"><svg viewBox="0 0 24 24" style="width:17px;height:17px;flex:none;margin-top:3px;stroke:var(--gold);fill:none;stroke-width:1.8"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>' +
-      '<p><b>' + fa(n) + ' جلسهٔ کامل</b> از ' + fa(all.length) + ' جلسه · ' + lic +
-      '. هدف این راند ' + fa(CFG.target||100) + ' نفر است.</p></div>' +
+  /* ── خلاصهٔ تصمیم: پنج عدد، هر کدام با مخرج و منبعِ خودش ─────── */
+  const bothCorrect = all.filter(s => s._s.asset_correct !== undefined && s._s.custody_correct !== undefined);
+  const five = [
+    ['تکمیل مأموریت اصلی', h1[0], 'beh'],
+    ['تشخیص درست جایگاه', h2[0], 'ans'],
+    ['فهم ماهیت و نگهداری', kpi('', cnt(bothCorrect, s=>s._s.asset_correct && s._s.custody_correct),
+        bothCorrect.length, .70), 'ans'],
+    ['اعتماد ۴ و ۵', h4[2], 'ans'],
+    ['قصد پول واقعی', h5[1], 'ans']
+  ];
+  const svc = (r) => r.den === 0 ? '' : r.pass ? 'ok' : r.near ? 'near' : 'bad';
+
+  const allGate = [].concat(h1,h2,h3,h4,h5).filter(r=>!r.diag && r.den>=SAMPLE.provisional);
+  const failed = allGate.filter(r=>!r.pass && !r.near).length;
+  const maxN = Math.max(0, ...[].concat(h1,h2,h3,h4,h5).map(r=>r.den));
+  const lic = maxN < SAMPLE.none ? 'زیر ۱۰ پاسخ، هیچ قضاوتی مجاز نیست'
+    : maxN < SAMPLE.provisional ? 'جهت‌دهنده است، نه تصمیم‌ساز'
+    : maxN < SAMPLE.decision ? 'مقدماتی؛ برای تصمیم نهایی کافی نیست'
+    : 'برای تصمیمِ این راند کافی است';
+
+  /* ── گفته در برابر رفتار ─────────────────────────────────────── */
+  const saidDid = '<div class="sec"><h2>گفته در برابر رفتار</h2><span class="h">دو framing متفاوت</span><span class="ln"></span></div>' +
+    '<div class="card"><table><tr><th>قابلیت</th><th>Top-2 در پرسش ۵</th><th>اولین مسیر در اپ</th><th>تا آخر برد</th></tr>' +
+    Object.keys(L.route).map(k =>
+      '<tr><td><b>' + esc(L.feat[k] || L.route[k]) + '</b></td>' +
+      '<td class="num">' + (q5.length ? fa(top2[k]||0) + ' · ' + fa(pct(top2[k]||0, q5.length)) + '٪' : '—') + '</td>' +
+      '<td class="num">' + (nS ? fa(firstR[k]||0) + ' · ' + fa(pct(firstR[k]||0, nS)) + '٪' : '—') + '</td>' +
+      '<td class="num">' + (nS ? fa(doneR[k]||0) : '—') + '</td></tr>').join('') +
+    '</table><p class="tiny" style="margin-top:12px">در پرسش ۵ هر نفر <b>دو</b> انتخاب دارد، پس جمعِ آن ستون تا ۲۰۰٪ می‌رسد. ' +
+    'ستون‌های مسیر از رفتارِ همان یک نشست می‌آیند و مأموریت، رفتار را محدود کرده بود: ' +
+    'ناهم‌خوانیِ این دو ستون «تناقض» نیست.</p></div>';
+
+  return dqBar() +
+    '<div class="qual"><svg viewBox="0 0 24 24" style="width:17px;height:17px;flex:none;margin-top:3px;stroke:var(--gold);fill:none;stroke-width:1.8"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>' +
+      '<p><b>' + fa(dn.length) + ' جلسهٔ کامل</b> از ' + fa(all.length) + ' جلسه · ' + lic +
+      '. هدف این راند ' + fa(CFG.target||100) + ' نفر است. هر شاخص مخرجِ خودش را دارد؛ ' +
+      'کسی که سؤالی را ندیده، در آن شاخص شمرده نمی‌شود.</p></div>' +
 
     '<div class="sec"><h2>خلاصهٔ تصمیم</h2><span class="h">' +
-      (failed ? fa(failed) + ' شاخص از Gate عقب است' : 'همهٔ شاخص‌ها روی Gate یا نزدیک آن') +
+      (allGate.length ? (failed ? fa(failed) + ' شاخص از Gate عقب است' : 'همهٔ شاخص‌های واجد، روی Gate یا نزدیک آن')
+                      : 'هنوز هیچ شاخصی به ۲۰ پاسخ نرسیده') +
       '</span><span class="ln"></span></div>' +
-    '<div class="kpis">' +
-      '<div class="kpi"><div class="v num">' + pctTxt(comp) + '</div><div class="l">تکمیل مأموریت</div></div>' +
-      '<div class="kpi gold"><div class="v num">' + pctTxt(cPass) + '</div><div class="l">فهم قبول</div></div>' +
-      '<div class="kpi ok"><div class="v num">' + pctTxt(t45) + '</div><div class="l">اعتماد ۴ و ۵</div></div>' +
-      '<div class="kpi"><div class="v num">' + pctTxt(money) + '</div><div class="l">قصد پول واقعی</div></div>' +
-    '</div>' +
+    '<div class="sv">' + five.map(([l, r, src]) =>
+      '<div class="c ' + svc(r) + '"><div class="v num">' + (r.den ? pctTxt(r.value) : '—') + '</div>' +
+      '<div class="l">' + l + '</div><div class="m"><span class="num">n=' + fa(r.den) + '</span>' +
+      '<span class="num">Gate ≥ ' + pctTxt(r.gate) + '</span>' +
+      '<span class="src ' + SRCB[src][1] + '">' + SRCB[src][0] + '</span></div></div>').join('') + '</div>' +
 
-    '<div class="sec"><h2>فرضیه‌ها</h2><span class="ln"></span></div>' +
-    hcard('H1','مسیر اصلی تأمین مالی', pctTxt(comp), 'کاربر بدون کمک، تبدیل را تا آخر می‌برد.', h1,
-      distBlock('مسیر انتخابی در سناریوی دوم', routes, n, L.route)) +
-    hcard('H2','ارزش و جایگاه', pctTxt(posR), 'مهاجر را «حفظ ارزش با کنترل و خروج» می‌فهمد.', h2,
-      distBlock('پاسخ به «مهم‌ترین کار مهاجر»', tally(d.map(x=>e(x).positioning_main)), n, L.positioning)) +
-    hcard('H3','قابلیت‌ها', fa(Object.keys(top2).length) + ' قابلیت', 'کدام دو قابلیت واقعاً ضروری‌اند.', h3,
-      distBlock('دو قابلیت ضروری (Top-2)', top2, n, L.feat) +
-      distBlock('نبودش مانع استفاده است', must, n, L.feat)) +
-    hcard('H4','فهم و اعتماد', pctTxt(cPass), 'می‌داند دارایی چیست، کجاست و چطور بیرون می‌آید.', h4,
-      distBlock('کج‌فهمی‌های بحرانی', misAll, n, L.mis) +
-      distBlock('مانع اعتماد', tally(d.map(x=>e(x).trust_blocker)), n, L.blocker) +
-      distBlock('دلیل اعتماد', tally(d.map(x=>e(x).trust_driver)), n, L.driver)) +
-    hcard('H5','قصد رفتاری', pctTxt(pract), 'قدم بعدی‌اش از حرف فراتر می‌رود.', h5,
-      distBlock('محتمل‌ترین قدم بعدی', tally(d.map(x=>e(x).commitment_step)), n, L.step) +
-      distBlock('مبلغ شروع', tally(d.map(x=>e(x).starting_amount_band)), n, L.amount));
+    '<div class="sec"><h2>فرضیه‌ها</h2><span class="h">ترتیب تفسیر: ارزش → فهم → اعتماد → اقدام</span><span class="ln"></span></div>' +
+    hcard('H2','ارزش و جایگاه','مهاجر را «حفظ ارزش همراه با کنترل، استفاده و خروج» می‌فهمد و حداقل یک تمایز واقعی نسبت به صرافی می‌بیند.','ans', h2,
+      distBlock('مهم‌ترین کاری که مهاجر می‌کند', tally(q1.map(s=>s.end.positioning_main)), q1.length, L.positioning) +
+      distBlock('ارزشِ اضافه نسبت به خرید مستقیم تتر (دو انتخاب)', tallyAll(q2.map(s=>s.end.distinct_value)), q2.length, L.feat)) +
+    hcard('H4','فهم و اعتماد','می‌داند دارایی‌اش چیست و کجا می‌ماند، و اعتماد قابل قبولی دارد.','mix', h4,
+      distBlock('بعد از تبدیل، چه چیزی نگه داشته می‌شود', tally(q3.map(s=>s.end.asset_understanding)), q3.length, L.asset) +
+      distBlock('پول کجا می‌ماند', tally(q4.map(s=>s.end.custody_understanding)), q4.length, L.custody) +
+      distBlock('کج‌فهمی‌های بحرانی', misAll, misDen, L.mis)) +
+    hcard('H1','مسیر اصلی تأمین مالی','کاربر بدون کمک، تبدیل را تا آخر انجام می‌دهد.','beh', h1,
+      distBlock('اولین مسیری که بعد از تبدیل باز کرد', firstR, nS, L.route)) +
+    hcard('H3','اعتبار قابلیت‌ها','بین قابلیت‌ها اولویتی روشن شکل می‌گیرد و رفتار دست‌کم بخشی از آن را تأیید می‌کند.','mix', h3,
+      distBlock('دو قابلیتِ ضروری (هر نفر دو انتخاب)', top2, q5.length, L.feat) +
+      distBlock('مسیرهایی که تا آخر رفته‌اند', doneR, nS, L.route)) +
+    hcard('H5','قصد رفتاری','قدم بعدی‌اش از موافقتِ کلی فراتر می‌رود.','mix', h5,
+      distBlock('محتمل‌ترین قدم بعدی', tally(q7.map(s=>s.end.commitment_step)), q7.length, L.step) +
+      distBlock('اقدام‌های بعد از پایان', acts, cta.length, L.act)) +
+    saidDid;
 }
 
 /* ── بیرون بردن ─────────────────────────────────────────────────── */
 function exportCsv(){
+  const meta = {
+    generated_at: new Date().toISOString(), product_version: $('f-ver').value,
+    round: $('f-round').value || 'all', protocol_version: $('f-proto').value || 'all',
+    scoring_version: TK.SCORING_VERSION, question_set: TK.QUESTION_SET,
+    sources: (SRC && SRC.status || []).map(x => (x.ok ? 'ok:' + x.n : 'down')).join('+') || 'local'
+  };
   const rows = SEL.map(s => {
-    const d = s._d, e = s.end || {}, g = s.seg || {};
-    return {
-      id: s.id, version: s.ver, round: s.r, channel: TK.CHANNELS[s.c] || s.c,
-      started: s.t0, completed: s.done ? 1 : 0, seconds: Math.round(d.ms / 1000),
+    const d = s._d, e = s.end || {}, g = s.seg || {}, b = s._b, sc = s._s;
+    return Object.assign({}, meta, {
+      id: s.id, round: s.r, channel: TK.CHANNELS[s.c] || s.c, protocol: TK.protoOf(s),
+      started: s.t0, completed: s.done ? 1 : 0, confirmed: s.delivery_confirmed ? 1 : 0,
+      revision: s.revision || 0, answered_of_7: sc.answered || 0,
+      seconds: Math.round(d.ms / 1000), active_seconds: Math.round(d.activeMs / 1000),
       age: g.age || '', fx: g.fx || '', crypto: g.crypto || '', savings: g.where || '',
-      trust: e.trust || '', go: e.go || '', stop: e.stop || '',
-      name: (s.contact && s.contact.name) || '', tel: (s.contact && s.contact.tel) || '',
+      mission_completed: b.completed ? 1 : 0, mission_independent: b.independent ? 1 : 0,
+      mission_direct: b.direct ? 1 : 0, facilitator_help: b.help ? 1 : 0,
+      first_route: b.first_route || '', routes: (b.routes || []).join('+'),
+      routes_completed: (b.routes_completed || []).join('+'), control_route: b.control_route ? 1 : 0,
+      positioning: e.positioning_main || '', distinct_value: [].concat(e.distinct_value || []).join('+'),
+      asset: e.asset_understanding || '', custody: e.custody_understanding || '',
+      feature_top2: [].concat(e.feature_top2 || []).join('+'),
+      trust: e.trust || '', next_step: e.commitment_step || '',
+      positioning_correct: sc.positioning_correct, asset_correct: sc.asset_correct,
+      custody_correct: sc.custody_correct, money_intent: sc.money_intent,
+      misconceptions: (sc.misconceptions || []).join('+'),
+      post_actions: (s.post_actions || []).join('+'),
       screens: d.screens, taps: d.taps.length, rage: d.rage, dead: d.dead,
       deepest: d.deepest, path: d.path.join(' > '),
-      confuse: e.confuse || '', change: e.change || '',
       feedback: (s.fb || []).map(f => (f.mood || '') + ':' + (f.text || '')).join(' | ')
-    };
+    });
   });
-  TK.download('mohajer-test-v' + $('f-ver').value + '.csv', TK.csv(rows), 'text/csv');
+  TK.download('mohajer-sessions-v' + $('f-ver').value + '.csv', TK.csv(rows), 'text/csv');
+}
+/* جدا، عمداً: این فایل اطلاعات شخصی دارد و نباید با فایلی که دست‌به‌دست
+   می‌شود یکی باشد. */
+function exportContacts(){
+  const rows = SEL.filter(s => s.contact && ((s.contact.name||'').trim() || (s.contact.tel||'').trim()))
+    .map(s => ({ name: (s.contact.name||'').trim(), tel: (s.contact.tel||'').trim(),
+      age: (s.seg||{}).age || '', round: s.r, protocol: TK.protoOf(s),
+      asked: (s.post_actions||[]).join('+'), at: s.t0, id: s.id }));
+  if (!rows.length) return alert('هنوز کسی شماره نگذاشته است.');
+  TK.download('mohajer-contacts-v' + $('f-ver').value + '.csv', TK.csv(rows), 'text/csv');
 }
 function exportJson(){
   TK.download('mohajer-test-v' + $('f-ver').value + '.json',
