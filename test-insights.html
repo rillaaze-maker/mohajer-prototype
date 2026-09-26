@@ -80,6 +80,44 @@ option{background:#14181D}
 .btn:hover{border-color:rgba(213,164,92,.45)}
 .btn.p{background:var(--gold);border-color:var(--gold);color:#0B0D10}
 
+.tabs{display:flex;gap:6px;margin-top:18px;background:var(--surf);border:1px solid var(--brd);
+  border-radius:99px;padding:5px;width:fit-content}
+.tb{border:none;background:none;color:var(--w2);font:600 13px/1 var(--f);padding:10px 18px;
+  border-radius:99px;cursor:pointer;transition:.2s var(--swift)}
+.tb[aria-pressed=true]{background:var(--gold);color:#0B0D10}
+
+/* ── hypothesis cards ───────────────────────────────────────────── */
+.hcard{background:var(--surf);border:1px solid var(--brd);border-radius:18px;padding:20px;margin-top:10px}
+.hcard .hh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.hcard .hh h3{font-size:15.5px;font-weight:600;letter-spacing:-.02em}
+.hcard .hh .code{font-size:10.5px;font-weight:700;color:var(--w3);letter-spacing:.08em}
+.hcard .hl{font-size:26px;font-weight:700;letter-spacing:-.03em;margin:6px 0 2px}
+.hcard .hs{font-size:12px;color:var(--w3);margin-bottom:14px}
+.kpirow{display:grid;grid-template-columns:1fr 70px 58px 62px;gap:8px;align-items:center;
+  padding:9px 0;border-top:1px solid rgba(255,255,255,.06);font-size:12.5px}
+.kpirow .n{color:var(--w2)}
+.kpirow .v{font-weight:700;text-align:end}
+.kpirow .g{color:var(--w3);text-align:end;font-size:11.5px}
+.kpirow .st{text-align:end;font-size:10.5px;font-weight:700}
+.kpirow .st.ok{color:var(--ok)} .kpirow .st.near{color:var(--gold)} .kpirow .st.bad{color:var(--bad)}
+.hstat{display:inline-flex;align-items:center;gap:7px;border-radius:99px;padding:6px 13px;
+  font-size:11.5px;font-weight:700;margin-top:14px}
+.hstat.ok{background:rgba(63,191,143,.15);color:var(--ok)}
+.hstat.near{background:rgba(213,164,92,.16);color:var(--gold)}
+.hstat.bad{background:rgba(224,108,91,.16);color:var(--bad)}
+.hstat.none{background:var(--surf2);color:var(--w3)}
+.dist{margin-top:14px}
+.dist .d{display:grid;grid-template-columns:1fr 46px;gap:10px;align-items:center;padding:5px 0;font-size:12px}
+.dist .d .b{height:8px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;margin-top:5px}
+.dist .d .b i{display:block;height:100%;background:var(--gold);border-radius:99px}
+.dist .d .l{color:var(--w2)}
+.dist .d .l small{display:block;color:var(--w3);font-size:10.5px;margin-top:1px}
+.dist .d .p{text-align:end;color:var(--w2);font-weight:600}
+.qual{display:flex;gap:11px;align-items:flex-start;border-radius:14px;padding:13px 15px;margin-top:16px;
+  border:1px solid rgba(213,164,92,.22);background:rgba(213,164,92,.07)}
+.qual p{font-size:12.5px;color:var(--w2);line-height:1.8}
+.qual b{color:#fff}
+
 /* ── kpis ───────────────────────────────────────────────────────── */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(136px,1fr));gap:10px;margin-top:14px}
 .kpi{background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:16px 17px}
@@ -215,12 +253,16 @@ footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--brd);font-siz
     <button class="btn" onclick="exportJson()">JSON</button>
   </div>
 
+  <div class="tabs" id="tabs">
+    <button class="tb" aria-pressed="true" onclick="setView('ux')">کاربردپذیری</button>
+    <button class="tb" aria-pressed="false" onclick="setView('hypo')">فرضیه‌ها</button>
+  </div>
   <div id="body"></div>
 
   <footer>هر عدد این صفحه از همان جریان رویدادها ساخته می‌شود؛ چیزی دوباره‌شماری یا تخمین نمی‌شود. زیر سه جلسه، این صفحه قضاوت نمی‌کند — فقط داده را نشان می‌دهد.</footer>
 </div>
 
-<script src="./test-kit.js"></script>
+<script src="./test-kit.js?v=20260926b"></script>
 <script>
 const $ = TK.$, esc = TK.esc, fa = TK.fa;
 let CFG = {}, VERS = [], ALL = [], SEL = [], SRC = null, ageFilter = new Set(), heatScreen = null;
@@ -234,14 +276,21 @@ let CFG = {}, VERS = [], ALL = [], SEL = [], SRC = null, ageFilter = new Set(), 
 })();
 
 /* ── data ───────────────────────────────────────────────────────── */
+/* دو مرحله: اول هرچه بدون شبکه داریم، بعد تازه‌سازی از سرور. هیچ‌وقت
+   صفحهٔ خالی به‌خاطر کندیِ سرور. */
 async function load(){
-  $('sub').textContent = 'در حال خواندن…';
-  /* همهٔ منبع‌ها با هم: سرور اصلی، سرور پشتیبان، آرشیو داخل مخزن، کدهای
-     واردشده و جلسه‌های همین مرورگر. تکراری‌ها با id حذف می‌شوند. */
-  const got = await TK.readAll(CFG, { full: 1 });
+  TK.warm(CFG);                                   /* همین‌جا، بی‌انتظار */
+  const quick = await TK.readAll(CFG, { full: 1 }, { localOnly: true });
+  ingest(quick, 'local');
+  if (!TK.eps(CFG).length) return;
+  $('sub-src').textContent = 'در حال تازه‌سازی از سرور…';
+  const fresh = await TK.readAll(CFG, { full: 1 });
+  ingest(fresh, 'live');
+}
+function ingest(got, how){
   ALL = got.sessions.filter(s => s && s.ev);            /* خلاصه‌ها تحلیل نمی‌شوند */
   ALL.forEach(s => { if (!s._d) s._d = TK.derive(s); });
-  SRC = got;
+  SRC = got; SRC.how = how;
 
   const vers = [...new Set(ALL.map(s => String(s.ver)))];
   /* یک تازه‌سازی نباید انتخاب کاربر را به نسخهٔ داخل آدرس برگرداند */
@@ -266,15 +315,18 @@ function apply(){
 
   const nm = (VERS.find(x => x.id === v) || {}).name || ('v' + v);
   $('title').textContent = nm;
-  const src = SRC ? [
-    ...SRC.status.map((st, i) => 'سرور ' + fa(i + 1) + (st.ok ? '' : ' (قطع)')),
-    SRC.repo ? 'آرشیو مخزن' : null
-  ].filter(Boolean).join(' · ') : '';
+  const ago = (t) => { const m = Math.round((Date.now() - t) / 60000);
+    return m < 1 ? 'همین حالا' : m < 60 ? fa(m) + ' دقیقه پیش' : fa(Math.round(m / 60)) + ' ساعت پیش'; };
+  const src = !SRC ? '' :
+    SRC.how === 'local'
+      ? (SRC.cachedAt ? 'از نسخهٔ ذخیره‌شده · ' + ago(SRC.cachedAt) : 'فقط دادهٔ همین مرورگر')
+      : (SRC.status.every(x => x.ok) ? 'به‌روز شد · همین حالا'
+         : 'سرور جواب نداد؛ آخرین نسخهٔ ذخیره‌شده' + (SRC.cachedAt ? ' · ' + ago(SRC.cachedAt) : ''));
   $('sub').innerHTML = SEL.length
     ? fa(SEL.length) + ' جلسه' + (r ? ' · راند ' + fa(r) : ' · همهٔ راندها') +
       (ageFilter.size ? ' · فقط ' + [...ageFilter].join('، ') : '') +
-      (src ? '<span style="color:var(--w3)"> — از ' + esc(src) + '</span>' : '')
-    : 'هنوز جلسه‌ای برای این فیلتر نیست.';
+      ' <span id="sub-src" style="color:var(--w3)">— ' + esc(src) + '</span>'
+    : 'هنوز جلسه‌ای برای این فیلتر نیست. <span id="sub-src" style="color:var(--w3)">' + esc(src) + '</span>';
   render();
 }
 function toggleAge(b){
@@ -297,6 +349,7 @@ function render(){
       'اگر کسی «کد» فرستاده، از کنسول واردش کنید.</p></div>';
     return;
   }
+  if (VIEW === 'hypo') { $('body').innerHTML = hypoView(); return; }
   $('body').innerHTML =
     blockCompare() + blockKpis() + blockLayer() + blockAges() + blockFunnel() + blockHeat() + blockStuck() +
     blockQuotes() + blockContacts() + blockSessions();
@@ -670,6 +723,185 @@ function bindSessions(){
 function when(iso){
   try { return new Intl.DateTimeFormat('fa-IR', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }).format(new Date(iso)); }
   catch (e) { return iso || '—'; }
+}
+
+/* ════════ داشبورد فرضیه‌ها ══════════════════════════════════════
+   Gateها عیناً از §۳۲ سند. هیچ میانگینی جای یک Gateِ افتاده را نمی‌گیرد:
+   وضعیت هر کارت از بدترین شاخصش می‌آید، نه از میانگینشان. */
+const GATES = {
+  journey_completion:.80, journey_independent:.70, journey_direct:.70,
+  positioning_correct:.80, distinct_value:.60,
+  comprehension_pass:.80, asset_correct:.70, custody_correct:.70, exit_correct:.70,
+  critical_misconception_max:.20,
+  trust_4_5:.70, trust_median:4, trust_1_2_max:.15,
+  practical_action:.60, money_intent:.40, high_commitment:.30, no_action_max:.30
+};
+const SAMPLE = { none:10, directional:10, provisional:20, decision:30, target:100 };
+let VIEW = 'ux';
+
+function setView(v){
+  VIEW = v;
+  TK.$$('#tabs .tb').forEach((b,i)=>b.setAttribute('aria-pressed', String((i===0)===(v==='ux'))));
+  render();
+}
+
+const done = () => SEL.filter(x => x.done);
+const rate = (n, d) => d ? n / d : 0;
+const pctTxt = v => fa(Math.round(v * 100)) + '٪';
+
+/* یک ردیف KPI: مقدار، Gate، و فاصله‌اش تا Gate */
+function kpi(name, value, gate, dir, fmt){
+  const f = fmt || pctTxt;
+  const pass = dir === 'max' ? value <= gate : value >= gate;
+  const gap = dir === 'max' ? value - gate : gate - value;
+  const near = !pass && Math.abs(gap) <= (gate > 1 ? .5 : .10);
+  return { name, value, gate, pass, near,
+    html:'<div class="kpirow"><span class="n">'+name+'</span>' +
+      '<span class="v num">'+f(value)+'</span>' +
+      '<span class="g num">'+(dir==='max'?'≤ ':'≥ ')+f(gate)+'</span>' +
+      '<span class="st '+(pass?'ok':near?'near':'bad')+'">'+(pass?'رسیده':near?'نزدیک':'نرسیده')+'</span></div>' };
+}
+function hstatus(rows, n){
+  if (n < SAMPLE.provisional) return ['none','شواهد کافی نیست · n='+fa(n)];
+  if (rows.every(r => r.pass)) return ['ok','تأیید شد'];
+  if (rows.every(r => r.pass || r.near)) return ['near','نیاز به اصلاح'];
+  return ['bad','تأیید نشد'];
+}
+function hcard(code, title, headline, sub, rows, extra){
+  const n = done().length, st = hstatus(rows, n);
+  return '<div class="hcard"><div class="hh"><span class="code">'+code+'</span><h3>'+title+'</h3></div>' +
+    '<div class="hl num">'+headline+'</div><div class="hs">'+sub+'</div>' +
+    rows.map(r=>r.html).join('') +
+    '<div class="hstat '+st[0]+'">'+st[1]+'</div>' + (extra||'') + '</div>';
+}
+/* توزیع پاسخ‌ها: میله‌ای ساده، مرتب‌شده */
+function distBlock(title, counts, total, labels){
+  const keys = Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+  if (!keys.length) return '';
+  return '<div class="dist"><div class="tiny" style="margin-bottom:6px">'+title+'</div>' +
+    keys.map(k=>'<div class="d"><div class="l">'+esc((labels&&labels[k])||k) +
+      '<div class="b"><i style="width:'+Math.round(rate(counts[k],total)*100)+'%"></i></div></div>' +
+      '<div class="p num">'+fa(counts[k])+'</div></div>').join('') + '</div>';
+}
+const tally = (arr) => arr.reduce((m,v)=>{ if(v==null||v==='') return m; m[v]=(m[v]||0)+1; return m; }, {});
+const tallyAll = (arrs) => arrs.reduce((m,list)=>{ (list||[]).forEach(v=>m[v]=(m[v]||0)+1); return m; }, {});
+
+const L = {
+  positioning:{value_control:'حفظ ارزش + کنترل و خروج', crypto_trade:'خرید و فروش رمزارز', guaranteed:'بازده تضمین‌شده', p2p:'انتقال بین کاربران', hold_app:'نگهداری در یک اپ', dunno:'هنوز متوجه نشدم'},
+  feat:{convert:'تبدیل و برداشت', pw:'کیف پول شخصی', gold:'طلای فیزیکی', p2p:'انتقال به دیگران', invest:'سرمایه‌گذاری', support:'پشتیبانی انسانی', none:'هیچ‌کدام', never:'در هر صورت نه', custody:'انتخاب روش نگهداری', unsure:'مطمئن نیستم'},
+  step:{nothing:'هیچ کاری نمی‌کردم', read:'اطلاعات بیشتر می‌خواندم', talk:'با پشتیبان حرف می‌زدم', signup:'حساب می‌ساختم', try_small:'با مبلغ آزمایشی', serious:'با مبلغ جدی'},
+  blocker:{where:'نمی‌دانم دارایی کجاست', bitvana:'بیت‌وانا را نمی‌شناسم', usdt:'تردید دربارهٔ تتر', withdraw:'تردید در برداشت', security:'نگرانی امنیتی', legal:'قوانین روشن نیست', no_anchor:'پشتوانهٔ نهادی ندیدم', fees:'کارمزد روشن نبود', ux:'تجربهٔ کاربری', any_new:'به سرویس جدید اعتماد ندارم'},
+  driver:{fees:'شفافیت نرخ و کارمزد', exit:'امکان برداشت', pw:'کیف پول شخصی', gold:'طلای فیزیکی', bitvana:'نقش روشن بیت‌وانا', support:'پشتیبانی انسانی', brand:'اعتبار برند', ux:'طراحی و تجربه', feeling:'حس کلی'},
+  route:{withdraw:'برداشت ریالی', personal_wallet:'کیف پول شخصی', gold:'طلای فیزیکی', transfer:'انتقال', invest:'سرمایه‌گذاری', none:'هیچ مسیری'},
+  mis:{bank_deposit:'سپردهٔ بانکی می‌داند', mohajer_issuer:'مهاجر را ناشر می‌داند', mohajer_direct_custodian:'مهاجر را نگهدارندهٔ مستقیم می‌داند', central_bank:'بانک مرکزی را نگهدارنده می‌داند'},
+  amount:{lt5:'کمتر از ۵ م', '5_20':'۵ تا ۲۰ م', '20_50':'۲۰ تا ۵۰ م', '50_100':'۵۰ تا ۱۰۰ م', gt100:'بیشتر از ۱۰۰ م'}
+};
+
+function hypoView(){
+  const all = SEL, d = done(), n = d.length;
+  if (!n) return '<div class="card empty"><h3>هنوز جلسهٔ کاملی نیست</h3>' +
+    '<p class="tiny">کارت‌های فرضیه وقتی پر می‌شوند که جلسه‌ها تا آخر بروند.</p></div>';
+
+  const sc = x => x.score || {}, oc = x => x.outcomes || {}, e = x => x.end || {};
+  const lic = n < SAMPLE.none ? 'زیر ۱۰ جلسه هیچ قضاوتی مجاز نیست'
+    : n < SAMPLE.provisional ? 'جهت‌دهنده است، نه تصمیم‌ساز'
+    : n < SAMPLE.decision ? 'مقدماتی؛ برای تصمیم نهایی کافی نیست'
+    : 'برای تصمیم کافی است';
+
+  /* H1 Core Journey */
+  const comp = rate(d.filter(x=>oc(x).primary_completed).length, n);
+  const indep = rate(d.filter(x=>oc(x).primary_independent).length, n);
+  const direct = rate(d.filter(x=>oc(x).primary_direct).length, n);
+  const times = d.filter(x=>oc(x).primary_completed).map(x=>oc(x).primary_duration_ms).filter(Boolean).sort((a,b)=>a-b);
+  const medT = times.length ? times[times.length>>1] : 0;
+  const p75 = times.length ? times[Math.floor(times.length*.75)] : 0;
+  const rageRate = rate(d.filter(x=>(oc(x).primary_rage||0)>0).length, n);
+  const h1 = [ kpi('تکمیل مأموریت', comp, GATES.journey_completion),
+               kpi('تکمیل مستقل', indep, GATES.journey_independent),
+               kpi('مسیر مستقیم', direct, GATES.journey_direct),
+               kpi('زمان میانه', medT/60000, 3, 'max', v=>fa(Math.round(v*10)/10)+'د'),
+               kpi('صدک ۷۵ زمان', p75/60000, 5, 'max', v=>fa(Math.round(v*10)/10)+'د'),
+               kpi('جلسه با عصبانیت', rageRate, .20, 'max') ];
+
+  /* H2 Value & Positioning */
+  const posR = rate(d.filter(x=>sc(x).positioning_correct).length, n);
+  const dvR = rate(d.filter(x=>sc(x).distinct_value_recognized).length, n);
+  const noDiff = rate(d.filter(x=>sc(x).no_distinct_value).length, n);
+  const h2 = [ kpi('تشخیص درست جایگاه', posR, GATES.positioning_correct),
+               kpi('تشخیص ارزش متمایز', dvR, GATES.distinct_value),
+               kpi('«تفاوتی نمی‌بینم»', noDiff, .40, 'max') ];
+
+  /* H3 Feature Validation */
+  const top2 = tallyAll(d.map(x=>e(x).feature_top2));
+  const must = tally(d.map(x=>e(x).feature_must_have));
+  const routes = tally(d.map(x=>oc(x).secondary_route));
+  const h3 = Object.keys(L.feat).filter(k=>top2[k]).map(k =>
+    kpi(L.feat[k]+' · Top-2', rate(top2[k],n), .35));
+
+  /* H4 Comprehension & Trust */
+  const cPass = rate(d.filter(x=>sc(x).comprehension_pass).length, n);
+  const aC = rate(d.filter(x=>sc(x).asset_correct).length, n);
+  const cC = rate(d.filter(x=>sc(x).custody_correct).length, n);
+  const eC = rate(d.filter(x=>sc(x).exit_correct).length, n);
+  const trusts = d.map(x=>+e(x).trust).filter(v=>v>0).sort((a,b)=>a-b);
+  const tMed = trusts.length ? trusts[trusts.length>>1] : 0;
+  const t45 = rate(d.filter(x=>+e(x).trust>=4).length, n);
+  const t12 = rate(d.filter(x=>+e(x).trust>0&&+e(x).trust<=2).length, n);
+  const misAll = tallyAll(d.map(x=>sc(x).misconceptions));
+  const worstMis = Object.keys(misAll).reduce((a,k)=>Math.max(a, rate(misAll[k],n)), 0);
+  const h4 = [ kpi('فهم ۲ از ۳ یا بیشتر', cPass, GATES.comprehension_pass),
+               kpi('ماهیت دارایی', aC, GATES.asset_correct),
+               kpi('نگهداری پیش‌فرض', cC, GATES.custody_correct),
+               kpi('راه‌های خروج', eC, GATES.exit_correct),
+               kpi('اعتماد ۴ و ۵', t45, GATES.trust_4_5),
+               kpi('میانهٔ اعتماد', tMed, GATES.trust_median, 'min', v=>fa(v)),
+               kpi('اعتماد ۱ و ۲', t12, GATES.trust_1_2_max, 'max'),
+               kpi('بدترین کج‌فهمی', worstMis, GATES.critical_misconception_max, 'max') ];
+
+  /* H5 Behavioral Intent */
+  const goYM = rate(d.filter(x=>['yes','maybe'].indexOf(e(x).go)>=0).length, n);
+  const pract = rate(d.filter(x=>sc(x).practical_action).length, n);
+  const money = rate(d.filter(x=>sc(x).money_intent).length, n);
+  const high = rate(d.filter(x=>sc(x).high_commitment).length, n);
+  const noAct = rate(d.filter(x=>e(x).commitment_step==='nothing').length, n);
+  const h5 = [ kpi('بله یا شاید', goYM, .70),
+               kpi('اقدام عملی', pract, GATES.practical_action),
+               kpi('قصد پول واقعی', money, GATES.money_intent),
+               kpi('تعهد بالا', high, GATES.high_commitment),
+               kpi('هیچ اقدامی', noAct, GATES.no_action_max, 'max') ];
+
+  const allRows = [].concat(h1,h2,h4,h5);
+  const failed = allRows.filter(r=>!r.pass && !r.near).length;
+
+  return '<div class="qual"><svg viewBox="0 0 24 24" style="width:17px;height:17px;flex:none;margin-top:3px;stroke:var(--gold);fill:none;stroke-width:1.8"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>' +
+      '<p><b>' + fa(n) + ' جلسهٔ کامل</b> از ' + fa(all.length) + ' جلسه · ' + lic +
+      '. هدف این راند ' + fa(CFG.target||100) + ' نفر است.</p></div>' +
+
+    '<div class="sec"><h2>خلاصهٔ تصمیم</h2><span class="h">' +
+      (failed ? fa(failed) + ' شاخص از Gate عقب است' : 'همهٔ شاخص‌ها روی Gate یا نزدیک آن') +
+      '</span><span class="ln"></span></div>' +
+    '<div class="kpis">' +
+      '<div class="kpi"><div class="v num">' + pctTxt(comp) + '</div><div class="l">تکمیل مأموریت</div></div>' +
+      '<div class="kpi gold"><div class="v num">' + pctTxt(cPass) + '</div><div class="l">فهم قبول</div></div>' +
+      '<div class="kpi ok"><div class="v num">' + pctTxt(t45) + '</div><div class="l">اعتماد ۴ و ۵</div></div>' +
+      '<div class="kpi"><div class="v num">' + pctTxt(money) + '</div><div class="l">قصد پول واقعی</div></div>' +
+    '</div>' +
+
+    '<div class="sec"><h2>فرضیه‌ها</h2><span class="ln"></span></div>' +
+    hcard('H1','مسیر اصلی تأمین مالی', pctTxt(comp), 'کاربر بدون کمک، تبدیل را تا آخر می‌برد.', h1,
+      distBlock('مسیر انتخابی در سناریوی دوم', routes, n, L.route)) +
+    hcard('H2','ارزش و جایگاه', pctTxt(posR), 'مهاجر را «حفظ ارزش با کنترل و خروج» می‌فهمد.', h2,
+      distBlock('پاسخ به «مهم‌ترین کار مهاجر»', tally(d.map(x=>e(x).positioning_main)), n, L.positioning)) +
+    hcard('H3','قابلیت‌ها', fa(Object.keys(top2).length) + ' قابلیت', 'کدام دو قابلیت واقعاً ضروری‌اند.', h3,
+      distBlock('دو قابلیت ضروری (Top-2)', top2, n, L.feat) +
+      distBlock('نبودش مانع استفاده است', must, n, L.feat)) +
+    hcard('H4','فهم و اعتماد', pctTxt(cPass), 'می‌داند دارایی چیست، کجاست و چطور بیرون می‌آید.', h4,
+      distBlock('کج‌فهمی‌های بحرانی', misAll, n, L.mis) +
+      distBlock('مانع اعتماد', tally(d.map(x=>e(x).trust_blocker)), n, L.blocker) +
+      distBlock('دلیل اعتماد', tally(d.map(x=>e(x).trust_driver)), n, L.driver)) +
+    hcard('H5','قصد رفتاری', pctTxt(pract), 'قدم بعدی‌اش از حرف فراتر می‌رود.', h5,
+      distBlock('محتمل‌ترین قدم بعدی', tally(d.map(x=>e(x).commitment_step)), n, L.step) +
+      distBlock('مبلغ شروع', tally(d.map(x=>e(x).starting_amount_band)), n, L.amount));
 }
 
 /* ── بیرون بردن ─────────────────────────────────────────────────── */

@@ -163,7 +163,17 @@
 
   /* Everything, from every source, deduplicated by id. A finished copy of a
      session always beats a half-finished one, whichever source it came from. */
-  async function readAll(cfg, params) {
+  /* آخرین پاسخ موفق سرور. صفحه با همین فوری بالا می‌آید و بعد تازه می‌شود. */
+  function cacheKey(params) { return 'cache.' + ((params && params.full) ? 'full' : 'sum'); }
+
+  /* Apps Script بعد از بی‌کاری سرد است؛ این را همان اول و بدون انتظار
+     می‌فرستیم تا وقتی درخواست اصلی می‌رسد، بیدار باشد. */
+  function warm(cfg) {
+    eps(cfg).forEach(u => { try { read(u, { ping: 1 }, 30000).catch(() => {}); } catch (e) {} });
+  }
+
+  async function readAll(cfg, params, opts) {
+    opts = opts || {};
     const map = new Map();
     const merge = (arr) => (arr || []).forEach(s => {
       if (!s || !s.id) return;
@@ -171,17 +181,41 @@
       const cur = map.get(s.id);
       if (!cur || (!cur.done && s.done)) map.set(s.id, s);
     });
-    const status = [];
-    for (const u of eps(cfg)) {
-      try { const r = await read(u, params, 40000); merge(r && r.sessions); status.push({ url: u, ok: true, n: ((r && r.sessions) || []).length }); }
-      catch (e) { status.push({ url: u, ok: false, error: String(e.message || e) }); }
-    }
+
+    const cached = store.get(cacheKey(params), null);
+    if (cached && cached.rows) merge(cached.rows);
+
     const repo = await json('./test-sessions.json', null);       /* آرشیو دستیِ داخل مخزن */
     const repoList = Array.isArray(repo) ? repo : (repo && repo.sessions) || [];
     merge(repoList);
     merge(store.get('local', []));                               /* کدهایی که دستی وارد شده */
     merge(store.get('mine', []));                                /* جلسه‌های همین دستگاه */
-    return { sessions: [...map.values()], status, repo: repoList.length };
+
+    /* دورِ اول: بدون شبکه، تا صفحه همین حالا چیزی داشته باشد */
+    if (opts.localOnly) {
+      return { sessions: [...map.values()], status: [], repo: repoList.length,
+               cachedAt: cached && cached.at, live: false };
+    }
+
+    const status = [];
+    let got = null;
+    for (const u of eps(cfg)) {
+      let rows = null;
+      try { rows = (await read(u, params, 30000)).sessions; }
+      catch (e) {
+        /* اولین تماس بعد از بی‌کاری کند است: گرمش کن و یک بار دیگر */
+        try { await read(u, { ping: 1 }, 30000); rows = (await read(u, params, 40000)).sessions; }
+        catch (e2) { status.push({ url: u, ok: false, error: String(e2.message || e2) }); continue; }
+      }
+      merge(rows); got = (got || []).concat(rows || []);
+      status.push({ url: u, ok: true, n: (rows || []).length });
+    }
+    if (got) {
+      const payload = JSON.stringify({ at: Date.now(), rows: got });
+      if (payload.length < 2000000) { try { localStorage.setItem(NS + cacheKey(params), payload); } catch (e) {} }
+    }
+    return { sessions: [...map.values()], status, repo: repoList.length,
+             cachedAt: got ? Date.now() : (cached && cached.at), live: !!got };
   }
 
   /* Anything that failed to send is kept and retried the next time any
@@ -273,7 +307,9 @@
        ['f', t, screen, mood, text]     the participant said something, mid-use
        ['e', t, message]                the prototype threw
        ['h', t, ms]                     came back after being away ms          */
-  const EV = { screen: 's', tap: 't', dead: 'd', rage: 'r', back: 'b', fb: 'f', err: 'e', away: 'h' };
+  const EV = { screen: 's', tap: 't', dead: 'd', rage: 'r', back: 'b', fb: 'f', err: 'e', away: 'h',
+    /* تست فرضیه‌ها: پرسش، پاسخ، تخصیص سناریو، و نتیجهٔ هر مأموریت */
+    q: 'q', ans: 'a', scen: 'x', p_done: 'P', p_left: 'L', s_start: 'B', s_done: 'D', s_none: 'N' };
 
   /* Per-session derived facts. Everything the dashboard shows is built from
      these, so the rules live in exactly one place. */
@@ -329,6 +365,6 @@
     $, $$, esc, fa, qs, mmss, secs, clamp, store, json, config, versions, uid, device,
     LAYERS, AGES, CHANNELS, EV, eps, post, postAll, verify, readAll, keepMine,
     queue, flush, read, pack, unpack,
-    copy, download, csv, derive, screenFa, SCREEN_FA
+    copy, download, csv, derive, screenFa, SCREEN_FA, warm
   };
 })(window);

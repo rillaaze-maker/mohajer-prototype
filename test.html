@@ -291,7 +291,7 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
 
 <div class="flash" id="flash"></div>
 
-<script src="./test-kit.js"></script>
+<script src="./test-kit.js?v=20260926b"></script>
 <script>
 const $ = TK.$;
 let CFG = {}, VERS = [], sel = null, chans = ['tg'], rows = [], DEFAULT_INVITE = '';
@@ -384,12 +384,12 @@ function localSessions(){ return TK.store.get('local', []); }
 /* هر منبع جداگانه گزارش می‌شود: اگر یکی بیفتد، باید همان لحظه دیده شود،
    نه وقتی که عددها ته کشیدند. */
 async function refresh(){
-  $('conns').innerHTML = '<span class="pill">در حال بررسی…</span>';
+  TK.warm(CFG);                                   /* همین‌جا، بی‌انتظار */
+  const quick = await TK.readAll(CFG, { sum: 1 }, { localOnly: true });
+  paintRows(quick);                       /* فوری، از آخرین نسخهٔ ذخیره‌شده */
+  $('conns').innerHTML = '<span class="pill">در حال تازه‌سازی…</span>';
   const all = await TK.readAll(CFG, { sum: 1 });
-  rows = all.sessions.map(s => ({
-    id: s.id, r: s.r, ver: s.ver, c: s.c,
-    age: s.age || (s.seg || {}).age, done: s.done ? 1 : 0, at: s.at || s.t0, ms: s.ms
-  }));
+  paintRows(all);
 
   const pills = [];
   if (!TK.eps(CFG).length) pills.push('<span class="pill">بدون جمع‌آوری خودکار</span>');
@@ -406,6 +406,13 @@ async function refresh(){
 
   paintLive();
   countsOnVers();
+}
+function paintRows(got){
+  rows = got.sessions.map(s => ({
+    id: s.id, r: s.r, ver: s.ver, c: s.c,
+    age: s.age || (s.seg || {}).age, done: s.done ? 1 : 0, at: s.at || s.t0, ms: s.ms
+  }));
+  paintLive(); countsOnVers();
 }
 
 /* پشتیبان: همهٔ جلسه‌ها، کامل، در یک فایل — برای گذاشتن در خودِ مخزن. */

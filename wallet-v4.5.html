@@ -3898,6 +3898,16 @@ let lastTap=0;
 document.addEventListener('touchend',e=>{ const now=Date.now(); if(now-lastTap<=320&&e.touches.length===0) e.preventDefault(); lastTap=now; },{passive:false});
 document.addEventListener('touchmove',e=>{ if(e.touches.length>1) e.preventDefault(); },{passive:false});
 
+/* ════════ test hook ════════
+   کیت تست هم‌مبدأ است ولی S با const تعریف شده و روی window نمی‌آید؛
+   این تابع (function declaration) تنها راهِ خواندنِ دقیق وضعیت است.
+   چیزی را عوض نمی‌کند و رفتار اپ را هم تغییر نمی‌دهد. */
+function mhjSnapshot(){
+  return { available:S.available, pending:S.pending, invested:nestsTotal(),
+           pw:pwBal(), gold:goldHeld(), total:total(), custody:S.custody,
+           activity:(S.activity||[]).map(t=>({kind:t.kind,status:t.status,amount:t.amount})) };
+}
+
 /* ════════ boot ════════ */
 loadCopyOverrides();
 buildTabs(); edCount(); applyTheme(); applyCopy(); $('clock').textContent=fa('9:41');

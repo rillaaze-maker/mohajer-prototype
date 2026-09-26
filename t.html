@@ -94,6 +94,26 @@ h1 em{font-style:normal;color:var(--gold)}
 .opt[aria-pressed=true] .rd::after{transform:scale(1)}
 .opt .n{margin-inline-start:auto;font-size:12px;color:var(--w3)}
 
+.opt.multi .rd{border-radius:6px}
+.opt.multi .rd::after{border-radius:2px}
+.opt[aria-disabled=true]{opacity:.4;pointer-events:none}
+.picked-n{font-size:11.5px;color:var(--w3);margin-top:10px;text-align:center}
+
+/* ذره‌بین: همه‌چیز محو، جز همان قسمتی که پرسش درباره‌اش است.
+   فقط روی پرسش‌هایی که «پاسخ درست» ندارند — وگرنه جواب را لو می‌دهد. */
+.spot{position:relative;width:100%;max-width:250px;margin:18px auto 4px;aspect-ratio:390/844;
+  border-radius:20px;overflow:hidden;background:#0E1216}
+.spot img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block}
+.spot img.blur{filter:blur(3px) brightness(.42) saturate(.75)}
+.spot .win{position:absolute;overflow:hidden;border-radius:10px;
+  box-shadow:0 0 0 2px var(--gold),0 0 0 6px rgba(213,164,92,.2)}
+.spot .win img{position:absolute;inset:auto;filter:none}
+
+.voiceq{display:flex;flex-direction:column;gap:11px;margin-top:20px}
+.voiceq li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--w2);line-height:1.75;list-style:none}
+.voiceq li b{flex:none;width:21px;height:21px;border-radius:50%;background:rgba(213,164,92,.16);color:var(--gold);
+  display:grid;place-items:center;font-size:11px;font-weight:700;margin-top:2px}
+
 .scale{display:flex;gap:7px;margin-top:22px}
 .scale button{flex:1;aspect-ratio:1/1.05;max-height:74px;border-radius:14px;background:var(--surf);
   border:1px solid var(--brd);color:var(--w1);font:700 17px/1 var(--f);cursor:pointer;
@@ -229,6 +249,19 @@ textarea::placeholder{color:var(--w3)}
     <div class="btn-row"><button class="btn btn-primary" onclick="openApp()">باز کردن اپ</button></div>
   </section>
 
+  <!-- ── مأموریت دوم ─────────────────────────────────────────── -->
+  <section class="step" id="s-brief2">
+    <div class="eyebrow" data-c="" id="b2-kicker">مأموریت دوم</div>
+    <h1 id="b2-title">—</h1>
+    <p class="lead" id="b2-task">—</p>
+    <div class="facts">
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg><span>موجودی‌تان همان است؛ از همان‌جا ادامه دهید.</span></div>
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span>لازم نیست چیزی را نهایی کنید؛ تا هر جا خواستید جلو بروید.</span></div>
+    </div>
+    <div class="grow"></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="openApp(true)">ادامه در اپ</button></div>
+  </section>
+
   <!-- ── پایان ───────────────────────────────────────────────── -->
   <section class="step" id="s-done">
     <div class="seal"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
@@ -278,7 +311,7 @@ textarea::placeholder{color:var(--w3)}
   </div>
 </div>
 
-<script src="./test-kit.js"></script>
+<script src="./test-kit.js?v=20260926b"></script>
 <script>
 /* ════════ متن‌ها ════════════════════════════════════════════════
    هر جملهٔ این صفحه اینجاست. برای تغییر، یا همین‌جا را عوض کنید یا در
@@ -320,24 +353,165 @@ const SEG = [
            {v:'skip',l:'ترجیح می‌دهم نگویم'} ] }
 ];
 
+/* ════════ پرسش‌های پایانی ══════════════════════════════════════
+   ترتیب از سند: جایگاه → ارزش متمایز → فهم → قابلیت → اعتماد → قصد →
+   کاربردپذیری. پرسش‌های اعتماد و اقدام عمداً بعد از فهم می‌آیند تا
+   پاسخ فهم را جهت‌دهی نکنند. */
 const END = [
-  { id:'trust', q:'اگر این سرویس واقعی بود، چقدر به آن اعتماد می‌کردید؟',
-    type:'scale', lo:'اصلاً', hi:'کامل' },
-  { id:'go', q:'اگر واقعی بود، ادامه می‌دادید؟',
+  { id:'positioning_main', code:'P1', type:'single', req:true, rnd:true,
+    q:'به نظر شما مهم‌ترین کاری که مهاجر انجام می‌دهد چیست؟',
+    opts:[ {v:'value_control', l:'حفظ ارزش پول همراه با امکان کنترل، استفاده و خروج'},
+           {v:'crypto_trade',  l:'خرید و فروش رمزارز برای کسب سود'},
+           {v:'guaranteed',    l:'سرمایه‌گذاری با بازده تضمین‌شده'},
+           {v:'p2p',           l:'انتقال پول بین کاربران'},
+           {v:'hold_app',      l:'نگهداری پول داخل یک اپ'},
+           {v:'dunno',         l:'هنوز متوجه نشدم', last:true} ] },
+
+  { id:'distinct_value', code:'P2', type:'multi', req:true, max:2, rnd:true,
+    q:'در مقایسه با خرید مستقیم تتر از یک صرافی، کدام بخش مهاجر برایتان ارزش اضافه می‌سازد؟',
+    sub:'حداکثر دو مورد',
+    opts:[ {v:'convert', l:'تبدیل ساده ریال به دارایی دلاری و برعکس'},
+           {v:'custody', l:'انتخاب روش نگهداری دارایی'},
+           {v:'pw',      l:'انتقال به کیف پول شخصی'},
+           {v:'gold',    l:'تبدیل و دریافت طلای فیزیکی'},
+           {v:'invest',  l:'استفاده از خدمات سرمایه‌گذاری'},
+           {v:'p2p',     l:'انتقال به کاربران دیگر مهاجر'},
+           {v:'support', l:'دسترسی به پشتیبانی انسانی'},
+           {v:'none',    l:'تفاوت مهمی نمی‌بینم', ex:true, last:true},
+           {v:'unsure',  l:'هنوز مطمئن نیستم', ex:true, last:true} ] },
+
+  { id:'asset_understanding', code:'C1', type:'single', req:true, rnd:true,
+    q:'بعد از تبدیل تومان، کدام عبارت دقیق‌تر است؟',
+    opts:[ {v:'bank_usd',  l:'دلار بانکی به نام من نگهداری می‌شود'},
+           {v:'usdt_share',l:'به‌ازای موجودی من تتر نگهداری و سهم من ثبت می‌شود'},
+           {v:'credit',    l:'فقط یک اعتبار داخلی در مهاجر دریافت می‌کنم'},
+           {v:'issuer',    l:'مهاجر خودش یک دلار دیجیتال جدید صادر می‌کند'},
+           {v:'dunno',     l:'نمی‌دانم', last:true} ] },
+
+  { id:'custody_understanding', code:'C2', type:'single', req:true, rnd:true,
+    q:'در حالت پیش‌فرض، دارایی پایهٔ شما کجا نگهداری می‌شود؟',
+    opts:[ {v:'mohajer_bank', l:'در حساب بانکی مهاجر'},
+           {v:'bitvana',      l:'نزد بیت‌وانا و دسترسی آن از طریق مهاجر مدیریت می‌شود'},
+           {v:'own_wallet',   l:'داخل کیف پول شخصی من'},
+           {v:'central_bank', l:'نزد بانک مرکزی'},
+           {v:'dunno',        l:'نمی‌دانم', last:true} ] },
+
+  { id:'exit_understanding', code:'C3', type:'multi', req:true, max:3, rnd:true,
+    q:'اگر نخواهید دارایی در حالت پیش‌فرض بماند، در نسخه‌ای که دیدید کدام گزینه‌ها وجود داشت؟',
+    sub:'حداکثر سه مورد',
+    opts:[ {v:'rial',      l:'تبدیل دوباره به ریال و برداشت'},
+           {v:'pw',        l:'انتقال دارایی به کیف پول شخصی'},
+           {v:'gold',      l:'تبدیل بخشی از دارایی و دریافت طلای فیزیکی'},
+           {v:'permission',l:'فقط با اجازهٔ مهاجر می‌توانم دارایی را خارج کنم'},
+           {v:'no_exit',   l:'امکان خروج از مهاجر وجود ندارد'},
+           {v:'dunno',     l:'نمی‌دانم', ex:true, last:true} ] },
+
+  { id:'feature_top2', code:'F1', type:'multi', req:true, exact:2, rnd:true,
+    q:'اگر در نسخهٔ اول مهاجر فقط دو قابلیت بماند، کدام دو مورد برایتان ضروری‌تر است؟',
+    sub:'دقیقاً دو مورد',
+    /* تصویر فقط یادآوری است، نه راهنمایی: این پرسش پاسخ درست ندارد. */
+    spot:{img:'./test-home.png', x:18, y:461, w:354, h:76},
+    opts:[ {v:'convert', l:'تبدیل ریال به دارایی دلاری و برداشت دوباره'},
+           {v:'pw',      l:'انتقال به کیف پول شخصی'},
+           {v:'gold',    l:'دریافت طلای فیزیکی'},
+           {v:'p2p',     l:'انتقال به کاربران دیگر'},
+           {v:'invest',  l:'سرمایه‌گذاری'},
+           {v:'support', l:'پشتیبانی انسانی'} ] },
+
+  { id:'feature_must_have', code:'F2', type:'single', req:true, rnd:true,
+    q:'نبودِ کدام قابلیت باعث می‌شود فعلاً از مهاجر استفاده نکنید؟',
+    opts:[ {v:'convert', l:'تبدیل و برداشت ساده'},
+           {v:'pw',      l:'کیف پول شخصی'},
+           {v:'gold',    l:'دریافت طلای فیزیکی'},
+           {v:'p2p',     l:'انتقال به کاربران دیگر'},
+           {v:'invest',  l:'سرمایه‌گذاری'},
+           {v:'support', l:'پشتیبانی انسانی'},
+           {v:'none',    l:'هیچ‌کدام؛ نبودِ یک قابلیت خاص مانع من نیست', last:true},
+           {v:'never',   l:'در هر صورت فعلاً استفاده نمی‌کنم', last:true} ] },
+
+  { id:'trust', code:'T1', type:'scale', req:true, lo:'اصلاً', hi:'کامل',
+    q:'اگر این سرویس واقعی بود، چقدر به آن اعتماد می‌کردید؟' },
+
+  { id:'trust_driver', code:'T2A', type:'single', rnd:true,
+    when:e=>+e.trust>=4,
+    q:'اصلی‌ترین چیزی که باعث شد به مهاجر اعتماد کنید چه بود؟',
+    opts:[ {v:'fees',    l:'شفاف‌بودن نرخ و کارمزد'},
+           {v:'exit',    l:'امکان برداشت و تبدیل دوباره به ریال'},
+           {v:'pw',      l:'امکان انتقال به کیف پول شخصی'},
+           {v:'gold',    l:'امکان دریافت طلای فیزیکی'},
+           {v:'bitvana', l:'مشخص‌بودن نقش بیت‌وانا'},
+           {v:'support', l:'پشتیبانی انسانی'},
+           {v:'brand',   l:'اعتبار نام یا مجموعهٔ پشت مهاجر'},
+           {v:'ux',      l:'طراحی و تجربهٔ کاربری اپ'},
+           {v:'feeling', l:'دلیل مشخصی نداشت؛ حس کلی خوبی داشتم', last:true} ] },
+
+  { id:'trust_blocker', code:'T2B', type:'single', rnd:true,
+    when:e=>+e.trust>0 && +e.trust<=3,
+    q:'اصلی‌ترین مانع اعتماد شما چه بود؟',
+    opts:[ {v:'where',     l:'دقیقاً نمی‌دانم دارایی کجا نگهداری می‌شود'},
+           {v:'bitvana',   l:'بیت‌وانا را نمی‌شناسم یا به آن اعتماد ندارم'},
+           {v:'usdt',      l:'دربارهٔ تتر و ثبات ارزش آن مطمئن نیستم'},
+           {v:'withdraw',  l:'مطمئن نیستم بتوانم پولم را برداشت کنم'},
+           {v:'security',  l:'دربارهٔ امنیت حساب یا کیف پول نگرانم'},
+           {v:'legal',     l:'قوانین، مسئولیت‌ها و پاسخ‌گویی روشن نیست'},
+           {v:'no_anchor', l:'پشتوانهٔ نهادی یا برند معتبری ندیدم'},
+           {v:'fees',      l:'کارمزد یا نرخ تبدیل برایم روشن نبود'},
+           {v:'ux',        l:'تجربهٔ کاربری باعث بی‌اعتمادی شد'},
+           {v:'any_new',   l:'فعلاً به هیچ سرویس جدید مالی اعتماد نمی‌کنم', last:true} ] },
+
+  { id:'go', code:'I1', type:'single', req:true,
+    q:'اگر واقعی بود، ادامه می‌دادید؟',
     opts:[ {v:'yes',l:'بله'}, {v:'maybe',l:'شاید'}, {v:'no',l:'نه'} ] },
-  { id:'stop', q:'اگر جایی مکث کردید، نزدیک‌ترین دلیلش کدام بود؟',
-    opts:[ {v:'none',l:'جایی گیر نکردم'},
-           {v:'value',l:'نفهمیدم اصلاً به چه دردم می‌خورد'},
-           {v:'usability',l:'فهمیدم، ولی نمی‌دانستم چطور انجامش دهم'},
-           {v:'trust',l:'بلد بودم، ولی مطمئن نبودم'},
+
+  { id:'commitment_step', code:'I2', type:'single', req:true,
+    q:'اگر مهاجر همین امروز واقعی و قابل استفاده بود، محتمل‌ترین قدم بعدی شما چه بود؟',
+    opts:[ {v:'nothing',  l:'فعلاً هیچ کاری نمی‌کردم'},
+           {v:'read',     l:'فقط اطلاعات بیشتری می‌خواندم'},
+           {v:'talk',     l:'با یک پشتیبان صحبت می‌کردم'},
+           {v:'signup',   l:'حساب کاربری می‌ساختم'},
+           {v:'try_small',l:'با مبلغ آزمایشی شروع می‌کردم'},
+           {v:'serious',  l:'با مبلغ جدی شروع می‌کردم'} ] },
+
+  { id:'starting_amount_band', code:'I3', type:'single',
+    when:e=>e.commitment_step==='try_small'||e.commitment_step==='serious',
+    q:'برای شروع، چه مبلغی برایتان قابل‌قبول بود؟',
+    opts:[ {v:'lt5',    l:'کمتر از ۵ میلیون تومان'},
+           {v:'5_20',   l:'۵ تا ۲۰ میلیون تومان'},
+           {v:'20_50',  l:'۲۰ تا ۵۰ میلیون تومان'},
+           {v:'50_100', l:'۵۰ تا ۱۰۰ میلیون تومان'},
+           {v:'gt100',  l:'بیشتر از ۱۰۰ میلیون تومان'} ] },
+
+  { id:'action_cta', code:'I4', type:'single',
+    when:e=>['talk','signup','try_small','serious'].indexOf(e.commitment_step)>=0,
+    q:'دوست دارید کدام قدم را واقعاً بردارید؟',
+    opts:[ {v:'pilot',  l:'در پایلوت نسخهٔ واقعی شرکت کنم'},
+           {v:'talk',   l:'با تیم مهاجر دربارهٔ تجربه‌ام صحبت کنم'},
+           {v:'notify', l:'وقتی نسخهٔ بعدی آماده شد خبرم کنید'},
+           {v:'none',   l:'فعلاً نمی‌خواهم اقدامی انجام دهم', last:true} ] },
+
+  { id:'stop', code:'U1', type:'single',
+    q:'اگر جایی مکث کردید، نزدیک‌ترین دلیلش کدام بود؟',
+    opts:[ {v:'none',      l:'جایی گیر نکردم'},
+           {v:'value',     l:'نفهمیدم اصلاً به چه دردم می‌خورد'},
+           {v:'usability', l:'فهمیدم، ولی نمی‌دانستم چطور انجامش دهم'},
+           {v:'trust',     l:'بلد بودم، ولی مطمئن نبودم'},
            {v:'motivation',l:'مطمئن بودم، ولی برایم مهم نبود'} ] },
-  { id:'confuse', q:'چه چیزی گیج‌کننده یا مشکوک بود؟',
-    type:'text', ph:'هر چیزی که به ذهنتان می‌رسد…', opt:true },
-  { id:'change', q:'اگر فقط یک چیز را می‌شد عوض کرد، چه بود؟',
-    type:'text', ph:'یک جمله کافی است…', opt:true },
-  { id:'contact', q:'اگر دوست دارید که بیشتر راجع به تجربه و ایده‌هاتون صحبت کنید',
+
+  { id:'change', code:'U2', type:'text', opt:true,
+    q:'اگر فقط یک چیز را می‌شد عوض کرد، چه بود؟',
+    ph:'یک جمله کافی است…' },
+
+  /* خواستهٔ بنیان‌گذار: یک ویس کوتاه، بعد از همهٔ گزینه‌ای‌ها */
+  { id:'voice', code:'V', type:'voice', opt:true,
+    q:'اگر می‌شود، تجربه‌تان را در یک ویس کوتاه بگویید.',
+    sub:'محصول را چطور فهمیدید، چه حسی داشتید، و آیا خودتان از آن استفاده می‌کردید؟',
+    nextLabel:'ویس می‌فرستم', skipLabel:'ویس نمی‌فرستم' },
+
+  { id:'contact', code:'CT', type:'contact', opt:true,
+    when:e=>['pilot','talk','notify'].indexOf(e.action_cta)>=0,
+    q:'اگر دوست دارید که بیشتر راجع به تجربه و ایده‌هاتون صحبت کنید',
     sub:'شماره تماس و نامتون رو برای ما بنویسید. <b style="color:var(--w2);font-weight:600">(کاملاً اختیاری)</b>',
-    type:'contact', opt:true, skipLabel:'بدون شماره تمام می‌کنم', nextLabel:'ثبت و پایان' }
+    skipLabel:'بدون شماره تمام می‌کنم', nextLabel:'ثبت و پایان' }
 ];
 
 const MOODS = [
@@ -348,12 +522,37 @@ const MOODS = [
   {v:'liked',    l:'خوشم آمد'}
 ];
 
+/* دو سناریوی دوم، نصف‌نصف و پایدار بر اساس شناسهٔ جلسه */
+const SCEN = {
+  control_exit: { t:'کنترل و خروج',
+    task:'حالا فرض کنید می‌خواهید مطمئن شوید برای دسترسی به پول‌تان وابسته به مهاجر نمی‌مانید. در اپ بررسی کنید چه انتخاب‌هایی دارید و مسیری را که برایتان مناسب‌تر است پیدا کنید.' },
+  next_use: { t:'استفادهٔ بعدی',
+    task:'حالا فرض کنید تبدیل انجام شده و موجودی دلاری دارید. یک استفاده از این موجودی پیدا کنید که برایتان جذاب‌تر است و تا مرحلهٔ قبل از تأیید نهایی جلو بروید.' }
+};
+/* مسیرهای معتبرِ سناریوی دوم و صفحه‌ای که «انتخاب شد» یعنی همان */
+const ROUTES = [
+  { id:'withdraw', screens:['w-amt','w-quote'] },
+  { id:'personal_wallet', screens:['pw-tut','pw-mode','pw-ready','pw-wallet','pw-amt'] },
+  { id:'gold', screens:['p-tut','p-shop','p-amt'] },
+  { id:'transfer', screens:['t-who','t-amt','t-confirm'] },
+  { id:'invest', screens:['invest','n-detail','n-amt'] }
+];
+const DONE_SCREENS = ['w-quote','pw-mode','pw-ready','pw-wallet','p-shop','p-amt','t-confirm','n-amt'];
+
+/* چهار پرسشی که بنیان‌گذار می‌خواهد در ویس جواب داده شود */
+const VOICE_Q = [
+  'اگر بخواهید مهاجر را معرفی کنید، می‌گویید چیست و دارایی شما را چطور نگهداری می‌کند؟',
+  'کجای اپ حس خوبی داشتید و کجا مردد یا بی‌اعتماد شدید؟ چرا؟',
+  'چه چیزی باعث می‌شود در مهاجر حساب کاربری بسازید؟',
+  'برای واردکردن پول واقعی چه چیزی باید ببینید، خط قرمزتان چیست و با چه مبلغی شروع می‌کنید؟'
+];
+
 /* ════════ حالت ═════════════════════════════════════════════════ */
 const $ = TK.$;
 let CFG = {}, VERS = [], VER = null;
 let S = null;               /* جلسهٔ جاری */
-let phase = 'seg', qi = 0, pick = null, moodPick = null;
-let t0 = Date.now(), awayAt = 0, lastSave = 0, sentOnce = false;
+let phase = 'seg', qi = 0, pick = null, picks = [], moodPick = null;
+let t0 = Date.now(), stageT0 = Date.now(), awayAt = 0, lastSave = 0, sentOnce = false;
 
 const ver = TK.qs('v', '4.5');
 const round = TK.qs('r', '1');
@@ -377,8 +576,13 @@ const chan = TK.qs('c', 'x');
     v: 1, id: TK.uid(), r: round, ver: VER.id, c: chan,
     t0: new Date().toISOString(), t1: null, ms: 0,
     seg: {}, end: {}, contact: null, fb: [], ev: [], dev: TK.device(),
+    stage: 'primary', assignment: null, outcomes: {}, score: null,
     phase: 'welcome', done: false
   };
+  /* تخصیص از روی شناسهٔ جلسه: با رفرش عوض نمی‌شود */
+  let h = 0; for (const ch of S.id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  S.assignment = (h % 2) ? 'control_exit' : 'next_use';
+  mark(TK.EV.scen, S.assignment);
   TK.flush(CFG);                     /* هر جلسهٔ نفرستادهٔ قبلی، به همهٔ مقصدها */
   $('sh-moods').innerHTML = MOODS.map(m =>
     '<button class="mood" aria-pressed="false" data-v="' + m.v + '" onclick="pickMood(this)">' + m.l + '</button>').join('');
@@ -413,9 +617,29 @@ function begin(){ phase = 'seg'; qi = 0; S.phase = 'seg'; renderAsk(); }
 
 function questions(){ return phase === 'seg' ? SEG : END; }
 
+/* گزینه‌ها یک‌بار در هر جلسه جابه‌جا می‌شوند و همان‌طور می‌مانند؛ «نمی‌دانم»
+   و هم‌خانواده‌هایش همیشه آخرند. */
+function optsOf(q){
+  if (q._o) return q._o;
+  let o = (q.opts || []).slice();
+  if (q.rnd) {
+    const tail = o.filter(x => x.last), head = o.filter(x => !x.last);
+    for (let i = head.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [head[i], head[j]] = [head[j], head[i]]; }
+    o = head.concat(tail);
+  }
+  q._o = o; return o;
+}
+function spotHtml(sp){
+  const L=v=>v/390*100, T=v=>v/844*100;
+  return '<div class="spot"><img class="blur" src="'+sp.img+'" alt="">'+
+    '<div class="win" style="left:'+L(sp.x)+'%;top:'+T(sp.y)+'%;width:'+L(sp.w)+'%;height:'+T(sp.h)+'%">'+
+    '<img src="'+sp.img+'" style="width:'+(390/sp.w*100)+'%;height:'+(844/sp.h*100)+'%;'+
+    'left:'+(-sp.x/sp.w*100)+'%;top:'+(-sp.y/sp.h*100)+'%" alt=""></div></div>';
+}
 function renderAsk(){
   const list = questions(), q = list[qi];
-  pick = null;
+  pick = null; picks = [];
+  mark(TK.EV.q, q.code || q.id);
   $('a-kicker').textContent = TK.fa(qi + 1) + ' از ' + TK.fa(list.length);
   $('a-title').innerHTML = q.q;
   $('a-sub').hidden = !q.sub; if (q.sub) $('a-sub').innerHTML = q.sub;
@@ -426,7 +650,16 @@ function renderAsk(){
   $('a-skip').textContent = q.skipLabel || 'رد کردن این سؤال';
 
   const b = $('a-body');
-  if (q.type === 'text') {
+  if (q.type === 'multi') {
+    b.innerHTML = (q.spot ? spotHtml(q.spot) : '') + '<div class="opts">' + optsOf(q).map(o =>
+      '<button class="opt multi" aria-pressed="false" data-v="' + TK.esc(o.v) + '"' + (o.ex ? ' data-ex="1"' : '') +
+      ' onclick="toggleMulti(this)"><span class="rd"></span><span>' + TK.esc(o.l) + '</span></button>').join('') +
+      '</div><div class="picked-n" id="a-count"></div>';
+    multiCount();
+  } else if (q.type === 'voice') {
+    b.innerHTML = '<ul class="voiceq">' + VOICE_Q.map((t, i) =>
+      '<li><b class="num">' + TK.fa(i + 1) + '</b><span>' + t + '</span></li>').join('') + '</ul>';
+  } else if (q.type === 'text') {
     b.innerHTML = '<textarea id="a-text" placeholder="' + TK.esc(q.ph || '') + '"></textarea>';
   } else if (q.type === 'contact') {
     b.innerHTML = '<div class="fields">' +
@@ -438,7 +671,7 @@ function renderAsk(){
         '<button aria-pressed="false" data-v="' + n + '" onclick="choose(this)">' + TK.fa(n) + '</button>').join('') +
       '</div><div class="scale-lb"><span>' + TK.esc(q.lo) + '</span><span>' + TK.esc(q.hi) + '</span></div>';
   } else {
-    b.innerHTML = '<div class="opts">' + q.opts.map(o =>
+    b.innerHTML = (q.spot ? spotHtml(q.spot) : '') + '<div class="opts">' + optsOf(q).map(o =>
       '<button class="opt" aria-pressed="false" data-v="' + TK.esc(o.v) + '" onclick="choose(this)">' +
       '<span class="rd"></span><span>' + TK.esc(o.l) + '</span></button>').join('') + '</div>';
   }
@@ -448,6 +681,28 @@ function renderAsk(){
   show('s-ask');
 }
 
+/* «نمی‌دانم» و «تفاوتی نمی‌بینم» با هر گزینهٔ دیگری ناسازگارند */
+function toggleMulti(btn){
+  const q = questions()[qi], on = btn.getAttribute('aria-pressed') === 'true';
+  const all = TK.$$('#a-body .opt');
+  if (!on) {
+    if (btn.dataset.ex) all.forEach(x => { if (x !== btn) x.setAttribute('aria-pressed', 'false'); });
+    else all.forEach(x => { if (x.dataset.ex) x.setAttribute('aria-pressed', 'false'); });
+  }
+  btn.setAttribute('aria-pressed', !on);
+  picks = all.filter(x => x.getAttribute('aria-pressed') === 'true').map(x => x.dataset.v);
+  const cap = q.exact || q.max;
+  if (cap && picks.length > cap) { btn.setAttribute('aria-pressed', 'false'); picks.pop(); }
+  multiCount();
+}
+function multiCount(){
+  const q = questions()[qi], cap = q.exact || q.max, n = picks.length;
+  const full = q.exact ? n === q.exact : n > 0;
+  $('a-next').disabled = q.req ? !full : false;
+  $('a-count').textContent = cap ? TK.fa(n) + ' از ' + TK.fa(cap) : '';
+  TK.$$('#a-body .opt').forEach(x => x.setAttribute('aria-disabled',
+    String(!!(q.max && n >= q.max && x.getAttribute('aria-pressed') !== 'true' && !x.dataset.ex))));
+}
 function choose(btn){
   [...btn.parentElement.children].forEach(x => x.setAttribute('aria-pressed', 'false'));
   btn.setAttribute('aria-pressed', 'true');
@@ -457,6 +712,11 @@ function choose(btn){
 
 function askNext(){
   const list = questions(), q = list[qi];
+  if (q.type === 'multi') { if (q.req && !(q.exact ? picks.length === q.exact : picks.length)) return;
+    if (picks.length) (phase === 'seg' ? S.seg : S.end)[q.id] = picks.slice();
+    mark(TK.EV.ans, q.code || q.id, picks.join(',')); return step(); }
+  if (q.type === 'voice') { S.end.voice = 'sent'; mark(TK.EV.ans, 'V', 'sent');
+    if (CFG.contact) window.open(CFG.contact, '_blank', 'noopener'); return step(); }
   /* تنها جایی که چیزی شخصی ثبت می‌شود، و فقط اگر خودش نوشته باشد. جدا از
      بقیهٔ پاسخ‌ها نگه داشته می‌شود تا در تحلیل و خروجی قابل تفکیک بماند. */
   if (q.type === 'contact') {
@@ -469,39 +729,121 @@ function askNext(){
   if (q.type === 'text') val = ($('a-text') && $('a-text').value || '').trim().slice(0, 600);
   if (q.req && !val) return;
   if (val) (phase === 'seg' ? S.seg : S.end)[q.id] = val;
+  mark(TK.EV.ans, q.code || q.id, String(val || ''));
   step();
 }
-function askSkip(){ step(); }
+function askSkip(){
+  const q = questions()[qi];
+  if (q.type === 'voice') { S.end.voice = 'skipped'; mark(TK.EV.ans, 'V', 'skipped'); }
+  step();
+}
 
 function step(){
   qi++;
   const list = questions();
+  /* پرسش‌های شرطی: اگر شرطشان برقرار نیست، اصلاً دیده نمی‌شوند */
+  while (qi < list.length && list[qi].when && !list[qi].when(S.end)) qi++;
   if (qi < list.length) { save(); return renderAsk(); }
   if (phase === 'seg') { S.phase = 'brief'; save(); progress(SEG.length / (SEG.length + END.length + 2)); return show('s-brief'); }
   finish();
 }
 
 /* ════════ اپ ════════════════════════════════════════════════════ */
-function openApp(){
+function openApp(keepApp){
   S.phase = 'app'; save();
   /* اولین درخواست به Apps Script بعد از بی‌کاری می‌تواند ۲۰ ثانیه طول بکشد.
      همین‌جا — چند دقیقه پیش از پایان — یک ping می‌فرستیم تا وقتی جلسه تمام
      شد، تأییدِ ارسال فوری باشد و شرکت‌کننده منتظر نماند. */
   TK.eps(CFG).forEach(u => { try { TK.read(u, { ping: 1 }, 15000).catch(() => {}); } catch (e) {} });
-  t0 = Date.now();
+  if (!keepApp) t0 = Date.now();
+  stageT0 = Date.now();
   $('appwrap').classList.add('on');
   const f = $('app');
+  progress((SEG.length + 1 + (keepApp ? 1 : 0)) / (SEG.length + END.length + 3));
+  if (keepApp) { $('fin').classList.remove('nudge'); return; }   /* همان اپ، همان موجودی */
   f.src = './' + VER.file + '?t=' + Date.now();
   f.onload = () => { try { instrument(f.contentWindow, f.contentDocument); } catch (e) { mark('e', 'probe:' + e.message); } };
-  progress((SEG.length + 1) / (SEG.length + END.length + 2));
+}
+
+/* وضعیت خودِ اپ خوانده می‌شود، نه حدس از روی نام صفحه‌ها: هم‌مبدأ است و
+   دفتر تراکنش‌هایش دقیق‌تر از هر استنباطی است. */
+/* نسخه‌های قدیمی این قلاب را ندارند؛ آن‌وقت از روی خودِ صفحه می‌خوانیم. */
+function appState(){
+  try { const w = $('app').contentWindow; return w.mhjSnapshot ? w.mhjSnapshot() : null; }
+  catch (e) { return null; }
+}
+function convertedOk(){
+  const a = appState();
+  if (a) return (a.activity || []).some(t => t.kind === 'convert' && t.status === 'done');
+  try { const d = $('app').contentDocument;                     /* راه دوم: نشانِ صفحهٔ نتیجه */
+    const b = d.getElementById('cs-badge');
+    return !!(b && /انجام|موفق/.test(b.textContent||''));
+  } catch (e) { return false; }
 }
 
 function finishApp(){
   S.ms = Date.now() - t0;
+  const d = TK.derive(S);
+  if (S.stage === 'primary') {
+    const ok = convertedOk();
+    const path = d.path, iHome = path.indexOf('home');
+    const bad = (S.fb || []).some(f => ['confused','lost','distrust'].indexOf(f.mood) >= 0);
+    S.outcomes.primary_completed = ok;
+    S.outcomes.primary_direct = ok && iHome >= 0 && path[iHome + 1] === 'convert';
+    S.outcomes.primary_independent = ok && !bad;
+    S.outcomes.primary_duration_ms = Date.now() - stageT0;
+    S.outcomes.primary_dead = d.dead; S.outcomes.primary_rage = d.rage;
+    mark(ok ? TK.EV.p_done : TK.EV.p_left, Date.now() - stageT0, d.deepest);
+    /* مأموریت دوم */
+    S.stage = 'secondary'; S.phase = 'brief2'; save();
+    $('appwrap').classList.remove('on');
+    const sc = SCEN[S.assignment];
+    $('b2-title').textContent = sc.t; $('b2-task').textContent = sc.task;
+    progress((SEG.length + 2) / (SEG.length + END.length + 3));
+    mark(TK.EV.s_start, S.assignment);
+    return show('s-brief2');
+  }
+  /* پایانِ سناریوی دوم: کدام مسیر را رفت */
+  const after = d.path.slice(d.path.indexOf(d.path.find(x => true)) );
+  const seen = d.path;
+  let route = null, done = false;
+  for (const scr of seen) {
+    if (!route) { const r = ROUTES.find(x => x.screens.indexOf(scr) >= 0); if (r) route = r.id; }
+    if (DONE_SCREENS.indexOf(scr) >= 0) done = true;
+  }
+  S.outcomes.secondary_route = route || 'none';
+  S.outcomes.secondary_completed = done;
+  S.outcomes.secondary_duration_ms = Date.now() - stageT0;
+  mark(done ? TK.EV.s_done : TK.EV.s_none, S.assignment, route || '');
   $('appwrap').classList.remove('on');
   $('app').src = 'about:blank';
   phase = 'end'; qi = 0; S.phase = 'end'; save();
   renderAsk();
+}
+
+/* امتیازها همین‌جا حساب می‌شوند تا داشبورد مجبور نباشد قاعده‌ها را دوباره بسازد */
+function scoreEnd(){
+  const e = S.end, sc = {};
+  sc.positioning_correct = e.positioning_main === 'value_control' ? 1 : 0;
+  const dv = e.distinct_value || [];
+  sc.distinct_value_recognized = dv.some(v => ['convert','custody','pw','gold','invest','p2p','support'].indexOf(v) >= 0) ? 1 : 0;
+  sc.no_distinct_value = dv.indexOf('none') >= 0 ? 1 : 0;
+  sc.asset_correct = e.asset_understanding === 'usdt_share' ? 1 : 0;
+  sc.custody_correct = e.custody_understanding === 'bitvana' ? 1 : 0;
+  const ex = e.exit_understanding || [];
+  const good = ex.filter(v => ['rial','pw','gold'].indexOf(v) >= 0).length;
+  sc.exit_correct = (good >= 2 && ex.indexOf('permission') < 0 && ex.indexOf('no_exit') < 0) ? 1 : 0;
+  sc.comprehension_score = sc.asset_correct + sc.custody_correct + sc.exit_correct;
+  sc.comprehension_pass = sc.comprehension_score >= 2 ? 1 : 0;
+  sc.misconceptions = [];
+  if (e.asset_understanding === 'bank_usd') sc.misconceptions.push('bank_deposit');
+  if (e.asset_understanding === 'issuer') sc.misconceptions.push('mohajer_issuer');
+  if (e.custody_understanding === 'mohajer_bank') sc.misconceptions.push('mohajer_direct_custodian');
+  if (e.custody_understanding === 'central_bank') sc.misconceptions.push('central_bank');
+  sc.practical_action = ['talk','signup','try_small','serious'].indexOf(e.commitment_step) >= 0 ? 1 : 0;
+  sc.money_intent = ['try_small','serious'].indexOf(e.commitment_step) >= 0 ? 1 : 0;
+  sc.high_commitment = (sc.money_intent && ['pilot','notify'].indexOf(e.action_cta) >= 0 && !!S.contact) ? 1 : 0;
+  return sc;
 }
 
 /* ════════ کاوشگر ════════════════════════════════════════════════
@@ -615,7 +957,7 @@ function saveFb(){
    «ارسال شد» فقط وقتی نوشته می‌شود که سرور تأیید کند ردیف را دارد — یک
    POSTِ بی‌پاسخ دلیلِ رسیدن نیست. */
 async function finish(){
-  S.done = true; S.phase = 'done';
+  S.done = true; S.phase = 'done'; S.score = scoreEnd();
   S.t1 = new Date().toISOString();
   if (!S.ms) S.ms = Date.now() - t0;
   progress(1); show('s-done');

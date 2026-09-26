@@ -1749,14 +1749,96 @@ lesson (risk is not a promise of more), but it is the opposite of what the old
 numbers implied, so **the team should confirm it before the round** and replace
 `asset12m` with measured data.
 
-### Still open from the two specs
+### The hypothesis test, built (2026-09-26)
 
-`Mohajer_Hypothesis_Validation_Test_and_Dashboard_Spec_v1.0.md` is not started:
-the primary-task definition, scenarios A/B, the ~15 structured end questions
-across H1–H5, the event list, and the hypothesis-validation dashboard with its
-Business tab. The runner's segmentation (age, dollar history, crypto, savings)
-already matches the spec's S1–S4. Also pending: the founder's four closing voice
-questions, and spotlighted screenshots for the "did you notice this?" questions.
+`Mohajer_Hypothesis_Validation_Test_and_Dashboard_Spec_v1.0.md` is implemented.
+
+**The runner is now two tasks, not one.** خوش‌آمد → four segment questions →
+**مأموریت اول** (funding journey) → app → **مأموریت دوم** → the same app with the
+same balance → 18 closing questions. The second mission is assigned 50/50 from a
+hash of the session id, so a refresh cannot change it: «کنترل و خروج» or
+«استفادهٔ بعدی», both in the spec's own wording.
+
+**The question engine was rebuilt** to carry the battery: single, multi with a
+cap (`max` / `exact`), mutually-exclusive options that clear the rest, per-session
+option shuffling with «نمی‌دانم» pinned last, conditional questions, a 1–5 scale,
+free text, the contact form, and the voice ask. Order is P1 · P2 · C1 · C2 · C3 ·
+F1 · F2 · T1 · T2A/T2B · I1 · I2 · I3 · I4 · U1 · U2 · voice · contact, with the
+trust and intent questions after comprehension so they cannot prime it.
+
+Conditionals verified live: trust 5 → T2A only; «با مبلغ جدی» → I3 and I4 appear;
+«شرکت در پایلوت» → the contact screen appears, otherwise it never does.
+
+**Scoring happens in the runner**, not the dashboard: `comprehension_score` and
+its pass flag, positioning/distinct-value flags, the four critical misconception
+flags, practical action, money intent and high commitment. The dashboard reads
+them rather than re-deriving the rules, so the two can never disagree.
+
+**Outcomes are measured, not asked**: primary completed / independent / direct,
+duration, dead and rage taps, and for the second mission the first route taken
+and whether it reached a completion screen.
+
+**The `mhjSnapshot()` hook.** `const S` at a script's top level is *not* a
+property of `window`, so reading the app's state from the runner silently
+returned null and every task looked failed. The prototype now exposes one
+function (declarations *are* on `window`) returning balances and the transaction
+ledger. Task completion is judged from the ledger — reaching a screen is not
+completing a task. Older builds without the hook fall back to reading the status
+badge.
+
+**The founder's voice ask** is the second-to-last screen: the four questions
+listed, «ویس می‌فرستم» opens the channel from `contact`, «ویس نمی‌فرستم» skips.
+
+**Spotlights.** F1 shows the home screen blurred and darkened with the four
+quick actions sharp inside a gold ring. The rect was measured in a real 390×844
+viewport (`x:18 y:461 w:354 h:76`) against a screenshot captured from *this*
+build — the deck's old `v45-home.png` predates the distribution bar and its
+coordinates no longer match. **Rule: never spotlight a question that has a
+correct answer.** C3 asks which exit routes existed; showing them would hand over
+the answer. F1/F2 have no right answer, so a reminder is fair.
+
+### The hypothesis dashboard
+
+A second tab on the results page («فرضیه‌ها»), with the gates copied from §32 of
+the spec. One card per hypothesis — Core Journey, Value & Positioning, Feature
+Validation, Comprehension & Trust, Behavioral Intent — each showing its KPIs as
+value · gate · «رسیده / نزدیک / نرسیده», plus the distributions that explain the
+number: which route they took, what they think Mohajer does, the critical
+misconceptions, trust blockers and drivers, the commitment ladder, starting
+amounts.
+
+**A card's status is its worst KPI, never an average** — the spec is explicit
+that a failed critical gate must not be hidden by a mean. Below 20 completed
+sessions no card gives a verdict, and the quality banner states what the current
+n licenses: nothing under 10, directional to 20, provisional to 30, decision
+above.
+
+### Results appear instantly now (the real complaint)
+
+The founder reported results taking forever and usually never arriving. Measured
+against their live endpoint: ping 1.8s, `sum` 2.5s, full read 2.4s — **the
+endpoint is fine.** The failure was ours:
+
+- the page *awaited* the network before rendering anything, so a slow call meant
+  an empty screen even though local data was in hand;
+- the first call after idle pays Apps Script's cold start (20s+) and blew the
+  timeout, which failed the whole load;
+- nothing was cached, so every open paid it again;
+- and `test-kit.js` had no cache-busting, so browsers kept serving a stale kit
+  after every upload — which is how I lost twenty minutes to code that was not
+  running.
+
+Now: the last good server response is cached, the page renders from cache plus
+local data **immediately**, a warm-up ping is fired without waiting, the real
+read follows and re-renders when it lands, and a failed read falls back to the
+cache instead of blanking. A line says which it is — «به‌روز شد · همین حالا» or
+«از نسخهٔ ذخیره‌شده · ۵ دقیقه پیش». Verified: 44 sessions on screen at 2s, live
+refresh landed at 12s. The kit include is versioned (`?v=20260926b`) — **bump it
+whenever test-kit.js changes.**
+
+One collision worth remembering: the new ingest function was called `apply()`,
+which silently overwrote the page's existing filter `apply()`. Renamed to
+`ingest()`.
 
 ---
 
