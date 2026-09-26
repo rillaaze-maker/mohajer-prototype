@@ -1840,6 +1840,44 @@ One collision worth remembering: the new ingest function was called `apply()`,
 which silently overwrote the page's existing filter `apply()`. Renamed to
 `ingest()`.
 
+### Delivery is now held open until the server confirms (2026-09-26)
+
+The founder's point: **the result is everything**, and leaving the tab early
+used to mean the session was gone — a single best-effort beacon, then a retry
+queue in a browser that might never open a test page again.
+
+Four changes:
+
+1. **A partial goes out after every answer** (throttled to 4s). Someone who
+   abandons at question 12 still leaves twelve answers behind.
+2. **The end screen does not claim success until the server does.** It shows a
+   progress bar and «در حال ثبت نتیجه…» with a live seconds counter, POSTs, then
+   asks the collector `?has=<id>`. Up to five attempts with backoff. Only a
+   confirmed row flips it to the seal and «ثبت شد».
+3. **Closing the tab before delivery raises the browser's leave warning**
+   (`beforeunload`), from the moment the app opens until the row is confirmed.
+   The welcome and segment screens are excluded — nobody should be held for a
+   session that has produced nothing yet.
+4. **The endpoint is warmed when the question battery starts**, one to three
+   minutes before it is needed, so the confirm does not pay Apps Script's cold
+   start. The first verify also waits 25s rather than 12s, because failing fast
+   on a cold instance only produces duplicate rows.
+
+Measured: with a realistic warm-up the whole confirm takes **under 7 seconds**
+and lands on attempt 1. Cold, it took 25s and landed on attempt 2 — slow, but it
+landed, and the participant saw why they were waiting. If all five attempts fail
+the code/file/share panel appears with «زحمتی که کشیدید بی‌نتیجه نماند», and
+copying, sharing or saving the file each count as delivered and release the
+guard.
+
+### «پشتیبانی انسانی» now says what it gives you
+
+The founder asked why a tester should care about "support". As a bare noun it
+tests nothing — everyone says yes to support in the abstract. All four places it
+appears now name the moment it matters: «پشتیبانی انسانی؛ وقتی پولم گیر کرد، یک
+آدم جواب بدهد» in the feature questions, «می‌دانستم کسی جواب می‌دهد» as a trust
+driver.
+
 ---
 
 ## 11. Blu Bank — the reference

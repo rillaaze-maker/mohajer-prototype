@@ -185,6 +185,13 @@ textarea::placeholder{color:var(--w3)}
 #sheet textarea{min-height:82px;margin-top:12px}
 
 /* ── the end ────────────────────────────────────────────────────── */
+/* نوار تحویل: کاری که واقعاً دارد انجام می‌شود، نه یک انیمیشن تزئینی */
+.sending{height:6px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden;margin-top:6px}
+.sending i{display:block;height:100%;width:8%;border-radius:99px;
+  background:linear-gradient(90deg,var(--gold),#E8C48A);transition:width .5s var(--spring)}
+.sendmsg{font-size:17px;font-weight:600;letter-spacing:-.02em;margin-top:16px}
+.sendsub{font-size:12.5px;color:var(--w3);margin-top:6px;line-height:1.8}
+
 .seal{width:62px;height:62px;border-radius:22px;background:rgba(63,191,143,.14);display:grid;place-items:center;margin-bottom:20px}
 .seal svg{width:30px;height:30px;stroke:var(--ok);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .code{margin-top:18px;background:var(--surf);border:1px solid var(--brd);border-radius:15px;padding:14px}
@@ -264,9 +271,15 @@ textarea::placeholder{color:var(--w3)}
 
   <!-- ── پایان ───────────────────────────────────────────────── -->
   <section class="step" id="s-done">
-    <div class="seal"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
-    <h1 id="d-title">ممنون از وقتی که گذاشتید.</h1>
-    <p class="lead" id="d-lead">پاسخ‌های شما ثبت شد. همین نکته‌هاست که نسخهٔ بعدی را ساده‌تر می‌کند.</p>
+    <!-- تا نتیجه نرسد، همین بالا می‌ماند -->
+    <div id="d-send">
+      <div class="sending"><i id="d-bar"></i></div>
+      <div class="sendmsg" id="d-send-msg">در حال ثبت نتیجه…</div>
+      <div class="sendsub" id="d-send-sub">چند لحظه صبر کنید؛ نتیجهٔ شما هنوز به دست ما نرسیده.</div>
+    </div>
+    <div class="seal" id="d-seal" hidden><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <h1 id="d-title" hidden>ممنون از وقتی که گذاشتید.</h1>
+    <p class="lead" id="d-lead" hidden>پاسخ‌های شما ثبت شد. همین نکته‌هاست که نسخهٔ بعدی را ساده‌تر می‌کند.</p>
     <div id="d-sent" class="sent" hidden><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="d-sent-t">ارسال شد</span></div>
     <button class="skip" id="d-more" hidden onclick="showCode()">یک نسخهٔ پشتیبان هم بفرستم</button>
     <div id="d-code" class="code" hidden>
@@ -376,7 +389,7 @@ const END = [
            {v:'gold',    l:'تبدیل و دریافت طلای فیزیکی'},
            {v:'invest',  l:'استفاده از خدمات سرمایه‌گذاری'},
            {v:'p2p',     l:'انتقال به کاربران دیگر مهاجر'},
-           {v:'support', l:'دسترسی به پشتیبانی انسانی'},
+           {v:'support', l:'پشتیبانی انسانی؛ وقتی پولم گیر کرد، یک آدم جواب بدهد'},
            {v:'none',    l:'تفاوت مهمی نمی‌بینم', ex:true, last:true},
            {v:'unsure',  l:'هنوز مطمئن نیستم', ex:true, last:true} ] },
 
@@ -416,7 +429,7 @@ const END = [
            {v:'gold',    l:'دریافت طلای فیزیکی'},
            {v:'p2p',     l:'انتقال به کاربران دیگر'},
            {v:'invest',  l:'سرمایه‌گذاری'},
-           {v:'support', l:'پشتیبانی انسانی'} ] },
+           {v:'support', l:'پشتیبانی انسانی؛ کسی که وقتی گیر کردم جواب بدهد'} ] },
 
   { id:'feature_must_have', code:'F2', type:'single', req:true, rnd:true,
     q:'نبودِ کدام قابلیت باعث می‌شود فعلاً از مهاجر استفاده نکنید؟',
@@ -425,7 +438,7 @@ const END = [
            {v:'gold',    l:'دریافت طلای فیزیکی'},
            {v:'p2p',     l:'انتقال به کاربران دیگر'},
            {v:'invest',  l:'سرمایه‌گذاری'},
-           {v:'support', l:'پشتیبانی انسانی'},
+           {v:'support', l:'پشتیبانی انسانی؛ کسی که جواب بدهد وقتی مشکلی پیش آمد'},
            {v:'none',    l:'هیچ‌کدام؛ نبودِ یک قابلیت خاص مانع من نیست', last:true},
            {v:'never',   l:'در هر صورت فعلاً استفاده نمی‌کنم', last:true} ] },
 
@@ -440,7 +453,7 @@ const END = [
            {v:'pw',      l:'امکان انتقال به کیف پول شخصی'},
            {v:'gold',    l:'امکان دریافت طلای فیزیکی'},
            {v:'bitvana', l:'مشخص‌بودن نقش بیت‌وانا'},
-           {v:'support', l:'پشتیبانی انسانی'},
+           {v:'support', l:'پشتیبانی انسانی؛ می‌دانستم کسی جواب می‌دهد'},
            {v:'brand',   l:'اعتبار نام یا مجموعهٔ پشت مهاجر'},
            {v:'ux',      l:'طراحی و تجربهٔ کاربری اپ'},
            {v:'feeling', l:'دلیل مشخصی نداشت؛ حس کلی خوبی داشتم', last:true} ] },
@@ -714,7 +727,7 @@ function askNext(){
   const list = questions(), q = list[qi];
   if (q.type === 'multi') { if (q.req && !(q.exact ? picks.length === q.exact : picks.length)) return;
     if (picks.length) (phase === 'seg' ? S.seg : S.end)[q.id] = picks.slice();
-    mark(TK.EV.ans, q.code || q.id, picks.join(',')); return step(); }
+    mark(TK.EV.ans, q.code || q.id, picks.join(',')); partial(); return step(); }
   if (q.type === 'voice') { S.end.voice = 'sent'; mark(TK.EV.ans, 'V', 'sent');
     if (CFG.contact) window.open(CFG.contact, '_blank', 'noopener'); return step(); }
   /* تنها جایی که چیزی شخصی ثبت می‌شود، و فقط اگر خودش نوشته باشد. جدا از
@@ -730,6 +743,7 @@ function askNext(){
   if (q.req && !val) return;
   if (val) (phase === 'seg' ? S.seg : S.end)[q.id] = val;
   mark(TK.EV.ans, q.code || q.id, String(val || ''));
+  partial();
   step();
 }
 function askSkip(){
@@ -818,6 +832,9 @@ function finishApp(){
   $('appwrap').classList.remove('on');
   $('app').src = 'about:blank';
   phase = 'end'; qi = 0; S.phase = 'end'; save();
+  /* یکی دو دقیقه تا پایان مانده: سرور را همین حالا بیدار کن تا ثبت نتیجه
+     منتظر سرد بودنش نماند. */
+  TK.warm(CFG);
   renderAsk();
 }
 
@@ -956,35 +973,63 @@ function saveFb(){
    همین دستگاه می‌ماند، و به‌صورت کد و فایل در اختیار خود شرکت‌کننده است.
    «ارسال شد» فقط وقتی نوشته می‌شود که سرور تأیید کند ردیف را دارد — یک
    POSTِ بی‌پاسخ دلیلِ رسیدن نیست. */
+const TRIES = 5;
+function deliverUi(step, msg, sub){
+  $('d-bar').style.width = Math.round(step / TRIES * 100) + '%';
+  $('d-send-msg').textContent = msg;
+  if (sub !== undefined) $('d-send-sub').textContent = sub;
+}
+function deliverDone(){
+  S.delivered = true;
+  $('d-send').hidden = true;
+  $('d-seal').hidden = false; $('d-title').hidden = false; $('d-lead').hidden = false;
+  $('d-sent').hidden = false; $('d-sent-t').textContent = 'ثبت شد';
+  $('d-more').hidden = false;
+  TK.store.del('sess');
+}
+/* تا سرور تأیید نکند، تمام نشده است. */
 async function finish(){
   S.done = true; S.phase = 'done'; S.score = scoreEnd();
   S.t1 = new Date().toISOString();
   if (!S.ms) S.ms = Date.now() - t0;
   progress(1); show('s-done');
 
-  TK.keepMine(S);                                    /* ۱. نسخهٔ خودِ دستگاه */
+  TK.keepMine(S);                                    /* ۱. نسخهٔ خودِ دستگاه، همین حالا */
   const lite = Object.assign({}, S); lite.ev = S.ev.slice(0, 400);
-  $('d-blob').value = TK.pack(lite);                 /* ۲. کد، از همین حالا آماده */
+  $('d-blob').value = TK.pack(lite);                 /* ۲. کد، از پیش آماده */
 
-  const tried = await TK.postAll(CFG, S);            /* ۳. همهٔ سرورها */
-  let ok = false;
-  if (tried) {
-    $('d-sent').hidden = false;
-    $('d-sent-t').textContent = 'در حال ارسال…';
-    ok = !!(await TK.verify(CFG, S.id, 12000));
-  }
+  if (!TK.eps(CFG).length) return deliverFail(true); /* سروری تعریف نشده */
 
-  if (ok) {
-    $('d-sent-t').textContent = 'ارسال شد';
-    $('d-more').hidden = false;
-  } else {
-    $('d-sent').hidden = true;
-    $('d-code').hidden = false;
-    $('d-code-h').textContent = TK.eps(CFG).length
-      ? 'ارسال خودکار تأیید نشد. لطفاً این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند بفرستید — تمام پاسخ‌های شما داخل همین متن است.'
-      : 'این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند بفرستید — تمام پاسخ‌های شما داخل همین متن است.';
-    TK.queue(S);                                     /* ۴. دفعهٔ بعد دوباره تلاش می‌شود */
+  /* شمارندهٔ ثانیه، تا انتظار بی‌حساب نباشد */
+  const t0d = Date.now();
+  const tick = setInterval(() => {
+    const sec = Math.round((Date.now() - t0d) / 1000);
+    $('d-send-sub').textContent = 'نتیجهٔ شما هنوز به دست ما نرسیده. ' + TK.fa(sec) + ' ثانیه.';
+  }, 1000);
+
+  for (let i = 1; i <= TRIES; i++) {
+    deliverUi(i, 'در حال ثبت نتیجه…');
+    try {
+      const sent = await TK.postAll(CFG, S);
+      /* تلاش اول مهلت بلندتری دارد: اگر سرور سرد باشد، بیدارشدنش وقت می‌برد
+         و شکستِ زودهنگام فقط ردیف تکراری می‌سازد. */
+      if (sent && await TK.verify(CFG, S.id, i === 1 ? 25000 : 15000)) {
+        clearInterval(tick); deliverUi(TRIES, 'ثبت شد'); return deliverDone();
+      }
+    } catch (e) {}
+    await new Promise(r => setTimeout(r, 1200 * i));
   }
+  clearInterval(tick);
+  deliverFail(false);
+}
+function deliverFail(noServer){
+  $('d-send').hidden = true;
+  $('d-seal').hidden = false; $('d-title').hidden = false; $('d-lead').hidden = false;
+  $('d-code').hidden = false;
+  $('d-code-h').textContent = noServer
+    ? 'این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند بفرستید — تمام پاسخ‌های شما داخل همین متن است.'
+    : 'نتیجه به دست ما نرسید. لطفاً این متن را کپی کنید و همان‌جایی که این لینک را برایتان فرستادند بفرستید؛ زحمتی که کشیدید بی‌نتیجه نماند.';
+  TK.queue(S);                                       /* دفعهٔ بعد هم خودکار تلاش می‌شود */
   TK.store.del('sess');
 }
 
@@ -1002,6 +1047,7 @@ function showCode(){ $('d-code').hidden = false; $('d-more').hidden = true;
 
 async function copyBlob(){
   const ok = await TK.copy($('d-blob').value);
+  if (ok) S.delivered = true;
   $('d-copy').textContent = ok ? 'کپی شد ✓' : 'انتخاب و کپی کنید';
   setTimeout(() => $('d-copy').textContent = 'کپی کردن', 2200);
 }
@@ -1012,12 +1058,14 @@ async function shareBlob(){
     try { await navigator.share({ title: 'نتیجهٔ تست مهاجر', text }); return; } catch (e) {}
   }
   await TK.copy(text);
+  S.delivered = true;                                /* خودش دارد می‌فرستد */
   $('d-share').textContent = 'کپی شد — برای ما بفرستید';
   if (CFG.contact) setTimeout(() => window.open(CFG.contact, '_blank', 'noopener'), 400);
   setTimeout(() => $('d-share').textContent = 'فرستادن برای مهاجر', 3000);
 }
 /* فایل کامل، با همهٔ رویدادها — کامل‌تر از کدِ کوتاه. */
 function saveFile(){
+  S.delivered = true;                                /* نسخه‌ای دستش هست */
   TK.download('mohajer-test-' + S.ver + '-' + S.id + '.json', JSON.stringify(S));
 }
 
@@ -1042,6 +1090,25 @@ addEventListener('visibilitychange', () => {
   }
 });
 addEventListener('pagehide', () => { if (S && !S.done) { S.ms = Date.now() - t0; send(true); } });
+
+/* بستنِ تب پیش از تحویل، یعنی از دست رفتنِ کل جلسه. مرورگر فقط اجازهٔ یک
+   هشدار عمومی می‌دهد؛ همان را می‌گیریم. */
+addEventListener('beforeunload', (e) => {
+  if (!S || S.delivered) return;
+  if (S.phase === 'welcome' || S.phase === 'seg') return;
+  e.preventDefault(); e.returnValue = '';
+});
+
+/* بعد از هر پاسخ یک نسخهٔ نیمه‌کاره می‌رود: اگر وسط کار رفت، همین‌قدر که
+   جواب داده دستمان است. */
+let lastPartial = 0;
+function partial(){
+  if (!S || S.done || !TK.eps(CFG).length) return;
+  const now = Date.now();
+  if (now - lastPartial < 4000) return;
+  lastPartial = now; S.ms = now - t0;
+  try { send(true); } catch (e) {}
+}
 </script>
 </body>
 </html>
