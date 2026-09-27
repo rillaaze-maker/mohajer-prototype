@@ -2029,6 +2029,44 @@ hand-edited in the JSON were folded back into the defaults — the two files
 are now byte-identical in content, verified, so neither can silently revert
 the other.
 
+### Row labels are nouns — benchmarked, not invented (2026-09-27)
+
+«آماده» sat as a row label next to «همین الان» and «۵ تا ۷ روز». The row is
+about *time*; the label was an adjective. That one table had six rows in six
+different grammars: a question («کلید کجا ساخته می‌شود»), a noun («۱۲ کلمه»),
+a noun phrase («تأیید هر انتقال»), a conditional clause («گوشی هک شود»), an
+adjective («آماده») and a noun («هزینه»).
+
+The benchmark is what every Persian finance app people actually open —
+**والکس, نوبیتکس, بلوبانک** — does in a key/value table: **the label is always
+a short noun phrase.** «کارمزد», «زمان تسویه», «حداقل برداشت», «مقصد»,
+«وضعیت». Never a verb, never an adjective, never a conditional. And the two
+values in one row share one grammar.
+
+Every table in the app was rewritten to that rule:
+
+| was | is |
+|---|---|
+| آماده · همین الان · ۵ تا ۷ روز | **زمان آماده‌شدن** · همین حالا · ۵ تا ۷ روز کاری |
+| گوشی هک شود · در خطر · امن | **امنیت در برابر هک گوشی** · کلید در خطر است · کلید امن می‌ماند |
+| کلید کجا ساخته می‌شود | **محل ساخت کلید** |
+| کلید کجاست / دستگاه گم شد | **محل نگهداری کلید** / **گم‌شدن دستگاه** |
+| می‌پردازید / دریافتی نهایی / نرخ اجرا | **مبلغ پرداختی** / **مبلغ دریافتی** / **نرخ تبدیل** |
+| از موجودی کم می‌شود / اکنون کسر می‌شود | **مجموع کسر از موجودی** |
+| در فعال‌سازی منتقل می‌شود | **انتقال هنگام فعال‌سازی** |
+| نوع / نشانی / پشتیبان | **نوع کیف پول** / **نشانی کیف پول** / **نسخهٔ پشتیبان** |
+| خدمت مهاجر / ساخت و تحویل شریک | **کارمزد مهاجر** / **اجرت ساخت و تحویل** |
+| از چه ساخته شده / بالا و پایین / حداقل | **ترکیب سبد** / **نوسان** / **حداقل مبلغ** |
+| وارد سبد می‌شود / تحویل می‌گیرید | **مبلغ واردشده به سبد** / **تحویلی شما** |
+
+«پشتیبان» as a label was its own bug — on a screen that also has «پشتیبان
+انسانی», it reads as the support agent, not the backup phrase.
+
+Two things stay verb phrases on purpose, because they are not row labels: the
+caption above a big number («دریافت می‌کنید», «به کیف پول شما می‌رسد» — Blu
+writes these the same way) and the pros/cons list items, which must be full
+sentences.
+
 ### Two real bugs the user found
 
 **«۵ دلار · امتحان» did nothing.** When the fee spec landed, the rates moved
