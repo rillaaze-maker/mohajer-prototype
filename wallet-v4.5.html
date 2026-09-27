@@ -135,6 +135,19 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 .btn-danger{background:var(--bad-soft);color:var(--bad)}
 .cta-slot{margin-top:12px;transition:opacity .35s var(--swift),transform .5s var(--spring)}
 .cta-slot.hidden{opacity:0;transform:translateY(16px);pointer-events:none}
+/* پیامِ گذرا: برای اتفاقی که خودِ سیستم شروع کرده و کاربر باید بداند */
+.toast{position:absolute;left:50%;bottom:86px;transform:translateX(-50%) translateY(14px);z-index:60;
+  max-width:88%;background:var(--card-2);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:12px 16px;font-size:12.5px;line-height:1.7;color:var(--ink-1);text-align:center;
+  box-shadow:0 12px 34px rgba(0,0,0,.34);opacity:0;pointer-events:none;
+  transition:opacity .28s var(--swift),transform .42s var(--spring)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+/* چرا دکمه خاموش است — درست بالای خودِ دکمه، جایی که نگاه آنجاست */
+.why{font-size:12.5px;line-height:1.7;color:var(--ink-2);text-align:center;
+  padding:0 8px 9px;animation:whyIn .3s var(--swift)}
+.why b{color:var(--ink-1);font-weight:600}
+.why.bad{color:var(--bad)}
+@keyframes whyIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1}}
 
 /* surfaces */
 .card{background:var(--surface);border-radius:var(--r-lg);padding:18px;box-shadow:var(--sh)}
@@ -1780,6 +1793,7 @@ button,input,select,textarea{color:inherit}
       <button class="key num" onclick="pwKey('00')">00</button><button class="key num" onclick="pwKey('0')">0</button>
       <button class="key" onclick="pwKey('del')"><svg viewBox="0 0 24 24"><path d="M20 6H9l-5 6 5 6h11a1 1 0 001-1V7a1 1 0 00-1-1z"/><path d="M17 10l-4 4M13 10l4 4"/></svg></button>
     </div>
+    <div id="pw-share" class="note warn" style="text-align:start;margin:0 20px" hidden></div>
     <div class="cta-slot hidden" id="pw-cta"><button class="btn btn-primary" onclick="go('pw-quote')" data-c="pwReview"></button></div>
   </section>
 
@@ -2065,7 +2079,7 @@ button,input,select,textarea{color:inherit}
   <section class="screen" data-screen="w-amt">
     <div class="nav">
       <button class="back" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <h2 data-c="convTitle"></h2><span class="step num">۱/۳</span>
+      <h2 data-c="withdrawTitleShort"></h2><span class="step num">۱/۳</span>
     </div>
     <div class="dirsw" role="tablist">
       <button role="tab" aria-selected="false" onclick="setDir('in')" data-c="dirIn"></button>
@@ -2178,6 +2192,7 @@ button,input,select,textarea{color:inherit}
 
   </div><!-- /viewport -->
   <!-- ═══ CALL · the last answer is a person ═══ -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="callui" id="callui" aria-hidden="true">
     <div class="who">
       <div class="av"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20.5c1.2-4 4.2-6 8-6s6.8 2 8 6"/></svg></div>
@@ -2300,7 +2315,7 @@ const COPY_GROUPS={
 const COPY_DEF={
   /* intro */
   introH:['intro','پولتان را <em>امن</em> و دلاری<br>نگه دارید'],
-  introH2:['intro','از خدمات سرمایه‌گذاری و تبدیل به طلای فیزیکی استفاده کنید.'],
+  introH2:['intro','می‌توانید سرمایه‌گذاری کنید یا پولتان را به طلای فیزیکی تبدیل کنید.'],
   introSub:['intro','خودتان انتخاب می‌کنید پول کجا بماند.'],
   useSend:['intro','انتقال'], useSendD:['intro','به هر کاربر مهاجر'],
   useInvest:['intro','سرمایه‌گذاری'], useInvestD:['intro','سبد طلا و رمزارز'],
@@ -2308,9 +2323,9 @@ const COPY_DEF={
   introSafeQ:['intro','«امن» یعنی چی؟'],
   introCta:['intro','شروع'], introNext:['intro','بعدی'],
   whyT:['intro','چرا مهاجر؟'],
-  why1:['intro','پول شما، جایی که خودتان بخواهید'], why1d:['intro','پیش ما، طلای فیزیکی، یا کیف پول خودتان.'],
+  why1:['intro','پول شما، جایی که خودتان بخواهید'], why1d:['intro','پیش مهاجر، به شکل طلای فیزیکی، یا در کیف پول خودتان.'],
   why2:['intro','پول، دست خودتان'], why2d:['intro','هر مقدار که بخواهید، پیش خودتان می‌ماند.'],
-  why3:['intro','هر وقت بخواهید، برداشت'], why3d:['intro','بدون قفل. بدون سؤال.'],
+  why3:['intro','هر وقت بخواهید، برداشت می‌کنید'], why3d:['intro','بدون قفل، بدون پرسش و پاسخ.'],
 
   /* home */
   homeTitle:['home','خانه'],
@@ -2319,7 +2334,7 @@ const COPY_DEF={
   unitAlt:['home','به تومان'], unitBack:['home','به دلار'],
   qSend:['home','انتقال'], qInvest:['home','سرمایه‌گذاری'], qGold:['home','تحویل طلا'], qOut:['home','برداشت'],
   homeEmpty:['home',''],
-  homeCta:['home','امن کردنِ دارایی'],
+  homeCta:['home','تبدیل دارایی به دلار'],
   recent:['home','اخیر'], seeAll:['home','همه'],
   distLabel:['home','توزیع دارایی'],
   cuAtMohajer:['home','دارایی شما پیش مهاجر نگه داشته می‌شود'],
@@ -2340,9 +2355,17 @@ const COPY_DEF={
   grossUsd:['conv','دلار ناخالص'],
   feeMohajer:['conv','کارمزد مهاجر'],
   feeZero:['conv','صفر'],
-  feeFloorNote:['conv','کف کارمزد نیم دلار اعمال شد.'],
-  trialNote:['conv','مسیر آموزشی؛ هزینهٔ این یکی را مهاجر داده است.'],
-  minBuyWarn:['conv','حداقل خرید، معادل ۵۰ دلار است.'],
+  feeFloorNote:['conv','کارمزد کمتر از نیم دلار نمی‌شود، پس همان نیم دلار حساب شد.'],
+  trialNote:['conv','این یکی آزمایشی است و کارمزدش را مهاجر داده است.'],
+  minBuyWarn:['conv','حداقل مبلغ تبدیل، ۵۰ دلار است.'],
+  quoteExpired:['conv','نرخ منقضی شد. برای دیدن نرخ تازه، دوباره «دریافت نرخ» را بزنید.'],
+  feeShareWarn:['conv','کارمزد این انتقال {p}٪ مبلغ است، چون هزینهٔ شبکه ثابت است. با مبلغ بیشتر، این درصد کمتر می‌شود.'],
+  minBuyHint:['conv','حداقل مبلغ تبدیل ۵۰ دلار است — حدود {t} تومان.'],
+  about:['conv','حدود'],
+  orTryTrial:['conv','برای امتحان، «۵ دلار» را بزنید.'],
+  typeAmount:['conv','مبلغ را وارد کنید.'],
+  yourBalance:['conv','موجودی شما:'],
+  minMoreThanFee:['conv','مبلغ باید از کارمزد ({f}) بیشتر باشد.'],
   feeHowQ:['conv','هزینه کل چطور حساب شد؟'],
   goldMetal:['conv','قیمت طلا'],
   goldFab:['conv','ساخت و تحویل شریک'],
@@ -2354,15 +2377,15 @@ const COPY_DEF={
   whatIsDollarQ:['conv','این دلار چیست و کجاست؟'],
   confirmPay:['conv','تأیید و پرداخت'],
   convPending:['conv','در حال تبدیل…'], convOk:['conv','به موجودی شما اضافه شد.'],
-  convFail:['conv','پرداخت انجام نشد.'], convFailNote:['conv','بانک تأیید نکرد. <b>مبلغی از حساب شما کم نشده است.</b>'],
+  convFail:['conv','پرداخت انجام نشد.'], convFailNote:['conv','بانک پرداخت را تأیید نکرد. <b>هیچ مبلغی از حساب شما کم نشد.</b>'],
   freeTrial:['conv','رایگان · آزمایشی'],
 
   /* transfer */
   sendTitle:['send','انتقال'],
-  sendWho:['send','انتقال فقط به کسانی که خودشان هم در مهاجر حساب دارند.'],
+  sendWho:['send','فقط به کسی می‌توانید پول بفرستید که خودش هم در مهاجر حساب دارد.'],
   contactsSec:['send','کاربران مهاجر'],
   noUserSec:['send','هنوز مهاجر ندارند'],
-  noUserL:['send','به این‌ها فعلاً نمی‌شود پول فرستاد. دعوتشان کنید تا بعد از ثبت‌نام بتوانید.'],
+  noUserL:['send','فعلاً نمی‌توانید به این‌ها پول بفرستید. دعوتشان کنید؛ بعد از ثبت‌نام می‌شود.'],
   pickedB:['send','گیرنده'],
   changeBtn:['send','تغییر'],
   hasMohajer:['send','مهاجر دارد'],
@@ -2382,37 +2405,37 @@ const COPY_DEF={
   inviteBack:['send','بازگشت به انتقال'], recipientPhone:['send','شمارهٔ موبایل گیرنده'],
   verified:['send','تأییدشده'], amountTitle:['send','مبلغ'], confirmTitle:['send','تأیید'],
   recipient:['send','گیرنده'], phone:['send','شماره'], amount:['send','مبلغ'], deducted:['send','از موجودی کم می‌شود'],
-  irreversible:['send','<b>برگشت‌ناپذیر است.</b> شماره را دوباره ببینید.'],
+  irreversible:['send','<b>این انتقال برگشت نمی‌خورد.</b> یک بار دیگر شماره را ببینید.'],
   confirmSend:['send','تأیید و ارسال'],
   sendPending:['send','در حال ارسال…'], sendOk:['send','رسید.'], sendFail:['send','انجام نشد.'],
-  sendFailNote:['send','گیرنده در دسترس نبود. <b>کل مبلغ برگشت.</b>'],
+  sendFailNote:['send','گیرنده در دسترس نبود. <b>کل مبلغ به موجودی شما برگشت.</b>'],
 
   /* use tab */
   useTitle:['use','خدمات'],
   whereNow:['use','پول شما الان'],
   uInvest:['use','سرمایه‌گذاری'], uInvestD:['use','طلا و رمزارز، در سه سبد آماده.'],
   uGold:['use','تحویل طلا'], uGoldD:['use','طلای فیزیکی، از صرافی نزدیک شما.'],
-  uKey:['use','کیف پول شخصی'], uKeyD:['use','پولتان دست خودتان.'],
+  uKey:['use','کیف پول شخصی'], uKeyD:['use','کلید پول، دست خودتان.'],
   uBack:['use','برگرداندن به تومان'],
 
   /* custody page */
   cuTitle:['cu','پول شما کجاست؟'],
-  cuSub:['cu','سه انتخاب. هر وقت خواستید عوضش کنید.'],
+  cuSub:['cu','سه انتخاب دارید. هر وقت خواستید عوضش کنید.'],
   cuNow:['cu','روش فعال'],
   cuBasicN:['cu','پیش مهاجر'],
-  cuBasicL:['cu','پولتان پیش مهاجر می‌ماند و می‌توانید در خدمات دیگر مهاجر از آن استفاده کنید.'],
-  cuBasicP1:['cu','هر وقت بخواهید، برداشت'], cuBasicP2:['cu','رمز را فراموش کردید؟ برایتان بازیابی می‌شود'],
-  cuBasicC1:['cu','برای بیرون‌آوردن پول، به مهاجر وابسته‌اید'],
+  cuBasicL:['cu','پول شما را مهاجر نگه می‌دارد.'],
+  cuBasicP1:['cu','هر وقت بخواهید، پولتان را برداشت می‌کنید'], cuBasicP2:['cu','اگر رمزتان را فراموش کنید، مهاجر حسابتان را برمی‌گرداند'],
+  cuBasicC1:['cu','بدون مهاجر نمی‌توانید پولتان را جابه‌جا کنید'],
   cuGoldN:['cu','طلای فیزیکی'],
-  cuGoldL:['cu','هر مقدار که بخواهید از دارایی‌تان طلا می‌شود و شمشش را تحویل می‌گیرید.'],
-  cuGoldP1:['cu','دست خودتان'], cuGoldP2:['cu','بی‌نیاز از اجازهٔ مهاجر'],
-  cuGoldC1:['cu','نگه‌داشتن طلا در خانه، مسئولیتش با خودتان است'], cuGoldC2:['cu','با طلا نمی‌شود از خدمات دیگر مهاجر استفاده کرد'],
+  cuGoldL:['cu','هر مقدار که بخواهید از پولتان شمش طلا می‌شود و آن را از صرافی تحویل می‌گیرید.'],
+  cuGoldP1:['cu','شمش را خودتان در دست دارید'], cuGoldP2:['cu','برای فروشش به مهاجر نیاز ندارید؛ هر طلافروشی می‌خرد'],
+  cuGoldC1:['cu','اگر طلا در خانه گم یا دزدیده شود، کسی جبران نمی‌کند'], cuGoldC2:['cu','تا وقتی طلاست، در خدمات دیگر مهاجر استفاده نمی‌شود'],
   cuGoldCta:['cu','تحویل طلا'],
   cuSelfN:['cu','کیف پول شخصی'],
-  cuSelfL:['cu','کلید دسترسی به پول، روی گوشیِ خودتان می‌ماند و از آن بیرون نمی‌رود.'],
-  cuSelfP1:['cu','دست خودتان'], cuSelfP2:['cu','بی‌نیاز از اجازهٔ مهاجر'],
-  cuSelfC1:['cu','اگر کلید را گم کنید، هیچ‌کس نمی‌تواند برش گرداند'],
-  cuSelfCta:['cu','سفارش کلید'],
+  cuSelfL:['cu','کلید پول شما روی گوشی خودتان ساخته می‌شود و از گوشی بیرون نمی‌رود.'],
+  cuSelfP1:['cu','پول را خودتان نگه می‌دارید، نه مهاجر'], cuSelfP2:['cu','برای جابه‌جا کردن پول به اجازهٔ مهاجر نیاز ندارید'],
+  cuSelfC1:['cu','اگر گوشی و ۱۲ کلمه هر دو گم شوند، هیچ‌کس پول را برنمی‌گرداند'],
+  cuSelfCta:['cu','ساخت کیف پول شخصی'],
   cuActive:['cu','فعال'], cuHere:['cu','اینجاست'], cuReady:['cu','آماده'],
   cuSplitA:['cu','پیش مهاجر'], cuSplitB:['cu','دست خودتان'], cuSplitC:['cu','طلای فیزیکی'],
   walletBox:['home','در کیف پول شخصی'],
@@ -2420,14 +2443,14 @@ const COPY_DEF={
 
   /* personal wallet */
   pwTitle:['pw','کیف پول شخصی'],
-  pw1:['pw','کلید دسترسی به دارایی دلاری را خودتان نگه می‌دارید؛ روی گوشی یا یک دستگاه کوچک.'],
-  pw2:['pw','هر مقدار که بخواهید منتقل می‌کنید و بقیه نزد مهاجر می‌ماند.'],
-  pw3:['pw','بدون کلید شخصی شما، هیچ‌کس — حتی مهاجر — نمی‌تواند دارایی را جابه‌جا کند.'],
+  pw1:['pw','کلید دسترسی به پولتان را خودتان نگه می‌دارید؛ روی گوشی یا روی یک دستگاه کوچک.'],
+  pw2:['pw','هر مقدار که بخواهید منتقل می‌کنید و بقیه پیش مهاجر می‌ماند.'],
+  pw3:['pw','بدون کلید شما، هیچ‌کس — حتی مهاجر — نمی‌تواند این پول را جابه‌جا کند.'],
   pwMake:['pw','ساخت کیف پول'],
   pwModeT:['pw','روی گوشی یا دستگاه؟'],
   pwSoft:['pw','روی گوشی'], pwSoftD:['pw','کلید همین حالا و در فضای امن همین گوشی ساخته می‌شود.'], pwSoftB:['pw','سریع'],
   pwHard:['pw','دستگاه فیزیکی'], pwHardD:['pw','کلید داخل یک دستگاه جدا ساخته می‌شود و ۵ تا ۷ روز زمان می‌برد.'], pwHardB:['pw','اختیاری'],
-  pwModeNote:['pw','هر دو روش کلید را به خود شما می‌دهند؛ تفاوت در جای نگهداری کلید است.'],
+  pwModeNote:['pw','در هر دو روش، کلید مال خودتان است. فرقشان این است که کلید کجا نگه داشته می‌شود.'],
   pwCompareQ:['pw','فرقشان چیست؟'],
   pmT:['pw','در یک نگاه'],
   pm1:['pw','کلید کجا ساخته می‌شود'], pm1a:['pw','داخل گوشی'], pm1b:['pw','داخل دستگاه'],
@@ -2440,7 +2463,7 @@ const COPY_DEF={
   pwReadyT:['pw','قبل از شروع'],
   pwR1:['pw','جای خلوت'], pwR1d:['pw','جایی بنشینید که کسی صفحه را نبیند.'],
   pwR2:['pw','بدون عکس'], pwR2d:['pw','کلمه‌ها را فقط روی کاغذ بنویسید و از آن‌ها عکس نگیرید.'],
-  pwR3:['pw','۱۲ کلمه، خودِ کلید است'], pwR3d:['pw','هر کس این کلمه‌ها را داشته باشد، به دارایی شما دسترسی دارد.'],
+  pwR3:['pw','۱۲ کلمه، خودِ کلید است'], pwR3d:['pw','هر کس این کلمه‌ها را داشته باشد، به پول شما دسترسی دارد.'],
   pwReadyCta:['pw','آماده‌ام'],
   pwWordsT:['pw','۱۲ کلمهٔ شما'], pwWordsL:['pw','کلمه‌ها را فقط روی کاغذ بنویسید؛ مهاجر آن‌ها را نمی‌بیند.'], pwWrote:['pw','نوشتم'],
   pwCheckT:['pw','یک بررسی کوتاه'], pwCheckQ:['pw','کلمهٔ شمارهٔ {n} کدام بود؟'],
@@ -2453,16 +2476,16 @@ const COPY_DEF={
   pwIn:['pw','انتقال به اینجا'], pwOut:['pw','بازگرداندن به مهاجر'],
   pwTechQ:['pw','جزئیات فنی'], pwWantHard:['pw','دستگاه فیزیکی می‌خواهید؟'],
   pwAmtT:['pw','انتقال به کیف پول'], pwAll:['pw','همه'], pwReview:['pw','بررسی'],
-  pwQuoteT:['pw','بررسی انتقال'], pwArrives:['pw','به کیف پول شما می‌رسد'], pwFrom:['pw','از نزد مهاجر کم می‌شود'],
+  pwQuoteT:['pw','بررسی انتقال'], pwArrives:['pw','به کیف پول شما می‌رسد'], pwFrom:['pw','از موجودی شما پیش مهاجر کم می‌شود'],
   pwFee:['pw','هزینهٔ انتقال'], pwDest:['pw','مقصد'], pwDestV:['pw','کیف پول شما'], pwTime:['pw','حدود ۳ دقیقه'],
-  pwIrr:['pw','<b>این انتقال برگشت‌ناپذیر است.</b> از این پس فقط کلید شما کار می‌کند.'], pwConfirm:['pw','تأیید انتقال'],
+  pwIrr:['pw','<b>این انتقال برگشت نمی‌خورد.</b> از این به بعد فقط کلید شما این پول را جابه‌جا می‌کند.'], pwConfirm:['pw','تأیید انتقال'],
   pwS1:['pw','ثبت شد'], pwS2:['pw','در راه'], pwS3:['pw','رسید'],
   pwSending:['pw','در راه…'], pwArrivedMsg:['pw','رسید. دارایی حالا در کیف پول خودتان است.'],
-  pwFailed:['pw','پیش از ارسال متوقف شد.'], pwFailNote:['pw','<b>مبلغ به موجودی شما برگشت.</b> هزینه‌ای کسر نشد.'],
+  pwFailed:['pw','پیش از ارسال متوقف شد.'], pwFailNote:['pw','<b>مبلغ به موجودی شما برگشت</b> و کارمزدی کسر نشد.'],
   goWallet:['pw','کیف پول شخصی'],
-  pwBackT:['pw','بازگرداندن به مهاجر'], pwBackArrives:['pw','به حساب شما نزد مهاجر می‌رسد'], pwBackFrom:['pw','از کیف پول شما'],
-  pwBackDestV:['pw','حساب خودتان نزد مهاجر'], pwBackFixed:['pw','مقصد ثابت است و فقط حساب خودتان را می‌پذیرد.'],
-  pwSignNote:['pw','انتقال با کلید شما امضا می‌شود؛ مهاجر نمی‌تواند به‌جای شما امضا کند.'], pwSignCta:['pw','تأیید با کلید'],
+  pwBackT:['pw','بازگرداندن به مهاجر'], pwBackArrives:['pw','به حساب شما پیش مهاجر می‌رسد'], pwBackFrom:['pw','از کیف پول شما'],
+  pwBackDestV:['pw','حساب خودتان پیش مهاجر'], pwBackFixed:['pw','مقصد ثابت است: فقط حساب خودتان پیش مهاجر.'],
+  pwSignNote:['pw','این انتقال با کلید خودتان امضا می‌شود؛ مهاجر نمی‌تواند به‌جای شما امضا کند.'], pwSignCta:['pw','تأیید با کلید'],
   pwSignT:['pw','تأیید با کلید شما'], pwHoldSoft:['pw','نگه دارید'], pwHoldSoftD:['pw','انگشتتان را روی دکمه نگه دارید تا امضا کامل شود.'],
   pwHoldHard:['pw','دکمهٔ دستگاه را فشار دهید'], pwHoldHardBtn:['pw','شبیه‌سازی: فشار دکمه'],
   pwSigned:['pw','امضا شد'], pwSignFail:['pw','امضا رد شد و چیزی تغییر نکرد.'],
@@ -2471,12 +2494,12 @@ const COPY_DEF={
   txRef:['pw','شناسهٔ انتقال'], techRow:['pw','جزئیات فنی'],
   /* the one place the technical names are said, by request, a layer down */
   exPwDeepT:['ex','کیف پول شخصی، دقیق‌تر'],
-  exPwDeep1:['ex','کیف پول دیجیتال شخصی برای شما ساخته شده، مقدار دلخواه از موجودی دلار دیجیتال به تتر (USDT) تبدیل می‌شود و به آدرس کیف پول شخصی شما انتقال می‌یابد.'],
+  exPwDeep1:['ex','یک کیف پول شخصی برای شما ساخته می‌شود. هر مقدار که بخواهید به تتر (USDT) تبدیل و به نشانی همان کیف پول فرستاده می‌شود.'],
   exPwDeep2:['ex','۱۲ کلمه نسخهٔ پشتیبان کلید است؛ روی کاغذ بنویسید و عکس نگیرید.'],
-  exPwDeep3:['ex','این روش نگهداری معمولاً برای نگهداری بلندمدت دارایی مناسب است.'],
+  exPwDeep3:['ex','این روش بیشتر برای نگهداری بلندمدت به کار می‌آید.'],
   exPwDeep4:['ex','گوشی یا دستگاه گم شد؟ یکی نو بگیرید و ۱۲ کلمه را وارد کنید.'],
   exPwDeep5:['ex','مهاجر نبود؟ ۱۲ کلمه در هر کیف پول استاندارد دیگری کار می‌کند.'],
-  exPwDeep6:['ex','گوشی/دستگاه و ۱۲ کلمه هر دو گم شدند؟ پول برنمی‌گردد. این قانون خودِ این روش است.'],
+  exPwDeep6:['ex','اگر گوشی یا دستگاه و ۱۲ کلمه هر دو گم شوند، پول برنمی‌گردد. این قانونِ خودِ این روش است.'],
   exPwDeepM1:['ex','کلید خصوصی در بخش امنِ سخت‌افزاری گوشی یا داخل تراشهٔ امن دستگاه ساخته می‌شود و هیچ‌وقت از آن بیرون نمی‌آید.'],
   exPwDeepM2:['ex','۱۲ کلمه، استاندارد BIP-39 است؛ همین کیف پول در هر کیف پول استاندارد قابل بازیابی است.'],
   exPwDeepM3:['ex','هر انتقال روی خودِ گوشی یا دستگاه امضا می‌شود؛ فقط پیام امضاشده به شبکه می‌رود.'],
@@ -2502,8 +2525,8 @@ const COPY_DEF={
   egPw:['eg','مثل این است که پول را از بانک بگیرید و در گاوصندوق خانهٔ خودتان بگذارید. کلیدش فقط دست شماست. بانک دیگر نمی‌تواند به آن دست بزند — و اگر کلید را گم کنید، بانک هم نمی‌تواند کمک کند.'],
   egMode:['eg','کلید را می‌توانید در جیب خودتان نگه دارید (گوشی) یا در یک جاکلیدی جدا (دستگاه). جیب، دمِ دست است؛ جاکلیدی جدا، اگر جیب‌تان را زدند، امن می‌ماند.'],
   egWords:['eg','این ۱۲ کلمه، کلید یدکی است. هر کس آن را داشته باشد، می‌تواند در را باز کند. پس فقط روی کاغذ، در جای امن.'],
-  egGold:['eg','دلار شما را به صرافی می‌برند و طلا می‌شود. شما با یک کد آن را می‌گیرید — مثل گرفتن بسته از پست، فقط با کد.'],
-  egSafe:['eg','تومان مثل یخ در آفتاب است: هر روز کمی آب می‌شود. دلار مثل سنگ است: همان‌قدر می‌ماند. مهاجر یخ شما را سنگ می‌کند.'],
+  egGold:['eg','دلار شما به شمش طلا تبدیل می‌شود و آن را با یک کد و کارت شناسایی از صرافی می‌گیرید — مثل گرفتن بسته از پست.'],
+  egSafe:['eg','تومان مثل یخ در لیوان است: هر روز کمی آب می‌شود. دلار مثل سنگ است: همان‌قدر می‌ماند. مهاجر یخ شما را سنگ می‌کند.'],
   egDollar:['eg','یک دلار دیجیتال مثل یک برگهٔ رسید است که همیشه ارزشش یک دلار است و می‌شود آن را با گوشی به هر کسی داد.'],
   egBasket:['eg','مثل این که تخم‌مرغ‌ها را در چند سبد بگذارید، نه در یکی. یک سبد بیفتد، بقیه سالم‌اند.'],
   egCuBasic:['eg','مثل پول در حساب بانکی: بانک نگه می‌دارد، شما هر وقت خواستید می‌گیرید. رمز را فراموش کردید؟ بانک کمک می‌کند.'],
@@ -2531,22 +2554,22 @@ const COPY_DEF={
   goldIdT:['gold','کارت شناسایی همراهتان باشد'],
   goldIdB:['gold','تحویل شمش فقط با کارت شناسایی خودتان انجام می‌شود.'],
   goldIdShort:['gold','الزامی'],
-  goldResale:['gold','شمش استاندارد است؛ هر وقت خواستید، در بازار طلا قابل فروش است.'],
+  goldResale:['gold','شمش استاندارد است؛ هر وقت خواستید، در هر طلافروشی می‌فروشیدش.'],
   gramRate:['gold','نرخ هر گرم'], whenDeducted:['gold','زمان کسر'], deductNow:['gold','همین حالا'],
   pickupTime:['gold','زمان مراجعه'], confirmGold:['gold','ثبت درخواست'],
   pickupCode:['gold','کد تحویل'], oneTimeCode:['gold','کد یک‌بارمصرف'], showAtPickup:['gold','فقط موقع تحویل نشان دهید'],
-  shop:['gold','صرافی'], youReceive:['gold','تحویل می‌گیرید'], codeExpires:['gold','اعتبار کد: ۲۴ ساعت. اگر نروید، سفارش لغو و کل مبلغ به موجودی شما برمی‌گردد.'],
-  goldOverStock:['gold','موجودی این شعبه کمتر از این مقدار است. مقدار کمتری انتخاب کنید یا صرافی دیگری را ببینید.'],
+  shop:['gold','صرافی'], youReceive:['gold','تحویل می‌گیرید'], codeExpires:['gold','کد تا ۲۴ ساعت اعتبار دارد. اگر نروید، سفارش لغو می‌شود و کل مبلغ به موجودی شما برمی‌گردد.'],
+  goldOverStock:['gold','موجودی این صرافی از این مقدار کمتر است. مقدار کمتری بردارید یا صرافی دیگری انتخاب کنید.'],
   cancel:['gold','لغو'],
 
   /* key */
   keyTitle:['key','کلید مهاجر'],
-  key1:['key','کلید مهاجر دستگاهی کوچک است، به اندازهٔ یک فلش.'],
-  key2:['key','کلید پول شما فقط داخل آن ساخته می‌شود.'],
-  key3:['key','بدون تأیید روی دستگاه، پول جابه‌جا نمی‌شود. مهاجر کلیدی ندارد.'],
+  key1:['key','کلید مهاجر یک دستگاه کوچک است، به اندازهٔ یک فلش.'],
+  key2:['key','کلید پول شما فقط داخل همین دستگاه ساخته می‌شود.'],
+  key3:['key','تا روی دستگاه تأیید نکنید، پول جابه‌جا نمی‌شود. مهاجر کلیدی ندارد.'],
   prosCons:['key','مزایا و مسئولیت‌ها'],
-  keyP1:['key','نگهداری با کلید شخصی'], keyP2:['key','عدم وابستگی به مهاجر در نگهداری'], keyP3:['key','دسترسی به دارایی دیجیتال حتی بدون مهاجر'],
-  keyC1:['key','مسئولیت نگهداری شخصی'], keyC2:['key','اگر کلید و ۱۲ کلمه هر دو گم شوند، بازیابی ممکن نیست.'], keyC3:['key','در صورت انتخاب دستگاه، برای هر برداشت دستگاه لازم است.'],
+  keyP1:['key','کلید پول فقط داخل دستگاه شماست'], keyP2:['key','برای جابه‌جا کردن پول به مهاجر نیاز ندارید'], keyP3:['key','اگر مهاجر هم نبود، به پولتان دسترسی دارید'],
+  keyC1:['key','نگه‌داشتنِ دستگاه و ۱۲ کلمه با خودتان است'], keyC2:['key','اگر دستگاه و ۱۲ کلمه هر دو گم شوند، هیچ‌کس پول را برنمی‌گرداند'], keyC3:['key','برای هر بار جابه‌جا کردن پول، دستگاه باید همراهتان باشد'],
   keyDeepQ:['key','دقیق‌تر چطور کار می‌کند؟'],
   keySeeDevice:['key','دیدن دستگاه'],
   keyName:['key','کلید مهاجر'],
@@ -2555,9 +2578,9 @@ const COPY_DEF={
   keyLost:['key','دستگاه گم شد'], keyLostV:['key','با ۱۲ کلمه برمی‌گردد'],
   shipping:['key','ارسال'], shippingV:['key','رایگان · ۵ تا ۷ روز'],
   keyRiskT:['key','این را بدانید'],
-  keyRiskB:['key','اگر دستگاه و ۱۲ کلمه هر دو گم شوند، دارایی برنمی‌گردد و هیچ‌کس نمی‌تواند آن را برگرداند.'],
+  keyRiskB:['key','اگر دستگاه و ۱۲ کلمه هر دو گم شوند، هیچ‌کس نمی‌تواند پول را برگرداند — حتی مهاجر.'],
   orderKey:['key','سفارش کلید'],
-  address:['key','نشانی'], moveToKey:['key','چقدر روی کلید برود؟ · دلار'], moveLater:['key','می‌توانید خالی بگذارید.'],
+  address:['key','نشانی'], moveToKey:['key','چقدر دلار روی کلید برود؟'], moveLater:['key','می‌توانید خالی بگذارید و بعداً منتقل کنید.'],
   devicePrice:['key','قیمت دستگاه'], free:['key','رایگان'], moveOnActivate:['key','در فعال‌سازی منتقل می‌شود'],
   deductedNow:['key','اکنون کسر می‌شود'], placeOrder:['key','ثبت سفارش'],
   orderPlaced:['key','ثبت شد'], keyOnWay:['key','کلید در راه است.'], activationCode:['key','کد فعال‌سازی'],
@@ -2568,16 +2591,16 @@ const COPY_DEF={
 
   /* invest */
   investTitle:['inv','سرمایه‌گذاری'],
-  eggLine:['inv','همهٔ پول را روی یکی نگذارید.'],
-  canDrop:['inv','ارزش می‌تواند کم هم بشود.'],
+  eggLine:['inv','همهٔ پول را روی یک چیز نگذارید.'],
+  canDrop:['inv','ارزشش می‌تواند کم هم بشود.'],
   mine:['inv','سبدهای شما'], madeOf:['inv','از چه ساخته شده'],
-  swing:['inv','بالا و پایین'], lastYear:['inv','بازده ۱۲ ماه گذشته'], yearCard:['inv','۱۲ ماه گذشته'], pastNotFuture:['inv','گذشته، تضمین آینده نیست.'], minAmount:['inv','حداقل'], lock:['inv','قفل زمانی'], none:['inv','ندارد'],
+  swing:['inv','بالا و پایین'], lastYear:['inv','بازده ۱۲ ماه گذشته'], yearCard:['inv','۱۲ ماه گذشته'], pastNotFuture:['inv','گذشته، تضمینِ آینده نیست.'], minAmount:['inv','حداقل'], lock:['inv','قفل زمانی'], none:['inv','ندارد'],
   investCta:['inv','سرمایه‌گذاری در این سبد'],
   howMuchDollar:['inv','چند دلار؟'], goesIn:['inv','وارد سبد می‌شود'], confirm:['inv','تأیید'],
-  investOk:['inv','وارد سبد شد.'], exitAnytime:['inv','هر وقت خواستید، بیرون بکشید. بدون جریمه.'],
-  warnLow:['inv','کم یعنی صفر نیست. می‌تواند کم شود.'],
-  warnMid:['inv','برای پولِ ماه آینده مناسب نیست.'],
-  warnHigh:['inv','می‌تواند نصف شود. فقط پولی که به آن نیاز ندارید.'],
+  investOk:['inv','وارد سبد شد.'], exitAnytime:['inv','هر وقت خواستید بیرون می‌کشید، بدون جریمه.'],
+  warnLow:['inv','نوسانش کم است، ولی باز هم می‌تواند کم شود.'],
+  warnMid:['inv','برای پولی که ماه آینده لازم دارید مناسب نیست.'],
+  warnHigh:['inv','می‌تواند نصف شود. فقط پولی را بگذارید که به آن نیاز ندارید.'],
   minTen:['inv','حداقل ۱۰ دلار.'], notEnough:['inv','موجودی کافی نیست.'],
   backToInvest:['inv','بازگشت'],
 
@@ -2591,12 +2614,12 @@ const COPY_DEF={
 
   /* explain pages */
   exSafeT:['ex','«امن» یعنی چی؟'],
-  exSafe1:['ex','ارزش دارایی دلاری شما در مقابل تورم حفظ می‌شود.'],
-  exSafe2:['ex','امکان انتخاب بین نگهداری دارایی توسط مهاجر، نگهداری در کیف پول شخصی و تبدیل به طلای فیزیکی.'],
-  exSafe3:['ex','امکان همیشگی تبدیل دوباره به ریال و برداشت'],
+  exSafe1:['ex','ارزش پول شما در برابر تورم حفظ می‌شود.'],
+  exSafe2:['ex','خودتان انتخاب می‌کنید پول کجا بماند: پیش مهاجر، در کیف پول شخصی، یا به شکل طلای فیزیکی.'],
+  exSafe3:['ex','هر وقت بخواهید، دوباره به تومان تبدیل می‌کنید و برداشت می‌کنید.'],
   exFeeT:['ex','هزینه چطور حساب می‌شود؟'],
-  exFee1:['ex','کارمزد مهاجر روی همان صفحه نوشته می‌شود: ۰٫۷۵٪ مبلغ، با کف نیم دلار.'],
-  exFee2:['ex','نرخ خرید و فروش یکی است؛ سود پنهانی در اختلاف نرخ وجود ندارد.'],
+  exFee1:['ex','کارمزد مهاجر روی همان صفحه نوشته می‌شود: ۰٫۷۵٪ مبلغ، و کمتر از نیم دلار نمی‌شود.'],
+  exFee2:['ex','نرخ خرید و فروش یکی است؛ سودِ پنهانی در اختلاف نرخ وجود ندارد.'],
   exFee3:['ex','انتقال به کاربر دیگر مهاجر کارمزد ندارد و نگهداری پایه هم رایگان است.'],
   exFeeM1:['ex','سرمایه‌گذاری: ۰٫۵٪ فقط هنگام ورود. در این نسخه کارمزد خروج و دوره‌ای صفر است.'],
   exFeeM2:['ex','انتقال به کیف پول شخصی: ۰٫۲٪ سهم مهاجر با سقف ۵ دلار، به‌علاوهٔ هزینهٔ واقعی شبکه که جدا نوشته می‌شود.'],
@@ -2620,20 +2643,20 @@ const COPY_DEF={
   exKeyDeep6:['ex','دستگاه و ۱۲ کلمه هر دو گم شدند؟ پول برنمی‌گردد. این قانون خودِ این روش است، نه مهاجر.'],
   exBasketT:['ex','سبد چیست؟'],
   exBasket1:['ex','چند دارایی با هم، نه فقط یکی. یکی افت کند، بقیه جبران می‌کنند.'],
-  exBasket2:['ex','سود ثابت ندارد. ارزش با بازار بالا و پایین می‌رود.'],
-  exBasket3:['ex','قفل ندارد. هر وقت خواستید، بیرون بکشید.'],
+  exBasket2:['ex','سود ثابت ندارد. ارزشش با بازار بالا و پایین می‌رود.'],
+  exBasket3:['ex','قفل ندارد. هر وقت خواستید بیرون می‌کشید.'],
   exCuBasicT:['ex','نگهداری توسط مهاجر یعنی چی؟'],
-  exCuBasic1:['ex','دارایی شما در کیف پول‌های امن صرافی رمزارز بیت‌وانا، شریک مهاجر، نگهداری می‌شود.'],
-  exCuBasic2:['ex','برداشت و استفاده از دارایی فقط از طریق اکانت شما در مهاجر انجام می‌شود.'],
-  exCuBasic3:['ex','در صورت فراموشی یا گم شدن رمز ورود، قابلیت بازیابی با احراز هویت وجود دارد.'],
+  exCuBasic1:['ex','پول شما در کیف پول‌های امنِ صرافی رمزارز بیت‌وانا، شریک مهاجر، نگه داشته می‌شود.'],
+  exCuBasic2:['ex','برداشت و استفاده از پول، فقط از حساب خودتان در مهاجر انجام می‌شود.'],
+  exCuBasic3:['ex','اگر رمز ورود را فراموش کنید، با احراز هویت آن را برمی‌گردانید.'],
   exCuGoldT:['ex','طلای فیزیکی یعنی چی؟'],
-  exCuGold1:['ex','دلار دیجیتال به مقدار معادل تبدیل به طلا و به صورت فیزیکی به شما تحویل داده می‌شود.'],
-  exCuGold2:['ex','از لحظهٔ تحویل، مسئولیت نگهداری با شماست.'],
-  exCuGold3:['ex','برای استفاده از خدمات دیگر مهاجر یا تبدیل به ریال، باید طلا را بفروشید.'],
+  exCuGold1:['ex','دلار شما به همان اندازه شمش طلای ۱۸ عیار می‌شود و آن را به‌صورت فیزیکی تحویل می‌گیرید.'],
+  exCuGold2:['ex','از لحظهٔ تحویل، نگه‌داشتنِ طلا با خودتان است.'],
+  exCuGold3:['ex','برای استفاده از خدمات دیگر مهاجر یا تبدیل به تومان، اول باید طلا را بفروشید.'],
   exCuSelfT:['ex','کیف پول شخصی یعنی چی؟'],
-  exCuSelf1:['ex','کلید دسترسی به دارایی فقط دست شماست: به صورت نرم‌افزاری روی گوشی یا سخت‌افزاری روی دستگاه.'],
+  exCuSelf1:['ex','کلید پول فقط دست شماست: روی گوشی، یا روی یک دستگاه جدا.'],
   exCuSelf2:['ex','بدون کلید شخصی شما، هیچ‌کس نمی‌تواند پول را جابه‌جا کند.'],
-  exCuSelf3:['ex','اگر دستگاه و عبارت بازیابی (۱۲ کلمه) هر دو گم شوند، بازیابی دارایی ممکن نیست.'],
+  exCuSelf3:['ex','اگر گوشی یا دستگاه و ۱۲ کلمه هر دو گم شوند، پول برنمی‌گردد.'],
   exGotIt:['ex','فهمیدم'],
   exMore:['ex','بیشتر توضیح بده'],
   /* the deep layer — opens only on request; precise words are allowed here */
@@ -2641,8 +2664,8 @@ const COPY_DEF={
   exSafeM2:['ex','در حالت پایه، به‌ازای هر دلار دیجیتال، یک تتر (USDT) در صرافی رمزارز بیت‌وانا نگهداری می‌شود.'],
   exSafeM3:['ex','با کیف پول فیزیکی مهاجر، کلید کیف پول شخصی شما روی دستگاه ساخته می‌شود.'],
   exDollarM1:['ex','تتر برای حفظ ارزشی نزدیک به یک دلار طراحی شده، اما می‌تواند موقتاً کمتر یا بیشتر شود و سپردهٔ تضمین‌شدهٔ بانکی نیست.'],
-  exDollarM2:['ex','می‌توانید دارایی را به ریال تبدیل کنید یا روی شبکهٔ TRON به کیف پول شخصی منتقل کنید؛ نرخ، کارمزد، زمان و مبلغ دریافتی پیش از تأیید نمایش داده می‌شود.'],
-  exDollarM3:['ex','همهٔ عملیات در سابقهٔ حساب ثبت می‌شود؛ انتقال‌های روی شبکه شناسهٔ عمومی دارند و مستقل از مهاجر قابل پیگیری‌اند.'],
+  exDollarM2:['ex','می‌توانید پول را به تومان تبدیل کنید یا روی شبکهٔ TRON به کیف پول شخصی بفرستید. نرخ، کارمزد، زمان و مبلغ دریافتی، پیش از تأیید نوشته می‌شود.'],
+  exDollarM3:['ex','همهٔ کارها در سابقهٔ حساب ثبت می‌شود. انتقال‌های روی شبکه شناسهٔ عمومی دارند و مستقل از مهاجر قابل پیگیری‌اند.'],
   exGoldWhyM1:['ex','نرخ گرم = قیمت جهانی اونس × نرخ دلار ÷ ۳۱٫۱ × عیار.'],
   exGoldWhyM2:['ex','نرخ در همان لحظهٔ ثبت درخواست قفل می‌شود؛ نوسان بعدی روی سفارش شما اثری ندارد.'],
   exGoldWhyM3:['ex','اگر ظرف ۲۴ ساعت مراجعه نکنید، سفارش لغو و کل مبلغ به موجودی شما برمی‌گردد.'],
@@ -2654,23 +2677,23 @@ const COPY_DEF={
   exBasketM2:['ex','کارمزد ورود ۰٫۵٪؛ خروج بدون کارمزد، با قیمت لحظه.'],
   exBasketM3:['ex','دارایی‌های سبد هم در صرافی رمزارز بیت‌وانا و به نام شما نگهداری می‌شود.'],
   exCuBasicM1:['ex','صرافی رمزارز بیت‌وانا، شریک نگهدارندهٔ دارای مجوز، دارایی‌ها را در کیف پول‌های سرد (Cold wallet) و با امنیت بالا در مقابل حملات نگهداری می‌کند.'],
-  exCuBasicM2:['ex','مهاجر بدون دستور شما نمی‌تواند برداشت کند؛ هر درخواست برداشت با احراز هویت شما ثبت می‌شود.'],
+  exCuBasicM2:['ex','مهاجر بدون دستور شما برداشت نمی‌کند؛ هر درخواست برداشت با احراز هویت خودتان ثبت می‌شود.'],
   exCuBasicM3:['ex',''],
-  exCuGoldM1:['ex','طلا به صورت شمش یا سکهٔ ۱۸ عیار، با رسید کتبی صرافی تحویل می‌شود.'],
-  exCuGoldM2:['ex','پس از تحویل، مهاجر هیچ مسئولیتی در نگهداری ندارد.'],
+  exCuGoldM1:['ex','شمش استاندارد ۱۸ عیار، همراه با رسید کتبی صرافی تحویل داده می‌شود.'],
+  exCuGoldM2:['ex','بعد از تحویل، مهاجر دیگر مسئول نگه‌داشتن طلا نیست.'],
   exCuGoldM3:['ex','فروش دوباره محدود به شریک تحویل‌دهنده‌ی طلا نیست و طلا در هر طلافروشی معتبری قابل تحویل است.'],
 
   /* diagram labels */
-  dgDollar:['dg','دلار'], dgGold18:['dg','طلای ۱۸ عیار'], dgShop:['dg','طلافروشی'],
+  dgDollar:['dg','دلار'], dgGold18:['dg','شمش ۱۸ عیار'], dgShop:['dg','طلافروشی'],
   dgNoKey:['dg','مهاجر: بدون کلید'], dgKeyIn:['dg','کلید داخل دستگاه'], dgOnlyDev:['dg','فقط با دستگاه شما'],
-  dgUsd:['dg','دارایی دلاری'], dgPlace:['dg','انتخاب روش نگهداری'], dgAnytime:['dg','انتقال و تبدیل'],
-  dgDigi:['dg','دلار دیجیتال'], dgPartner:['dg','نزد شریک نگهدارنده'], dgOrKey:['dg','یا با کلید شما'],
+  dgUsd:['dg','دارایی دلاری'], dgPlace:['dg','انتخاب جای نگهداری'], dgAnytime:['dg','انتقال و تبدیل'],
+  dgDigi:['dg','دلار دیجیتال'], dgPartner:['dg','نزد بیت‌وانا'], dgOrKey:['dg','یا با کلید شما'],
   dgGold:['dg','طلا'], dgBasket:['dg','یک سبد'], dgKeyPhone:['dg','کلید روی گوشی'], dgKeyDev:['dg','یا روی دستگاه'], dgModePhone:['dg','روی گوشی · رایگان'], dgModeDev:['dg','دستگاه · <tspan style="direction:ltr;unicode-bidi:isolate">$49</tspan>'],
-  dgAtMohajer:['dg','توسط مهاجر'], dgPhysGold:['dg','طلای فیزیکی'], dgYourKey:['dg','کلید شخصی'],
+  dgAtMohajer:['dg','پیش مهاجر'], dgPhysGold:['dg','طلای فیزیکی'], dgYourKey:['dg','کلید شخصی'],
 
   /* comparison on the custody page */
   cmpTitle:['cu','در یک نگاه'],
-  cmp1:['cu','بدون اجازهٔ ما'], cmp2:['cu','رمز گم شد؟ بازیابی'], cmp3:['cu','خرج و انتقال، مستقیم'], cmp4:['cu','دست خودتان'],
+  cmp1:['cu','جابه‌جایی بدون اجازهٔ مهاجر'], cmp2:['cu','بازیابی رمزِ فراموش‌شده'], cmp3:['cu','خرج و انتقال مستقیم'], cmp4:['cu','نگهداری دستِ خودتان'],
 
   /* misc */
   next:['misc','ادامه'], done:['misc','تمام'], back:['misc','بازگشت'], home:['misc','خانه'],
@@ -2678,7 +2701,7 @@ const COPY_DEF={
   activityTitle:['misc','فعالیت‌ها'], noActivity:['misc','هنوز چیزی نیست.'],
   support:['misc','پشتیبانی'], humanSupport:['misc','پشتیبان انسانی'], supportHours:['misc','۹ تا ۲۱'],
   receiptTitle:['misc','رسید'], problemQ:['misc','مشکلی هست؟'], followUp:['misc','پیگیری با پشتیبان'],
-  needBalanceT:['misc','اول موجودی لازم است'], needBalanceB:['misc','ابتدا تومان را به دلار تبدیل کنید.'],
+  needBalanceT:['misc','اول باید موجودی دلاری داشته باشید'], needBalanceB:['misc','برای این کار، اول تومان را به دلار تبدیل کنید.'],
   goConvert:['misc','رفتن به تبدیل'], close:['misc','بستن'],
   pending:['misc','در انتظار'], doneB:['misc','انجام شد'], failedB:['misc','ناموفق'], refundedB:['misc','برگشت'], cancelledB:['misc','لغو شد'],
   txIn:['misc','تبدیل تومان به دلار'], txOut:['misc','برداشت به تومان'], txSend:['misc','انتقال به سارا رضایی'],
@@ -2691,7 +2714,8 @@ const COPY_DEF={
   callRinging:['ex','در حال تماس…'],
   callOn:['ex','وصل شد'],
   callSay:['ex','هر سؤالی دارید، بپرسید. عجله‌ای نیست.'],
-  callMute:['ex','بی‌صدا'], callSpeaker:['ex','بلندگو'], callEnd:['ex','پایان']
+  callMute:['ex','بی‌صدا'], callSpeaker:['ex','بلندگو'], callEnd:['ex','پایان'],
+  withdrawTitleShort:['misc','برداشت']
 };
 /* The Nest arm changes only narrative words, never facts. Kept small on purpose. */
 const COPY_NEST={
@@ -2834,6 +2858,18 @@ const pwFeeOf=a=>Math.min(FEES.pwPct*a, FEES.pwCap);
 const pwTotalOf=a=>a+pwFeeOf(a)+FEES.pwNetwork;
 const nextId=()=>'MHJ-'+(++S.seq);
 const N=s=>'<span class="num">'+s+'</span>';
+/* یک دکمهٔ خاموش با دلیلِ نوشته‌شده، به‌جای دکمه‌ای که ناپدید می‌شود.
+   هر صفحهٔ مبلغ از همین رد می‌شود، تا رفتارِ همه‌جا یکی باشد. */
+function gate(slotId, ok, why, bad){
+  const slot=$(slotId); if(!slot) return;
+  slot.classList.remove('hidden');
+  const b=slot.querySelector('button'); if(b) b.disabled=!ok;
+  let h=slot.querySelector('.why');
+  if(!h){ h=document.createElement('div'); h.className='why'; slot.insertBefore(h,slot.firstChild); }
+  h.className='why'+(bad?' bad':'');
+  h.innerHTML= ok?'':(why||'');
+  h.hidden = ok || !why;
+}
 const NOTE=(kind,html)=>'<div class="note '+kind+'" style="text-align:start"><svg viewBox="0 0 24 24">'+
   (kind==='bad'||kind==='warn'?'<path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/>':'<circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/>')+
   '</svg><p>'+html+'</p></div>';
@@ -2864,8 +2900,9 @@ function go(name){
   const prev=current; current=name;
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===name));
   stopQuote();
-  if(name==='c-quote') startQuote('q-secs','q-bar',()=>go('convert'));
-  if(name==='w-quote') startQuote('w-secs','w-bar',()=>go('w-amt'));
+  /* نرخ که منقضی شد، صفحه بی‌خبر به عقب نمی‌پرد؛ می‌گوید چه شد. */
+  if(name==='c-quote') startQuote('q-secs','q-bar',()=>{ go('convert'); toast(C('quoteExpired')); });
+  if(name==='w-quote') startQuote('w-secs','w-bar',()=>{ go('w-amt'); toast(C('quoteExpired')); });
   if(name==='activity') renderActivity();
   if(name==='invest') renderNests();
   if(name==='use') renderUse();
@@ -2895,6 +2932,12 @@ function startQuote(secId,barId,onExpire){
     if(left<=0){stopQuote(); onExpire();} },1000);
 }
 function stopQuote(){ if(S.quoteTimer){clearInterval(S.quoteTimer);S.quoteTimer=null} }
+let toastT=null;
+function toast(msg){
+  const t=$('toast'); if(!t) return;
+  t.textContent=msg; t.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),3600);
+}
 
 /* ════════ render ════════ */
 function cycleUnit(){ S.unit=S.unit==='usd'?'irr':'usd'; render(); }
@@ -2920,8 +2963,14 @@ function render(){
   const cd=$('c-amt'); cd.innerHTML=(S.cRaw?toman(+S.cRaw):'۰')+'<span class="caret"></span>';
   cd.classList.toggle('zero',!S.cRaw);
   $('c-out').innerHTML=C('youGetApprox')+' '+N(usd(q.net));
-  $('c-warn').innerHTML = q.tooSmall&&cAmt>0 ? NOTE('warn',C('minBuyWarn')) : '';
-  $('c-cta').classList.toggle('hidden',!(q.gross>0&&!q.tooSmall));
+  /* حداقلِ خرید از همان اول نوشته می‌شود، نه بعد از این‌که آدم شکست
+     بخورد. مبلغِ تومانی هم کنارش است، چون آدم دارد تومان تایپ می‌کند. */
+  const minT=Math.ceil(FEES.minBuyUsd*buyRate()/100000)*100000;
+  $('c-warn').innerHTML='';
+  /* این خطا نیست، راهنماست: تا وقتی آدم کاری اشتباه نکرده، رنگِ خطا
+     نمی‌گیرد. قرمز را برای «بیشتر از موجودی» نگه می‌داریم. */
+  gate('c-cta', q.gross>0&&!q.tooSmall,
+    C('minBuyHint').replace('{t}',toman(minT)) + (cAmt>0 ? ' '+C('orTryTrial') : ''));
   $('q-pay').textContent=toman(cAmt)+' تومان';
   $('q-rate').textContent=toman(buyRate());
   $('q-gross').textContent=usd(q.gross);
@@ -2936,7 +2985,10 @@ function render(){
   const tAmt=+S.tRaw||0, tFee=FEES.transferPct*tAmt;
   const td=$('t-val'); td.innerHTML='$'+(S.tRaw?grp(tAmt):'0')+'<span class="caret"></span>';
   td.classList.toggle('zero',!S.tRaw);
-  $('t-cta2').classList.toggle('hidden',!(tAmt>0 && tAmt+tFee<=S.available));
+  const tOver=tAmt+tFee>S.available;
+  gate('t-cta2', tAmt>0 && !tOver,
+    tAmt<=0 ? C('typeAmount') : C('notEnough')+' '+C('yourBalance')+' <b>'+usd(S.available)+'</b>',
+    tOver);
   $('tc-amt').textContent=usd(tAmt);
   $('tc-fee').innerHTML=tFee?N(usd(tFee)):'<span style="color:var(--ok)">'+C('feeZero')+'</span>';
   $('tc-total').textContent=usd(tAmt+tFee);
@@ -2945,7 +2997,9 @@ function render(){
   const wAmt=+S.wRaw||0, wq=quoteSell(wAmt);
   const wd=$('w-val'); wd.innerHTML='$'+(S.wRaw?grp(wAmt):'0')+'<span class="caret"></span>';
   wd.classList.toggle('zero',!S.wRaw);
-  $('w-cta').classList.toggle('hidden',!(wAmt>0&&wAmt<=S.available));
+  gate('w-cta', wAmt>0&&wAmt<=S.available,
+    wAmt<=0 ? C('typeAmount') : C('notEnough')+' '+C('yourBalance')+' <b>'+usd(S.available)+'</b>',
+    wAmt>S.available);
   $('w-get').textContent=toman(wq.toman)+' تومان'; $('wq-net').textContent=toman(wq.toman)+' تومان';
   $('wq-amt').textContent=usd(wAmt); $('wq-rate').textContent=toman(sellRate());
   $('wq-fee').textContent=usd(wq.fee);
@@ -2956,10 +3010,10 @@ function render(){
 /* ════════ CONVERT ════════ */
 function cKey(k){ S.trial=false; if(k==='del') S.cRaw=S.cRaw.slice(0,-1);
   else if(S.cRaw.length<13) S.cRaw=(S.cRaw==='0'?'':S.cRaw)+k; render(); }
-function cSet(n){ S.cRaw=String(n); render(); }
+function cSet(n){ S.trial=false; S.cRaw=String(n); render(); }
 /* مسیر آموزشی: زیر حداقلِ خرید است و عمداً بی‌کارمزد. هر رقمی که کاربر
    بعدش بزند، دوباره خریدِ واقعی است. */
-function cTrial(){ S.trial=true; S.cRaw=String(Math.ceil(FEES.trialUsd*buyRate()/1000)*1000); render(); }
+function cTrial(){ S.trial=true; S.cRaw=String(Math.ceil(CONFIG.trialUsd*buyRate()/1000)*1000); render(); }
 function doConvert(){
   stopQuote();
   const cAmt=+S.cRaw||0, cq=quoteBuy(cAmt), net=cq.net;
@@ -3153,7 +3207,8 @@ const nestFee=a=>a*0.005;
 function naCheck(){
   const a=parseFloat($('na-amt').value)||0, f=nestFee(a), over=a>S.available;
   $('na-fee').textContent=usd(f); $('na-net').textContent=usd(Math.max(0,a-f));
-  $('na-warn').innerHTML= over ? NOTE('bad',C('notEnough')+' '+N(usd(S.available))) : (a>0&&a<10 ? NOTE('warn',C('minTen')) : '');
+  $('na-warn').innerHTML= over ? NOTE('bad',C('notEnough')+' '+C('yourBalance')+' '+N(usd(S.available)))
+    : (a<10 ? NOTE('warn',C('minTen')) : '');
   $('na-cta').disabled=over||a<10;
 }
 function doNest(){
@@ -3394,13 +3449,26 @@ function renderPw(){
   const a=+S.pwRaw||0, fee=pwFeeOf(a)+FEES.pwNetwork, net=Math.max(0,a-fee);
   const v=$('pw-val'); v.innerHTML='$'+(S.pwRaw?grp(a):'0')+'<span class="caret"></span>'; v.classList.toggle('zero',!S.pwRaw);
   $('pw-avail').innerHTML=C('freeBal')+' '+N(usd(S.available));
-  $('pw-cta').classList.toggle('hidden',!(a>fee&&a<=S.available));
+  gate('pw-cta', a>fee&&a<=S.available,
+    a<=0 ? C('typeAmount')
+         : a>S.available ? C('notEnough')+' '+C('yourBalance')+' <b>'+usd(S.available)+'</b>'
+         : C('minMoreThanFee').replace('{f}',usd(fee)),
+    a>S.available);
+  /* هزینهٔ شبکه ثابت است، پس روی مبلغ کم، سهمش بزرگ می‌شود. عدد روی صفحه
+     هست؛ این سطر فقط همان را به درصد می‌گوید. */
+  const share=a>fee ? Math.round(fee/a*100) : 0;
+  $('pw-share').innerHTML = share>=20 ? C('feeShareWarn').replace('{p}',fa(share)) : '';
+  $('pw-share').hidden = share<20;
   $('pq-net').textContent=usd(net); $('pq-amt').textContent=usd(a); $('pq-fee').textContent=usd(fee); $('pq-addr').textContent=pwShort();
   /* amount back */
   const b=+S.pbRaw||0, bnet=Math.max(0,b-fee);
   const bv=$('pb-val'); bv.innerHTML='$'+(S.pbRaw?grp(b):'0')+'<span class="caret"></span>'; bv.classList.toggle('zero',!S.pbRaw);
   $('pb-avail').innerHTML=C('pwBalL')+' '+N(usd(pwBal()));
-  $('pb-cta').classList.toggle('hidden',!(b>fee&&b<=pwBal()));
+  gate('pb-cta', b>fee&&b<=pwBal(),
+    b<=0 ? C('typeAmount')
+         : b>pwBal() ? C('notEnough')+' '+C('yourBalance')+' <b>'+usd(pwBal())+'</b>'
+         : C('minMoreThanFee').replace('{f}',usd(fee)),
+    b>pwBal());
   $('pbq-net').textContent=usd(bnet); $('pbq-amt').textContent=usd(b); $('pbq-fee').textContent=usd(fee);
 }
 function pwCopy(){ try{ navigator.clipboard&&navigator.clipboard.writeText(S.pw.addr); }catch(e){} $('pw-copy').textContent=C('pwCopied'); setTimeout(()=>$('pw-copy').textContent=C('pwCopy'),1500); }

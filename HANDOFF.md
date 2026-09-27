@@ -1991,6 +1991,92 @@ source badges and no verdict ("شواهد کافی نیست · بیشترین n=
   would tilt the answer. `spotHtml()` and `./test-home.png` stay; re-attaching
   is one `spot:` key.
 
+### The writing standard, written down (2026-09-27)
+
+«هر وقت بخواهید، برداشت» — the user pointed at that line and asked what it
+is even supposed to mean. It is not a sentence. It is a headline fragment
+standing where a sentence belongs, and the app was full of them: «نگهداری با
+کلید شخصی», «عدم وابستگی به مهاجر در نگهداری», «مسئولیت نگهداری شخصی».
+
+So the rule is no longer taste. It is the standard GOV.UK content design,
+plainlanguage.gov and NN/g microcopy all converge on, and it is now written
+here so the next pass does not re-litigate it:
+
+1. **Every list item is a complete sentence with a verb.** If the reader has
+   to supply the verb themselves, it is not copy, it is a label.
+2. **Second person, active voice.** «برداشت می‌کنید», not «قابل برداشت است».
+3. **Verbs, not nominalizations.** «نگه می‌دارید», not «نگهداری».
+4. **State the consequence, not the category.** «اگر طلا در خانه گم یا دزدیده
+   شود، کسی جبران نمی‌کند» beats «مسئولیت نگهداری شخصی» — same fact, and the
+   reader can actually picture it.
+5. **Parallel construction inside a list.** All items open the same way.
+6. **One idea per line.** No «و» chains.
+7. **Concrete numbers and times**, never «مقدار کافی» or «به‌زودی».
+8. **No rhetorical questions inside a list.** «رمز را فراموش کردید؟ بازیابی
+   می‌شود» became «اگر رمزتان را فراموش کنید، مهاجر حسابتان را برمی‌گرداند».
+
+Exempt: titles, labels, table headers, badges. Those may be fragments.
+Punctuation: a paragraph gets a full stop, a list item does not.
+
+Two vocabulary decisions that are now fixed, because the app was using three
+names for one thing: the custodian is always **«پیش مهاجر»** (never «نزد ما»,
+never «توسط مهاجر»), and an explanatory sentence says **«پول»** while
+**«دارایی»** is kept for labels like «توزیع دارایی».
+
+The pass covered 100+ keys. Both `COPY_DEF` inside the app and
+`copy-v4.5.json` were written together, and the eight keys the user had
+hand-edited in the JSON were folded back into the defaults — the two files
+are now byte-identical in content, verified, so neither can silently revert
+the other.
+
+### Two real bugs the user found
+
+**«۵ دلار · امتحان» did nothing.** When the fee spec landed, the rates moved
+to `CONFIG` but `cTrial()` still read `FEES.trialUsd`. `undefined × rate` is
+`NaN`, so the amount field filled with NaN and the button stayed dead. One
+word. The trial is deliberately below the $50 minimum and deliberately
+fee-free, and that logic was always right — it just never ran.
+
+**The button vanished instead of explaining.** On every amount screen the CTA
+was hidden until the amount was valid. Someone types 2,000,000 تومان, nothing
+happens, and no part of the screen says why. That is the first usability
+heuristic (visible system status) and the ninth (say what is wrong in plain
+words) failing at the same moment, on the single most important screen.
+
+Now one helper, `gate()`, drives all five keypad screens: the button is
+always there, disabled, with the reason directly above it —
+
+- empty: «حداقل مبلغ تبدیل ۵۰ دلار است — حدود ۱۱٬۸۰۰٬۰۰۰ تومان.» The minimum
+  is taught *before* the failure, and in تومان, because تومان is what they
+  are typing.
+- below it: the same line plus «برای امتحان، «۵ دلار» را بزنید.»
+- over balance: «موجودی کافی نیست. موجودی شما: $250.00» — and only this state
+  is red. A person mid-typing has not made an error yet.
+
+### Three more from the screen-by-screen sweep
+
+- **The quote expiring bounced the user back silently.** 90 seconds pass, the
+  screen changes by itself, nothing is said. Added a toast: «نرخ منقضی شد.
+  برای دیدن نرخ تازه، دوباره «دریافت نرخ» را بزنید.»
+- **The network fee is flat, so on small transfers it is enormous.** $2 to a
+  personal wallet costs $0.80 — 40%. The number was on screen; nobody does
+  that division. Now, above 20%, the app says the percentage out loud. No new
+  minimum was invented: that is the fee spec's call, not ours.
+- **The withdrawal screen was titled «تبدیل».** They arrive by tapping
+  «برداشت» on home. It now says «برداشت».
+
+### Verification (2026-09-27)
+
+In a 375×812 viewport, no console errors: trial preset → ۱٬۱۷۴٬۰۰۰ تومان →
+«دریافتی $5.00» → fee «رایگان · آزمایشی» → balance $5.00. Convert gate across
+empty / below-min / valid, transfer gate across empty / valid / over-balance,
+personal-wallet gate across below-fee / 40%-fee / normal — every state gives
+the right message and the right enabled/disabled button. Quote expiry fires
+the toast and returns to the amount screen. Gold: 1g bar = $102.80 metal +
+$2.00 fabrication + $2.50 floor = $107.30 charged at order, $102.80 in
+توزیع دارایی. All 567 copy keys resolve — no `data-c` and no `C()` call points
+at a missing key.
+
 ---
 
 ## 11. Blu Bank — the reference
