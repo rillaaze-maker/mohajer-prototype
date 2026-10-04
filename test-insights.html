@@ -292,7 +292,7 @@ footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--brd);font-siz
   <footer>هر عدد این صفحه از همان جریان رویدادها ساخته می‌شود؛ چیزی دوباره‌شماری یا تخمین نمی‌شود. زیر سه جلسه، این صفحه قضاوت نمی‌کند — فقط داده را نشان می‌دهد.</footer>
 </div>
 
-<script src="./test-kit.js?v=20260927a"></script>
+<script src="./test-kit.js?v=20261004a"></script>
 <script>
 const $ = TK.$, esc = TK.esc, fa = TK.fa;
 let CFG = {}, VERS = [], ALL = [], SEL = [], SRC = null, ageFilter = new Set(), heatScreen = null;
@@ -737,7 +737,7 @@ function blockSessions(){
         '<td>' + m + '</td>' +
         '<td>' + esc(R[b.first_route] || '—') +
           (b.routes_completed.length ? ' <span class="pill g">تا آخر</span>' : '') + '</td>' +
-        '<td class="num">' + fa(sc.answered || 0) + '/۷</td>' +
+        '<td class="num">' + fa(sc.answered || 0) + '/' + fa(s.question_count || TK.CORE_Q.length) + '</td>' +
         '<td class="num">' + (e.trust ? fa(e.trust) + '/۵' : '—') + '</td>' +
         '<td>' + (step ? '<span class="pill ' + step[1] + '">' + step[0] + '</span>' : '—') + '</td>' +
         '<td>' + (s.delivery_confirmed ? '<span class="pill g">تأیید</span>' : '<span class="pill">—</span>') + '</td></tr>' +
@@ -811,9 +811,11 @@ function kpi(name, num, den, gate, o){
   const value = !has ? null : (o.raw ? num : num / den);
   const pass = !has ? null : (dir === 'max' ? value <= gate : value >= gate);
   const near = (has && !pass) && Math.abs(value - gate) <= (o.slack !== undefined ? o.slack : (gate > 1 ? .5 : .10));
-  const st = !has ? ['none','—'] : pass ? ['ok','رسیده'] : near ? ['near','نزدیک'] : ['bad','نرسیده'];
+  const st = o.off ? ['none','پرسیده نشد']
+    : !has ? ['none','—'] : pass ? ['ok','رسیده'] : near ? ['near','نزدیک'] : ['bad','نرسیده'];
   const src = SRCB[o.src || 'ans'];
-  return { name, value, den, pass, near, gate, diag: !!o.diag,
+  /* شاخصی که سؤالش پرسیده نمی‌شود، نه Gate است و نه «در انتظار داده» */
+  return { name, value, den, pass, near, gate, diag: !!o.diag || !!o.off, off: !!o.off,
     html:'<div class="kpirow' + (o.diag ? ' diag' : '') + '"><span class="n">' + name +
       '<span class="src ' + src[1] + '">' + src[0] + '</span></span>' +
       '<span class="v num">' + (has ? f(value) : '—') + '</span>' +
@@ -827,7 +829,9 @@ function kpi(name, num, den, gate, o){
 function hstatus(rows){
   const g = rows.filter(r => !r.diag && r.den > 0);
   const ready = g.filter(r => r.den >= SAMPLE.provisional);
-  if (!g.length) return ['none','هنوز پاسخی برای این کارت نیست'];
+  if (!g.length) return ['none', rows.some(r => r.off)
+    ? 'سؤال این کارت در این راند پرسیده نمی‌شود — فقط شواهد رفتاری'
+    : 'هنوز پاسخی برای این کارت نیست'];
   if (!ready.length) return ['none','شواهد کافی نیست · بیشترین n=' + fa(Math.max(...g.map(r => r.den)))];
   if (ready.every(r => r.pass)) return ['ok', ready.every(r => r.den >= SAMPLE.decision) ? 'تأیید شد' : 'تأیید مقدماتی'];
   if (ready.every(r => r.pass || r.near)) return ['near','نیاز به اصلاح'];
@@ -907,6 +911,9 @@ function hypoView(){
     '<p class="tiny">لینک این راند را از کنسول بردارید و بفرستید.</p></div>';
 
   const cnt = (list, f) => list.filter(f).length;
+  /* سؤالی که در نسخهٔ جاری پرسیده نمی‌شود: مخرجش هیچ‌وقت پر نمی‌شود، و
+     کارت باید همین را بگوید نه «منتظر داده». */
+  const off = k => TK.CORE_Q.indexOf(k) < 0;
 
   /* ── H1 مسیر اصلی — فقط رفتاری ───────────────────────────────── */
   const nS = startedS.length;
@@ -926,8 +933,8 @@ function hypoView(){
   const q1 = ans('positioning_main'), q2 = ans('distinct_value');
   const h2 = [
     kpi('تشخیص درست جایگاه', cnt(q1, s=>s._s.positioning_correct), q1.length, GATES.positioning),
-    kpi('تشخیص ارزش متمایز', cnt(q2, s=>s._s.distinct_value_recognized), q2.length, GATES.distinct),
-    kpi('«تفاوتی نمی‌بینم»', cnt(q2, s=>s._s.no_distinct_value), q2.length, GATES.no_distinct_max, {dir:'max'})
+    kpi('تشخیص ارزش متمایز', cnt(q2, s=>s._s.distinct_value_recognized), q2.length, GATES.distinct, {off:off('distinct_value')}),
+    kpi('«تفاوتی نمی‌بینم»', cnt(q2, s=>s._s.no_distinct_value), q2.length, GATES.no_distinct_max, {dir:'max', off:off('distinct_value')})
   ];
 
   /* ── H3 قابلیت‌ها ────────────────────────────────────────────── */
@@ -938,9 +945,11 @@ function hypoView(){
   const doneR = tallyAll(startedS.map(s=>s._b.routes_completed));
   const h3 = [
     kpi('سهم قابلیتِ اول در Top-2' + (topKey?' — '+esc(L.feat[topKey]||topKey):''),
-        topKey?top2[topKey]:0, q5.length, GATES.top_feature),
+        topKey?top2[topKey]:0, q5.length, GATES.top_feature, {off:off('feature_top2')}),
+    /* سؤالِ قابلیت‌ها که حذف شد، شاهدِ این فرضیه تماماً رفتاری است —
+       پس همان می‌شود Gate، نه یک شاخصِ تشخیصیِ کنار آن. */
     kpi('مسیری را در اپ تا آخر برد', cnt(startedS, s=>s._b.routes_completed.length>0), nS, .50,
-        {src:'beh', diag:true})
+        {src:'beh', diag:!off('feature_top2')})
   ];
 
   /* ── H4 فهم و اعتماد ─────────────────────────────────────────── */
@@ -950,7 +959,7 @@ function hypoView(){
   const misDen = Math.max(q3.length, q4.length);
   const worstMis = Object.keys(misAll).reduce((a,k)=>Math.max(a, rate(misAll[k], misDen)), 0);
   const h4 = [
-    kpi('فهم ماهیت دارایی', cnt(q3, s=>s._s.asset_correct), q3.length, GATES.asset),
+    kpi('فهم ماهیت دارایی', cnt(q3, s=>s._s.asset_correct), q3.length, GATES.asset, {off:off('asset_understanding')}),
     kpi('فهم جای نگهداری', cnt(q4, s=>s._s.custody_correct), q4.length, GATES.custody),
     kpi('اعتماد ۴ یا ۵', cnt(q6, s=>s._s.trust_high), q6.length, GATES.trust_45),
     kpi('میانهٔ اعتماد', trusts.length?med(trusts):0, trusts.length, GATES.trust_median,
@@ -982,8 +991,10 @@ function hypoView(){
   const five = [
     ['تکمیل مأموریت اصلی', h1[0], 'beh'],
     ['تشخیص درست جایگاه', h2[0], 'ans'],
-    ['فهم ماهیت و نگهداری', kpi('', cnt(bothCorrect, s=>s._s.asset_correct && s._s.custody_correct),
-        bothCorrect.length, .70), 'ans'],
+    [off('asset_understanding') ? 'فهم جای نگهداری' : 'فهم ماهیت و نگهداری',
+      off('asset_understanding')
+        ? kpi('', cnt(q4, s=>s._s.custody_correct), q4.length, GATES.custody)
+        : kpi('', cnt(bothCorrect, s=>s._s.asset_correct && s._s.custody_correct), bothCorrect.length, .70), 'ans'],
     ['اعتماد ۴ و ۵', h4[2], 'ans'],
     ['قصد پول واقعی', h5[1], 'ans']
   ];

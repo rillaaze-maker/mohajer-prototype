@@ -399,8 +399,13 @@
      یک قاعدهٔ سخت: پاسخِ نداده صفر نیست. اگر کسی سؤالی را ندیده، کلیدش
      ساخته نمی‌شود و آن جلسه در مخرجِ آن شاخص نمی‌آید. */
   const SCORING_VERSION = 2;
-  const CORE_Q = ['positioning_main', 'distinct_value', 'asset_understanding',
-                  'custody_understanding', 'feature_top2', 'trust', 'commitment_step'];
+  /* سؤال‌هایی که واقعاً پرسیده می‌شوند. `answered` از روی همین شمرده
+     می‌شود، پس «۳ از ۴» یعنی همان چیزی که روی صفحه دیده شده — نه کسری
+     از هفت سؤالی که دیگر پرسیده نمی‌شوند. */
+  const CORE_Q = ['positioning_main', 'custody_understanding', 'trust', 'commitment_step'];
+  /* سؤال‌های نسخه‌های قبل. امتیازشان همچنان حساب می‌شود تا جلسه‌های قدیمی
+     خوانا بمانند، ولی در مخرجِ «چند سؤال جواب داد» نمی‌آیند. */
+  const PAST_Q = ['distinct_value', 'asset_understanding', 'feature_top2'];
   /* «تمایز نسبت به صرافی» فقط چیزهایی است که صرافی ندارد. تبدیل و کیف پول
      شخصی در توزیع دیده می‌شوند، ولی خودشان تمایز نیستند. */
   const DISTINCT_OK = ['custody', 'gold', 'invest', 'p2p', 'support'];
@@ -490,7 +495,7 @@
     queue, flush, read, pack, unpack,
     copy, download, csv, derive, screenFa, SCREEN_FA, warm,
     /* پروتکل ۱.۱ */
-    SCORING_VERSION, PROTOCOL: '1.1', QUESTION_SET: 'seven_core_v1', HYPOTHESIS_SET: 'validation_v1_1',
-    CORE_Q, DISTINCT_OK, ROUTES, CONTROL_ROUTES, routesOf, scoreSession, behaviorOf, protoOf
+    SCORING_VERSION, PROTOCOL: '1.1', QUESTION_SET: 'core4_v1', HYPOTHESIS_SET: 'validation_v1_1',
+    CORE_Q, PAST_Q, DISTINCT_OK, ROUTES, CONTROL_ROUTES, routesOf, scoreSession, behaviorOf, protoOf
   };
 })(window);

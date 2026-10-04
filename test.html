@@ -210,7 +210,7 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
          همین متن را بفرستید. -->
     <div class="note" style="margin-top:16px">
       <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v4"/></svg>
-      <p><b>پیام ویس.</b> در پایان تست، بعضی‌ها می‌زنند «یک ویس کوتاه می‌فرستم». نامشان در نتیجه‌ها زیر «اقدام‌های بعد از پایان» می‌آید؛ همین متن را برایشان بفرستید.</p>
+      <p><b>پیام ویس.</b> حالا <b>همهٔ</b> شرکت‌کننده‌ها در پایان تست همین چهار سؤال را می‌بینند و از آن‌ها ویس خواسته می‌شود. این متن را همراه لینک بفرستید تا از قبل بدانند، و برای هر کسی که ویس نفرستاد یک بار دیگر. کسانی که دکمهٔ «فرستادن ویس» را زده‌اند، در نتیجه‌ها زیر «اقدام‌های بعد از پایان» دیده می‌شوند.</p>
     </div>
     <textarea id="voicemsg" style="margin-top:12px;min-height:170px"></textarea>
     <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
@@ -302,7 +302,7 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
 
 <div class="flash" id="flash"></div>
 
-<script src="./test-kit.js?v=20260927a"></script>
+<script src="./test-kit.js?v=20261004a"></script>
 <script>
 const $ = TK.$;
 let CFG = {}, VERS = [], sel = null, chans = ['tg'], rows = [], DEFAULT_INVITE = '';
@@ -390,7 +390,8 @@ function resetInvite(){
 'می‌شود پنج دقیقه با نمونهٔ آزمایشی‌اش کار کنید و بگویید کجا گیج‌کننده است؟\n' +
 'همه‌چیز شبیه‌سازی است و دادن نام و شماره هم کاملاً اختیاری است.\n\n' +
 linkFor(chans[0] || 'x') + '\n\n' +
-'روی گوشی باز کنید. هر جا گیر کردید همان‌جا دکمهٔ «گیر کردم» هست — دقیقاً همان چیزی است که دنبالش هستیم.';
+'روی گوشی باز کنید. هر جا گیر کردید همان‌جا دکمهٔ «گیر کردم» هست — دقیقاً همان چیزی است که دنبالش هستیم.\n' +
+'در پایان، چهار سؤال کوتاه می‌بینید؛ جوابشان را برایمان ویس بفرستید. همین چند جمله از همه‌چیز برای ما باارزش‌تر است.';
   $('invite').value = DEFAULT_INVITE;
   $('voicemsg').value =
 'ممنون که وقت گذاشتید 🙏\n' +
@@ -505,7 +506,7 @@ function paintLive(){
     ['تا آخر رفته‌اند', TK.fa(done.length), 'gold'],
     ['نیمه‌کاره', TK.fa(part.length), ''],
     ['تحویلِ تأییدشده', TK.fa(conf.length), conf.length === done.length && done.length ? 'ok' : ''],
-    ['پاسخ‌ها، میانگین', ansd.length ? TK.fa(Math.round(avgAns * 10) / 10) + ' از ۷' : '—', ''],
+    ['پاسخ‌ها، میانگین', ansd.length ? TK.fa(Math.round(avgAns * 10) / 10) + ' از ' + TK.fa(TK.CORE_Q.length) : '—', ''],
     ['میانگین زمان', done.length ? TK.mmss(avg) : '—', ''],
     ['بازه‌های سنی', TK.fa(ages.size) + ' از ' + TK.fa(TK.AGES.length), '']
   ].map(([l, v, c]) => '<div class="kpi ' + c + '"><div class="v num">' + v + '</div><div class="l">' + l + '</div></div>').join('');

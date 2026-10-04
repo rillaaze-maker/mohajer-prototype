@@ -205,6 +205,17 @@ textarea::placeholder{color:var(--w3)}
 .pact .ic svg{width:16px;height:16px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .pact .tx{min-width:0}
 .pact .tx i{display:block;font-style:normal;font-weight:400;font-size:11.5px;color:var(--w3);margin-top:3px}
+/* ویس: کارِ اصلیِ این صفحه، نه یک گزینه در کنار بقیه */
+.vbox{border:1px solid rgba(213,164,92,.34);background:rgba(213,164,92,.07);border-radius:17px;padding:17px}
+.vh{display:flex;gap:12px;align-items:flex-start}
+.vh .ic{width:34px;height:34px;border-radius:11px;flex:none;display:grid;place-items:center;background:rgba(213,164,92,.16)}
+.vh .ic svg{width:17px;height:17px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.vh b{font-size:14.5px;font-weight:700;letter-spacing:-.02em}
+.vh i{display:block;font-style:normal;font-size:11.5px;color:var(--w3);margin-top:3px;line-height:1.7}
+.vq{margin:15px 0 16px;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.vq li{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.8;color:var(--w2)}
+.vq li b{flex:none;width:20px;height:20px;margin-top:3px;border-radius:50%;background:rgba(213,164,92,.17);
+  color:var(--gold);font-size:11px;font-weight:700;display:grid;place-items:center}
 .sent{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ok);margin-top:16px}
 .sent svg{width:15px;height:15px;stroke:var(--ok);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
@@ -278,10 +289,18 @@ textarea::placeholder{color:var(--w3)}
     <div id="d-sent" class="sent" hidden><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="d-sent-t">ارسال شد</span></div>
     <!-- بعد از ثبت. هیچ‌کدام اجباری نیست و هیچ‌کدام روی نتیجه اثر ندارد. -->
     <div class="post" id="d-post" hidden>
-      <div class="k" style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--gold)">اگر وقت دارید</div>
-      <button class="pact" id="pa-voice" onclick="postAct('voice',this)">
-        <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v4"/></svg></span>
-        <span class="tx">یک ویس کوتاه می‌فرستم<i>چهار سؤال برایتان می‌فرستیم؛ همان‌ها را بگویید.</i></span></button>
+      <!-- ویس برای همه، نه به‌عنوان یکی از گزینه‌ها: در این مرحله، حرفِ
+           خودِ آدم از هر گزینه‌ای بیشتر می‌ارزد. -->
+      <div class="vbox" id="d-voice">
+        <div class="vh">
+          <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v4"/></svg></span>
+          <div><b id="v-title">یک ویس کوتاه بفرستید</b><i id="v-sub">همین چهار سؤال. هر کدام یک جمله کافی است.</i></div>
+        </div>
+        <ol class="vq" id="v-list"></ol>
+        <button class="btn btn-primary" id="pa-voice" onclick="postAct('voice',this)">فرستادن ویس</button>
+        <p class="tiny" id="v-where" style="margin-top:10px;text-align:center">ویس را همان‌جایی بفرستید که این لینک را گرفتید.</p>
+      </div>
+      <div class="k" style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-top:22px">اگر وقت دارید</div>
       <button class="pact" id="pa-pilot" onclick="postAct('pilot',this)">
         <span class="ic"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.5 2.1L8.1 9.7a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.5c.9.3 1.8.5 2.7.6a2 2 0 011.9 2z"/></svg></span>
         <span class="tx">برای پایلوت با من تماس بگیرید<i>نسخهٔ واقعی را قبل از همه امتحان می‌کنم.</i></span></button>
@@ -345,7 +364,7 @@ textarea::placeholder{color:var(--w3)}
   </div>
 </div>
 
-<script src="./test-kit.js?v=20260927a"></script>
+<script src="./test-kit.js?v=20261004a"></script>
 <script>
 /* ════════ متن‌ها ════════════════════════════════════════════════
    هر جملهٔ این صفحه اینجاست. برای تغییر، یا همین‌جا را عوض کنید یا در
@@ -360,7 +379,17 @@ const TXT = {
   bTitle:'فرض کنید این اپ<br>واقعاً مال شماست.',
   bTask:'می‌خواهید بخشی از پول‌تان را از تومان خارج کنید و دلاری نگه دارید. هر کاری لازم است، در اپ انجام دهید.',
   dTitle:'ممنون از وقتی که گذاشتید.',
-  dLead:'پاسخ‌های شما ثبت شد. همین نکته‌هاست که نسخهٔ بعدی را ساده‌تر می‌کند.'
+  dLead:'پاسخ‌های شما ثبت شد. همین نکته‌هاست که نسخهٔ بعدی را ساده‌تر می‌کند.',
+  /* چهار سؤالِ ویس. مثل بقیهٔ متن‌ها، از test-config.json قابل عوض‌کردن است. */
+  vTitle:'یک ویس کوتاه بفرستید',
+  vSub:'همین چهار سؤال. هر کدام یک جمله کافی است.',
+  vq1:'اگر بخواهید مهاجر را به یک دوست معرفی کنید، می‌گویید چیست و پولتان را چطور نگه می‌دارد؟',
+  vq2:'کجای اپ حس خوبی داشتید و کجا مردد یا بی‌اعتماد شدید؟ چرا؟',
+  vq3:'چه چیزی باعث می‌شود در مهاجر حساب بسازید؟',
+  vq4:'برای واردکردن پول واقعی چه چیزی باید ببینید، خط قرمزتان چیست، و با چه مبلغی شروع می‌کنید؟',
+  vWhere:'ویس را همان‌جایی بفرستید که این لینک را گرفتید.',
+  vWhereLink:'دکمه را بزنید تا همان‌جا باز شود و ویس را بفرستید.',
+  vThanks:'ممنون. منتظر ویس‌تان هستیم.'
 };
 
 /* ════════ سؤال‌ها ═══════════════════════════════════════════════
@@ -399,7 +428,17 @@ const SEG = [
 
    ترتیب قطعی است: ارزش → فهم → قابلیت → اعتماد → اقدام. اعتماد عمداً بعد
    از فهم می‌آید تا نمرهٔ فهم را جهت‌دهی نکند. */
-const END = [
+/* ── کدام سؤال‌ها پرسیده شوند ───────────────────────────────────
+   این یک خط، تمامِ پرسش‌نامه را تعیین می‌کند. برای برگرداندنِ یک سؤال،
+   شناسه‌اش را به همین فهرست اضافه کنید؛ ترتیب از خودِ END می‌آید، نه از
+   اینجا، پس جایش همان‌جایی می‌ماند که سند گفته است.
+
+   شناسه‌های موجود:
+     positioning_main · distinct_value · asset_understanding
+     custody_understanding · feature_top2 · trust · commitment_step   */
+const ASK = ['positioning_main', 'custody_understanding', 'trust', 'commitment_step'];
+
+const END_ALL = [
   { id:'positioning_main', code:'P1', type:'single', req:true, rnd:true,
     q:'به نظر شما مهم‌ترین کاری که مهاجر انجام می‌دهد چیست؟',
     opts:[ {v:'value_control', l:'حفظ ارزش پول همراه با امکان کنترل، استفاده و خروج'},
@@ -461,6 +500,7 @@ const END = [
            {v:'try_small',l:'با مبلغ آزمایشی شروع می‌کردم'},
            {v:'serious',  l:'با مبلغ جدی شروع می‌کردم'} ] }
 ];
+const END = END_ALL.filter(q => ASK.indexOf(q.id) >= 0);
 
 const MOODS = [
   {v:'confused', l:'گیج شدم'},
@@ -497,13 +537,17 @@ const proto = TK.qs('p', TK.PROTOCOL);
   $('w-f1').textContent = TXT.wF1; $('w-f2').textContent = TXT.wF2; $('w-f3').textContent = TXT.wF3;
   $('b-title').innerHTML = TXT.bTitle; $('b-task').innerHTML = (CFG.task || TXT.bTask);
   $('d-title').innerHTML = TXT.dTitle; $('d-lead').innerHTML = TXT.dLead;
+  $('v-title').textContent = TXT.vTitle; $('v-sub').textContent = TXT.vSub;
+  $('v-list').innerHTML = [TXT.vq1, TXT.vq2, TXT.vq3, TXT.vq4]
+    .map((q, i) => '<li><b class="num">' + TK.fa(i + 1) + '</b><span>' + TK.esc(q) + '</span></li>').join('');
+  $('v-where').textContent = CFG.contact ? TXT.vWhereLink : TXT.vWhere;
   $('vtag').textContent = 'نسخهٔ ' + TK.fa(VER.id);
 
   S = {
     v: 1, id: TK.uid(), r: round, ver: VER.id, c: chan,
     /* پروتکل روی خودِ جلسه می‌نشیند: شاخص‌هایی که تعریفشان عوض شده نباید با
        دادهٔ راندهای قبل جمع شوند، و داشبورد از همین سه کلید می‌فهمد. */
-    protocol_version: proto, question_set: TK.QUESTION_SET,
+    protocol_version: proto, question_set: TK.QUESTION_SET, question_count: END.length,
     hypothesis_set: TK.HYPOTHESIS_SET, scoring_version: TK.SCORING_VERSION,
     t0: new Date().toISOString(), t1: null, ms: 0,
     updated_at: new Date().toISOString(), revision: 0,
@@ -866,7 +910,9 @@ function postAct(kind, btn){
   if (kind === 'voice') {
     /* اگر راه ارتباطی تعریف شده باشد باز می‌شود؛ وگرنه همان‌جایی که لینک را
        گرفته، خودش جای فرستادنِ ویس است. */
-    btn.querySelector('.tx').innerHTML = 'ممنون — چهار سؤال را همان‌جایی که این لینک را گرفتید برایتان می‌فرستیم<i>ویس را همان‌جا بفرستید.</i>';
+    btn.textContent = 'ممنون ✓';
+    btn.disabled = true;
+    $('v-where').textContent = TXT.vThanks;
     if (CFG.contact) setTimeout(() => window.open(CFG.contact, '_blank', 'noopener'), 300);
   } else {
     $('d-contact').hidden = false;

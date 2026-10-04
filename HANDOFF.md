@@ -1991,6 +1991,58 @@ source badges and no verdict ("شواهد کافی نیست · بیشترین n=
   would tilt the answer. `spotHtml()` and `./test-home.png` stay; re-attaching
   is one `spot:` key.
 
+### Four questions, and the voice is for everyone (2026-10-04)
+
+The team's call, the night before the links went out.
+
+**The voice note is no longer one of three optional cards.** It is the main
+thing on the end screen now: a bordered block with the four questions listed,
+a gold «فرستادن ویس» button, and a line saying where to send it. The pilot
+call and the next-version ping stay below it under «اگر وقت دارید». The
+reasoning was theirs and it is right for this stage — at n=100 with a
+prototype, what someone says in forty seconds beats another multiple-choice
+distribution.
+
+The four questions live in `TXT` (`vq1`…`vq4`), so they are editable from
+`test-config.json` like every other sentence, without touching code.
+
+**Seven questions became four.** The voice note named four candidates for
+three deletions, so the kept set is **one editable line** at the top of the
+question array:
+
+```js
+const ASK = ['positioning_main', 'custody_understanding', 'trust', 'commitment_step'];
+```
+
+All seven definitions stay in the file. Adding one back is adding its id to
+that line; the order still comes from the array, so a restored question
+returns to the position the spec gave it.
+
+The four kept are one per link of the spec's own interpretation chain —
+ارزش → فهم → اعتماد → اقدام. The three dropped were each either the *second*
+question on a hypothesis that still has one (`distinct_value` is H2's second,
+`asset_understanding` is H4's second) or had behavioural evidence standing
+behind it (`feature_top2` — H3 also has the routes people actually walked).
+
+**A dropped question is not missing data.** The dashboard already computes
+every denominator per question, so the three dropped KPIs would have read
+`n=۰ · —` forever while the card said «شواهد کافی نیست» — which reads as
+"keep waiting". They now say **«پرسیده نشد»**, the card says «سؤال این کارت
+در این راند پرسیده نمی‌شود — فقط شواهد رفتاری», and H3's gate moves to its
+behavioural KPI. The decision summary swaps «فهم ماهیت و نگهداری» for «فهم
+جای نگهداری», since only one of the two comprehension questions is asked.
+
+`question_set` is now `core4_v1` and each session records `question_count`,
+so the console's «پاسخ‌ها، میانگین X از ۴» and the session table's `۴/۴` come
+from the data rather than a hardcoded seven. Protocol stays 1.1 — no KPI
+changed definition, so these sessions pool correctly with any 1.1 data.
+
+Verified end to end: `۱ از ۴` … `۴ از ۴` with «پایان» on the last,
+`question_set: core4_v1`, `answered: 4`, delivery confirmed, voice block
+visible to everyone, the button recording `post_actions: ['voice']` and
+bumping `revision`. On the dashboard the three dropped KPIs read «پرسیده نشد»
+and H3 falls back to behaviour.
+
 ### The writing standard, written down (2026-09-27)
 
 «هر وقت بخواهید، برداشت» — the user pointed at that line and asked what it
