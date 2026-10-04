@@ -226,6 +226,7 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
       <span style="flex:1"></span>
       <button class="btn sm" onclick="refresh()">تازه‌سازی</button>
       <button class="btn sm" onclick="backup()" id="bk-btn">گرفتن پشتیبان</button>
+      <a class="btn sm" id="vo-btn" href="#" target="_blank" rel="noopener" hidden>پوشهٔ ویس‌ها</a>
       <a class="btn sm p" id="go-insights" href="./test-insights.html">دیدن نتیجه‌ها</a>
     </div>
     <p class="tiny" id="conn-h" style="margin-bottom:14px"></p>
@@ -238,6 +239,17 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
     <div class="bar"><i id="bar-i"></i></div>
     <div class="legend"><span id="bar-l">—</span><span id="bar-r">—</span></div>
     <table id="rounds"></table>
+  </div>
+
+  <!-- ── ۵ ویس‌ها ────────────────────────────────────────────── -->
+  <div class="sec"><span class="n num">۵</span>ویس‌ها<span class="ln"></span></div>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      <p class="tiny" id="vo-h" style="flex:1;margin:0">در حال خواندن…</p>
+      <button class="btn sm" onclick="loadVoices()">تازه‌سازی</button>
+      <a class="btn sm" id="vo-folder" href="#" target="_blank" rel="noopener" hidden>پوشهٔ Drive</a>
+    </div>
+    <div id="vo-list"></div>
   </div>
 
   <!-- ── راه‌اندازی ─────────────────────────────────────────── -->
@@ -301,8 +313,17 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
 </div>
 
 <div class="flash" id="flash"></div>
+<style>
+.vrow{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.vrow:first-child{border-top:none}
+.vrow .m{flex:1;min-width:0}
+.vrow .t{font-size:13.5px;font-weight:600}
+.vrow .d{font-size:11.5px;color:var(--ink-3);margin-top:3px}
+.vrow audio{height:36px;max-width:230px}
+@media(max-width:620px){.vrow{flex-wrap:wrap}.vrow audio{max-width:100%;width:100%}}
+</style>
 
-<script src="./test-kit.js?v=20261004a"></script>
+<script src="./test-kit.js?v=20261004b"></script>
 <script>
 const $ = TK.$;
 let CFG = {}, VERS = [], sel = null, chans = ['tg'], rows = [], DEFAULT_INVITE = '';
@@ -321,6 +342,7 @@ const base = () => location.href.replace(/[^/]*$/, '');
   paintVers(); paint(); paintLive(); resetInvite();
   TK.flush(CFG);
   refresh();
+  loadVoices();
   setInterval(refresh, 60000);
 })();
 
@@ -432,6 +454,14 @@ async function refresh(){
   pills.push('<span class="pill' + (all.repo ? ' y' : '') + '">آرشیو مخزن: ' + TK.fa(all.repo) + '</span>');
   const mine = TK.store.get('mine', []).length + localSessions().length;
   if (mine) pills.push('<span class="pill">این مرورگر: ' + TK.fa(mine) + '</span>');
+  /* ویس‌ها در Drive می‌نشینند، نه در شیت: اینجا فقط شمارش و دری به پوشه. */
+  try {
+    const v = await TK.read(TK.eps(CFG)[0], { voices: 1 }, 30000);
+    if (v && v.ok) {
+      pills.push('<span class="pill' + (v.n ? ' g' : '') + '">ویس: ' + TK.fa(v.n) + '</span>');
+      if (v.folder) { $('vo-btn').href = v.folder; $('vo-btn').hidden = false; }
+    }
+  } catch (e) {}
   $('conns').innerHTML = pills.join('');
   $('conn-h').textContent = TK.eps(CFG).length
     ? 'جمعاً ' + TK.fa(rows.length) + ' جلسهٔ یکتا از همهٔ منبع‌ها.'
@@ -551,6 +581,53 @@ function countsOnVers(){
     const n = rows.filter(x => String(x.ver) === id).length;
     el.textContent = n ? TK.fa(n) + ' جلسه' : '';
   });
+}
+
+/* ── ویس‌ها ─────────────────────────────────────────────────────── */
+let VOICES = [];
+async function loadVoices(){
+  const ep = TK.eps(CFG)[0];
+  if (!ep) { $('vo-h').textContent = 'هنوز سروری تعریف نشده.'; return; }
+  $('vo-h').textContent = 'در حال خواندن…';
+  let v = null;
+  try { v = await TK.read(ep, { voices: 1 }, 40000); } catch (e) {}
+  if (!v || !v.ok) { $('vo-h').textContent = 'خوانده نشد. اگر همین حالا اسکریپت را عوض کرده‌اید، چند لحظه بعد دوباره بزنید.'; return; }
+  VOICES = v.voices || [];
+  if (v.folder) { $('vo-folder').href = v.folder; $('vo-folder').hidden = false; }
+  $('vo-h').innerHTML = VOICES.length
+    ? '<b>' + TK.fa(VOICES.length) + '</b> ویس رسیده. روی ▶ بزنید تا همین‌جا پخش شود.'
+    : 'هنوز ویسی نرسیده. وقتی کسی تست را تمام کند و ویس بفرستد، همین‌جا می‌آید.';
+  $('vo-list').innerHTML = VOICES.map((x, i) => {
+    const when = x.at ? new Date(x.at).toLocaleString('fa-IR', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) : '';
+    return '<div class="vrow" id="vo-' + i + '">' +
+      '<button class="btn sm" onclick="playVoice(' + i + ')">▶ پخش</button>' +
+      '<div class="m"><div class="t num">' + TK.esc(x.id) + '</div>' +
+      '<div class="d"><span class="num">' + TK.esc(when) + '</span>' +
+        ' · راند <span class="num">' + TK.fa(x.r || '—') + '</span>' +
+        ' · <span class="num">' + TK.fa(x.secs || '؟') + '</span> ثانیه' +
+        (x.age ? ' · <span class="num">' + TK.esc(x.age) + '</span> سال' : '') +
+        (x.kb ? ' · <span class="num">' + TK.fa(x.kb) + '</span> کیلوبایت' : '') + '</div></div>' +
+      (x.url ? '<a class="btn sm" href="' + TK.esc(x.url) + '" target="_blank" rel="noopener">Drive</a>' : '') +
+      '</div>';
+  }).join('');
+}
+/* صدا را از همان آدرس می‌گیریم و از data-uri پخش می‌کنیم؛ لازم نیست فایل
+   در Drive عمومی شود. */
+async function playVoice(i){
+  const x = VOICES[i], row = $('vo-' + i);
+  const btn = row.querySelector('button');
+  btn.textContent = 'در حال گرفتن…'; btn.disabled = true;
+  try {
+    const r = await TK.read(TK.eps(CFG)[0], { voiceget: x.id }, 60000);
+    if (!r || !r.ok || !r.b64) throw new Error((r && r.error) || 'نشد');
+    const a = document.createElement('audio');
+    a.controls = true; a.src = 'data:' + (r.mime || 'audio/webm') + ';base64,' + r.b64;
+    btn.remove(); row.insertBefore(a, row.firstChild);
+    a.play().catch(() => {});
+  } catch (e) {
+    btn.textContent = '▶ پخش'; btn.disabled = false;
+    flash('پخش نشد — ' + e.message);
+  }
 }
 
 async function ping(){

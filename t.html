@@ -216,6 +216,22 @@ textarea::placeholder{color:var(--w3)}
 .vq li{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.8;color:var(--w2)}
 .vq li b{flex:none;width:20px;height:20px;margin-top:3px;border-radius:50%;background:rgba(213,164,92,.17);
   color:var(--gold);font-size:11px;font-weight:700;display:grid;place-items:center}
+/* ضبط: یک دکمهٔ گرد و یک شمارنده. هر چیز دیگری اینجا اضافی است. */
+.rec{display:flex;flex-direction:column;align-items:center;gap:11px}
+.recbtn{width:74px;height:74px;border-radius:50%;border:none;cursor:pointer;display:grid;place-items:center;
+  background:var(--gold);color:#0B0D10;transition:.25s var(--spring)}
+.recbtn svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.recbtn:active{transform:scale(.94)}
+.recbtn:disabled{opacity:.5;cursor:default}
+.recbtn.on{background:#E06C5B;color:#fff;animation:recPulse 1.6s var(--swift) infinite}
+.recbtn.on svg{stroke:none;fill:currentColor}
+@keyframes recPulse{0%,100%{box-shadow:0 0 0 0 rgba(224,108,91,.5)}70%{box-shadow:0 0 0 16px rgba(224,108,91,0)}}
+.rectime{font:700 19px/1 var(--f);letter-spacing:.02em}
+.rechint{color:var(--w3);text-align:center;line-height:1.75}
+#v-play{width:100%;margin-top:4px;height:40px}
+.vfile{display:inline-flex;align-items:center;gap:8px;border:1px dashed var(--brd);border-radius:12px;
+  padding:12px 16px;font:600 13px/1 var(--f);color:var(--w2);cursor:pointer}
+.vfile input{display:none}
 .sent{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ok);margin-top:16px}
 .sent svg{width:15px;height:15px;stroke:var(--ok);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
@@ -297,8 +313,23 @@ textarea::placeholder{color:var(--w3)}
           <div><b id="v-title">یک ویس کوتاه بفرستید</b><i id="v-sub">همین چهار سؤال. هر کدام یک جمله کافی است.</i></div>
         </div>
         <ol class="vq" id="v-list"></ol>
-        <button class="btn btn-primary" id="pa-voice" onclick="postAct('voice',this)">فرستادن ویس</button>
-        <p class="tiny" id="v-where" style="margin-top:10px;text-align:center">ویس را همان‌جایی بفرستید که این لینک را گرفتید.</p>
+        <div class="rec" id="v-rec">
+          <button class="recbtn" id="v-btn" onclick="recToggle()" aria-label="ضبط صدا">
+            <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v4"/></svg>
+          </button>
+          <div class="rectime num" id="v-time">۰:۰۰</div>
+          <div class="rechint tiny" id="v-hint">برای شروع، دکمه را بزنید. حداکثر دو دقیقه.</div>
+          <audio id="v-play" controls hidden></audio>
+          <div class="btn-row" id="v-send-row" style="width:100%" hidden>
+            <button class="btn btn-primary" id="v-send" onclick="voiceSend()">فرستادن ویس</button>
+            <button class="skip" id="v-again" onclick="recReset()">از اول ضبط کنم</button>
+          </div>
+          <label class="vfile" id="v-file" hidden>
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v4"/></svg>
+            <span>ضبط با خودِ گوشی</span>
+            <input type="file" id="v-input" accept="audio/*" capture onchange="voicePicked(this)">
+          </label>
+        </div>
       </div>
       <div class="k" style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-top:22px">اگر وقت دارید</div>
       <button class="pact" id="pa-pilot" onclick="postAct('pilot',this)">
@@ -364,7 +395,7 @@ textarea::placeholder{color:var(--w3)}
   </div>
 </div>
 
-<script src="./test-kit.js?v=20261004a"></script>
+<script src="./test-kit.js?v=20261004b"></script>
 <script>
 /* ════════ متن‌ها ════════════════════════════════════════════════
    هر جملهٔ این صفحه اینجاست. برای تغییر، یا همین‌جا را عوض کنید یا در
@@ -383,13 +414,21 @@ const TXT = {
   /* چهار سؤالِ ویس. مثل بقیهٔ متن‌ها، از test-config.json قابل عوض‌کردن است. */
   vTitle:'یک ویس کوتاه بفرستید',
   vSub:'همین چهار سؤال. هر کدام یک جمله کافی است.',
-  vq1:'اگر بخواهید مهاجر را به یک دوست معرفی کنید، می‌گویید چیست و پولتان را چطور نگه می‌دارد؟',
-  vq2:'کجای اپ حس خوبی داشتید و کجا مردد یا بی‌اعتماد شدید؟ چرا؟',
-  vq3:'چه چیزی باعث می‌شود در مهاجر حساب بسازید؟',
-  vq4:'برای واردکردن پول واقعی چه چیزی باید ببینید، خط قرمزتان چیست، و با چه مبلغی شروع می‌کنید؟',
-  vWhere:'ویس را همان‌جایی بفرستید که این لینک را گرفتید.',
-  vWhereLink:'دکمه را بزنید تا همان‌جا باز شود و ویس را بفرستید.',
-  vThanks:'ممنون. منتظر ویس‌تان هستیم.'
+  vq1:'اگر بخواهید مهاجر را به یک دوست معرفی کنید، می‌گویید مهاجر چیست و پول شما را چطور نگه می‌دارد؟',
+  vq2:'کجای اپ حستان خوب بود و کجا مردد یا بی‌اعتماد شدید؟ چرا؟',
+  vq3:'چه چیزی باعث می‌شود در مهاجر حساب باز کنید؟',
+  vq4:'برای اینکه پول واقعی وارد کنید، چه چیزی باید ببینید؟ خط قرمزتان چیست و با چه مبلغی شروع می‌کنید؟',
+  vStart:'برای شروع، دکمه را بزنید. حداکثر دو دقیقه.',
+  vRecording:'در حال ضبط… برای پایان، دوباره بزنید.',
+  vReview:'گوش کنید؛ اگر خوب بود بفرستید.',
+  vSending:'در حال فرستادن ویس…',
+  vThanks:'ویس شما رسید. ممنون.',
+  vNoMic:'مرورگرِ شما اجازهٔ ضبط نداد. با دکمهٔ زیر، ضبط‌کنندهٔ خودِ گوشی باز می‌شود.',
+  vDenied:'اجازهٔ میکروفون داده نشد. اگر پشیمان شدید، از تنظیمات مرورگر اجازه بدهید یا با دکمهٔ زیر از ضبط‌کنندهٔ گوشی استفاده کنید.',
+  vFail:'ویس فرستاده نشد. یک بار دیگر «فرستادن ویس» را بزنید؛ اگر باز هم نشد، همان‌جایی که این لینک را گرفتید برایمان بفرستید.',
+  vTooBig:'این ویس خیلی طولانی است. کوتاه‌ترش کنید و دوباره بفرستید.',
+  vOffline:'ویس را همان‌جایی که این لینک را گرفتید برایمان بفرستید — جواب همین چهار سؤال، هر کدام یک جمله.',
+  vOpen:'باز کردن و فرستادن ویس'
 };
 
 /* ════════ سؤال‌ها ═══════════════════════════════════════════════
@@ -540,7 +579,9 @@ const proto = TK.qs('p', TK.PROTOCOL);
   $('v-title').textContent = TXT.vTitle; $('v-sub').textContent = TXT.vSub;
   $('v-list').innerHTML = [TXT.vq1, TXT.vq2, TXT.vq3, TXT.vq4]
     .map((q, i) => '<li><b class="num">' + TK.fa(i + 1) + '</b><span>' + TK.esc(q) + '</span></li>').join('');
-  $('v-where').textContent = CFG.contact ? TXT.vWhereLink : TXT.vWhere;
+  $('v-hint').textContent = TXT.vStart;
+  if (!recOk()) recFallback(TXT.vNoMic);
+  voiceProbe();                      /* سرور ویس می‌گیرد یا نه */
   $('vtag').textContent = 'نسخهٔ ' + TK.fa(VER.id);
 
   S = {
@@ -903,24 +944,173 @@ function deliverDone(){
 
 /* اقدام‌های بعد از پایان. نه سؤال‌اند، نه شماره دارند، و نه روی `done` و
    امتیاز فرضیه‌ها اثری دارند — هرکس نخواهد، تستش کامل است. */
+/* انتخاب‌شدنی و پس‌گرفتنی. یک دکمه که فقط روشن می‌شود، انتخاب نیست. */
 function postAct(kind, btn){
   if (!S) return;
-  if ((S.post_actions || []).indexOf(kind) < 0) (S.post_actions = S.post_actions || []).push(kind);
-  btn.setAttribute('aria-pressed', 'true');
-  if (kind === 'voice') {
-    /* اگر راه ارتباطی تعریف شده باشد باز می‌شود؛ وگرنه همان‌جایی که لینک را
-       گرفته، خودش جای فرستادنِ ویس است. */
-    btn.textContent = 'ممنون ✓';
-    btn.disabled = true;
-    $('v-where').textContent = TXT.vThanks;
-    if (CFG.contact) setTimeout(() => window.open(CFG.contact, '_blank', 'noopener'), 300);
-  } else {
-    $('d-contact').hidden = false;
+  S.post_actions = S.post_actions || [];
+  const i = S.post_actions.indexOf(kind), on = i < 0;
+  if (on) S.post_actions.push(kind); else S.post_actions.splice(i, 1);
+  btn.setAttribute('aria-pressed', String(on));
+
+  /* فرم تماس تا وقتی باز می‌ماند که دست‌کم یکی از دو مورد انتخاب باشد */
+  const wants = S.post_actions.some(a => a === 'pilot' || a === 'notify');
+  $('d-contact').hidden = !wants;
+  if (on && wants) {
     $('d-contact').scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(() => { try { $('c-name').focus(); } catch (e) {} }, 400);
   }
   resend();
 }
+/* ════════ ویس ══════════════════════════════════════════════════
+   همین‌جا ضبط می‌شود و همین‌جا می‌رود. هیچ‌کس لازم نیست اپ را ببندد.
+   اگر مرورگر اجازهٔ میکروفون ندهد — که مرورگرِ داخلیِ تلگرام روی iOS
+   نمی‌دهد — همان ضبط‌کنندهٔ خودِ گوشی باز می‌شود. */
+/* سرورِ جمع‌آوری ویس می‌گیرد یا نه. تا وقتی مطمئن نشده‌ایم، ضبط نشان داده
+   می‌شود ولی اگر جواب منفی بیاید جایش را به راه قدیمی می‌دهد. */
+let voiceReady = null;
+async function voiceProbe(){
+  if (!TK.eps(CFG).length) return voiceOffline();
+  try {
+    const r = await TK.read(TK.eps(CFG)[0], { voice: '__probe__' }, 25000);
+    voiceReady = !!(r && r.found === false);
+  } catch (e) { voiceReady = false; }
+  if (!voiceReady) voiceOffline();
+}
+/* سرور هنوز به‌روز نشده: ضبط را برمی‌داریم تا فایل جایی گم نشود. */
+function voiceOffline(){
+  voiceReady = false;
+  const r = $('v-rec'); if (!r) return;
+  r.innerHTML = '<p class="tiny" style="text-align:center;line-height:1.9">' +
+    TK.esc(TXT.vOffline) + '</p>' +
+    (CFG.contact ? '<div class="btn-row" style="width:100%;margin-top:10px">' +
+      '<button class="btn btn-primary" onclick="voiceOut(this)">' + TK.esc(TXT.vOpen) + '</button></div>' : '');
+}
+function voiceOut(btn){
+  if ((S.post_actions || []).indexOf('voice') < 0) (S.post_actions = S.post_actions || []).push('voice');
+  btn.textContent = 'ممنون ✓'; btn.disabled = true;
+  if (CFG.contact) setTimeout(() => window.open(CFG.contact, '_blank', 'noopener'), 250);
+  resend();
+}
+
+const REC_MAX = 120;                       /* ثانیه */
+let mediaRec = null, mediaStream = null, chunks = [], recTick = null, recSec = 0, voiceBlob = null;
+
+const recOk = () => !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+const mmss = (n) => TK.fa(Math.floor(n / 60) + ':' + String(n % 60).padStart(2, '0'));
+function recIcon(stop){
+  $('v-btn').innerHTML = stop
+    ? '<svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>'
+    : '<svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v4"/></svg>';
+}
+
+async function recToggle(){
+  if (mediaRec && mediaRec.state === 'recording') return recStop();
+  if (voiceReady === false) return voiceOffline();
+  if (!recOk()) return recFallback(TXT.vNoMic);
+  try {
+    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (e) { mark(TK.EV.err, 'mic:' + (e && e.name)); return recFallback(TXT.vDenied); }
+
+  chunks = []; recSec = 0; voiceBlob = null;
+  /* کروم webm/opus می‌دهد و سافاری mp4؛ هر دو برای ما یکی است. */
+  const want = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+  const mime = (window.MediaRecorder && MediaRecorder.isTypeSupported)
+    ? want.find(t => MediaRecorder.isTypeSupported(t)) : null;
+  try {
+    mediaRec = new MediaRecorder(mediaStream, mime ? { mimeType: mime, audioBitsPerSecond: 32000 } : undefined);
+  } catch (e) { mediaRec = new MediaRecorder(mediaStream); }
+
+  mediaRec.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
+  mediaRec.onstop = () => {
+    (mediaStream.getTracks() || []).forEach(t => t.stop());
+    voiceBlob = new Blob(chunks, { type: (mediaRec && mediaRec.mimeType) || 'audio/webm' });
+    recReview();
+  };
+  mediaRec.start(1000);
+  mark(TK.EV.ans, 'VOICE', 'start');
+
+  $('v-btn').classList.add('on'); recIcon(true);
+  $('v-hint').textContent = TXT.vRecording;
+  $('v-play').hidden = true; $('v-send-row').hidden = true; $('v-file').hidden = true;
+  recTick = setInterval(() => {
+    recSec++; $('v-time').textContent = mmss(recSec);
+    if (recSec >= REC_MAX) recStop();
+  }, 1000);
+}
+function recStop(){
+  clearInterval(recTick); recTick = null;
+  try { if (mediaRec && mediaRec.state === 'recording') mediaRec.stop(); } catch (e) {}
+  $('v-btn').classList.remove('on'); recIcon(false);
+}
+function recReview(){
+  if (!voiceBlob || !voiceBlob.size) return recReset();
+  $('v-play').src = URL.createObjectURL(voiceBlob); $('v-play').hidden = false;
+  $('v-send-row').hidden = false;
+  $('v-btn').hidden = true;
+  $('v-hint').textContent = TXT.vReview;
+}
+function recReset(){
+  voiceBlob = null; chunks = []; recSec = 0;
+  $('v-time').textContent = mmss(0);
+  $('v-play').hidden = true; $('v-play').removeAttribute('src');
+  $('v-send-row').hidden = true;
+  $('v-btn').hidden = false; $('v-btn').disabled = false; recIcon(false);
+  $('v-hint').textContent = recOk() ? TXT.vStart : TXT.vNoMic;
+}
+/* مرورگری که میکروفون نمی‌دهد، معمولاً فایل می‌دهد: همان ضبط‌کنندهٔ گوشی. */
+function recFallback(msg){
+  $('v-hint').textContent = msg;
+  $('v-file').hidden = false;
+  $('v-btn').disabled = true;
+}
+function voicePicked(input){
+  const f = input.files && input.files[0];
+  if (!f) return;
+  voiceBlob = f; recSec = 0;
+  $('v-file').hidden = true;
+  recReview();
+}
+
+const toB64 = (blob) => new Promise((res, rej) => {
+  const r = new FileReader();
+  r.onload = () => res(String(r.result).split(',')[1] || '');
+  r.onerror = rej; r.readAsDataURL(blob);
+});
+
+async function voiceSend(){
+  if (!voiceBlob) return;
+  if (voiceBlob.size > 6 * 1024 * 1024) { $('v-hint').textContent = TXT.vTooBig; return; }
+  const b = $('v-send'); b.disabled = true; b.textContent = TXT.vSending;
+  $('v-hint').textContent = TXT.vSending;
+  let b64;
+  try { b64 = await toB64(voiceBlob); } catch (e) { return voiceFail(); }
+
+  const payload = { kind: 'voice', id: S.id, ver: S.ver, r: S.r, c: S.c,
+                    secs: recSec, bytes: voiceBlob.size, mime: voiceBlob.type || 'audio/webm',
+                    age: (S.seg || {}).age || '', b64 };
+  for (let i = 1; i <= 3; i++) {
+    try {
+      await TK.postBig(CFG, payload);
+      if (await TK.verifyVoice(CFG, S.id, i === 1 ? 30000 : 20000)) return voiceOk();
+    } catch (e) {}
+    await new Promise(r => setTimeout(r, 1500 * i));
+  }
+  voiceFail();
+}
+function voiceOk(){
+  S.voice = 'sent'; S.voice_secs = recSec;
+  if ((S.post_actions || []).indexOf('voice') < 0) (S.post_actions = S.post_actions || []).push('voice');
+  mark(TK.EV.ans, 'VOICE', 'sent');
+  $('v-rec').innerHTML = '<div class="sent" style="margin:0"><svg viewBox="0 0 24 24">' +
+    '<path d="M20 6L9 17l-5-5"/></svg><span>' + TK.esc(TXT.vThanks) + '</span></div>';
+  resend();
+}
+function voiceFail(){
+  const b = $('v-send'); b.disabled = false; b.textContent = 'فرستادن ویس';
+  $('v-hint').textContent = TXT.vFail;
+  mark(TK.EV.err, 'voice-upload');
+}
+
 /* تنها جایی که چیزی شخصی ثبت می‌شود، و فقط اگر خودش نوشته باشد. جدا از
    پاسخ‌ها نگه داشته می‌شود تا در تحلیل و خروجی قابل تفکیک بماند. */
 function saveContact(){

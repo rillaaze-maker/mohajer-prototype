@@ -15,6 +15,14 @@
      ۷. همین کار را با یک شیت دوم تکرار کنید و آدرسش را جلوی "endpoint2"
         بگذارید — هر جلسه به هر دو فرستاده می‌شود.
 
+   ⚠ بعد از چسباندن این کد، یک‌بار تابع setup را از ویرایشگر Run کنید.
+   اجازهٔ Drive فقط همان‌جا پرسیده می‌شود.
+
+   ویس‌ها: شرکت‌کننده داخل خودِ صفحه ضبط می‌کند و فایل همین‌جا می‌رسد.
+   هر فایل در پوشه‌ای به نام «mohajer-voices» در Drive همین حساب ذخیره
+   می‌شود و نشانی‌اش در برگهٔ «voices» می‌آید. چون این کد به Drive دست
+   می‌زند، بار اولِ انتشار گوگل یک اجازهٔ تازه می‌خواهد — قبول کنید.
+
    بعد از هر تغییر در این کد، باید دوباره Deploy کنید:
    Deploy → Manage deployments → ✎ (ویرایش) → Version: New version → Deploy.
    آدرس عوض نمی‌شود.
@@ -35,7 +43,25 @@
    صریح صاحبش اینجاست. همان‌طور با آن رفتار کنید.
    ══════════════════════════════════════════════════════════════════════ */
 
+/* ════════════════════════════════════════════════════════════════
+   یک‌بار، بعد از چسباندن این کد: از فهرستِ بالای ویرایشگر «setup» را
+   انتخاب کنید و Run بزنید. گوگل اجازهٔ Drive را می‌پرسد — قبول کنید.
+   بدون این یک کار، ویس‌ها هیچ‌وقت نمی‌رسند؛ چون تابع‌هایی که با _ تمام
+   می‌شوند در فهرستِ Run دیده نمی‌شوند و اجازه هیچ‌وقت پرسیده نمی‌شود.
+   ════════════════════════════════════════════════════════════════ */
+function setup() {
+  var f = voiceFolder_();            /* همین خط، اجازهٔ Drive را می‌طلبد */
+  voiceSheet_();
+  sheet_();
+  var msg = 'آماده است.\nپوشهٔ ویس‌ها: ' + f.getUrl();
+  Logger.log(msg);
+  try { SpreadsheetApp.getActiveSpreadsheet().toast('ویس‌ها آماده‌اند', 'مهاجر', 8); } catch (e) {}
+  return msg;
+}
+
 var SHEET = 'sessions';
+var VOICE_SHEET = 'voices';
+var VOICE_FOLDER = 'mohajer-voices';   /* داخل Drive خودتان ساخته می‌شود */
 var MAX_CELL = 45000;          /* سقف امن یک خانهٔ شیت */
 
 /* ستون json عمداً نهم مانده است: شیت‌هایی که با نسخهٔ قبلی این کد پر شده‌اند
@@ -86,6 +112,7 @@ function doPost(e) {
     var raw = (e && e.postData && e.postData.contents) || '{}';
     var s = JSON.parse(raw);
     if (!s || !s.id) return out_({ ok: false, error: 'no-id' });
+    if (s.kind === 'voice') return voiceSave_(s);
 
     var json = JSON.stringify(s);
     if (json.length > MAX_CELL) {                       /* رویدادها را کوتاه کن، نه پاسخ‌ها را */
@@ -140,13 +167,112 @@ function doPost(e) {
   }
 }
 
+/* ── ویس ───────────────────────────────────────────────────────────
+   شرکت‌کننده داخل خودِ صفحه ضبط می‌کند؛ فایل base64 می‌شود و همین‌جا
+   می‌رسد. اینجا به یک فایل واقعی در Drive تبدیل می‌شود، با نامی که
+   جلسه‌اش را لو می‌دهد: v4.5__r3__ab12cd.webm
+
+   نکتهٔ استقرار: این تابع به Drive دست می‌زند، پس بار اولی که منتشر
+   می‌کنید گوگل اجازهٔ تازه می‌خواهد. قبول کنید، وگرنه ویس‌ها نمی‌آیند. */
+function voiceFolder_() {
+  var it = DriveApp.getFoldersByName(VOICE_FOLDER);
+  return it.hasNext() ? it.next() : DriveApp.createFolder(VOICE_FOLDER);
+}
+function voiceSheet_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(VOICE_SHEET);
+  if (!sh) {
+    sh = ss.insertSheet(VOICE_SHEET);
+    sh.appendRow(['at', 'id', 'round', 'version', 'channel', 'age', 'seconds', 'kb', 'file', 'url', 'fileId']);
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+function voiceExt_(mime) {
+  mime = String(mime || '');
+  if (mime.indexOf('mp4') >= 0 || mime.indexOf('m4a') >= 0 || mime.indexOf('aac') >= 0) return 'm4a';
+  if (mime.indexOf('ogg') >= 0) return 'ogg';
+  if (mime.indexOf('mpeg') >= 0 || mime.indexOf('mp3') >= 0) return 'mp3';
+  if (mime.indexOf('wav') >= 0) return 'wav';
+  return 'webm';
+}
+function voiceSave_(s) {
+  try {
+    if (!s.b64) return out_({ ok: false, error: 'no-audio' });
+    var name = 'v' + (s.ver || '?') + '__r' + (s.r || '?') + '__' + s.id + '.' + voiceExt_(s.mime);
+    var bytes = Utilities.base64Decode(s.b64);
+    var blob = Utilities.newBlob(bytes, s.mime || 'audio/webm', name);
+    var file = voiceFolder_().createFile(blob);
+    voiceSheet_().appendRow([
+      new Date(), txt_(s.id), txt_(s.r), txt_(s.ver), txt_(s.c), s.age || '',
+      s.secs || '', Math.round((s.bytes || bytes.length) / 1024), name, file.getUrl(), txt_(file.getId())
+    ]);
+    return out_({ ok: true, url: file.getUrl() });
+  } catch (err) {
+    return out_({ ok: false, error: String(err) });
+  }
+}
+
 /* ── خواندن ────────────────────────────────────────────────────────
    JSONP، چون یک وب‌اپِ Apps Script درخواست را به دامنهٔ دیگری هدایت
    می‌کند و fetchِ بین‌دامنه‌ای همیشه با آن کنار نمی‌آید؛ یک script tag
    هیچ‌وقت این مشکل را ندارد.                                        */
 function doGet(e) {
   var p = (e && e.parameter) || {};
-  if (p.ping) return out_({ ok: true, pong: 1 }, p.callback);
+  /* عمداً سبک: نه شیت باز می‌کند، نه Drive. تنها کارش بیدارکردن سرور است. */
+  if (p.ping) return out_({ ok: true, pong: 1, voice: 1 }, p.callback);
+
+  /* «ویسِ این جلسه رسید؟» — صفحهٔ شرکت‌کننده تا این را نپرسد، نمی‌نویسد
+     «ویس شما رسید». */
+  if (p.voice) {
+    var vs = null;
+    try { vs = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(VOICE_SHEET); } catch (err) {}
+    if (!vs) return out_({ ok: true, found: false }, p.callback);
+    var vr = vs.getDataRange().getValues();
+    for (var q = vr.length - 1; q > 0; q--) {
+      if (String(vr[q][1]) === String(p.voice)) {
+        return out_({ ok: true, found: true, url: vr[q][9] }, p.callback);
+      }
+    }
+    return out_({ ok: true, found: false }, p.callback);
+  }
+
+  /* خودِ صدا، برای پخش در کنسول. base64 برمی‌گردد تا بدون باز کردن Drive
+     همان‌جا شنیده شود. */
+  if (p.voiceget) {
+    try {
+      var g = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(VOICE_SHEET);
+      if (!g) return out_({ ok: false, error: 'no-voices' }, p.callback);
+      var gr = g.getDataRange().getValues(), fid = '', nm = '';
+      for (var y = gr.length - 1; y > 0; y--) {
+        if (String(gr[y][1]) === String(p.voiceget)) { fid = String(gr[y][10] || ''); nm = String(gr[y][8] || ''); break; }
+      }
+      if (!fid) return out_({ ok: false, error: 'not-found' }, p.callback);
+      var bl = DriveApp.getFileById(fid).getBlob();
+      return out_({ ok: true, name: nm, mime: bl.getContentType(),
+                    b64: Utilities.base64Encode(bl.getBytes()) }, p.callback);
+    } catch (err) {
+      return out_({ ok: false, error: String(err) }, p.callback);
+    }
+  }
+
+  /* فهرست ویس‌ها، برای کنسول */
+  if (p.voices) {
+    var vsh = null;
+    try { vsh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(VOICE_SHEET); } catch (err) {}
+    var list = [];
+    if (vsh) {
+      var rows2 = vsh.getDataRange().getValues();
+      for (var w = 1; w < rows2.length; w++) {
+        list.push({ at: rows2[w][0], id: String(rows2[w][1]), r: String(rows2[w][2]),
+                    ver: String(rows2[w][3]), c: String(rows2[w][4] || ''), age: rows2[w][5] || '',
+                    secs: rows2[w][6], kb: rows2[w][7], url: rows2[w][9] });
+      }
+    }
+    var fu2 = '';
+    try { fu2 = voiceFolder_().getUrl(); } catch (err) {}
+    return out_({ ok: true, n: list.length, folder: fu2, voices: list }, p.callback);
+  }
 
   var sh = sheet_();
   var rows = sh.getDataRange().getValues();

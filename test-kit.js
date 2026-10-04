@@ -126,6 +126,33 @@
     }).then(() => true).catch(() => false);
   }
 
+  /* فایلِ بزرگ (ویس): همان مقصدها، ولی بدون keepalive — که سقفِ ۶۴
+     کیلوبایتیِ بدنه را برمی‌دارد. پاسخ خوانده نمی‌شود؛ رسیدنش را جداگانه
+     می‌پرسیم. */
+  function postBig(cfg, payload) {
+    const body = JSON.stringify(payload);
+    return Promise.all(eps(cfg).map(u =>
+      fetch(u, { method: 'POST', mode: 'no-cors',
+                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body })
+        .then(() => true).catch(() => false)
+    )).then(r => r.filter(Boolean).length);
+  }
+
+  /* «ویسِ این جلسه رسید؟» — مثل verify، ولی روی برگهٔ ویس‌ها. */
+  function verifyVoice(cfg, id, timeout) {
+    const list = eps(cfg);
+    if (!list.length) return Promise.resolve(null);
+    return new Promise(resolve => {
+      let left = list.length, settled = false;
+      const miss = () => { if (!--left && !settled) { settled = true; resolve(null); } };
+      list.forEach(u => {
+        read(u, { voice: id }, timeout || 20000).then(r => {
+          if (!settled && r && r.found === true) { settled = true; resolve(u); } else miss();
+        }).catch(miss);
+      });
+    });
+  }
+
   async function postAll(cfg, payload, beacon) {
     const r = await Promise.all(eps(cfg).map(u => post(u, payload, beacon)));
     return r.filter(Boolean).length;
@@ -491,7 +518,7 @@
 
   g.TK = {
     $, $$, esc, fa, qs, mmss, secs, clamp, store, json, config, versions, uid, device,
-    LAYERS, AGES, CHANNELS, EV, eps, post, postAll, verify, readAll, keepMine,
+    LAYERS, AGES, CHANNELS, EV, eps, post, postAll, postBig, verify, verifyVoice, readAll, keepMine,
     queue, flush, read, pack, unpack,
     copy, download, csv, derive, screenFa, SCREEN_FA, warm,
     /* پروتکل ۱.۱ */

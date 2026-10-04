@@ -292,7 +292,7 @@ footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--brd);font-siz
   <footer>هر عدد این صفحه از همان جریان رویدادها ساخته می‌شود؛ چیزی دوباره‌شماری یا تخمین نمی‌شود. زیر سه جلسه، این صفحه قضاوت نمی‌کند — فقط داده را نشان می‌دهد.</footer>
 </div>
 
-<script src="./test-kit.js?v=20261004a"></script>
+<script src="./test-kit.js?v=20261004b"></script>
 <script>
 const $ = TK.$, esc = TK.esc, fa = TK.fa;
 let CFG = {}, VERS = [], ALL = [], SEL = [], SRC = null, ageFilter = new Set(), heatScreen = null;
@@ -721,7 +721,7 @@ function blockSessions(){
   const R = { withdraw:'برداشت', personal_wallet:'کیف شخصی', gold:'طلا', transfer:'انتقال', invest:'سرمایه‌گذاری' };
   return '<div class="sec"><h2>جلسه‌ها</h2><span class="h">روی هر سطر بزنید تا مسیرش باز شود</span><span class="ln"></span></div>' +
     '<div class="card"><table id="stbl"><tr><th>زمان</th><th>سن</th><th>کانال</th><th>پروتکل</th>' +
-    '<th>زمان فعال</th><th>مأموریت</th><th>مسیر اول</th><th>پاسخ</th><th>اعتماد</th><th>قدم بعدی</th><th>تحویل</th></tr>' +
+    '<th>زمان فعال</th><th>مأموریت</th><th>مسیر اول</th><th>پاسخ</th><th>اعتماد</th><th>قدم بعدی</th><th>ویس</th><th>تحویل</th></tr>' +
     rows.map((s, i) => {
       const d = s._d, e = s.end || {}, b = s._b, sc = s._s;
       const step = { nothing:['هیچ',''], read:['اطلاعات',''], talk:['پشتیبان','y'],
@@ -740,8 +740,9 @@ function blockSessions(){
         '<td class="num">' + fa(sc.answered || 0) + '/' + fa(s.question_count || TK.CORE_Q.length) + '</td>' +
         '<td class="num">' + (e.trust ? fa(e.trust) + '/۵' : '—') + '</td>' +
         '<td>' + (step ? '<span class="pill ' + step[1] + '">' + step[0] + '</span>' : '—') + '</td>' +
+        '<td>' + (s.voice === 'sent' ? '<span class="pill g">ویس</span>' : '<span class="pill">—</span>') + '</td>' +
         '<td>' + (s.delivery_confirmed ? '<span class="pill g">تأیید</span>' : '<span class="pill">—</span>') + '</td></tr>' +
-        '<tr class="s-det" data-d="' + i + '" hidden><td colspan="11">' + track(s) + '</td></tr>';
+        '<tr class="s-det" data-d="' + i + '" hidden><td colspan="12">' + track(s) + '</td></tr>';
     }).join('') + '</table>' +
     '<p class="tiny" style="margin-top:12px">' + fa(rows.length) + ' جلسه · ' +
     fa(rows.filter(s => !s.done).length) + ' تای آن نیمه‌کاره رها شده است. ' +
@@ -870,7 +871,7 @@ const L = {
   custody:{mohajer_bank:'حساب بانکی مهاجر', bitvana:'نزد بیت‌وانا', own_wallet:'کیف پول خودم', central_bank:'بانک مرکزی', dunno:'نمی‌دانم'},
   route:{withdraw:'برداشت تومانی', personal_wallet:'کیف پول شخصی', gold:'طلای فیزیکی', transfer:'انتقال', invest:'سرمایه‌گذاری'},
   mis:{bank_deposit:'سپردهٔ بانکی می‌داند', mohajer_issuer:'مهاجر را ناشر می‌داند', mohajer_direct_custodian:'مهاجر را نگهدارندهٔ مستقیم می‌داند', central_bank:'بانک مرکزی را نگهدارنده می‌داند'},
-  act:{voice:'ویس می‌فرستم', pilot:'برای پایلوت تماس بگیرید', notify:'نسخهٔ بعدی را خبرم کنید'}
+  act:{voice:'ویس فرستاد', pilot:'برای پایلوت تماس بگیرید', notify:'نسخهٔ بعدی را خبرم کنید'}
 };
 
 /* ── نوار کیفیت داده ───────────────────────────────────────────────

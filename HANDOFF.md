@@ -1991,6 +1991,106 @@ source badges and no verdict ("شواهد کافی نیست · بیشترین n=
   would tilt the answer. `spotHtml()` and `./test-home.png` stay; re-attaching
   is one `spot:` key.
 
+### The Drive permission that was never asked for (2026-10-04)
+
+The redeploy went through, both check URLs answered correctly, and Google
+never showed a permission screen. That looked like good news. It was not.
+
+Posting a real 16KB WAV to the live endpoint returned:
+
+```
+{"ok":false,"error":"...nicht die erforderliche Berechtigung,
+DriveApp.getFoldersByName anzurufen. Erforderliche Berechtigungen: .../auth/drive"}
+```
+
+**Why no prompt:** Apps Script only asks for a scope when code that needs it
+actually *runs*, and the editor's Run menu hides every function whose name
+ends in `_`. `voiceFolder_()` is private, so nothing runnable touched Drive,
+so nothing ever asked. Deploying a web app does not itself trigger consent.
+
+Fix: a public `setup()` that calls `voiceFolder_()`, `voiceSheet_()` and
+`sheet_()`. Running it once from the editor raises the consent dialog and
+creates the folder and the sheet in the same move. It is now the first thing
+the file's header tells you to do.
+
+Worth keeping: the failure was *clean*. The try/catch returned `ok:false`,
+nothing was written, no row was polluted, the sessions path never saw it. A
+silent half-write would have been far worse than a loud refusal — which is
+the argument for wrapping every Drive call, not just the obvious one.
+
+### Listening in the console (2026-10-04)
+
+`?voiceget=<session id>` returns the file as base64 and the console plays it
+from a data URI. The file never has to be made link-public in Drive, and the
+operator never has to leave the page. Each row shows the session id, so a
+voice sits next to the answers it belongs to; a Drive link is there too.
+
+`?voices` lists them, `?ping` stays deliberately light — it touches neither
+the sheet nor Drive, because every participant's page pings it to warm the
+server up.
+
+Verified end to end against a mock collector: participant records → 32KB
+upload → confirmed → listed in the console → plays inline, `duration: 2`,
+`readyState: 4`.
+
+### The voice records in the page and uploads itself (2026-10-04)
+
+Asking someone to leave the app, open Telegram, find the group the link came
+from and send a voice note there loses nine people out of ten. And on GitHub
+Pages there is no server to receive a file.
+
+Except there is one: the Apps Script that already collects the sessions.
+Apps Script can write to Drive, so the whole pipeline needs no new service,
+no account and no cost:
+
+```
+browser (MediaRecorder) → base64 → the same /exec → a Drive folder
+```
+
+The participant taps a round record button inside the end screen, a timer
+runs to a 2-minute cap, they can listen back and re-record, and «فرستادن ویس»
+uploads it. The file lands in **mohajer-voices** in the script owner's Drive,
+named `v4.5__r3__<session id>.webm`, with a row in a new **voices** sheet
+holding duration, size and the file URL — so a voice is joined to its session
+by id, not by whoever remembers who sent what.
+
+Three things this needed:
+
+- **`keepalive: true` caps a fetch body at 64KB.** Fine for a session, fatal
+  for audio. `TK.postBig()` is the same POST without it. A 2-minute Opus clip
+  is ~300KB, ~400KB as base64 — well inside what Apps Script accepts.
+- **A capability probe, because the old script is still deployed.** It does
+  not know `kind:'voice'`, so it would have written the base64 blob into the
+  `json` column as a junk session and lost the audio. On the end screen the
+  page asks `?voice=__probe__` first: the new script answers `{found:false}`,
+  the old one answers with the whole session list. Only on the new answer does
+  the recorder appear; otherwise it falls back to the old "send it where you
+  got the link" line. **Nothing breaks before the redeploy, and nothing is
+  silently lost.**
+- **A fallback for in-app browsers.** The link gets posted in Telegram groups,
+  and Telegram's in-app browser on iOS does not grant microphone access. If
+  `getUserMedia` is missing or refused, an `<input type="file" accept="audio/*"
+  capture>` opens the phone's own recorder instead, and the same upload path
+  takes the file.
+
+«ویس شما رسید» is only shown after the server confirms it holds the file —
+the same rule the session delivery follows.
+
+**Analysis:** the Drive folder is a NotebookLM source. Add the folder's audio
+files as sources and ask for themes across all of them. No n8n, no webhook
+host, nothing to keep running — n8n would need somewhere to live and would
+still need this same upload endpoint underneath. A Telegram bot was the other
+option and was rejected: the bot token would have to sit in client-side code
+on a public repo.
+
+**Deploy note:** this version touches Drive, so the first publish asks for a
+new Google permission. Accept it, or no voice ever arrives.
+
+Verified against a mock collector: a 307,200-byte upload arrived byte-exact,
+keyed to the session id, with duration recorded, and the page only confirmed
+after `found:true` came back. Against the real (still old) endpoint the probe
+correctly refused to record.
+
 ### Four questions, and the voice is for everyone (2026-10-04)
 
 The team's call, the night before the links went out.
@@ -2036,6 +2136,10 @@ behavioural KPI. The decision summary swaps «فهم ماهیت و نگهدار�
 so the console's «پاسخ‌ها، میانگین X از ۴» and the session table's `۴/۴` come
 from the data rather than a hardcoded seven. Protocol stays 1.1 — no KPI
 changed definition, so these sessions pool correctly with any 1.1 data.
+
+The two optional cards toggle off as well as on — they used to latch on with
+no way back, and the contact form now follows the selection instead of
+staying open once opened.
 
 Verified end to end: `۱ از ۴` … `۴ از ۴` with «پایان» on the last,
 `question_set: core4_v1`, `answered: 4`, delivery confirmed, voice block
