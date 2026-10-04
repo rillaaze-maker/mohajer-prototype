@@ -1991,6 +1991,58 @@ source badges and no verdict ("شواهد کافی نیست · بیشترین n=
   would tilt the answer. `spotHtml()` and `./test-home.png` stay; re-attaching
   is one `spot:` key.
 
+### The recorder, rebuilt — one bug, two symptoms (2026-10-05)
+
+«شمارنده خیلی تند می‌رفت و صدا تکرار می‌شد.» Both came from the same line.
+
+Between tapping record and recording actually starting there is an `await`
+for the microphone permission. There was no lock around it. So a second tap —
+which anyone makes when nothing appears to happen — ran the whole function
+again: a second `MediaRecorder` on a second stream, both pushing into the
+same `chunks` array (**the audio repeated**) and both running a timer
+(**the clock ran double**). One cause, two symptoms, and the thing was
+unusable.
+
+The lock is now set synchronously, before anything async, and a late stream
+that arrives after state changed is stopped and dropped.
+
+A second, quieter bug: the timer incremented a counter on each tick. Even
+with one timer, a missed tick gives a wrong number. Time now comes from the
+wall clock — `Date.now() - recStart` — so the display cannot drift no matter
+what the browser does with the interval.
+
+**Benchmarked against WhatsApp, Telegram and Voice Memos**, three things were
+missing and are now there:
+
+- **A live level meter.** 22 bars fed by an `AnalyserNode`, scrolling right to
+  left. It is the only thing that tells a person the microphone is actually
+  hearing them — without it, a silent recording looks identical to a working
+  one. (`AudioContext` also gets an explicit `resume()`: created outside a
+  user gesture it stays `suspended` and reads pure silence.)
+- **Our own player.** The native `<audio controls>` widget is white, English
+  and left-to-right in a dark RTL screen — and it showed **0:00 / 0:00**,
+  because a `MediaRecorder` webm carries no duration field. That is a known
+  Chrome behaviour, not something to work around with a seek hack here: we
+  already know the true length from the wall clock. Play/pause, a seekable
+  progress bar, and `۰:۰۰ / ۰:۰۷` in Persian digits.
+- **A countdown near the cap** — the last 15 seconds say how many are left.
+
+The player's progress is driven by the audio element's `timeupdate` event,
+not `requestAnimationFrame`. rAF does not fire while a page is hidden, so a
+participant who switches apps mid-playback would come back to a frozen bar.
+
+**Also fixed:** a duplicated selector (`.vfile{display:inline-flex;.vfile{…`)
+left by an earlier edit, which silently broke every CSS rule after it — the
+success tick was rendering as a 154px black triangle. The CSS brace depth is
+now checked as part of verification.
+
+Verified with a synthetic `MediaStream` from an oscillator, so the whole
+recorder runs for real without a microphone: three rapid taps produce exactly
+**one** recorder; 7.0s of wall time reads 7.01s recorded; the player reports
+`۰:۰۰ / ۰:۰۷`, seeking to 75% lands at 4.51s of 6.01s; `resume()` gives the
+analyser a live RMS of 0.213; and the upload arrives at 28,793 bytes with
+`secs: 7`.
+
 ### The Drive permission that was never asked for (2026-10-04)
 
 The redeploy went through, both check URLs answered correctly, and Google

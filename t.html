@@ -216,19 +216,36 @@ textarea::placeholder{color:var(--w3)}
 .vq li{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.8;color:var(--w2)}
 .vq li b{flex:none;width:20px;height:20px;margin-top:3px;border-radius:50%;background:rgba(213,164,92,.17);
   color:var(--gold);font-size:11px;font-weight:700;display:grid;place-items:center}
-/* ضبط: یک دکمهٔ گرد و یک شمارنده. هر چیز دیگری اینجا اضافی است. */
-.rec{display:flex;flex-direction:column;align-items:center;gap:11px}
-.recbtn{width:74px;height:74px;border-radius:50%;border:none;cursor:pointer;display:grid;place-items:center;
+/* ضبط */
+.rec{display:flex;flex-direction:column;align-items:center;gap:12px}
+/* نوارِ سطحِ صدا: تنها چیزی که ثابت می‌کند میکروفون دارد کار می‌کند */
+.meter{display:flex;align-items:center;justify-content:center;gap:3px;height:30px;width:100%;opacity:.35;
+  transition:opacity .3s var(--swift)}
+.meter.on{opacity:1}
+.meter i{width:3px;height:3px;border-radius:99px;background:var(--gold);
+  transition:height .09s linear}
+.recbtn{width:78px;height:78px;border-radius:50%;border:none;cursor:pointer;display:grid;place-items:center;
   background:var(--gold);color:#0B0D10;transition:.25s var(--spring)}
-.recbtn svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.recbtn svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .recbtn:active{transform:scale(.94)}
-.recbtn:disabled{opacity:.5;cursor:default}
-.recbtn.on{background:#E06C5B;color:#fff;animation:recPulse 1.6s var(--swift) infinite}
+.recbtn:disabled{opacity:.45;cursor:default}
+.recbtn.on{background:#E06C5B;color:#fff;animation:recPulse 1.7s var(--swift) infinite}
 .recbtn.on svg{stroke:none;fill:currentColor}
-@keyframes recPulse{0%,100%{box-shadow:0 0 0 0 rgba(224,108,91,.5)}70%{box-shadow:0 0 0 16px rgba(224,108,91,0)}}
-.rectime{font:700 19px/1 var(--f);letter-spacing:.02em}
-.rechint{color:var(--w3);text-align:center;line-height:1.75}
-#v-play{width:100%;margin-top:4px;height:40px}
+@keyframes recPulse{0%,100%{box-shadow:0 0 0 0 rgba(224,108,91,.45)}70%{box-shadow:0 0 0 18px rgba(224,108,91,0)}}
+.rectime{font:700 21px/1 var(--f);letter-spacing:.02em}
+.rectime.warn{color:#E06C5B}
+.rechint{color:var(--w3);text-align:center;line-height:1.75;min-height:19px}
+/* پخشِ خودمان: پخش‌کنندهٔ مرورگر هم انگلیسی و چپ‌چین است، هم روی فایلِ
+   ضبط‌شده مدت را ۰:۰۰ نشان می‌دهد. */
+.player{display:flex;align-items:center;gap:11px;width:100%;background:rgba(255,255,255,.05);
+  border:1px solid var(--brd);border-radius:14px;padding:10px 12px}
+.player .pp{width:40px;height:40px;border-radius:50%;flex:none;border:none;cursor:pointer;
+  background:var(--gold);color:#0B0D10;display:grid;place-items:center}
+.player .pp svg{width:16px;height:16px;fill:currentColor;stroke:none}
+.player .bar{flex:1;height:6px;border-radius:99px;background:rgba(255,255,255,.15);cursor:pointer;
+  position:relative;overflow:hidden}
+.player .bar i{position:absolute;inset:0 auto 0 0;display:block;width:0;border-radius:99px;background:var(--gold)}
+.player .tm{font:600 12.5px/1 var(--f);color:var(--w2);min-width:82px;text-align:end;direction:ltr}
 .vfile{display:inline-flex;align-items:center;gap:8px;border:1px dashed var(--brd);border-radius:12px;
   padding:12px 16px;font:600 13px/1 var(--f);color:var(--w2);cursor:pointer}
 .vfile input{display:none}
@@ -314,16 +331,29 @@ textarea::placeholder{color:var(--w3)}
         </div>
         <ol class="vq" id="v-list"></ol>
         <div class="rec" id="v-rec">
+          <div class="meter" id="v-meter"></div>
           <button class="recbtn" id="v-btn" onclick="recToggle()" aria-label="ضبط صدا">
             <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v4"/></svg>
           </button>
           <div class="rectime num" id="v-time">۰:۰۰</div>
-          <div class="rechint tiny" id="v-hint">برای شروع، دکمه را بزنید. حداکثر دو دقیقه.</div>
-          <audio id="v-play" controls hidden></audio>
+          <div class="rechint tiny" id="v-hint">برای ضبط بزنید. حداکثر دو دقیقه.</div>
+          <div class="player" id="v-player" hidden>
+            <button class="pp" id="v-pp" onclick="playToggle()" aria-label="پخش">
+              <svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></svg>
+            </button>
+            <div class="bar" id="v-bar" onclick="playSeek(event)"><i id="v-fill"></i></div>
+            <div class="tm num" id="v-tm">۰:۰۰ / ۰:۰۰</div>
+          </div>
           <div class="btn-row" id="v-send-row" style="width:100%" hidden>
             <button class="btn btn-primary" id="v-send" onclick="voiceSend()">فرستادن ویس</button>
             <button class="skip" id="v-again" onclick="recReset()">از اول ضبط کنم</button>
           </div>
+          <label class="vfile" id="v-file" hidden>
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v4"/></svg>
+            <span>ضبط با خودِ گوشی</span>
+            <input type="file" id="v-input" accept="audio/*" capture onchange="voicePicked(this)">
+          </label>
+                </div>
           <label class="vfile" id="v-file" hidden>
             <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v4"/></svg>
             <span>ضبط با خودِ گوشی</span>
@@ -418,8 +448,10 @@ const TXT = {
   vq2:'کجای اپ حستان خوب بود و کجا مردد یا بی‌اعتماد شدید؟ چرا؟',
   vq3:'چه چیزی باعث می‌شود در مهاجر حساب باز کنید؟',
   vq4:'برای اینکه پول واقعی وارد کنید، چه چیزی باید ببینید؟ خط قرمزتان چیست و با چه مبلغی شروع می‌کنید؟',
-  vStart:'برای شروع، دکمه را بزنید. حداکثر دو دقیقه.',
-  vRecording:'در حال ضبط… برای پایان، دوباره بزنید.',
+  vStart:'برای ضبط بزنید. حداکثر دو دقیقه.',
+  vAsking:'اجازهٔ میکروفون را بدهید…',
+  vRecording:'در حال ضبط… برای پایان دوباره بزنید.',
+  vLeft:'{s} ثانیه تا پایان.',
   vReview:'گوش کنید؛ اگر خوب بود بفرستید.',
   vSending:'در حال فرستادن ویس…',
   vThanks:'ویس شما رسید. ممنون.',
@@ -580,6 +612,7 @@ const proto = TK.qs('p', TK.PROTOCOL);
   $('v-list').innerHTML = [TXT.vq1, TXT.vq2, TXT.vq3, TXT.vq4]
     .map((q, i) => '<li><b class="num">' + TK.fa(i + 1) + '</b><span>' + TK.esc(q) + '</span></li>').join('');
   $('v-hint').textContent = TXT.vStart;
+  meterInit();
   if (!recOk()) recFallback(TXT.vNoMic);
   voiceProbe();                      /* سرور ویس می‌گیرد یا نه */
   $('vtag').textContent = 'نسخهٔ ' + TK.fa(VER.id);
@@ -992,83 +1025,208 @@ function voiceOut(btn){
   resend();
 }
 
-const REC_MAX = 120;                       /* ثانیه */
-let mediaRec = null, mediaStream = null, chunks = [], recTick = null, recSec = 0, voiceBlob = null;
+const REC_MAX = 120;                        /* ثانیه */
+const BARS = 22;
+let mediaRec = null, mediaStream = null, chunks = [], voiceBlob = null;
+let recTick = null, recStart = 0, recSec = 0, recDur = 0;
+let acx = null, analyser = null, rafId = null, levels = new Array(BARS).fill(0);
+let recBusy = false;                        /* قفلِ همان باگ: دو ضبطِ هم‌زمان */
+let audioEl = null;
 
 const recOk = () => !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
-const mmss = (n) => TK.fa(Math.floor(n / 60) + ':' + String(n % 60).padStart(2, '0'));
+const mmss = (n) => TK.fa(Math.floor(n / 60) + ':' + String(Math.floor(n % 60)).padStart(2, '0'));
 function recIcon(stop){
   $('v-btn').innerHTML = stop
-    ? '<svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>'
+    ? '<svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2.5"/></svg>'
     : '<svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v4"/></svg>';
+}
+function meterInit(){
+  $('v-meter').innerHTML = new Array(BARS).fill('<i></i>').join('');
+}
+/* نوار، مثل تلگرام، از راست به چپ می‌لغزد: هر فریم یک مقدار تازه جلو
+   می‌آید و بقیه عقب می‌روند. */
+function meterLoop(){
+  if (!analyser) return;
+  const buf = new Uint8Array(analyser.fftSize);
+  analyser.getByteTimeDomainData(buf);
+  let sum = 0;
+  for (let i = 0; i < buf.length; i++) { const v = (buf[i] - 128) / 128; sum += v * v; }
+  const rms = Math.sqrt(sum / buf.length);
+  levels.shift(); levels.push(Math.min(1, rms * 3.2));
+  const bars = $('v-meter').children;
+  for (let i = 0; i < bars.length; i++) bars[i].style.height = (3 + levels[i] * 27) + 'px';
+  rafId = requestAnimationFrame(meterLoop);
+}
+function meterStop(){
+  if (rafId) cancelAnimationFrame(rafId); rafId = null; analyser = null;
+  try { if (acx) acx.close(); } catch (e) {}
+  acx = null; levels = new Array(BARS).fill(0);
+  $('v-meter').classList.remove('on');
+  const bars = $('v-meter').children;
+  for (let i = 0; i < bars.length; i++) bars[i].style.height = '3px';
 }
 
 async function recToggle(){
   if (mediaRec && mediaRec.state === 'recording') return recStop();
+  if (recBusy) return;                      /* ← همان قفل. قبل از هر await. */
   if (voiceReady === false) return voiceOffline();
   if (!recOk()) return recFallback(TXT.vNoMic);
-  try {
-    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  } catch (e) { mark(TK.EV.err, 'mic:' + (e && e.name)); return recFallback(TXT.vDenied); }
 
-  chunks = []; recSec = 0; voiceBlob = null;
-  /* کروم webm/opus می‌دهد و سافاری mp4؛ هر دو برای ما یکی است. */
+  recBusy = true;
+  $('v-btn').disabled = true;
+  $('v-hint').textContent = TXT.vAsking;
+  let st;
+  try {
+    st = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+  } catch (e) {
+    recBusy = false; $('v-btn').disabled = false;
+    mark(TK.EV.err, 'mic:' + (e && e.name));
+    return recFallback(TXT.vDenied);
+  }
+  /* اگر وسطِ گرفتنِ اجازه چیزی عوض شده، استریم را همین‌جا رها کن */
+  if (mediaRec && mediaRec.state === 'recording') { st.getTracks().forEach(t => t.stop()); recBusy = false; return; }
+
+  mediaStream = st;
+  chunks = []; recSec = 0; recDur = 0; voiceBlob = null;
   const want = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
   const mime = (window.MediaRecorder && MediaRecorder.isTypeSupported)
     ? want.find(t => MediaRecorder.isTypeSupported(t)) : null;
   try {
-    mediaRec = new MediaRecorder(mediaStream, mime ? { mimeType: mime, audioBitsPerSecond: 32000 } : undefined);
-  } catch (e) { mediaRec = new MediaRecorder(mediaStream); }
+    mediaRec = new MediaRecorder(st, mime ? { mimeType: mime, audioBitsPerSecond: 32000 } : undefined);
+  } catch (e) { mediaRec = new MediaRecorder(st); }
 
   mediaRec.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
   mediaRec.onstop = () => {
-    (mediaStream.getTracks() || []).forEach(t => t.stop());
+    try { (mediaStream.getTracks() || []).forEach(t => t.stop()); } catch (e) {}
+    mediaStream = null;
     voiceBlob = new Blob(chunks, { type: (mediaRec && mediaRec.mimeType) || 'audio/webm' });
+    mediaRec = null; recBusy = false;
     recReview();
   };
+
+  /* سطحِ صدا */
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    acx = new AC();
+    /* بدون resume، اگر صفحه با یک کلیکِ واقعی شروع نشده باشد، context در
+       حالت suspended می‌ماند و نوار همیشه صفر نشان می‌دهد. */
+    if (acx.state === 'suspended') { try { await acx.resume(); } catch (e) {} }
+    analyser = acx.createAnalyser(); analyser.fftSize = 512;
+    acx.createMediaStreamSource(st).connect(analyser);
+    $('v-meter').classList.add('on'); meterLoop();
+  } catch (e) {}
+
   mediaRec.start(1000);
   mark(TK.EV.ans, 'VOICE', 'start');
 
+  $('v-btn').disabled = false;
   $('v-btn').classList.add('on'); recIcon(true);
   $('v-hint').textContent = TXT.vRecording;
-  $('v-play').hidden = true; $('v-send-row').hidden = true; $('v-file').hidden = true;
+  $('v-player').hidden = true; $('v-send-row').hidden = true; $('v-file').hidden = true;
+
+  /* زمان از ساعت خوانده می‌شود، نه از شمارشِ تیک‌ها */
+  recStart = Date.now();
+  clearInterval(recTick);
   recTick = setInterval(() => {
-    recSec++; $('v-time').textContent = mmss(recSec);
+    recSec = Math.floor((Date.now() - recStart) / 1000);
+    $('v-time').textContent = mmss(recSec);
+    const left = REC_MAX - recSec;
+    $('v-time').classList.toggle('warn', left <= 15);
+    if (left <= 15 && left > 0) $('v-hint').textContent = TXT.vLeft.replace('{s}', TK.fa(left));
     if (recSec >= REC_MAX) recStop();
-  }, 1000);
+  }, 200);
 }
+
 function recStop(){
   clearInterval(recTick); recTick = null;
-  try { if (mediaRec && mediaRec.state === 'recording') mediaRec.stop(); } catch (e) {}
+  recDur = Math.min(REC_MAX, Math.max(0, (Date.now() - recStart) / 1000));
+  recSec = Math.round(recDur);
+  $('v-time').textContent = mmss(recSec);
+  $('v-time').classList.remove('warn');
+  meterStop();
   $('v-btn').classList.remove('on'); recIcon(false);
+  try { if (mediaRec && mediaRec.state === 'recording') mediaRec.stop(); else recBusy = false; } catch (e) { recBusy = false; }
 }
+
 function recReview(){
   if (!voiceBlob || !voiceBlob.size) return recReset();
-  $('v-play').src = URL.createObjectURL(voiceBlob); $('v-play').hidden = false;
+  playerLoad(URL.createObjectURL(voiceBlob));
+  $('v-player').hidden = false;
   $('v-send-row').hidden = false;
   $('v-btn').hidden = true;
+  $('v-meter').style.display = 'none';
+  $('v-time').hidden = true;            /* مدت را از این به بعد پخش‌کننده می‌گوید */
   $('v-hint').textContent = TXT.vReview;
 }
+
 function recReset(){
-  voiceBlob = null; chunks = []; recSec = 0;
-  $('v-time').textContent = mmss(0);
-  $('v-play').hidden = true; $('v-play').removeAttribute('src');
-  $('v-send-row').hidden = true;
+  playerStop();
+  voiceBlob = null; chunks = []; recSec = 0; recDur = 0; recBusy = false;
+  $('v-time').textContent = mmss(0); $('v-time').classList.remove('warn');
+  $('v-time').hidden = false;
+  $('v-player').hidden = true; $('v-send-row').hidden = true;
   $('v-btn').hidden = false; $('v-btn').disabled = false; recIcon(false);
+  $('v-meter').style.display = ''; meterStop();
   $('v-hint').textContent = recOk() ? TXT.vStart : TXT.vNoMic;
 }
+
 /* مرورگری که میکروفون نمی‌دهد، معمولاً فایل می‌دهد: همان ضبط‌کنندهٔ گوشی. */
 function recFallback(msg){
   $('v-hint').textContent = msg;
   $('v-file').hidden = false;
   $('v-btn').disabled = true;
+  $('v-meter').style.display = 'none';
 }
 function voicePicked(input){
   const f = input.files && input.files[0];
   if (!f) return;
-  voiceBlob = f; recSec = 0;
+  voiceBlob = f; recSec = 0; recDur = 0;
   $('v-file').hidden = true;
   recReview();
+}
+
+/* ── پخشِ خودمان ────────────────────────────────────────────────── */
+function playerLoad(src){
+  playerStop();
+  audioEl = new Audio(); audioEl.src = src; audioEl.preload = 'metadata';
+  audioEl.onloadedmetadata = () => {
+    const d = audioEl.duration;
+    if (isFinite(d) && d > 0) recDur = d;      /* فایلِ انتخابی مدت دارد */
+    playerPaint();
+  };
+  /* رویدادِ خودِ فایل، نه rAF: وقتی صفحه پنهان شود rAF نمی‌آید ولی این می‌آید. */
+  audioEl.ontimeupdate = playerPaint;
+  audioEl.onended = () => { playIcon(false); playerPaint(); };
+  playIcon(false); playerPaint();
+}
+function playerStop(){
+  if (audioEl) { try { audioEl.pause(); } catch (e) {} try { URL.revokeObjectURL(audioEl.src); } catch (e) {} }
+  audioEl = null;
+}
+function playIcon(playing){
+  $('v-pp').innerHTML = playing
+    ? '<svg viewBox="0 0 24 24"><rect x="7" y="5" width="3.6" height="14" rx="1"/><rect x="13.4" y="5" width="3.6" height="14" rx="1"/></svg>'
+    : '<svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></svg>';
+}
+function playerPaint(){
+  const at = audioEl ? (audioEl.currentTime || 0) : 0;
+  const dur = recDur || 0;
+  $('v-fill').style.width = (dur ? Math.min(100, at / dur * 100) : 0) + '%';
+  $('v-tm').textContent = mmss(at) + ' / ' + mmss(dur);
+}
+function playToggle(){
+  if (!audioEl) return;
+  if (audioEl.paused) {
+    audioEl.play().then(() => { playIcon(true); playerPaint(); }).catch(() => {});
+  } else { audioEl.pause(); playIcon(false); playerPaint(); }
+}
+function playSeek(ev){
+  if (!audioEl || !recDur) return;
+  const r = $('v-bar').getBoundingClientRect();
+  /* صفحه راست‌چین است؛ نوار خودش چپ‌به‌راست پر می‌شود. */
+  const p = TK.clamp((ev.clientX - r.left) / r.width, 0, 1);
+  try { audioEl.currentTime = p * recDur; } catch (e) {}
+  playerPaint();
 }
 
 const toB64 = (blob) => new Promise((res, rej) => {
@@ -1086,7 +1244,7 @@ async function voiceSend(){
   try { b64 = await toB64(voiceBlob); } catch (e) { return voiceFail(); }
 
   const payload = { kind: 'voice', id: S.id, ver: S.ver, r: S.r, c: S.c,
-                    secs: recSec, bytes: voiceBlob.size, mime: voiceBlob.type || 'audio/webm',
+                    secs: Math.round(recDur || recSec), bytes: voiceBlob.size, mime: voiceBlob.type || 'audio/webm',
                     age: (S.seg || {}).age || '', b64 };
   for (let i = 1; i <= 3; i++) {
     try {
@@ -1098,7 +1256,8 @@ async function voiceSend(){
   voiceFail();
 }
 function voiceOk(){
-  S.voice = 'sent'; S.voice_secs = recSec;
+  playerStop();
+  S.voice = 'sent'; S.voice_secs = Math.round(recDur || recSec);
   if ((S.post_actions || []).indexOf('voice') < 0) (S.post_actions = S.post_actions || []).push('voice');
   mark(TK.EV.ans, 'VOICE', 'sent');
   $('v-rec').innerHTML = '<div class="sent" style="margin:0"><svg viewBox="0 0 24 24">' +
