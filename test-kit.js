@@ -261,8 +261,15 @@
      کافی است. */
   async function readPaged(u, params, timeout) {
     let off = 0, all = [], guard = 0;
-    while (guard++ < 60) {
-      const r = await read(u, Object.assign({}, params, { offset: off, limit: 12 }), timeout);
+    while (guard++ < 80) {
+      /* یک صفحهٔ ناموفق نباید کلِ خواندن را بخواباند: همان صفحه را کوچک‌تر
+         دوباره می‌خواهیم. در راند اول یک صفحهٔ هشت‌تایی یک بار شکست خورد و
+         با چهارتا رسید. */
+      let r = null, lim = 0;
+      for (const L of [12, 4, 1]) {
+        try { r = await read(u, Object.assign({}, params, { offset: off, limit: L }), timeout); lim = L; break; }
+        catch (e) { if (L === 1) throw e; }
+      }
       all = all.concat((r && r.sessions) || []);
       if (!r || r.next === null || r.next === undefined) break;
       off = r.next;

@@ -1991,6 +1991,42 @@ source badges and no verdict ("شواهد کافی نیست · بیشترین n=
   would tilt the answer. `spotHtml()` and `./test-home.png` stay; re-attaching
   is one `spot:` key.
 
+### The first round's report (2026-10-09)
+
+`prototype/test-report.html` — a 15-slide deck on round «تست اول ارسال»,
+linked from the console. It is a **snapshot**, computed once from the 21
+sessions and written up by hand; the live numbers stay in test-insights.
+No names, phones or session ids appear — the page is public on GitHub Pages.
+
+The headline: **they can use it; they don't understand it or trust it.**
+11 of 12 who reached home converted with nobody beside them, but only 2 of 9
+knew where the money is held, and median trust was 2/5. Two people believe
+the money sits in their own wallet — a dangerous misconception for a custody
+product. Six of sixteen opened «امن یعنی چی؟» before even entering the app;
+the separate explainer did not answer it.
+
+Things the data corrected along the way, worth knowing before trusting the
+console:
+
+- **«1.0» in the console's round table did not mean protocol 1.0.** Every
+  session in this round carries `protocol_version: '1.1'`. The summary falls
+  back to «1.0» when the row was written by the *old* collector, which had no
+  protocol column. Two sessions ran the seven-question set, the rest four.
+- **21 sessions are about 18 people.** Three sessions came from one iPhone
+  within eleven minutes — someone read the safety explainer for five minutes,
+  answered the questions without using the app, then came back twice.
+- **Most «rage taps» were typing.** Bursts of `0,0,0` on the toman keypad.
+  But one participant also wrote that fast zeros get dropped, so there is a
+  real iOS dropped-tap bug under the measurement bug. Both need fixing: the
+  keypad (`touch-action: manipulation`, act on `pointerdown`) and the rage
+  detector (ignore `.key`). Neither is done yet.
+- **Three people finished the mission and never pressed «تمام شد».** Their
+  answers do not exist. The runner needs an explicit "you're done — four
+  short questions left" once the mission screen is reached.
+
+Not in the report yet: the content of the two voices. No speech-to-text was
+available; the voices slide says so and waits for transcripts.
+
 ### What the first real round broke (2026-10-09)
 
 Round «تست اول ارسال»: 21 sessions, 10 on the old build (28 Sep – 4 Oct),

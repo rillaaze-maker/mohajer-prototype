@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مهاجر · گزارش تست اول ارسال</title>
+<meta name="theme-color" content="#0B0D10">
+<meta name="robots" content="noindex">
+<link rel="icon" href="./icons/icon-192.png">
+<!--
+  ════════════════════════════════════════════════════════════════════════
+  مهاجر · گزارشِ راندِ «تست اول ارسال» (۶ تا ۱۷ مهر ۱۴۰۵)
+
+  این صفحه عکسی از یک لحظه است، نه دادهٔ زنده: عددها یک بار از همان ۲۱
+  جلسه حساب شده‌اند و تفسیر روی همان‌ها نوشته شده. برای عددِ زنده،
+  test-insights.html.
+
+  هیچ نام، شماره یا شناسهٔ جلسه‌ای اینجا نیست — این صفحه روی GitHub Pages
+  عمومی است. نقل‌قول‌ها بی‌نام‌اند و فقط املایشان اصلاح شده.
+  ════════════════════════════════════════════════════════════════════════
+-->
+<style>
+@font-face{font-family:Dana;src:url('./fonts/Dana-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-DemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+
+:root{
+  --f:Dana,system-ui,sans-serif;
+  --gold:#D5A45C;--ok:#3FBF8F;--bad:#E06C5B;--blue:#4A9BE8;
+  --w1:#fff;--w2:rgba(255,255,255,.72);--w3:rgba(255,255,255,.46);
+  --surf:rgba(255,255,255,.05);--surf2:rgba(255,255,255,.085);--brd:rgba(255,255,255,.11);
+  --spring:cubic-bezier(.16,1,.3,1);--swift:cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-snap-type:y proximity;scroll-behavior:smooth}
+body{font-family:var(--f);color:var(--w1);background:#0B0D10;line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 82% -10%,rgba(213,164,92,.13),transparent 62%),
+             linear-gradient(168deg,#1A1F26,#0B0D10 56%,#12161B)}
+.num{unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+
+/* ── نوار بالا ─────────────────────────────────────────────────── */
+.top{position:fixed;inset:0 0 auto 0;z-index:10;display:flex;align-items:center;gap:10px;
+  padding:12px max(16px,env(safe-area-inset-right)) 12px max(16px,env(safe-area-inset-left));
+  background:linear-gradient(#0B0D10 55%,rgba(11,13,16,0))}
+.top .mk{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.08);display:grid;place-items:center;flex:none}
+.top .nm{font-size:13.5px;font-weight:600;white-space:nowrap}
+.top a{color:var(--w3);font-size:12px;text-decoration:none;white-space:nowrap}
+.top a:hover{color:var(--gold)}
+.top .sp{flex:1}
+.top .ct{font-size:12px;color:var(--w3);min-width:46px;text-align:center}
+.top button{width:34px;height:34px;border-radius:50%;border:1px solid var(--brd);background:var(--surf);
+  color:var(--w1);cursor:pointer;display:grid;place-items:center;flex:none}
+.top button svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.top button:disabled{opacity:.3;cursor:default}
+
+/* ── اسلاید ────────────────────────────────────────────────────── */
+.slide{position:relative;z-index:1;min-height:100vh;min-height:100svh;scroll-snap-align:start;
+  display:flex;flex-direction:column;justify-content:center;
+  max-width:980px;margin:0 auto;padding:84px 24px 56px}
+.kick{font-size:11.5px;font-weight:700;letter-spacing:.08em;color:var(--gold);margin-bottom:12px}
+h1{font-size:clamp(30px,5.6vw,52px);font-weight:700;letter-spacing:-.04em;line-height:1.18}
+h2{font-size:clamp(24px,4.2vw,38px);font-weight:700;letter-spacing:-.035em;line-height:1.25;max-width:22ch}
+.lead{font-size:clamp(14.5px,1.9vw,17px);color:var(--w2);margin-top:16px;max-width:62ch;line-height:1.95}
+.lead b{color:var(--w1);font-weight:600}
+.note{font-size:12.5px;color:var(--w3);margin-top:18px;max-width:70ch;line-height:1.9}
+
+/* عددهای بزرگ */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:30px}
+.stat{background:var(--surf);border:1px solid var(--brd);border-radius:18px;padding:20px}
+.stat .v{font-size:clamp(30px,4.6vw,42px);font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.stat .v small{font-size:.48em;color:var(--w3);font-weight:600;margin-inline-start:4px}
+.stat .l{font-size:13px;color:var(--w2);margin-top:8px;line-height:1.75}
+.stat.ok{border-color:rgba(63,191,143,.36)} .stat.ok .v{color:var(--ok)}
+.stat.bad{border-color:rgba(224,108,91,.36)} .stat.bad .v{color:var(--bad)}
+.stat.gold{border-color:rgba(213,164,92,.36)} .stat.gold .v{color:var(--gold)}
+
+/* میله‌ها */
+.bars{margin-top:26px;display:flex;flex-direction:column;gap:12px;max-width:760px}
+.bar{display:grid;grid-template-columns:minmax(150px,240px) 1fr 52px;gap:14px;align-items:center}
+.bar .k{font-size:13.5px;color:var(--w2);line-height:1.6}
+.bar .k i{display:block;font-style:normal;font-size:11.5px;color:var(--w3)}
+.bar .t{height:12px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;position:relative}
+.bar .t b{position:absolute;inset:0 0 0 auto;border-radius:99px;background:var(--gold)}
+.bar .t b.ok{background:var(--ok)} .bar .t b.bad{background:var(--bad)} .bar .t b.mute{background:rgba(255,255,255,.28)}
+.bar .t b.under{background:rgba(213,164,92,.28)}
+.bar .v{font-size:14px;font-weight:700;text-align:start}
+
+/* قیف */
+.fun{margin-top:28px;display:flex;flex-direction:column;gap:7px;max-width:800px}
+.fun .s{position:relative;border-radius:13px;background:var(--surf);border:1px solid var(--brd);overflow:hidden;
+  display:flex;align-items:center;gap:14px;padding:13px 16px}
+.fun .s .fill{position:absolute;inset:0 0 0 auto;background:rgba(213,164,92,.13)}
+.fun .s .n{position:relative;font-size:22px;font-weight:700;min-width:44px}
+.fun .s .t{position:relative;font-size:14px;font-weight:600}
+.fun .drop{font-size:12.5px;color:var(--bad);padding:0 16px;line-height:1.8}
+.fun .drop.mute{color:var(--w3)}
+
+/* فهرست با نشان */
+.pts{margin-top:24px;display:flex;flex-direction:column;gap:12px;max-width:760px;list-style:none}
+.pts li{display:flex;gap:13px;align-items:flex-start;font-size:clamp(14px,1.8vw,15.5px);color:var(--w2);line-height:1.9}
+.pts li b{color:var(--w1);font-weight:600}
+.pts .ic{flex:none;width:26px;height:26px;border-radius:9px;display:grid;place-items:center;margin-top:2px;
+  background:var(--surf2);font-size:13px;font-weight:700}
+.pts .ic.ok{background:rgba(63,191,143,.15);color:var(--ok)}
+.pts .ic.bad{background:rgba(224,108,91,.15);color:var(--bad)}
+.pts .ic.gold{background:rgba(213,164,92,.16);color:var(--gold)}
+
+/* نقل‌قول */
+.quotes{margin-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+.q{background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:18px}
+.q p{font-size:15px;line-height:1.95}
+.q .w{font-size:11.5px;color:var(--w3);margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-block;font-size:10.5px;font-weight:700;border-radius:99px;padding:3px 9px;background:var(--surf2);color:var(--w2)}
+.pill.bad{background:rgba(224,108,91,.15);color:var(--bad)}
+.pill.y{background:rgba(213,164,92,.16);color:var(--gold)}
+
+/* سه ستون تصمیم */
+.cols{margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.col{background:var(--surf);border:1px solid var(--brd);border-radius:18px;padding:20px}
+.col h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.col h3 i{width:10px;height:10px;border-radius:50%;flex:none}
+.col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.col li{font-size:13.5px;color:var(--w2);line-height:1.85;padding-inline-start:14px;position:relative}
+.col li::before{content:'';position:absolute;inset-inline-start:0;top:.75em;width:5px;height:5px;border-radius:50%;background:var(--w3)}
+.col li b{color:var(--w1);font-weight:600}
+.col.keep{border-color:rgba(63,191,143,.32)} .col.keep h3 i{background:var(--ok)}
+.col.change{border-color:rgba(213,164,92,.32)} .col.change h3 i{background:var(--gold)}
+.col.drop{border-color:rgba(224,108,91,.32)} .col.drop h3 i{background:var(--bad)}
+
+.callout{margin-top:26px;border-radius:16px;padding:18px 20px;background:rgba(213,164,92,.08);
+  border:1px solid rgba(213,164,92,.3);font-size:14.5px;line-height:1.95;color:var(--w2);max-width:760px}
+.callout b{color:var(--w1)}
+.callout.bad{background:rgba(224,108,91,.07);border-color:rgba(224,108,91,.3)}
+
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;align-items:start}
+.two .bars{margin-top:14px}
+.sub{font-size:13px;font-weight:700;color:var(--w2);margin-top:28px}
+
+.cover .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.cover .meta span{font-size:12.5px;color:var(--w2);background:var(--surf);border:1px solid var(--brd);border-radius:99px;padding:7px 14px}
+
+@media(max-width:620px){
+  .bar{grid-template-columns:1fr 46px;gap:8px 10px}
+  .bar .k{grid-column:1/-1}
+  .top .nm{display:none}
+}
+@media print{
+  html{scroll-snap-type:none} body{background:#0B0D10;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .top{display:none}
+  .slide{min-height:auto;page-break-after:always;break-after:page;padding:40px 30px}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="mk"><svg viewBox="0 0 49.33 39.99" width="14" height="14" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.7,94.92,94.92,0,0,0,26.71,19.2c7.65-2.8,14.71-6.82,20.41-12.84A16.84,16.84,0,0,0,49.33,3.5c-1.14,2.29-2.31,4.56-3.42,6.86Q38.24,26.44,30.6,42.54c-.07.15-.18.27-.32.47Z"/></svg></div>
+  <div class="nm">مهاجر · گزارش تست اول ارسال</div>
+  <a href="./test.html">کنسول</a>
+  <a href="./test-insights.html">نتیجه‌های زنده</a>
+  <span class="sp"></span>
+  <button id="prev" onclick="go(-1)" aria-label="اسلاید قبل"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <span class="ct num" id="ct">۱ / ۱۵</span>
+  <button id="next" onclick="go(1)" aria-label="اسلاید بعد"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+</div>
+
+<!-- ═══ ۱ جلد ═════════════════════════════════════════════════════ -->
+<section class="slide cover">
+  <div class="kick">گزارش راند · نسخهٔ ۴٫۵</div>
+  <h1>تست اول ارسال:<br>چه یاد گرفتیم</h1>
+  <p class="lead">جمع‌بندیِ اولین راندی که لینکش واقعاً برای مردم فرستاده شد — رفتارشان داخل اپ، پاسخ‌هایشان، و چیزی که خودشان نوشتند.</p>
+  <div class="meta">
+    <span class="num">۶ تا ۱۷ مهر ۱۴۰۵</span>
+    <span class="num">۲۱ جلسه · حدود ۱۸ نفر</span>
+    <span class="num">۸ تست کامل با اپ</span>
+    <span class="num">۲ ویس</span>
+  </div>
+  <p class="note">با ۸ پاسخ کامل، این گزارش جهت می‌دهد، تصمیم نمی‌گیرد. اسلاید آخر می‌گوید هر عدد را چقدر می‌شود جدی گرفت.</p>
+</section>
+
+<!-- ═══ ۲ یک جمله ══════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">در یک جمله</div>
+  <h2>کار با اپ را بلدند. چیزی که کم است، فهم و اعتماد است.</h2>
+  <p class="lead">از ۱۲ نفری که وارد اپ شدند، <b>۱۱ نفر بدون هیچ کمکی</b> تبدیل را تا آخر انجام دادند. ولی از ۹ نفری که به سؤال‌ها رسیدند، فقط <b>۲ نفر</b> می‌دانستند پولشان کجا نگه داشته می‌شود، و میانهٔ اعتمادشان <b>۲ از ۵</b> بود.</p>
+  <div class="stats">
+    <div class="stat ok"><div class="v num">۱۱<small>از ۱۲</small></div><div class="l">تبدیل را خودشان، بدون کمک، تمام کردند</div></div>
+    <div class="stat bad"><div class="v num">۲<small>از ۹</small></div><div class="l">درست می‌دانستند پولشان کجا نگه داشته می‌شود</div></div>
+    <div class="stat bad"><div class="v num">۲<small>از ۵</small></div><div class="l">میانهٔ اعتماد؛ ۶ نفر از ۹ نفر ۱ یا ۲ دادند</div></div>
+    <div class="stat gold"><div class="v num">۷<small>از ۹</small></div><div class="l">با این همه، خواستند در جریان بمانند یا در پایلوت باشند</div></div>
+  </div>
+</section>
+
+<!-- ═══ ۳ با چه کسانی ══════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">با چه کسانی تست کردیم</div>
+  <h2>با کسانی که مشکل را قبلاً خودشان حل کرده‌اند.</h2>
+  <div class="two">
+    <div>
+      <div class="bars">
+        <div class="bar"><div class="k">۲۵ تا ۳۴ ساله<i>سن</i></div><div class="t"><b style="width:87.5%"></b></div><div class="v num">۱۴ از ۱۶</div></div>
+        <div class="bar"><div class="k">پس‌اندازشان همین حالا دلار یا طلاست</div><div class="t"><b style="width:93.75%"></b></div><div class="v num">۱۵ از ۱۶</div></div>
+        <div class="bar"><div class="k">خودشان قبلاً دلار خریده‌اند</div><div class="t"><b style="width:75%"></b></div><div class="v num">۱۲ از ۱۶</div></div>
+        <div class="bar"><div class="k">با رمزارز کار کرده‌اند</div><div class="t"><b style="width:87.5%"></b></div><div class="v num">۱۴ از ۱۶</div></div>
+        <div class="bar"><div class="k">پس‌اندازشان در بانک است</div><div class="t"><b class="bad" style="width:6.25%"></b></div><div class="v num">۱ از ۱۶</div></div>
+      </div>
+      <p class="note">همه از تلگرام آمدند؛ ۱۷ جلسه از ۲۱ روی آیفون بود.</p>
+    </div>
+    <div class="callout">
+      این آدم‌ها مهاجر را با <b>صرافی و کیف پولی که همین حالا دارند</b> مقایسه می‌کنند — و برای آن‌ها، مهاجر هنوز چیزِ تازه‌ای نیست.<br><br>
+      کسانی که بیشترین نیاز را دارند — <b>پس‌اندازشان در بانک است، دلار نخریده‌اند، بالای ۴۵ سال‌اند</b> — تقریباً در این راند نبودند. تنها نفرِ بالای ۵۵ سال، بعد از چهار سؤالِ اول و پیش از باز کردنِ اپ رفت.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ۴ قیف ══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">از باز کردن لینک تا ویس</div>
+  <h2>بیشترِ آدم‌ها را پیش از رسیدن به محصول از دست دادیم.</h2>
+  <div class="fun">
+    <div class="s"><div class="fill" style="width:100%"></div><div class="n num">۲۱</div><div class="t">لینک را باز کردند</div></div>
+    <div class="drop">۵ نفر در کمتر از ۷ ثانیه، روی صفحهٔ خوش‌آمد، رفتند.</div>
+    <div class="s"><div class="fill" style="width:76%"></div><div class="n num">۱۶</div><div class="t">از صفحهٔ اول گذشتند و سنشان را گفتند</div></div>
+    <div class="drop">۲ نفر بعد از چهار سؤالِ اول، پیش از باز کردنِ اپ رفتند. ۱ نفر در صفحهٔ معرفی رفت. ۱ نفر پنج دقیقه «امن یعنی چی؟» را خواند و بی‌آنکه وارد اپ شود، سراغ سؤال‌ها رفت.</div>
+    <div class="s"><div class="fill" style="width:57%"></div><div class="n num">۱۲</div><div class="t">وارد اپ شدند</div></div>
+    <div class="drop mute">فقط ۱ نفر — که تب را باز گذاشت و رفت.</div>
+    <div class="s"><div class="fill" style="width:52%"></div><div class="n num">۱۱</div><div class="t">تبدیل را تمام کردند</div></div>
+    <div class="drop">۳ نفر کار را تمام کردند ولی «تمام شد» را نزدند؛ پاسخ‌هایشان را نداریم.</div>
+    <div class="s"><div class="fill" style="width:38%"></div><div class="n num">۸</div><div class="t">به چهار سؤال جواب دادند</div></div>
+    <div class="s"><div class="fill" style="width:10%"></div><div class="n num">۲</div><div class="t">ویس فرستادند</div></div>
+  </div>
+</section>
+
+<!-- ═══ ۵ چه چیزی کار کرد ═══════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">چه چیزی کار کرد</div>
+  <h2>مسیر اصلی سالم است، و آدم‌ها کنجکاوند.</h2>
+  <ul class="pts">
+    <li><span class="ic ok">✓</span><span><b>تبدیل را بدون کمک تمام کردند.</b> ۱۱ نفر از ۱۲ نفر. کسی کنارشان نبود؛ تست از راه دور بود. میانهٔ زمان از خانه تا پایان تبدیل: <span class="num">۶۴</span> ثانیه.</span></li>
+    <li><span class="ic ok">✓</span><span><b>اول می‌گردند، بعد تبدیل می‌کنند.</b> ۹ نفر از ۱۱ نفر پیش از تبدیل، اول خدمات دیگر را باز کردند. یعنی اپ را می‌خوانند، نه فقط دکمه را می‌زنند.</span></li>
+    <li><span class="ic ok">✓</span><span><b>انتقال و طلا واقعاً استفاده شد.</b> ۵ نفر انتقال را تا آخر بردند و ۴ نفر سفارش شمش ثبت کردند.</span></li>
+    <li><span class="ic ok">✓</span><span><b>تست کوتاه ماند.</b> میانهٔ کل تست حدود ۴ دقیقه و ۲۰ ثانیه بود؛ همان چیزی که در صفحهٔ اول قول داده بودیم.</span></li>
+    <li><span class="ic gold">★</span><span><b>علاقه هست، حتی با تردید.</b> ۷ نفر از ۹ نفر خواستند خبرشان کنیم یا در پایلوت باشند، و ۴ نفر خودشان شماره گذاشتند. اعتمادی که گفتند پایین بود؛ کاری که کردند، نه.</span></li>
+    <li><span class="ic gold">★</span><span><b>ویس جواب داد.</b> ۲ نفر از ۶ نفری که به بخش ویس رسیدند، هر کدام حدود ۸۰ ثانیه حرف زدند.</span></li>
+  </ul>
+</section>
+
+<!-- ═══ ۶ پول من کجاست ═════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">بزرگ‌ترین یافته</div>
+  <h2>جملهٔ اصلیِ محصول به دستشان نرسید.</h2>
+  <div class="two">
+    <div>
+      <div class="sub">«پولی که تبدیل کرده‌اید کجا می‌ماند؟» · ۹ پاسخ</div>
+      <div class="bars">
+        <div class="bar"><div class="k">نمی‌دانم</div><div class="t"><b class="mute" style="width:33.3%"></b></div><div class="v num">۳</div></div>
+        <div class="bar"><div class="k">نزد صرافی بیت‌وانا<i>پاسخ درست</i></div><div class="t"><b class="ok" style="width:22.2%"></b></div><div class="v num">۲</div></div>
+        <div class="bar"><div class="k">در کیف پول شخصی خودم</div><div class="t"><b class="bad" style="width:22.2%"></b></div><div class="v num">۲</div></div>
+        <div class="bar"><div class="k">در حساب بانکی مهاجر</div><div class="t"><b class="bad" style="width:22.2%"></b></div><div class="v num">۲</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="sub">«مهم‌ترین کاری که مهاجر می‌کند» · ۹ پاسخ</div>
+      <div class="bars">
+        <div class="bar"><div class="k">حفظ ارزش، با کنترل و خروج<i>همان چیزی که می‌خواهیم بگوییم</i></div><div class="t"><b class="ok" style="width:44.4%"></b></div><div class="v num">۴</div></div>
+        <div class="bar"><div class="k">نگهداری پول در یک اپ</div><div class="t"><b class="mute" style="width:22.2%"></b></div><div class="v num">۲</div></div>
+        <div class="bar"><div class="k">بازده تضمین‌شده</div><div class="t"><b class="bad" style="width:11.1%"></b></div><div class="v num">۱</div></div>
+        <div class="bar"><div class="k">خرید و فروش رمزارز</div><div class="t"><b class="bad" style="width:11.1%"></b></div><div class="v num">۱</div></div>
+        <div class="bar"><div class="k">هنوز متوجه نشدم</div><div class="t"><b class="mute" style="width:11.1%"></b></div><div class="v num">۱</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="callout bad"><b>دو نفر فکر می‌کنند پول در کیف پولِ خودشان است</b>، در حالی که به‌طور پیش‌فرض نزد بیت‌واناست. این کج‌فهمیِ خطرناکی است: کسی که فکر می‌کند کلید دست خودش است، وقتی مشکلی پیش بیاید انتظار دیگری دارد. هدف تست ۷۰٪ پاسخ درست بود؛ رسیدیم به ۲۲٪.</div>
+</section>
+
+<!-- ═══ ۷ اعتماد ═══════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">اعتماد</div>
+  <h2>اولین سؤالِ ذهنشان «امن است؟» بود — و جوابش قانعشان نکرد.</h2>
+  <div class="two">
+    <div>
+      <div class="sub">«اگر واقعی بود، چقدر اعتماد می‌کردید؟» · ۹ پاسخ</div>
+      <div class="bars">
+        <div class="bar"><div class="k num">۱ · اصلاً</div><div class="t"><b class="bad" style="width:22.2%"></b></div><div class="v num">۲</div></div>
+        <div class="bar"><div class="k num">۲</div><div class="t"><b class="bad" style="width:44.4%"></b></div><div class="v num">۴</div></div>
+        <div class="bar"><div class="k num">۳</div><div class="t"><b class="mute" style="width:22.2%"></b></div><div class="v num">۲</div></div>
+        <div class="bar"><div class="k num">۴</div><div class="t"><b class="ok" style="width:11.1%"></b></div><div class="v num">۱</div></div>
+        <div class="bar"><div class="k num">۵ · کاملاً</div><div class="t"><b class="ok" style="width:0%"></b></div><div class="v num">۰</div></div>
+      </div>
+      <div class="sub">«اگر همین امروز واقعی بود، قدم بعدی‌تان؟»</div>
+      <div class="bars">
+        <div class="bar"><div class="k">با مبلغ آزمایشی شروع می‌کردم</div><div class="t"><b class="ok" style="width:33.3%"></b></div><div class="v num">۳</div></div>
+        <div class="bar"><div class="k">فقط بیشتر می‌خواندم</div><div class="t"><b class="mute" style="width:33.3%"></b></div><div class="v num">۳</div></div>
+        <div class="bar"><div class="k">فعلاً هیچ کاری نمی‌کردم</div><div class="t"><b class="bad" style="width:33.3%"></b></div><div class="v num">۳</div></div>
+      </div>
+    </div>
+    <ul class="pts" style="margin-top:40px">
+      <li><span class="ic gold num">۶</span><span><b>نفر از ۱۶ نفر</b>، پیش از ورود به اپ، اول «امن یعنی چی؟» را باز کردند. سؤالِ اول، امنیت است — پیش از هر قابلیتی.</span></li>
+      <li><span class="ic bad">!</span><span>یک نفر بیش از <b>پنج دقیقه</b> همان صفحه را خواند، نوشت «توضیحات کافی نبود» و بی‌آنکه وارد اپ شود رفت.</span></li>
+      <li><span class="ic bad">!</span><span>یک نفر دیگر <b>سه بار</b> بین «پول شما کجاست» و همان توضیح رفت و برگشت.</span></li>
+      <li><span class="ic">→</span><span>صفحهٔ توضیحِ جدا، جای جوابِ اعتماد نیست. جواب باید همان‌جا باشد که سؤال پیش می‌آید.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ ۸ داخل اپ ══════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">داخل اپ چه کردند</div>
+  <h2>سرمایه‌گذاری بیشترین کنجکاوی را داشت و کمترین اقدام را.</h2>
+  <p class="lead">از ۱۱ نفری که تبدیل کردند: کمرنگ = باز کردند، پررنگ = تا آخر بردند.</p>
+  <div class="bars">
+    <div class="bar"><div class="k">انتقال به کاربر دیگر<i>۹ باز کردند · ۵ تمام کردند</i></div><div class="t"><b class="under" style="width:81.8%"></b><b style="width:45.5%"></b></div><div class="v num">۵ / ۹</div></div>
+    <div class="bar"><div class="k">تحویل طلا<i>۸ باز کردند · ۴ سفارش ثبت کردند</i></div><div class="t"><b class="under" style="width:72.7%"></b><b style="width:36.4%"></b></div><div class="v num">۴ / ۸</div></div>
+    <div class="bar"><div class="k">برداشت به تومان<i>۴ باز کردند · ۲ تمام کردند</i></div><div class="t"><b class="under" style="width:36.4%"></b><b style="width:18.2%"></b></div><div class="v num">۲ / ۴</div></div>
+    <div class="bar"><div class="k">سرمایه‌گذاری<i>۹ باز کردند · ۱ نفر سرمایه‌گذاری کرد</i></div><div class="t"><b class="under" style="width:81.8%"></b><b style="width:9.1%"></b></div><div class="v num">۱ / ۹</div></div>
+    <div class="bar"><div class="k">کیف پول شخصی<i>۴ باز کردند · هیچ‌کس تمام نکرد</i></div><div class="t"><b class="under" style="width:36.4%"></b><b style="width:0%"></b></div><div class="v num">۰ / ۴</div></div>
+  </div>
+  <p class="note">انتقال و طلا به اقدام رسیدند. سرمایه‌گذاری را تقریباً همه نگاه کردند و تقریباً هیچ‌کس انجام نداد. با ۱۱ نفر نمی‌شود گفت چرا — فقط می‌شود گفت کجا را باید در راند بعد پرسید.</p>
+</section>
+
+<!-- ═══ ۹ اصطکاک ═══════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">کجا گیر کردند · از ضربه‌ها و مسیرها</div>
+  <h2>شش جای مشخص که باید درست شود.</h2>
+  <ul class="pts">
+    <li><span class="ic bad num">۱</span><span><b>صفحه‌کلیدِ مبلغ، ضربه‌های تند را جا می‌اندازد.</b> یک نفر نوشت «با تند تند زدن، صفرها جا می‌ماند». روی آیفون، دو ضربهٔ پشت‌سرهم گاهی یکی حساب می‌شود — و برای نوشتنِ ۵۰ میلیون تومان باید هفت صفر زد. ۷ نفر از ۱۱ نفر روی همین صفحه‌کلید پشت‌سرهم ضربه زدند.</span></li>
+    <li><span class="ic bad num">۲</span><span><b>کارت‌های صفحهٔ معرفی شبیه دکمه‌اند ولی دکمه نیستند.</b> در ۹ جلسه روی صفحهٔ معرفی جایی زدند که دکمه نبود — بیشترشان روی همین کارت‌ها.</span></li>
+    <li><span class="ic bad num">۳</span><span><b>۳ نفر کار را تمام کردند ولی «تمام شد» را نزدند.</b> نمی‌دانستند تست تمام شده؛ پاسخ‌هایشان را نداریم.</span></li>
+    <li><span class="ic bad num">۴</span><span><b>شروع با موجودی صفر.</b> کسی که اول می‌خواهد بگردد، به «اول تبدیل کنید» می‌خورد. «کاش مقداری سرمایهٔ اولیه می‌دادید که با آن کار کنیم.»</span></li>
+    <li><span class="ic bad num">۵</span><span><b>صفحهٔ مبلغِ انتقال.</b> یک نفر ۱۳ بار روی جاهایی زد که دکمه نبود و نوشت «امکان ویرایش مبلغ را ندارم یا پیدا نکردم».</span></li>
+    <li><span class="ic bad num">۶</span><span><b>خانه هدف را روشن نمی‌گوید.</b> «بخش‌بندی‌ها شفاف نیست؛ مثلاً چرا کلید اصلی باید دریافت طلا باشد؟»</span></li>
+  </ul>
+  <p class="note">دربارهٔ اندازه‌گیری: بیشترِ چیزهایی که داشبورد «ضربهٔ عصبی» شمرده بود، تایپِ تندِ صفر روی صفحه‌کلید بود، نه عصبانیت. این شمارش برای صفحه‌کلید اصلاح می‌شود.</p>
+</section>
+
+<!-- ═══ ۱۰ حرف خودشان ═════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">حرف خودشان · وسطِ کار، با دکمهٔ «گیر کردم»</div>
+  <h2>شش جمله، از شش لحظه.</h2>
+  <div class="quotes">
+    <div class="q"><p>«خیلی گنگ است؛ مسیر مشخصی برای پیش رفتن ندارد. کاربر باید خودکار به آن سمت کشیده شود.»</p><div class="w"><span class="pill y">گیج شدم</span><span>صفحهٔ معرفی</span></div></div>
+    <div class="q"><p>«توضیحات کافی نبود.»</p><div class="w"><span class="pill bad">اعتماد نکردم</span><span>«امن یعنی چی؟»</span></div></div>
+    <div class="q"><p>«بخش‌بندی‌ها شفاف نیست و هدف را دقیقاً مشخص نمی‌کند؛ مثلاً چرا کلید اصلی باید دریافت طلا باشد؟»</p><div class="w"><span>خانه</span></div></div>
+    <div class="q"><p>«کاش مقداری سرمایهٔ اولیه می‌دادید که با آن کار کنیم.»</p><div class="w"><span>خانه</span></div></div>
+    <div class="q"><p>«با تند تند زدن، صفرها جا می‌ماند.»</p><div class="w"><span class="pill">کند بود</span><span>تبدیل</span></div></div>
+    <div class="q"><p>«امکان ویرایش مبلغ را ندارم، یا پیدا نکردم.»</p><div class="w"><span>مبلغ انتقال</span></div></div>
+  </div>
+  <p class="note">نقل‌ها بی‌نام‌اند و فقط املایشان اصلاح شده. یک نفر هم سه بار «گیج شدم» و «اعتماد نکردم» را زد، بی‌آنکه چیزی بنویسد — روی خانه و روی همان صفحهٔ توضیح. به احتمال زیاد همان کسی است که نوشته بود «توضیحات کافی نبود» و چند دقیقه بعد برگشت تا اپ را امتحان کند.</p>
+</section>
+
+<!-- ═══ ۱۱ ویس‌ها ══════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">ویس‌ها</div>
+  <h2>دو ویس، هر کدام حدود ۸۰ ثانیه.</h2>
+  <p class="lead">هر دو از کسانی بود که ۲۵ تا ۳۴ ساله‌اند و تست را تا آخر رفتند. یکی مهاجر را «خرید و فروش رمزارز» دانسته بود، فکر می‌کرد پول در حساب بانکی مهاجر است، و اعتماد ۴ داده بود. دیگری مهاجر را «نگهداری پول در یک اپ» دانسته بود، درست می‌دانست پول نزد بیت‌واناست، و اعتماد ۲ داده بود.</p>
+  <div class="callout">متنِ ویس‌ها هنوز در این گزارش نیامده. وقتی پیاده شوند، همین اسلاید با موضوع‌هایی که در هر دو تکرار شده کامل می‌شود.<br><br>
+  <b>نکتهٔ جانبی:</b> مردم وقتی چهار سؤال جلویشان باشد، حدود ۸۰ ثانیه حرف می‌زنند. سقف دو دقیقه درست است.</div>
+</section>
+
+<!-- ═══ ۱۲ تصمیم ═══════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">چه نگه داریم، چه عوض کنیم، چه کنار بگذاریم</div>
+  <h2>تصمیم‌ها</h2>
+  <div class="cols">
+    <div class="col keep">
+      <h3><i></i>نگه داریم</h3>
+      <ul>
+        <li><b>مسیر تبدیل</b>، همان‌طور که هست. ۱۱ از ۱۲ بدون کمک.</li>
+        <li><b>انتقال و طلا.</b> به اقدام رسیدند، نه فقط نگاه.</li>
+        <li><b>ویس و فرم تماس</b> در پایان تست.</li>
+        <li><b>چهار سؤال.</b> کوتاهی‌اش جواب داد؛ کل تست زیر پنج دقیقه ماند.</li>
+      </ul>
+    </div>
+    <div class="col change">
+      <h3><i></i>عوض کنیم</h3>
+      <ul>
+        <li><b>«پول من کجاست و امن است؟» را روی خودِ خانه جواب بدهیم</b>، نه در یک صفحهٔ توضیح جدا. یک جمله، یک نام (بیت‌وانا)، یک مدرک (مجوز).</li>
+        <li><b>صفحه‌کلید مبلغ:</b> ضربهٔ تند نباید جا بیفتد، و نوشتنِ مبلغ میلیونی باید ساده‌تر شود.</li>
+        <li><b>کارت‌های صفحهٔ معرفی</b> یا دکمه شوند، یا دیگر شبیه دکمه نباشند.</li>
+        <li><b>ترتیب دکمه‌های خانه</b> بر اساس کار اصلی: تبدیل، انتقال، برداشت؛ بعد طلا و سرمایه‌گذاری.</li>
+        <li><b>در تست:</b> بعد از انجام مأموریت، خودِ صفحه بگوید «کارتان تمام شد؛ چهار سؤال کوتاه مانده».</li>
+      </ul>
+    </div>
+    <div class="col drop">
+      <h3><i></i>کنار بگذاریم</h3>
+      <ul>
+        <li><b>صفحهٔ توضیحِ جدا به‌عنوان جوابِ اعتماد.</b> کار نکرد.</li>
+        <li><b>تست فقط با تلگرامِ همان حلقهٔ آشنایان.</b> مخاطب اصلی در آن نیست.</li>
+        <li><b>شمردنِ تایپِ تند به‌عنوان عصبانیت</b> در داشبورد.</li>
+        <li>برای <b>حذفِ هیچ قابلیتی</b> هنوز دلیل کافی نداریم. سرمایه‌گذاری و کیف پول شخصی کم استفاده شدند، ولی با ۱۱ نفر نمی‌شود حذفشان کرد.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ۱۳ کسب‌وکار ════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">برای کسب‌وکار چه معنایی دارد</div>
+  <h2>مانعِ اول اعتماد است، نه طراحی.</h2>
+  <ul class="pts">
+    <li><span class="ic gold num">۱</span><span><b>سرمایه‌گذاریِ بعدی روی «اثبات» است.</b> مجوز، رابطهٔ روشن با بیت‌وانا، چهره‌های پشتِ مهاجر، و یک برداشتِ واقعیِ کوچک که خودِ کاربر ببیند. اپ را بلدند؛ باورش نمی‌کنند.</span></li>
+    <li><span class="ic gold num">۲</span><span><b>«۵ دلار امتحان» را به ابزار اعتماد تبدیل کنیم.</b> با پولِ واقعیِ کم وارد شو، همان روز برداشت کن، ببین برمی‌گردد. ۳ نفر از ۹ نفر همین حالا گفتند با مبلغ آزمایشی شروع می‌کنند.</span></li>
+    <li><span class="ic gold num">۳</span><span><b>مخاطبِ این راند، مخاطبِ اصلی نیست.</b> کسی که دلار و رمزارز دارد، مهاجر را با صرافی و کیف پولِ خودش می‌سنجد. باید بفهمیم برای کسی که پس‌اندازش در بانک است چه می‌گوید — آن‌جا جای ارزش اصلی است.</span></li>
+    <li><span class="ic gold num">۴</span><span><b>علاقه هست و ارزان‌ترین دادهٔ بعدی همین‌جاست.</b> ۴ نفر خودشان شماره گذاشتند. پانزده دقیقه تماس با هر کدام، از یک راندِ دیگر بیشتر به ما می‌گوید.</span></li>
+    <li><span class="ic num">۵</span><span><b>هیچ‌کس دربارهٔ کارمزد چیزی نگفت</b> — نه مثبت، نه منفی. هنوز نمی‌دانیم قیمت برایشان مهم است یا نه؛ باید مستقیم بپرسیم.</span></li>
+  </ul>
+</section>
+
+<!-- ═══ ۱۴ راند بعد ════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">راند بعد</div>
+  <h2>همان تست، با آدم‌های درست.</h2>
+  <ul class="pts">
+    <li><span class="ic gold">۱</span><span><b>۳۰ تست کامل، با سهمیه:</b> دست‌کم ۱۰ نفر بالای ۴۵ سال و ۱۰ نفر که پس‌اندازشان در بانک است.</span></li>
+    <li><span class="ic gold">۲</span><span><b>کانالی غیر از تلگرامِ دانشگاه:</b> خانوادهٔ اعضای تیم، واتساپ، و شبکه‌های محلی.</span></li>
+    <li><span class="ic gold">۳</span><span><b>پیش از راند درست شود:</b> صفحه‌کلید مبلغ، پیامِ «کارتان تمام شد»، و جملهٔ «پول شما کجاست» روی خانه.</span></li>
+    <li><span class="ic gold">۴</span><span><b>بعد از راند:</b> تماسِ پانزده‌دقیقه‌ای با هر کسی که شماره گذاشت.</span></li>
+  </ul>
+  <div class="callout">پیش از فرستادنِ لینکِ بعدی، در کنسول <b>«راند تازه»</b> را بزنید تا عددهای این راند با راند بعد قاطی نشوند.</div>
+</section>
+
+<!-- ═══ ۱۵ دربارهٔ عددها ═══════════════════════════════════════════ -->
+<section class="slide">
+  <div class="kick">دربارهٔ این عددها</div>
+  <h2>این عددها را چقدر جدی بگیریم.</h2>
+  <ul class="pts">
+    <li><span class="ic">i</span><span><b>۸ پاسخ کامل با اپ، جهت می‌دهد ولی تصمیم نمی‌گیرد.</b> هر درصدی در این گزارش می‌تواند با یکی دو نفرِ بعدی جابه‌جا شود. الگوهایی که چند نشانهٔ جدا تأییدشان می‌کند — مثل اعتماد — جدی‌ترند.</span></li>
+    <li><span class="ic">i</span><span><b>۲۱ جلسه حدود ۱۸ نفر است.</b> دست‌کم سه جلسه از یک گوشی و در یازده دقیقه بود؛ همان آدم دوباره برگشته بود.</span></li>
+    <li><span class="ic">i</span><span><b>۲ نفر از ۹ نفر نسخهٔ هفت‌سؤالی را دیدند.</b> در این گزارش فقط چهار سؤالِ مشترک آمده. یک نفر هم بی‌آنکه وارد اپ شود به سؤال‌ها جواب داد؛ پاسخش در شمارشِ ۹ نفر هست.</span></li>
+    <li><span class="ic">i</span><span><b>تست از راه دور بود.</b> «بدون کمک» یعنی واقعاً کسی کنارشان نبود.</span></li>
+    <li><span class="ic">i</span><span><b>این صفحه عکسی از ۱۷ مهر است، نه دادهٔ زنده.</b> برای عددهای زنده، <a href="./test-insights.html" style="color:var(--gold)">صفحهٔ نتیجه‌ها</a>.</span></li>
+  </ul>
+</section>
+
+<script>
+/* ناوبری: کلیدهای جهت، فاصله و Page Up/Down؛ و شمارندهٔ اسلاید. در
+   راست‌چین، «بعد» به چپ است. */
+const FA='۰۱۲۳۴۵۶۷۸۹', fa=n=>String(n).replace(/\d/g,d=>FA[d]);
+const slides=[...document.querySelectorAll('.slide')];
+let cur=0;
+function paint(){
+  document.getElementById('ct').textContent=fa(cur+1)+' / '+fa(slides.length);
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+}
+function go(d){
+  cur=Math.max(0,Math.min(slides.length-1,cur+d));
+  slides[cur].scrollIntoView({behavior:'smooth',block:'start'});
+  paint();
+}
+addEventListener('keydown',e=>{
+  if(['ArrowDown','PageDown','ArrowLeft',' '].includes(e.key)){e.preventDefault();go(1);}
+  else if(['ArrowUp','PageUp','ArrowRight'].includes(e.key)){e.preventDefault();go(-1);}
+  else if(e.key==='Home'){cur=0;go(0);} else if(e.key==='End'){cur=slides.length-1;go(0);}
+});
+/* اگر با اسکرول جابه‌جا شد، شمارنده هم دنبالش برود */
+const io=new IntersectionObserver(es=>{
+  es.forEach(x=>{ if(x.isIntersecting&&x.intersectionRatio>.5){ cur=slides.indexOf(x.target); paint(); } });
+},{threshold:[.5]});
+slides.forEach(s=>io.observe(s));
+paint();
+</script>
+</body>
+</html>
