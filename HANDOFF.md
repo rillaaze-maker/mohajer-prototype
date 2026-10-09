@@ -1991,6 +1991,36 @@ source badges and no verdict ("شواهد کافی نیست · بیشترین n=
   would tilt the answer. `spotHtml()` and `./test-home.png` stay; re-attaching
   is one `spot:` key.
 
+### What the first real round broke (2026-10-09)
+
+Round «تست اول ارسال»: 21 sessions, 10 on the old build (28 Sep – 4 Oct),
+11 on the current four-question build (6–9 Oct). Reading it for the report
+surfaced two faults that had been failing quietly.
+
+**The full export stopped returning.** At 88 sessions, each carrying up to
+45KB of events, `?full=1` outgrew what Apps Script will hand back through the
+googleusercontent relay: curl gets 0 bytes, a browser gets a script-tag
+network error. `?sum=1` still works, which is why the console looked healthy.
+**The results page reads `full`**, so from that point it was silently showing
+whatever its local cache last held. That is exactly the failure the
+cache-first design was meant to make visible, and it did not.
+
+Fix: `?full=1` now takes `r=<round>` and `offset`/`limit`, and answers with
+`total` and `next`. `TK.readAll` pages through twelve at a time. A caller that
+sends no `limit` gets the old single response, so nothing that already worked
+changes behaviour. Verified against a paging mock: 33 sessions in three pages,
+all unique.
+
+**Every voice was saved twice.** Seven files, four recordings — each duplicate
+has the same session id, duration and size, 10 seconds to 2 minutes after the
+first. Uploading 300–500KB to a cold Apps Script outlasted the first «did it
+arrive?» check (30s), so the page sent it again and the server wrote it again.
+Fixed from both ends: the collector will not write a second voice with the same
+session id and size (it returns the first one's URL with `dup:true`), and the
+page asks before every retry, with a 60-second first wait. The console shows
+each voice once and says how many duplicates it set aside. The existing
+duplicate files were left in Drive — deleting is the owner's call.
+
 ### The recorder, rebuilt — one bug, two symptoms (2026-10-05)
 
 «شمارنده خیلی تند می‌رفت و صدا تکرار می‌شد.» Both came from the same line.

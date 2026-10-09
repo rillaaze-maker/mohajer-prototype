@@ -425,7 +425,7 @@ textarea::placeholder{color:var(--w3)}
   </div>
 </div>
 
-<script src="./test-kit.js?v=20261004b"></script>
+<script src="./test-kit.js?v=20261009a"></script>
 <script>
 /* ════════ متن‌ها ════════════════════════════════════════════════
    هر جملهٔ این صفحه اینجاست. برای تغییر، یا همین‌جا را عوض کنید یا در
@@ -1246,12 +1246,17 @@ async function voiceSend(){
   const payload = { kind: 'voice', id: S.id, ver: S.ver, r: S.r, c: S.c,
                     secs: Math.round(recDur || recSec), bytes: voiceBlob.size, mime: voiceBlob.type || 'audio/webm',
                     age: (S.seg || {}).age || '', b64 };
+  /* هر ویس دو بار ذخیره می‌شد: فرستادنِ چند صد کیلوبایت به سرورِ سرد
+     بیشتر از مهلتِ اولین «رسید؟» طول می‌کشید و صفحه دوباره می‌فرستاد.
+     حالا مهلت بلندتر است و پیش از هر ارسالِ دوباره، اول می‌پرسد. سرور هم
+     ویسی با همان شناسه و اندازه را دوباره نمی‌نویسد. */
   for (let i = 1; i <= 3; i++) {
     try {
+      if (i > 1 && await TK.verifyVoice(CFG, S.id, 30000)) return voiceOk();
       await TK.postBig(CFG, payload);
-      if (await TK.verifyVoice(CFG, S.id, i === 1 ? 30000 : 20000)) return voiceOk();
+      if (await TK.verifyVoice(CFG, S.id, i === 1 ? 60000 : 40000)) return voiceOk();
     } catch (e) {}
-    await new Promise(r => setTimeout(r, 1500 * i));
+    await new Promise(r => setTimeout(r, 2000 * i));
   }
   voiceFail();
 }

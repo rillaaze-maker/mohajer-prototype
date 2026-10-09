@@ -323,7 +323,7 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--brd);font-siz
 @media(max-width:620px){.vrow{flex-wrap:wrap}.vrow audio{max-width:100%;width:100%}}
 </style>
 
-<script src="./test-kit.js?v=20261004b"></script>
+<script src="./test-kit.js?v=20261009a"></script>
 <script>
 const $ = TK.$;
 let CFG = {}, VERS = [], sel = null, chans = ['tg'], rows = [], DEFAULT_INVITE = '';
@@ -592,10 +592,14 @@ async function loadVoices(){
   let v = null;
   try { v = await TK.read(ep, { voices: 1 }, 40000); } catch (e) {}
   if (!v || !v.ok) { $('vo-h').textContent = 'خوانده نشد. اگر همین حالا اسکریپت را عوض کرده‌اید، چند لحظه بعد دوباره بزنید.'; return; }
-  VOICES = v.voices || [];
+  /* تا پیش از درستیِ سرور، هر ویس دو بار ذخیره می‌شد. یکی نشان می‌دهیم. */
+  const seen = {};
+  VOICES = (v.voices || []).filter(x => { const k = x.id + '|' + x.kb; if (seen[k]) { seen[k]++; return false; } seen[k] = 1; return true; });
   if (v.folder) { $('vo-folder').href = v.folder; $('vo-folder').hidden = false; }
+  const dups = (v.voices || []).length - VOICES.length;
   $('vo-h').innerHTML = VOICES.length
-    ? '<b>' + TK.fa(VOICES.length) + '</b> ویس رسیده. روی ▶ بزنید تا همین‌جا پخش شود.'
+    ? '<b>' + TK.fa(VOICES.length) + '</b> ویس رسیده. روی ▶ بزنید تا همین‌جا پخش شود.' +
+      (dups ? ' <span style="color:var(--ink-3)">(' + TK.fa(dups) + ' نسخهٔ تکراری کنار گذاشته شد)</span>' : '')
     : 'هنوز ویسی نرسیده. وقتی کسی تست را تمام کند و ویس بفرستد، همین‌جا می‌آید.';
   $('vo-list').innerHTML = VOICES.map((x, i) => {
     const when = x.at ? new Date(x.at).toLocaleString('fa-IR', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) : '';

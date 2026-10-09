@@ -236,10 +236,11 @@
     let got = null;
     for (const u of eps(cfg)) {
       let rows = null;
-      try { rows = (await read(u, params, 30000)).sessions; }
+      const pull = (params && params.full) ? (t) => readPaged(u, params, t) : (t) => read(u, params, t).then(r => r.sessions);
+      try { rows = await pull(30000); }
       catch (e) {
         /* اولین تماس بعد از بی‌کاری کند است: گرمش کن و یک بار دیگر */
-        try { await read(u, { ping: 1 }, 30000); rows = (await read(u, params, 40000)).sessions; }
+        try { await read(u, { ping: 1 }, 30000); rows = await pull(40000); }
         catch (e2) { status.push({ url: u, ok: false, error: String(e2.message || e2) }); continue; }
       }
       merge(rows); got = (got || []).concat(rows || []);
@@ -251,6 +252,22 @@
     }
     return { sessions: [...map.values()], status, repo: repoList.length,
              cachedAt: got ? Date.now() : (cached && cached.at), live: !!got };
+  }
+
+  /* خروجیِ کامل، صفحه‌صفحه. یک‌جا دیگر برنمی‌گشت: با ۸۸ جلسه، پاسخ از
+     سقفی که Apps Script از راهِ googleusercontent برمی‌گرداند بزرگ‌تر شد
+     و صفحهٔ نتیجه‌ها بی‌صدا به نسخهٔ ذخیره‌شدهٔ قبلی برمی‌گشت.
+     سرورِ قدیمی که limit را نمی‌شناسد، `next` نمی‌دهد و همان یک پاسخ
+     کافی است. */
+  async function readPaged(u, params, timeout) {
+    let off = 0, all = [], guard = 0;
+    while (guard++ < 60) {
+      const r = await read(u, Object.assign({}, params, { offset: off, limit: 12 }), timeout);
+      all = all.concat((r && r.sessions) || []);
+      if (!r || r.next === null || r.next === undefined) break;
+      off = r.next;
+    }
+    return all;
   }
 
   /* Anything that failed to send is kept and retried the next time any

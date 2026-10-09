@@ -199,6 +199,15 @@ function voiceExt_(mime) {
 function voiceSave_(s) {
   try {
     if (!s.b64) return out_({ ok: false, error: 'no-audio' });
+    /* همان ویس دو بار نوشته نمی‌شود. صفحه وقتی جوابِ «رسید؟» دیر بیاید
+       دوباره می‌فرستد؛ اینجا همان شناسه با همان اندازه یعنی همان فایل. */
+    var kb = Math.round((s.bytes || (s.b64.length * 3 / 4)) / 1024);
+    var vs = voiceSheet_(), vv = vs.getDataRange().getValues();
+    for (var d = vv.length - 1; d > 0; d--) {
+      if (String(vv[d][1]) === String(s.id) && Math.abs((+vv[d][7] || 0) - kb) <= 1) {
+        return out_({ ok: true, dup: true, url: vv[d][9] });
+      }
+    }
     var name = 'v' + (s.ver || '?') + '__r' + (s.r || '?') + '__' + s.id + '.' + voiceExt_(s.mime);
     var bytes = Utilities.base64Decode(s.b64);
     var blob = Utilities.newBlob(bytes, s.mime || 'audio/webm', name);
@@ -292,11 +301,26 @@ function doGet(e) {
   }
 
   var byId = {};
+  /* فیلترِ راند: صفحهٔ نتیجه‌ها معمولاً فقط یک راند را لازم دارد */
+  var iRound = col.round === undefined ? 2 : col.round;
+  var onlyR = p.r ? String(p.r) : null;
   for (var i = 1; i < rows.length; i++) {
     if (!rows[i][iId]) continue;
+    if (onlyR && String(rows[i][iRound]) !== onlyR) continue;
     byId[String(rows[i][iId])] = rows[i];               /* آخرین سطرِ هر id برنده است */
   }
   var keys = Object.keys(byId), list = [];
+
+  /* صفحه‌صفحه. خروجیِ کامل از سقفِ پاسخِ Apps Script گذشت و دیگر
+     برنمی‌گشت. هر کس limit بفرستد صفحه‌ای می‌گیرد و `next` می‌گوید از
+     کجا ادامه دهد؛ هر کس نفرستد، همان رفتارِ قبلی را دارد. */
+  var total = keys.length, next = null;
+  if (p.limit) {
+    var off = Math.max(0, parseInt(p.offset, 10) || 0);
+    var lim = Math.max(1, Math.min(40, parseInt(p.limit, 10) || 15));
+    keys = keys.slice(off, off + lim);
+    next = (off + lim < total) ? off + lim : null;
+  }
   for (var k = 0; k < keys.length; k++) {
     var r = byId[keys[k]];
     if (p.full) {
@@ -319,7 +343,7 @@ function doGet(e) {
       });
     }
   }
-  return out_({ ok: true, n: list.length, sessions: list }, p.callback);
+  return out_({ ok: true, n: list.length, total: total, next: next, sessions: list }, p.callback);
 }
 
 function out_(obj, callback) {
