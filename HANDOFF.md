@@ -2099,6 +2099,116 @@ Four class names collided with v4.5's global CSS (`.bar`, `.who`, `.dot`,
 `.hint`) and were renamed (`.sbar`, `.whob`, `.cdot`, `.fhint`). The symptom
 was empty share bars — found by measuring the element, not by eye.
 
+## 10n. v5.1 «آشیانه» — safety score, quieter home, exchanges named, a real eject flow (2026-10-12)
+
+`prototype/wallet-v5.1.html` · `copy-v5.1.json` · `manifest-v5.1.json`.
+v5.0 was already live when this round started, so **v5.0 is untouched** —
+the local file was restored from the live site and is byte-identical to it
+(md5 `79bc0d21…`). v5.1 has its own copy key (`mhj51-copy`). v4.5 and every
+test file are still byte-identical. Neither v5 is in `test-versions.json`.
+
+### Safety score — «امنیت پس‌انداز شما»
+
+One percentage: **if the worst of the eight risks happens, how much of your
+money survives** (`safety()` = the minimum of `coverage()` over `RISKS`).
+Not the average: most risks miss any single place, so someone with everything
+in Mohajer scored 75% «well spread» on the average. On the worst case, one
+place is 0% and spreading raises it — the founder's line, as a number.
+Bands: ≥70% خوب, 40–69% متوسط, <40% ضعیف. Sample portfolio: 42% (theft).
+
+It sits on the main flow, per the team: a row in the balance card on home,
+a big ring at the top of the risks page, and a live preview in «ثبت پول»
+(«امنیت پس‌انداز شما از ۴۲٪ به ۳۲٪ می‌رسد» — declaring 20g of gold at home
+honestly lowers it, because more is exposed to theft).
+
+### Variant: safety at the core — `?core=safety`
+
+Same file. The home hero becomes the score (168px ring, band, one sentence),
+the balance drops to a pill under it, and a card «بالا بردن امنیت» names the
+worst risk, its fix and **one button that does the fix** (`BOOST` map: theft
+→ deposit cash at an exchange, company/freeze → gold, sanction → bring USDT,
+inflation → convert…). Pattern taken from score-first products: Credit Karma
+and ClearScore (ring + band), Oura Readiness (score + what pulled it down),
+1Password Watchtower and Google Security Checkup (one issue, one fix button).
+The facilitator panel has a chip to switch versions live. For A/B: send
+`wallet-v5.1.html` and `wallet-v5.1.html?core=safety`.
+
+### Home, simplified — detail one tap deeper
+
+Home is three blocks: balance card (total, safety row, واریز/برداشت),
+«پولتان کجاست», one-line «برداشت یک‌جای همه». Removed from home: the
+history list (clock button in the header; a dot appears while something is
+pending), the bottom «واریز» button and the four-button quick row (واریز was
+on screen three times, plus the tab), the «where is it held» line (now the
+Mohajer leaf's subtitle «نزد صرافی بیت‌وانا», with «امن یعنی چه؟» on its
+place page), the concentration warning and the risk list (both now the
+score). Leaves show name, amount and share; where each number comes from is
+on the place page.
+
+### «تتر نزد صرافی دیگر» — Iranian or foreign
+
+«تتر در جای دیگر» had no knowable risk. Now «ثبت پول» offers «تتر نزد صرافی
+دیگر», asks «این صرافی ایرانی است یا خارجی؟», then lists that place's risks
+right under the choice. On the map they are two places, `exir` and `exfx`,
+because their risks differ: foreign exchanges add **«اگر صرافی خارجی حساب
+ایرانی‌ها را ببندد»** (new risk `sanction`) and are slow to turn into toman
+(`urgent`). Watch addresses are only offered for a personal wallet — an
+exchange deposit address does not show the person's balance. The risk
+matrix shows only the places the person has (short column names `mx_*`) and
+is collapsed behind a button.
+
+### Also
+
+- Investment is separated: its own section in خدمات («سبدهای سرمایه‌گذاری» —
+  «سود و زیان دارد»), and its own line on the Mohajer place page, no longer
+  folded into «پولتان کجاست».
+- Eject methods, in the user's words and order: «تومان به حساب بانکی شما»,
+  «تحویل طلا», «تتر نزد آشیانه (بیت‌وانا)», «واریز به کیف پول شخصی».
+
+### The app is now «آشیانه» (v5.1 only)
+
+Every user-facing «مهاجر» became «آشیانه» («مهاجرتان» → «آشیانه‌تان»,
+«مهاجرِ» → «آشیانهٔ»). Code comments were left alone, and so was «مهاجرت»
+(emigration, an eject reason). Tab title, home-screen name and manifest say
+آشیانه. **The PWA icons are still the Mohajer mark** — they need a new
+icon from design. v5.0 and v4.5 keep the old name.
+
+### برداشت یک‌جا is now a real flow — everything ends up in one form
+
+The founder's point, in the user's words: «کل فلسفه‌ش همینه… اگه نشه کاری
+نکردیم». Before, confirming only emptied the Mohajer balance and left the
+rest of the map as it was. Now:
+
+1. **Method** (the four above) → **destination** if needed (Sheba, or exchange + time).
+2. **«کدام‌ها طلا شوند؟»** (wording per method) — every place asks بله / نه.
+   «نه» means it stays where it is. Places already in that form say so and stay.
+3. **Plan** — who does what, fee, amount received. The amount is only what
+   moves, so skipped places and gold you already had are not counted.
+4. **Hold to confirm** → **tracker** (`ej-track`): one step per place, each
+   marked نوبت شما / در جریان / انجام شد / منتظر بقیه, with a progress bar.
+   - Ashiyaneh's own balance moves by itself.
+   - Your steps are the real-world action, simulated: an exchange code for
+     cash or gold handed in, «فرستادم» after withdrawing from an exchange
+     (address and network shown), signing with the key, paying by card.
+   - The last step turns what arrived into the chosen form: Sheba transfer,
+     **a pickup code for the gold**, or sending to the personal wallet.
+5. **After every step the map updates.** The money that has arrived shows under
+   پیش آشیانه as «جمع‌شده برای برداشت». At the end, everything you said بله
+   to is in that one place. The home card reads «برداشت یک‌جا در جریان است ·
+   ۲ از ۴ مرحله» and reopens the tracker. You can leave and come back.
+
+Verified for all four methods on the sample portfolio. Gold, with cash
+skipped, ends as cash $1,500 + gold (22g + 26.73g). The amount received
+equals the plan screen to the cent. The gram amount on the plan screen used
+to print 15 decimals (`faG` without rounding); that is fixed in v5.1. **v5.0
+live still has that bug.** A `.pick` class collided with v4.5's gold-bar
+picker (monospace font) and was renamed `.ejpk`.
+
+
+- The واریز tab is only deposits; declaring outside money starts from the map.
+- The risk matrix (`RISKS`) is still **a draft for the founder to sign off**,
+  now with eight risks.
+
 ### The first round's report (2026-10-09)
 
 `prototype/test-report.html` — a 15-slide deck on round «تست اول ارسال»,
