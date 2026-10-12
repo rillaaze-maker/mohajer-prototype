@@ -2209,6 +2209,100 @@ picker (monospace font) and was renamed `.ejpk`.
 - The risk matrix (`RISKS`) is still **a draft for the founder to sign off**,
   now with eight risks.
 
+### Visual fixes after the user's phone test (v5.1)
+
+- **The squashed toast was a class collision.** The toast's kind class was
+  `info`, and v4.5 already has `.info{width:36px;height:36px;display:grid}` for
+  the round header button. Every info toast became a 36px box with one word
+  per line. Renamed to `t-ok` / `t-info`. The toast is also centred with
+  `left/right + margin:auto + fit-content` instead of `left:50%` + translate.
+- **The ring's number was not in Dana.** v4.5 gives buttons `color:inherit` but
+  not `font-family`, and the big ring is a `<button>`. `button,input,select,
+  textarea` now inherit the font everywhere.
+- **0% drew a red dot.** A zero-length dash with a round cap is a dot; the arc
+  is hidden below 0.5%.
+- **The eject card no longer shows on an empty account.**
+- **Tracker «نوبت شما» rows had a box around them.** v4.5's `.act` (home action
+  buttons) matched the state class; states are now `k-act/k-pend/k-done/k-wait`.
+- «هر جا، در برابر چه» was not grammatical Persian. Now «خطرها و راه‌حل‌ها»,
+  «جدول خطرِ هر جا», «در برابر کدام خطرها امن است».
+- Checking for these: list every class the new code uses and grep for a
+  selector that is *only* that class. Three collisions so far (`.pick`,
+  `.info`, `.act`), all short v4.5 names.
+
+### The آشیانه mark
+
+A roof over a nest with an egg in it: sheltered savings. Gold `#D5A45C` on the
+dark tile, same family as the old mark. Inline SVG on the intro, and new icons
+`icons/ash-180.png`, `ash-192.png`, `ash-512.png`, `ash-512-maskable.png`. They
+were drawn by `scratchpad/logo.py` with the same 24-unit geometry as the SVG.
+The old `icon-*.png` are untouched (v4.5 and v5.0 still use them). A designer
+should redraw it properly; this is a placeholder that reads at 32px.
+
+### Variant: real risk — `?risk=real`
+
+Same file; also a facilitator chip. Two things change:
+
+1. **Which exchange.** After «ایرانی یا خارجی؟» the person picks the actual
+   exchange: نوبیتکس، والکس، بیت‌پین، رمزینکس، آبان تتر، دیگر / بایننس،
+   اوکی‌ایکس، بای‌بیت، کوکوین، دیگر. Under the choice they see:
+   - a risk level;
+   - a bar per risk;
+   - its **dated history with a source link**;
+   - **where it ranks among the others** (Nobitex 87 → Wallex 73 → Bitpin and
+     Ramzinex 63 → Aban Tether 53).
+
+   The home tree colours each exchange name by its level, and the place page
+   shows each exchange's card.
+2. **Graded risk.** Each item has an exposure from 0 to 1 per risk:
+   likelihood × impact, or «how much of this money you would actually
+   lose». So home theft is 0.35, not 1, and toman inflation is 1. The
+   safety score is still the worst case, so it is comparable with the simple
+   mode. A ninth risk applies to Iranian exchanges and to آشیانه itself:
+   «اگر بانک مرکزی معامله یا برداشت صرافی‌های ایرانی را محدود کند».
+
+Facts used, all from public reporting up to Mehr 1405 (sources in the app
+under «منابع این سنجش»):
+
+- **Nobitex:** hacked 28 Khordad 1404 (~$90M burned; withdrawals shut until 9
+  Tir). In Tir 1404 Tether froze 42 Iran-linked addresses, more than half tied
+  to Nobitex or the IRGC.
+- **Wallex:** one wallet frozen by Tether and Circle (~$2.5M).
+- **OFAC:** designated Nobitex, Wallex, Bitpin and Ramzinex on 12 Khordad 1405.
+- **Central bank:** closed exchange rial gateways in Dey 1403, and limited
+  USDT/toman trading with a nightly halt in Shahrivar–Mehr 1405.
+- **Binance:** blocked thousands of Iranian accounts in 1402, and a Senate
+  inquiry into $1.7B of Iran-linked flows started in Esfand 1404.
+- **Bybit:** $1.5B hack on 3 Esfand 1403, covered by the exchange.
+- **OKX** and **KuCoin:** US guilty pleas.
+
+**Caveats for the team:**
+
+- The exposure numbers are mine, a draft for the founder to sign off.
+- The «42 addresses, more than half Nobitex» line comes from a secondary report
+  of TRM research. Verify it before external use.
+- The Wallex freeze has no confirmed date.
+- **Bitvana's own record is a placeholder.** I found nothing public, and the
+  card says so.
+- Naming real companies with risk levels is fine for an internal test. Legal
+  should look before it goes public.
+
+What the numbers show on the sample portfolio:
+
+- **The total barely moves between Nobitex and Wallex**, because $800 is 12% of
+  it. That is correct. The difference shows on the exchange card and once more
+  money is there: adding $3,000 at Nobitex drops the score from 73% to 57%;
+  at Wallex, to 61%.
+- **Everything in one place:**
+
+  | Where | Safety |
+  |---|---|
+  | Nobitex | 10% |
+  | Wallex | 20% |
+  | آشیانه | 40% |
+  | Cash at home | 65% |
+  | Toman in the bank | 0% |
+
 ### The first round's report (2026-10-09)
 
 `prototype/test-report.html` — a 15-slide deck on round «تست اول ارسال»,

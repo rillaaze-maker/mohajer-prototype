@@ -14,8 +14,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="آشیانه">
-<link rel="apple-touch-icon" href="./icons/icon-180.png">
-<link rel="icon" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/ash-180.png">
+<link rel="icon" href="./icons/ash-192.png">
 <!--
   MOHAJER · PROTOTYPE A · DIGITAL DOLLAR WALLET v0
   Built from Mohajer_Digital_Dollar_Wallet_WS0_v0
@@ -116,8 +116,8 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 .intro-h2{font-size:20px;font-weight:400;letter-spacing:-.02em;line-height:1.4;color:var(--ink);margin-top:8px;opacity:.85}
 .intro-sub{margin-top:14px;font-size:14px;color:var(--ink-3)}
 /* the mark sits on a dark tile in both themes — never a white box on black */
-.logomark{width:31px;height:31px;border-radius:10px;background:#15181D;display:grid;place-items:center;box-sizing:border-box}
-:root[data-theme="dark"] .logomark{background:#1B2027;border:1px solid rgba(255,255,255,.09)}
+.logomark{--lbg:#15181D;width:31px;height:31px;border-radius:10px;background:var(--lbg);display:grid;place-items:center;box-sizing:border-box}
+:root[data-theme="dark"] .logomark{--lbg:#1B2027;background:var(--lbg);border:1px solid rgba(255,255,255,.09)}
 .lead{font-size:14px;line-height:1.7;color:var(--ink-2)}
 .tiny{font-size:11.5px;line-height:1.6;color:var(--ink-3)}
 .eyebrow{font-size:11.5px;font-weight:600;color:var(--ink-3);margin-bottom:10px}
@@ -138,16 +138,17 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
 /* پیامِ گذرا — بالای صفحه، زیر نوار وضعیت، با رنگِ برعکسِ صفحه تا روی هیچ
    دکمه‌ای ننشیند و در هر دو حالتِ روشن و تاریک خوانا باشد. پایینِ صفحه
    جای دکمهٔ اصلی و نوار تب است؛ پیام آن‌جا دکمه را می‌پوشاند. */
-.toast{position:absolute;top:54px;left:50%;z-index:60;transform:translate(-50%,-14px);
-  display:flex;align-items:center;gap:9px;width:max-content;max-width:calc(100% - 40px);
+.toast{position:absolute;top:54px;left:20px;right:20px;margin:0 auto;z-index:60;transform:translateY(-14px);
+  display:flex;align-items:center;gap:9px;width:-webkit-fit-content;width:fit-content;max-width:calc(100% - 40px);box-sizing:border-box;
   padding:11px 15px;border-radius:14px;background:var(--ink);color:var(--canvas);
   font:500 12.5px/1.7 var(--f);box-shadow:var(--sh-d);opacity:0;pointer-events:none;
   transition:opacity .25s var(--swift),transform .45s var(--spring)}
-.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast.on{opacity:1;transform:translateY(0)}
+.toast>span:last-child{min-width:0}
 .toast .ti{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center}
 .toast .ti svg{width:12px;height:12px;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.toast.ok .ti{background:var(--ok)} .toast.ok .ti svg{stroke:#fff}
-.toast.info .ti{background:var(--gold)} .toast.info .ti svg{stroke:#14171B}
+.toast.t-ok .ti{background:var(--ok)} .toast.t-ok .ti svg{stroke:#fff}
+.toast.t-info .ti{background:var(--gold)} .toast.t-info .ti svg{stroke:#14171B}
 /* چرا دکمه خاموش است — درست بالای خودِ دکمه، جایی که نگاه آنجاست */
 .why{font-size:12.5px;line-height:1.7;color:var(--ink-2);text-align:center;
   padding:0 8px 9px;animation:whyIn .3s var(--swift)}
@@ -769,7 +770,7 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.028em;line-height:1.3}
    told otherwise. Every component below is a <button> that was relying on that
    accident. Setting it explicitly is a no-op in the light theme and the whole
    fix in the dark one. .btn is excluded — its modifiers set their own colour. */
-button,input,select,textarea{color:inherit}
+button,input,select,textarea{color:inherit;font-family:inherit}
 
 /* ══════════════════════════════════════════════════════════════════
    DARK THEME
@@ -1201,6 +1202,7 @@ button,input,select,textarea{color:inherit}
   background:rgba(255,255,255,.07);border:none;color:#fff;font:500 12.5px/1.6 var(--f);text-align:start;cursor:pointer}
 .v5safe .mr{width:30px;height:30px;flex:none;transform:rotate(-90deg)}
 .v5safe .mr circle{fill:none;stroke-width:4}
+.fg.z{display:none}   /* ۰٪: سرِ گردِ خطِ صفرطول یک نقطه می‌کشید */
 .v5safe .mr .bg{stroke:rgba(255,255,255,.14)}
 .v5safe .mr .fg{stroke:#4FBF95;stroke-linecap:round}.v5safe .mr .fg.mid{stroke:#E0B375}.v5safe .mr .fg.low{stroke:#E4695C}
 .v5safe .l{flex:1;min-width:0;color:rgba(255,255,255,.72)}
@@ -1210,6 +1212,7 @@ button,input,select,textarea{color:inherit}
 .v5safe .go svg{width:14px;height:14px;stroke:rgba(255,255,255,.5);fill:none;stroke-width:2}
 .ejcard .go{margin-inline-start:auto}
 .ejcard .m{flex:1;min-width:0}
+.ejcard[hidden]{display:none}
 .ejcard .s{display:block;font-size:11.5px;font-weight:600;color:var(--warn);margin-top:2px}
 /* کدام‌ها؟ */
 .ejpk{display:flex;align-items:center;gap:11px;padding:12px 14px;background:var(--surface);border-radius:var(--r-md);box-shadow:var(--sh)}
@@ -1239,11 +1242,11 @@ button,input,select,textarea{color:inherit}
 .trk .d{font-size:11.5px;color:var(--ink-2);line-height:1.8;margin-top:2px}
 .trk .btn{margin-top:8px;height:40px;font-size:12.5px}
 .trk .st{font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;white-space:nowrap;margin-top:6px}
-.trk .st.act{background:var(--warn-soft);color:var(--warn)}
-.trk .st.pend{background:var(--surface-2);color:var(--ink-2)}
-.trk .st.done{background:var(--ok-soft);color:var(--ok)}
-.trk .st.wait{background:var(--surface-2);color:var(--ink-3)}
-.trk.done .t,.trk.done .d{opacity:.6}
+.trk .st.k-act{background:var(--warn-soft);color:var(--warn)}
+.trk .st.k-pend{background:var(--surface-2);color:var(--ink-2)}
+.trk .st.k-done{background:var(--ok-soft);color:var(--ok)}
+.trk .st.k-wait{background:var(--surface-2);color:var(--ink-3)}
+.trk.k-done .t,.trk.k-done .d{opacity:.6}
 .addrbox{direction:ltr;font-size:12px;word-break:break-all;padding:10px 12px;border-radius:10px;background:var(--surface-2);margin:8px 0}
 .codebig{direction:ltr;text-align:center;font-size:28px;font-weight:700;letter-spacing:.3em;padding:12px;border-radius:12px;background:var(--surface-2);margin:10px 0}
 .ejcard .go svg{width:14px;height:14px;stroke:var(--ink-3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -1269,6 +1272,27 @@ button,input,select,textarea{color:inherit}
 .boost .q small{display:block;font-size:11px;font-weight:600;color:var(--ink-3)}
 .boost .fix{font-size:12px;color:var(--ink-2);line-height:1.8;margin-top:4px}
 .boost .btn{margin-top:10px}
+/* ریسک واقعی */
+.prov{margin-top:2px}
+.prov .ph{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.prov .ph b{font-size:14px}
+.rl{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:99px}
+.rl.hi{background:var(--bad-soft);color:var(--bad)} .rl.mid{background:var(--warn-soft);color:var(--warn)} .rl.lo{background:var(--ok-soft);color:var(--ok)}
+.prov .px,.pr{display:grid;grid-template-columns:1fr 84px;gap:10px;align-items:center;font-size:11.5px;line-height:1.6;padding:3px 0;color:var(--ink-2)}
+.prov .px i,.pr i{display:block;height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.prov .px i b,.pr i b{display:block;height:100%;border-radius:99px;background:var(--ok)}
+.prov .px i b.mid,.pr i b.mid{background:var(--warn)} .prov .px i b.hi,.pr i b.hi{background:var(--bad)}
+.pl{font-size:11px;font-weight:700;color:var(--ink-3);margin:12px 0 6px}
+.pe{display:grid;grid-template-columns:auto 1fr;gap:8px;font-size:11.5px;line-height:1.8;padding:4px 0;border-top:1px solid var(--line-2)}
+.pe:first-of-type{border-top:none}
+.pe .pd{font-weight:700;color:var(--ink);white-space:nowrap}
+.ps{color:var(--ink-3);font-size:10.5px;text-decoration:underline}
+.pr.on{color:var(--ink);font-weight:700}
+.pr.on span::before{content:'● ';color:var(--gold)}
+.rlv{font-weight:700} .rlv.hi{color:var(--bad)} .rlv.mid{color:var(--warn)} .rlv.lo{color:var(--gold)} .rlv.ok{color:var(--ok)}
+td.rlv{font-size:10.5px}
+.srcrow{display:block;padding:10px 0;border-top:1px solid var(--line-2);font-size:12px;line-height:1.7;color:var(--ink);text-decoration:none}
+.srcrow::after{content:' ↗';color:var(--ink-3)}
 .eadelta{display:flex;align-items:center;gap:8px;margin-top:8px;padding:9px 11px;border-radius:10px;background:var(--surface-2);font-size:12px;line-height:1.7}
 .eadelta b{font-weight:700}
 .eadelta .up{color:var(--ok)} .eadelta .dn{color:var(--bad)}
@@ -1347,7 +1371,7 @@ button,input,select,textarea{color:inherit}
       <div style="height:16px"></div>
       <div style="display:flex;align-items:center;gap:9px;margin-bottom:30px">
         <div class="logomark">
-          <svg viewBox="0 0 49.33 39.99" width="16" height="16" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg>
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5.2 11L12 5l6.8 6" fill="none" stroke="#D5A45C" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="12" cy="12.7" rx="2.5" ry="3.1" fill="#D5A45C"/><rect x="3.6" y="14.15" width="16.8" height="0.55" style="fill:var(--lbg)"/><path d="M3.6 14.7h16.8a8.4 5.7 0 0 1-16.8 0z" fill="#D5A45C"/></svg>
         </div>
         <div style="font-size:17px;font-weight:600;letter-spacing:-.02em">آشیانه</div>
       </div>
@@ -1384,7 +1408,7 @@ button,input,select,textarea{color:inherit}
         <div class="t" data-c="homeTitle"></div>
         <div class="hbtns">
           <button class="info" id="h-hist" onclick="go('activity')" aria-label="تاریخچه" data-ic="clock"></button>
-          <button class="info" onclick="go('risks')" aria-label="هر جا، در برابر چه" data-ic="info"></button>
+          <button class="info" onclick="go('risks')" aria-label="خطرها و راه‌حل‌ها" data-ic="info"></button>
         </div>
       </div>
 
@@ -1585,6 +1609,7 @@ button,input,select,textarea{color:inherit}
       <div class="v5card" id="rs-score"></div>
       <div class="v5card" id="rs-you-card"><div class="ht"><b data-c="rsYou"></b></div><div id="rs-you"></div></div>
       <button class="sclink" id="rs-mx-btn" onclick="S.mxOpen=!S.mxOpen;renderRisks()"></button>
+      <button class="sclink" id="rs-src-btn" onclick="riskSources()" hidden></button>
       <div class="v5card" id="rs-mx-card" hidden><div class="ht"><b data-c="rsMatrix"></b></div><div id="rs-mx"></div></div>
       <div style="height:12px"></div>
     </div>
@@ -2667,6 +2692,7 @@ button,input,select,textarea{color:inherit}
   <button class="chip" onclick="seed()">+ موجودی $2,000</button>
   <button class="chip" onclick="seedSpread()">+ نمونهٔ پول در چند جا</button>
   <button class="chip" onclick="toggleCore()">نسخه: امنیت در مرکز / موجودی در مرکز</button>
+  <button class="chip" onclick="toggleReal()">سنجش ریسک: واقعی / ساده</button>
   <button class="chip danger" id="fail-btn" aria-pressed="false" onclick="toggleFail()">شبیه‌سازی خطا</button>
   <button class="chip" id="lex-btn" aria-pressed="false" onclick="toggleLex()">واژگان: استاندارد</button>
   <button class="chip" id="theme-btn" aria-pressed="false" onclick="toggleTheme()">حالت: تاریک</button>
@@ -2767,6 +2793,27 @@ const COPY_GROUPS={
 };
 const COPY_DEF={
   /* ═══ v5 ═══ */
+  rkLimit:['home','اگر بانک مرکزی معامله یا برداشت صرافی‌های ایرانی را محدود کند'],
+  rkLimitFix:['home','بخشی را طلا کنید یا در کیف پول شخصی نگه دارید.'],
+  eaProvL:['home','کدام صرافی؟'],
+  eaNeedProv:['home','صرافی را انتخاب کنید.'],
+  rl_hi:['home','ریسک بالا'],
+  rl_mid:['home','ریسک متوسط'],
+  rl_lo:['home','ریسک کم'],
+  ex_hi:['home','زیاد'],
+  ex_mid:['home','متوسط'],
+  ex_lo:['home','کم'],
+  exS_hi:['home','زیاد'],
+  exS_mid:['home','متوسط'],
+  exS_lo:['home','کم'],
+  provRec:['home','سابقه'],
+  provCmp:['home','در میان صرافی‌های {k}'],
+  srcShort:['home','منبع'],
+  rsSrcBtn:['home','منابع این سنجش'],
+  rsSrcT:['home','منابع'],
+  rsSrcNote:['home','رویدادها از منابع عمومی تا مهر ۱۴۰۵ است. میزان ریسکِ هر صرافی پیش‌نویس تیم است و توصیهٔ مالی نیست.'],
+  realOn:['home','سنجش ریسک واقعی'],
+  realOff:['home','سنجش ریسک ساده'],
   ejOkPart_toman:['home','پولی که انتخاب کردید تومان شد و به حساب بانکی‌تان رفت.'],
   ejOkPart_gold:['home','پولی که انتخاب کردید طلا شد و تحویلش گرفتید.'],
   ejOkPart_mohajer:['home','پولی که انتخاب کردید تتر شد، نزد آشیانه.'],
@@ -2860,7 +2907,7 @@ const COPY_DEF={
   scLo:['home','بیشترِ پولتان به یک جا وابسته است.'],
   scWeak:['home','بدترین اتفاق برای پول شما'],
   scMore:['home','همهٔ خطرها و راه‌حل‌ها'],
-  rsMxShow:['home','جدول کامل: هر جا در برابر هر خطر'],
+  rsMxShow:['home','دیدن جدول کامل'],
   rsMxHide:['home','بستن جدول'],
   eaDelta:['home','امنیت پس‌انداز شما از {a} به {b} می‌رسد.'],
   eaDeltaNew:['home','امنیت پس‌انداز شما {b} می‌شود.'],
@@ -2912,7 +2959,7 @@ const COPY_DEF={
   i5W3d:['intro','به هر شکلی که لازم دارید: تومان، تتر یا طلا.'],
   mTotal:['home','کل پس‌انداز شما'],
   mWhere:['home','پولتان کجاست'],
-  mHowPlaces:['home','هر جا یعنی چه؟'],
+  mHowPlaces:['home','هر کدام یعنی چه؟'],
   mPlacesN:['home','پولتان در {n} جاست.'],
   mBiggest:['home','{p} آن {place} است.'],
   mSpreadEmpty:['home','هنوز چیزی ثبت نشده است.'],
@@ -2951,7 +2998,7 @@ const COPY_DEF={
   srcDeclared:['home','اعلام شما'],
   pdShare:['home','{p} از کل پس‌انداز شما'],
   pdItems:['home','چه چیزهایی'],
-  pdRisk:['home','در برابر چه امن است'],
+  pdRisk:['home','در برابر کدام خطرها امن است'],
   pdSafe:['home','در امان'],
   pdHit:['home','در خطر'],
   pdEdit:['home','به‌روزرسانی'],
@@ -2985,10 +3032,10 @@ const COPY_DEF={
   rkUrgentFix:['home','بخشی را پیش آشیانه نگه دارید؛ هر وقت بخواهید به تومان برداشت می‌کنید.'],
   rkLeaveFix:['home','بخشی را تتر نگه دارید؛ در هر کشوری قابل استفاده است.'],
   rkInflFix:['home','تومانِ بانک را به دلار تبدیل کنید.'],
-  rsTitle:['home','هر جا، در برابر چه'],
+  rsTitle:['home','خطرها و راه‌حل‌ها'],
   rsSub:['home','هیچ جایی بی‌خطر نیست و هیچ جایی همهٔ خطرها را ندارد. وقتی پول چند جا باشد، هر اتفاق فقط بخشی از آن را می‌گیرد.'],
   rsYou:['home','پول شما، اگر هر کدام اتفاق بیفتد'],
-  rsMatrix:['home','هر جا در برابر هر خطر'],
+  rsMatrix:['home','جدول خطرِ هر جا'],
   rsLegend:['home','✓ یعنی پولِ آن جا در برابر این اتفاق سالم می‌ماند. ✕ یعنی درگیر می‌شود.'],
   addTitle:['home','واریز'],
   addSub:['home','از هر جا که پول دارید، به آشیانه واریز کنید.'],
@@ -3733,7 +3780,7 @@ let toastT=null;
 function toast(msg,kind){
   const t=$('toast'); if(!t) return;
   const ok=kind==='ok';
-  t.className='toast '+(ok?'ok':'info');
+  t.className='toast '+(ok?'t-ok':'t-info');   /* «info» با دکمهٔ گرد .info تداخل داشت */
   t.innerHTML='<span class="ti"><svg viewBox="0 0 24 24">'+(ok?'<path d="M5 12.5l4.5 4.5L19 7.5"/>':'<path d="M12 7v6M12 16.5v.5"/>')+'</svg></span><span></span>';
   t.lastChild.textContent=msg;
   void t.offsetWidth; t.classList.add('on');
@@ -4811,6 +4858,98 @@ const RISKS=[
   {id:'infl',    n:'rkInfl',    hit:{bank:1},                   fix:'rkInflFix'}
 ];
 /* ستون‌های جدول: جاهایی که خودِ آدم پول دارد؛ اگر هنوز هیچ، چهار جای اصلی. */
+/* ═══ ریسک واقعی ═══════════════════════════════════════════════════
+   x = میزانِ درگیریِ پولِ این صرافی در هر خطر (۰ تا ۱). پیش‌نویسِ تیم است؛
+   رویدادها (ev) عمومی‌اند و هر کدام منبع دارد (s → RISK_SRC). */
+var REAL=/[?&]risk=real/.test(location.search);
+const RISK_SRC=[
+  ['OFAC چهار صرافی ایرانی را تحریم کرد (خرداد ۱۴۰۵) — <bdi>TRM Labs</bdi>','https://www.trmlabs.com/resources/blog/three-enforcement-layers-in-five-months-ofac-designates-irans-domestic-crypto-exchanges'],
+  ['نوبیتکس پس از هک ۹۰ میلیون دلاری — <bdi>The Block</bdi>','https://www.theblock.co/post/360223/iranian-crypto-exchange-nobitex-begins-restoring-service-following-90-million-exploit'],
+  ['هک نوبیتکس — <bdi>Chainalysis</bdi>','https://www.chainalysis.com/blog/nobitex-iranian-exchange-exploit-june-2025/'],
+  ['تتر و مسدودی آدرس‌های مرتبط با ایران — <bdi>Unlock</bdi>','https://www.unlock-bc.com/en/iran-turns-to-crypto-as-sanctions-bite-but-usdt-has-a-control-problem'],
+  ['مسدودی کیف‌پول والکس به گزارش ZachXBT — <bdi>CryptoRank</bdi>','https://cryptorank.io/news/feed/c850b-zachxbt-circle-tether-wallets-iranian-wallex'],
+  ['محدودیت بانک مرکزی بر حساب‌های ریالی صرافی‌ها — <bdi>Crypto Briefing</bdi>','https://cryptobriefing.com/central-bank-iran-block-rial-accounts-tether/'],
+  ['بستن حساب‌های ایرانی در بایننس — <bdi>The Block</bdi>','https://www.theblock.co/post/229094/binance-iranians-accounts-blocked'],
+  ['بایننس و ۱٫۷ میلیارد دلار مرتبط با ایران — <bdi>The Block</bdi>','https://www.theblock.co/post/390952'],
+  ['هک بای‌بیت — <bdi>The Register</bdi>','https://www.theregister.com/2025/02/26/bybit_lazarus_bounty/'],
+  ['اعتراف اوکی‌ایکس در آمریکا — <bdi>Decrypt</bdi>','https://decrypt.co/307554/okx-pleads-guilty-500-million-us-customers'],
+  ['اعتراف کوکوین در آمریکا — <bdi>Cointelegraph</bdi>','https://cointelegraph.com/news/kucoin-pleads-guilty-us-charges-300-million-fine']
+];
+const EV_IR=[['دی ۱۴۰۳','بانک مرکزی درگاه‌های پرداخت ریالی صرافی‌های رمزارز را بست.',5],
+             ['شهریور و مهر ۱۴۰۵','بانک مرکزی معاملهٔ تتر با تومان را محدود کرد و شب‌ها معامله متوقف شد.',5]];
+const EV_FX=[['همیشه','صرافی‌های بزرگ خارجی در قوانینشان کاربر ایرانی را نمی‌پذیرند؛ حساب ممکن است بی‌خبر بسته شود.',6]];
+const PROV={
+  nobitex:{n:'نوبیتکس',k:'ir',x:{company:.9,freeze:.9,limit:.8},ev:[
+    ['۲۸ خرداد ۱۴۰۴','هک شد. حدود ۹۰ میلیون دلار از کیف‌پول‌هایش سوزانده شد و برداشت‌ها تا ۹ تیر بسته ماند.',1],
+    ['تیر ۱۴۰۴','تتر ۴۲ آدرس مرتبط با ایران را مسدود کرد؛ بیش از نیمی به نوبیتکس یا سپاه مربوط بود.',3],
+    ['۱۲ خرداد ۱۴۰۵','در فهرست تحریم خزانه‌داری آمریکا (OFAC) قرار گرفت.',0]].concat(EV_IR)},
+  wallex:{n:'والکس',k:'ir',x:{company:.6,freeze:.8,limit:.8},ev:[
+    ['گزارش‌شده','تتر و سرکل یک کیف‌پول والکس را مسدود کردند؛ حدود ۲٫۵ میلیون دلار.',4],
+    ['۱۲ خرداد ۱۴۰۵','در فهرست تحریم خزانه‌داری آمریکا (OFAC) قرار گرفت.',0]].concat(EV_IR)},
+  bitpin:{n:'بیت‌پین',k:'ir',x:{company:.5,freeze:.7,limit:.7},ev:[
+    ['۱۲ خرداد ۱۴۰۵','در فهرست تحریم خزانه‌داری آمریکا (OFAC) قرار گرفت.',0]].concat(EV_IR)},
+  ramzinex:{n:'رمزینکس',k:'ir',x:{company:.5,freeze:.7,limit:.7},ev:[
+    ['۱۲ خرداد ۱۴۰۵','در فهرست تحریم خزانه‌داری آمریکا (OFAC) قرار گرفت.',0]].concat(EV_IR)},
+  abantether:{n:'آبان تتر',k:'ir',x:{company:.5,freeze:.5,limit:.6},ev:[
+    ['خرداد ۱۴۰۵','در فهرست تحریم این ماه نامش نیامد؛ اطلاعات عمومی کمتری دربارهٔ آن هست.',0]].concat(EV_IR)},
+  otherir:{n:'صرافی ایرانی دیگر',k:'ir',other:1,x:{company:.6,freeze:.6,limit:.7},ev:EV_IR},
+  binance:{n:'بایننس',k:'fx',x:{company:.2,freeze:.2,sanction:.9,urgent:.7},ev:[
+    ['۱۴۰۲','هزاران حساب ایرانی را بست؛ به گفتهٔ خودش بعضی را به اشتباه.',6],
+    ['اسفند ۱۴۰۴','سنای آمریکا دربارهٔ ۱٫۷ میلیارد دلار جریان مرتبط با ایران تحقیق را شروع کرد؛ بایننس می‌گوید دسترسی‌اش به صرافی‌های ایرانی ۹۷٪ کم شده.',7]].concat(EV_FX)},
+  okx:{n:'اوکی‌ایکس',k:'fx',x:{company:.3,freeze:.2,sanction:.8,urgent:.7},ev:[
+    ['اسفند ۱۴۰۳','در آمریکا به نقض قوانین ضدپول‌شویی اعتراف کرد و بیش از ۵۰۰ میلیون دلار جریمه داد.',9]].concat(EV_FX)},
+  bybit:{n:'بای‌بیت',k:'fx',x:{company:.5,freeze:.2,sanction:.8,urgent:.7},ev:[
+    ['۳ اسفند ۱۴۰۳','حدود ۱٫۵ میلیارد دلار هک شد (منتسب به لازاروس، کره شمالی). صرافی ضرر را پوشش داد و برداشت‌ها در چند روز عادی شد.',8]].concat(EV_FX)},
+  kucoin:{n:'کوکوین',k:'fx',x:{company:.3,freeze:.2,sanction:.8,urgent:.7},ev:[
+    ['۸ بهمن ۱۴۰۳','در آمریکا اعتراف به جرم کرد و حدود ۳۰۰ میلیون دلار جریمه داد.',10]].concat(EV_FX)},
+  otherfx:{n:'صرافی خارجی دیگر',k:'fx',other:1,x:{company:.4,freeze:.3,sanction:.8,urgent:.7},ev:EV_FX},
+  /* خودِ آشیانه: نزد بیت‌وانا، یک صرافی ایرانی. سابقهٔ عمومی‌اش را تیم باید اضافه کند. */
+  bitvana:{n:'بیت‌وانا',k:'ir',self:1,x:{company:.5,freeze:.5,limit:.6},ev:[
+    ['—','صرافی ایرانی است؛ پس محدودیت‌های بانک مرکزی و خطر مسدود شدن تتر شامل آن هم می‌شود. سابقهٔ عمومی‌اش را تیم باید کامل کند.',-1]].concat(EV_IR)}
+};
+/* جاهای دیگر، در حالت واقعی. هر عدد یعنی «چه سهمی از این پول را واقعاً از
+   دست می‌دهید» = احتمال × اثر، نه فقط «ممکن است». دزدی از خانه ممکن است ولی
+   محتمل نیست؛ تورمِ تومان قطعی است. پیش‌نویس تیم است. */
+const REAL_X={
+  cash:{theft:.35}, gold:{theft:.35,urgent:.4,leave:.5}, self:{freeze:.1,key:.3,urgent:.4},
+  bank:{company:.2,leave:.8,infl:1}
+};
+const LIMIT_RISK={id:'limit', n:'rkLimit', hit:{mohajer:1,exir:1}, fix:'rkLimitFix'};
+const provScore=p=>{ const v=Object.values(p.x); return v.reduce((a,b)=>a+b,0)/v.length; };
+const provLvl=v=>v>=.7?'hi':v>=.45?'mid':'lo';
+function expo(it,r){
+  if(!REAL) return r.hit[it.place]?1:0;
+  const p=it.prov&&PROV[it.prov];
+  if(p) return p.x[r.id]!=null?p.x[r.id]:0;
+  const b=REAL_X[it.place];
+  if(b) return b[r.id]!=null?b[r.id]:0;
+  return r.hit[it.place]?1:0;
+}
+function setReal(on){
+  REAL=on; const i=RISKS.findIndex(r=>r.id==='limit');
+  if(on&&i<0) RISKS.push(LIMIT_RISK); if(!on&&i>=0) RISKS.splice(i,1);
+  render(); if(current==='risks') renderRisks(); if(current==='place') renderPlace(); if(current==='ext-add') renderEa();
+}
+function toggleReal(){ setReal(!REAL); toast(C(REAL?'realOn':'realOff'),'info'); }
+function provCard(id){
+  const p=PROV[id], v=provScore(p), l=provLvl(v);
+  return `<div class="prov"><div class="ph"><b>${p.n}</b><span class="rl ${l}">${C('rl_'+l)}</span></div>
+    ${RISKS.filter(r=>p.x[r.id]!=null).map(r=>`<div class="px"><span>${C(r.n)}</span><i><b class="${provLvl(p.x[r.id])}" style="width:${Math.round(p.x[r.id]*100)}%"></b></i></div>`).join('')}
+    <div class="pl">${C('provRec')}</div>
+    ${p.ev.map(e=>`<div class="pe"><span class="pd">${e[0]}</span><span>${e[1]}${e[2]>=0?` <a href="${RISK_SRC[e[2]][1]}" target="_blank" rel="noopener" class="ps">${C('srcShort')}</a>`:''}</span></div>`).join('')}</div>`;
+}
+function provRank(kind,sel){
+  const L=Object.keys(PROV).filter(k=>PROV[k].k===kind&&!PROV[k].other&&!PROV[k].self).sort((a,b)=>provScore(PROV[b])-provScore(PROV[a]));
+  return `<div class="pl">${C('provCmp').replace('{k}',C(kind==='ir'?'eaKindIr':'eaKindFx'))}</div>`+
+    L.map(k=>{ const v=provScore(PROV[k]); return `<div class="pr${k===sel?' on':''}"><span>${PROV[k].n}</span><i><b class="${provLvl(v)}" style="width:${Math.round(v*100)}%"></b></i></div>`; }).join('');
+}
+function riskSources(){
+  openSheet('blank');
+  $('sheet-body').innerHTML=`<h3>${C('rsSrcT')}</h3><p class="lead" style="margin-bottom:8px">${C('rsSrcNote')}</p>`+
+    RISK_SRC.map(x=>`<a class="srcrow" href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a>`).join('')+
+    `<button class="btn btn-ghost" style="margin-top:10px" onclick="closeSheet()">${C('close')}</button>`;
+}
+if(REAL) RISKS.push(LIMIT_RISK);
 const MX_BASE=['mohajer','cash','gold','self'];
 function mxCols(){ const t=placeTotals(), k=PLACE_ORDER.filter(x=>(t[x]||0)>0.004); return k.length>=2?k:MX_BASE; }
 
@@ -4822,20 +4961,21 @@ function extUsd(e){
 function placeItems(){
   const it=[];
   const m=S.available+S.pending, inv=nestsTotal();
-  if(m>0.004) it.push({place:'mohajer',label:C('plMohajerL'),usd:m,src:'verified',ref:'mohajer'});
+  if(m>0.004) it.push({place:'mohajer',label:C('plMohajerL'),usd:m,src:'verified',ref:'mohajer',prov:'bitvana'});
   /* سرمایه‌گذاری هم پیش مهاجر است، ولی ردیفِ خودش را دارد */
-  if(inv>0.004) it.push({place:'mohajer',label:C('plInvestL'),usd:inv,src:'verified',ref:'mohajer'});
-  if(S.ej&&S.ej.pool>0.004) it.push({place:'mohajer',label:C('ejPoolL'),usd:S.ej.pool,src:'verified',ref:'mohajer'});
+  if(inv>0.004) it.push({place:'mohajer',label:C('plInvestL'),usd:inv,src:'verified',ref:'mohajer',prov:'bitvana'});
+  if(S.ej&&S.ej.pool>0.004) it.push({place:'mohajer',label:C('ejPoolL'),usd:S.ej.pool,src:'verified',ref:'mohajer',prov:'bitvana'});
   if(S.physical) it.push({place:'gold',label:C('plGoldMohajer'),usd:goldHeld(),src:'tracked',ref:'gold'});
   if(pwBal()>0) it.push({place:'self',label:C('plSelfMohajer'),usd:pwBal(),src:'chain',ref:'pw'});
-  S.ext.forEach(e=>it.push({place:e.place,label:e.label||C(PLACES[e.place].n),usd:extUsd(e),src:e.src||(e.addr?'watch':'declared'),ref:'ext',id:e.id}));
+  S.ext.forEach(e=>it.push({place:e.place,label:e.label||(e.prov&&PROV[e.prov]?PROV[e.prov].n:C(PLACES[e.place].n)),usd:extUsd(e),src:e.src||(e.addr?'watch':'declared'),ref:'ext',id:e.id,prov:e.prov}));
   return it;
 }
 function placeTotals(){ const t={}; placeItems().forEach(i=>t[i.place]=(t[i.place]||0)+i.usd); return t; }
 const grand=()=>Object.values(placeTotals()).reduce((a,b)=>a+b,0);
 /* چند درصدِ پول، اگر این اتفاق بیفتد، سالم می‌ماند */
-function coverage(r){ const t=placeTotals(), g=grand(); if(g<=0) return null;
-  let safe=0; for(const k in t) if(!r.hit[k]) safe+=t[k]; return safe/g; }
+function coverage(r){ const g=grand(); if(g<=0) return null;
+  /* ساده: هر جا یا درگیر است یا نه. واقعی: هر مورد به اندازهٔ درگیری‌اش. */
+  let loss=0; placeItems().forEach(i=>loss+=i.usd*expo(i,r)); return Math.max(0,1-loss/g); }
 const pctFa=v=>fa(Math.round(v*100))+'٪';
 const SRC_B={verified:['srcVerified','ok'],tracked:['srcTracked','ok'],chain:['srcChain','ok'],watch:['srcWatch',''],declared:['srcDeclared','']};
 const money=v=> S.unit==='irr' ? toman(v*CONFIG.buyRate)+' تومان' : usdx(v);
@@ -4849,7 +4989,10 @@ function renderHome(){
      می‌گوید پول کجا نگه داشته می‌شود — پرسشِ اولِ راند اول. */
   $('h-tree').innerHTML=keys.map(k=>{
     const p=PLACES[k], share=t[k]/g;
-    const sub='<span class="num">'+pctFa(share)+'</span>'+(k==='mohajer'?' · '+C('leafMohajer'):'');
+    /* واقعی: نام هر صرافی به رنگِ ریسکش */
+    const provs=REAL?[...new Set(placeItems().filter(i=>i.place===k&&i.prov&&!PROV[i.prov].self).map(i=>i.prov))]
+      .map(q=>`<span class="rlv ${provLvl(provScore(PROV[q]))}">${PROV[q].n}</span>`):[];
+    const sub='<span class="num">'+pctFa(share)+'</span>'+(k==='mohajer'?' · '+C('leafMohajer'):'')+(provs.length?' · '+provs.join('، '):'');
     return `<button class="leaf" onclick="openPlace('${k}')">
       <span class="ic pl-${k}">${IC[p.ic]}</span>
       <span class="t">${C(p.n)}</span><span class="a num">${money(t[k])}</span>
@@ -4857,6 +5000,7 @@ function renderHome(){
       <span class="sbar"><i class="f-${k}" style="width:${Math.max(2,share*100)}%"></i></span></button>`; }).join('');
   /* برداشت یک‌جا: اگر در جریان است، همین کارت پیشرفتش را نشان می‌دهد */
   if($('h-ej-t')){ const E=S.ej, on=!!(E&&E.active);
+    $('h-ej').hidden=!on&&g<=0;
     $('h-ej-t').textContent=C(on?'ejActiveT':'mEjectT'); $('h-ej-s').hidden=!on;
     if(on){ const all=E.steps.length+(E.final?1:0), d=E.steps.filter(x=>x.st==='done').length+(E.final&&E.final.st==='done'?1:0);
       $('h-ej-s').textContent=C('ejTrkN').replace('{a}',fa(d)).replace('{b}',fa(all)); } }
@@ -4867,7 +5011,7 @@ function renderHome(){
   if(hero) renderHero(sf);
   $('h-safe').hidden=sf==null;
   if(sf!=null){ const L=2*Math.PI*12;
-    $('h-safe').innerHTML=`<svg class="mr" viewBox="0 0 30 30"><circle class="bg" cx="15" cy="15" r="12"/><circle class="fg ${lvl(sf)}" cx="15" cy="15" r="12" stroke-dasharray="${(Math.max(.03,sf)*L).toFixed(1)} ${L.toFixed(1)}"/></svg>
+    $('h-safe').innerHTML=`<svg class="mr" viewBox="0 0 30 30"><circle class="bg" cx="15" cy="15" r="12"/><circle class="fg ${lvl(sf)}${sf<.005?' z':''}" cx="15" cy="15" r="12" stroke-dasharray="${(sf<.005?0:Math.max(.03,sf)*L).toFixed(1)} ${L.toFixed(1)}"/></svg>
       <span class="l">${C('scT')}<span class="s">${C(sf>=0.7?'scHi':sf>=0.4?'scMid':'scLo')}</span></span>
       <b class="pv num">${pctFa(sf)}</b>
       <span class="go">${IC.chev}</span>`; }
@@ -4876,11 +5020,11 @@ function renderHome(){
 var CORE_SAFE=/[?&]core=safety/.test(location.search);
 function toggleCore(){ CORE_SAFE=!CORE_SAFE; render(); toast(C(CORE_SAFE?'coreOn':'coreOff'),'info'); }
 /* هر خطر، یک کارِ مشخص که امنیت را بالا می‌برد */
-const BOOST={company:['bstGold',"go('p-tut')"], freeze:['bstGold',"go('p-tut')"], sanction:['bstUsdt',"go('in-usdt')"],
+const BOOST={limit:['bstGold',"go('p-tut')"], company:['bstGold',"go('p-tut')"], freeze:['bstGold',"go('p-tut')"], sanction:['bstUsdt',"go('in-usdt')"],
   theft:['bstCash',"go('in-cash')"], key:['bstKey','pwEntry()'], urgent:['bstIn',"go('add')"], leave:['bstIn',"go('add')"], infl:['bstConv',"setDir('in')"]};
 function renderHero(sf){
   const L=2*Math.PI*66, band=sf>=0.7?'scBandHi':sf>=0.4?'scBandMid':'scBandLo';
-  $('hh-ring').innerHTML=`<svg viewBox="0 0 168 168"><circle class="bg" cx="84" cy="84" r="66"/><circle class="fg ${lvl(sf)}" cx="84" cy="84" r="66" stroke-dasharray="${(Math.max(.02,sf)*L).toFixed(1)} ${L.toFixed(1)}"/></svg>
+  $('hh-ring').innerHTML=`<svg viewBox="0 0 168 168"><circle class="bg" cx="84" cy="84" r="66"/><circle class="fg ${lvl(sf)}${sf<.005?' z':''}" cx="84" cy="84" r="66" stroke-dasharray="${(sf<.005?0:Math.max(.02,sf)*L).toFixed(1)} ${L.toFixed(1)}"/></svg>
     <span class="c"><b class="num">${pctFa(sf)}</b><span class="${lvl(sf)}">${C(band)}</span></span>`;
   $('hh-sent').innerHTML=C('scHero').replace('{p}','<b class="num" style="color:#fff">'+pctFa(sf)+'</b>');
   $('hh-total').textContent=S.unit==='irr'?toman(grand()*CONFIG.buyRate)+' تومان':usd(grand());
@@ -4899,7 +5043,7 @@ const lvl=c=>c>=0.7?'':c>=0.4?'mid':'low';
 function scoreHTML(p,big){
   const L=2*Math.PI*27;
   return `<div class="score${big?' big':''}"><div class="ring"><svg viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="27"/>
-    <circle class="fg ${lvl(p)}" cx="32" cy="32" r="27" stroke-dasharray="${(Math.max(.02,p)*L).toFixed(1)} ${L.toFixed(1)}"/></svg>
+    <circle class="fg ${lvl(p)}${p<.005?' z':''}" cx="32" cy="32" r="27" stroke-dasharray="${(p<.005?0:Math.max(.02,p)*L).toFixed(1)} ${L.toFixed(1)}"/></svg>
     <span class="pv num">${pctFa(p)}</span></div>
     <div class="m"><div class="t">${C('scT')}</div>${big?`<div class="d">${C('scB').replace('{n}',fa(RISKS.length)).replace('{p}',pctFa(p))}</div>`:''}
     <div class="d" style="color:var(--${p>=0.7?'ok':p>=0.4?'gold':'bad'});font-weight:600">${C(p>=0.7?'scHi':p>=0.4?'scMid':'scLo')}</div></div></div>`;
@@ -4927,8 +5071,13 @@ function renderPlace(){
       <span class="v num">${money(i.usd)}</span></div>
       ${editable?`<button class="lnk" style="padding:2px 0 8px" onclick="editItem('${i.ref}','${i.id||''}')">${C('pdEdit')}</button>`:''}`; }).join('')
     :`<p class="tiny">${C('pdNone')}</p>`;
-  $('pl-risks').innerHTML=RISKS.map(r=>{ const hit=!!r.hit[k];
-    return `<div class="row"><span class="k" style="flex:1">${C(r.n)}</span><span class="v" style="color:var(--${hit?'bad':'ok'});font-weight:700">${C(hit?'pdHit':'pdSafe')}</span></div>`; }).join('');
+  const tk=t[k]||0;
+  $('pl-risks').innerHTML=RISKS.map(r=>{
+    if(!REAL){ const hit=!!r.hit[k];
+      return `<div class="row"><span class="k" style="flex:1">${C(r.n)}</span><span class="v" style="color:var(--${hit?'bad':'ok'});font-weight:700">${C(hit?'pdHit':'pdSafe')}</span></div>`; }
+    const e=tk>0?items.reduce((a,i)=>a+i.usd*expo(i,r),0)/tk:0, l=e<=0?'ok':provLvl(e);
+    return `<div class="row"><span class="k" style="flex:1">${C(r.n)}</span><span class="v rlv ${l}">${C(l==='ok'?'pdSafe':'ex_'+l)}</span></div>`; }).join('')+
+    (REAL?[...new Set(items.map(i=>i.prov).filter(Boolean))].map(provCard).join(''):'');
   const A={
     mohajer:[['pdIn',"go('add')"],['qSend','startTransfer()'],['qOut',"setDir('out')"]],
     cash:[['pdCashIn',"go('in-cash')"],['pdAddHere',"eaOpen('cash')"]],
@@ -4976,9 +5125,14 @@ function renderRisks(){
   $('rs-mx-card').hidden=g>0&&!S.mxOpen;
   $('rs-mx-btn').hidden=g<=0;
   $('rs-mx-btn').textContent=C(S.mxOpen?'rsMxHide':'rsMxShow');
+  $('rs-src-btn').hidden=!REAL; $('rs-src-btn').textContent=C('rsSrcBtn');
   const MX_COLS=mxCols();
   $('rs-mx').innerHTML=`<table class="mx"><tr><th></th>${MX_COLS.map(k=>`<th><span class="cdot f-${k}"></span>${C('mx_'+k)}</th>`).join('')}</tr>
-    ${RISKS.map(r=>`<tr><td>${C(r.n)}</td>${MX_COLS.map(k=>r.hit[k]?`<td class="n">✕</td>`:`<td class="y">✓</td>`).join('')}</tr>`).join('')}</table>
+    ${RISKS.map(r=>`<tr><td>${C(r.n)}</td>${MX_COLS.map(k=>{
+      if(!REAL) return r.hit[k]?`<td class="n">✕</td>`:`<td class="y">✓</td>`;
+      const its=placeItems().filter(i=>i.place===k), tk=its.reduce((a,i)=>a+i.usd,0);
+      const e=tk>0?its.reduce((a,i)=>a+i.usd*expo(i,r),0)/tk:expo({place:k},r);
+      return e<=0?`<td class="y">✓</td>`:`<td class="rlv ${provLvl(e)}">${C('exS_'+provLvl(e))}</td>`; }).join('')}</tr>`).join('')}</table>
     <p class="tiny" style="margin-top:10px;line-height:1.9">${C('rsLegend')}</p>`;
 }
 
@@ -4990,7 +5144,7 @@ function renderRisks(){
 const EA_TYPES=['cash','gold','exch','self','bank'];
 const eaPlace=()=>S.eaType==='exch'?(S.eaKind?'ex'+S.eaKind:null):S.eaType;
 function eaOpen(type){
-  S.eaKind=null;
+  S.eaKind=null; S.eaProv=null;
   if(type==='exir'||type==='exfx'){ S.eaKind=type.slice(2); type='exch'; }
   S.eaType=type||'cash'; S.extBack=current; $('ea-amt').value=''; $('ea-name').value=''; $('ea-addr').value=''; go('ext-add'); }
 function renderEa(){
@@ -4999,10 +5153,14 @@ function renderEa(){
     const opt=`<button class="opt" aria-pressed="${on}" onclick="S.eaType='${k}';renderEa()">
       <div class="ic pl-${cls}">${IC[ex?'swap':PLACES[k].ic]}</div><div class="m"><div class="t">${C(ex?'eaExchT':PLACES[k].n)}</div><div class="d">${C('ea_'+k)}</div></div></button>`;
     const kind=ex&&on?`<div class="eakind"><div class="l">${C('eaKindL')}</div><div class="rchips">${['ir','fx'].map(x=>
-      `<button class="rchip" aria-pressed="${S.eaKind===x}" onclick="S.eaKind='${x}';renderEa()">${C(x==='ir'?'eaKindIr':'eaKindFx')}</button>`).join('')}</div>
-      <div class="h">${C('eaKindHint')}</div></div>`:'';
+      `<button class="rchip" aria-pressed="${S.eaKind===x}" onclick="S.eaKind='${x}';S.eaProv=null;renderEa()">${C(x==='ir'?'eaKindIr':'eaKindFx')}</button>`).join('')}</div>
+      ${REAL&&S.eaKind?`<div class="l" style="margin-top:12px">${C('eaProvL')}</div><div class="rchips">${Object.keys(PROV).filter(q=>PROV[q].k===S.eaKind&&!PROV[q].self).map(q=>
+        `<button class="rchip" aria-pressed="${S.eaProv===q}" onclick="S.eaProv='${q}';renderEa()">${PROV[q].n}</button>`).join('')}</div>`:`<div class="h">${C('eaKindHint')}</div>`}</div>`:'';
     /* ریسک‌ها همان زیرِ گزینهٔ انتخاب‌شده، نه پایینِ فهرست */
     const p=on?eaPlace():null;
+    /* واقعی: سابقهٔ همان صرافی و جایش در میان بقیه */
+    if(on&&REAL&&ex&&S.eaProv) return opt+kind+`<div class="eakind">${provCard(S.eaProv)}${PROV[S.eaProv].other?'':provRank(S.eaKind,S.eaProv)}<div class="h">${C('eaRiskNote')}</div></div>`;
+    if(on&&REAL&&ex&&p) return opt+kind;
     const risk=p?`<div class="eakind earisk"><div class="l">${C('eaRiskT').replace('{place}',C(PLACES[p].n))}</div>`+
       RISKS.filter(r=>r.hit[p]).map(r=>`<div class="erk"><span class="x">✕</span><span>${C(r.n)}</span></div>`).join('')+
       `<div class="h">${C('eaRiskNote')}</div></div>`:'';
@@ -5014,16 +5172,18 @@ function renderEa(){
 function eaCheck(){ const v=parseFloat(toAscii($('ea-amt').value))||0, p=eaPlace();
   /* پیش‌نمایش: با این پول، امنیت پس‌انداز چند می‌شود */
   const d=$('ea-delta');
-  if(p&&v>0){ const a=safety(); S.ext.push({id:'_tmp',place:p,amount:v}); const b=safety(); S.ext.pop();
+  const needProv=REAL&&S.eaType==='exch'&&p&&!S.eaProv;
+  if(p&&v>0&&!needProv){ const a=safety(); S.ext.push({id:'_tmp',place:p,amount:v,prov:S.eaType==='exch'?S.eaProv:null}); const b=safety(); S.ext.pop();
     d.hidden=false;
     d.innerHTML=a==null?C('eaDeltaNew').replace('{b}','<b class="num">'+pctFa(b)+'</b>')
       :C('eaDelta').replace('{a}','<b class="num">'+pctFa(a)+'</b>').replace('{b}','<b class="num '+(b>a+.004?'up':b<a-.004?'dn':'')+'">'+pctFa(b)+'</b>'); }
   else d.hidden=true;
-  gate('ea-cta', !!p&&v>0, !p?C('eaNeedKind'):C('typeAmount')); }
+  gate('ea-cta', !!p&&v>0&&!needProv, !p?C('eaNeedKind'):needProv?C('eaNeedProv'):C('typeAmount')); }
 function eaSave(){
   const v=parseFloat(toAscii($('ea-amt').value))||0, p=eaPlace(); if(v<=0||!p) return;
   const addr=$('ea-addr').value.trim();
-  S.ext.push({id:'x'+(++S.extSeq),place:p,label:$('ea-name').value.trim(),amount:v,addr:p==='self'&&addr?addr:''});
+  if(REAL&&S.eaType==='exch'&&!S.eaProv) return;
+  S.ext.push({id:'x'+(++S.extSeq),place:p,label:$('ea-name').value.trim(),amount:v,addr:p==='self'&&addr?addr:'',prov:S.eaType==='exch'?S.eaProv:null});
   render(); toast(C('eaSaved'),'ok'); go('home');
 }
 
@@ -5327,8 +5487,8 @@ function renderEjTrack(){
     const amt=fin?'':`<span class="sep"> · </span><span class="num">${money(x.v)}</span>`;
     const txt=fin?C('ejFinD_'+f).replace('{s}',sh):x.who==='we'?C('ejDoMPool'):ejText(k,f,sh);
     const btn=x.st==='act'?`<button class="btn btn-soft" onclick="ejAct(${fin?"'f'":i})">${C(EJ_BTN[k])}</button>`:'';
-    return `<div class="trk ${x.st}">${ic}<div><div class="t">${name}${amt}</div><div class="d">${txt}</div>${btn}</div>
-      <span class="st ${x.st}">${C(EJ_ST[x.st])}</span></div>`; };
+    return `<div class="trk k-${x.st}">${ic}<div><div class="t">${name}${amt}</div><div class="d">${txt}</div>${btn}</div>
+      <span class="st k-${x.st}">${C(EJ_ST[x.st])}</span></div>`; };
   $('ejt-list').innerHTML=E.steps.map(row).join('')+(E.final?row(E.final,'f'):'');
   $('ejt-cta').innerHTML=E.complete
     ?`<button class="btn btn-primary" onclick="go('home')">${C('ejSeeMap')}</button>`
@@ -5340,7 +5500,8 @@ function seedSpread(){
   S.available+=1200;
   S.ext=[{id:'x'+(++S.extSeq),place:'cash',label:'گاوصندوق خانه',amount:1500,addr:''},
          {id:'x'+(++S.extSeq),place:'gold',label:'سکه و شمش',amount:22,addr:''},
-         {id:'x'+(++S.extSeq),place:'exir',label:'',amount:800,addr:''},
+         ...(REAL?[{id:'x'+(++S.extSeq),place:'exir',label:'',amount:500,addr:'',prov:'nobitex'},{id:'x'+(++S.extSeq),place:'exir',label:'',amount:300,addr:'',prov:'wallex'}]
+                 :[{id:'x'+(++S.extSeq),place:'exir',label:'',amount:800,addr:''}]),
          {id:'x'+(++S.extSeq),place:'bank',label:'حساب بانکی',amount:180000000,addr:''}];
   render(); go('home');
 }
