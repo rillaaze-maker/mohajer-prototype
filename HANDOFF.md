@@ -1991,6 +1991,114 @@ source badges and no verdict ("شواهد کافی نیست · بیشترین n=
   would tilt the answer. `spotHtml()` and `./test-home.png` stay; re-attaching
   is one `spot:` key.
 
+## 10m. v5.0 — «همهٔ پس‌اندازت را به یک روش نگهداری وابسته نکن» (2026-10-12)
+
+`prototype/wallet-v5.0.html` · `copy-v5.0.json` · `manifest-v5.0.json`.
+Built from a copy of v4.5 by `build_v5.py`; **v4.5, its copy file and every
+test file are byte-identical** (checked by md5 after the build). v5 has its own
+copy file and its own `localStorage` key (`mhj50-copy`), so editing copy in
+one version never leaks into the other. It is **not** in `test-versions.json`
+yet — the live test keeps running v4.5 untouched.
+
+### Why a major version
+
+The founder's re-read of the interviews and round one, in one line: the wedge
+is right, the framing was wrong. Self-custody does not *remove* risk, it
+*spreads* it — a cold wallet still holds Tether (freezable, seed-losable),
+gold is a different asset that sells slowly in a crisis, and someone leaving
+the country may only want physical dollars. Round one agreed: four people
+opened the personal wallet, none finished. So the value is the spread itself —
+«پس‌اندازت را در برابر ریسک‌های مختلف مقاوم‌تر کن و اختیار جابه‌جایی‌اش را
+نگه دار». The cultural line behind it: keep it in four places, and if one goes
+wrong the rest survive.
+
+Retention after cold wallet and willingness to pay are explicitly parked by
+the founder; v5 does not try to answer them.
+
+### What changed
+
+**Home is a map of all your savings, not your Mohajer balance.** The total is
+everything the person has, wherever it is. Below it, a tree: one branch per
+place (پیش مهاجر · دلار نقد · طلا · کیف پول شخصی · تتر در جای دیگر ·
+تومان در بانک), each with amount, share and **where the number comes from**
+— تأییدشده, سفارش از مهاجر, از روی شبکه, ردیابی نشانی, اعلام شما. A
+declared number is never presented as a verified one.
+
+**Risk, made concrete.** Seven plain «اگر…» lines — a company or exchange
+fails, Tether is frozen, theft at home, a lost key, cash needed urgently,
+leaving the country, the toman falling further — and for each, **what share of
+this person's money survives it**. Home shows the three weakest; the risks
+page shows all seven with a suggestion under each weak one, and a matrix of
+place × risk. The matrix lives in one `RISKS` constant and is a **draft for the
+team to review** — those judgments are the founder's to sign off, not mine.
+
+**Round-one fixes are built in:** «پول من کجاست» is answered on the home card
+itself; intro items are a list, not fake buttons; and the tap that dropped
+fast zeros is fixed (below).
+
+### The three features the user specified
+
+1. **Bringing money in** — a new «افزودن» tab: from a bank card (the existing
+   convert flow), **USDT from your own wallet** (enter the sending address and
+   amount, approve in the wallet — simulated — and it lands), and **cash
+   dollars at a licensed exchange** (pick exchange, amount, time; after handing
+   over the notes the exchange gives a six-digit code; entering it credits the
+   balance on the spot).
+2. **The savings dashboard** — the tree above, plus «ثبت پول در جای دیگر»: cash
+   at home, gold in grams, USDT on another exchange or wallet (optional watch
+   address), a personal hardware wallet, toman in a bank. Per the colleague's
+   note, **gold and the personal wallet can be updated** when some is spent,
+   from the place's own page.
+3. **Eject — «همه را یک‌جا کن»** — reads the map, asks why (optional), PIN +
+   SMS code + an explicit consent tick, then the form (toman to a Sheba number,
+   cash dollars or gold at an exchange, USDT to an address), then a **plan per
+   place saying who acts**: Mohajer, you, or «همان‌جا می‌ماند». Approximate
+   fee and amount, then hold-to-confirm. The Mohajer part starts; the rest
+   stays on the map until the person does it. The colleague will work out the
+   technical execution; this shows the mechanism.
+
+**Cash dollars are now a fourth way to keep money** (custody page, services
+tab, place page): taken from the Mohajer balance in $100 notes, paid at order
+like gold, collected at an exchange with a code.
+
+### Numbers invented here — replace before quoting
+
+`FEES.cashInPct` 0.5%, `FEES.cashOutPct` 1%, `minCashIn` $100, `cashStep` $100,
+`minUsdtIn` $10. The fee spec defines none of these.
+
+### Feasibility questions for the team, not answered by the prototype
+
+- Legality and supply of physical-dollar delivery through licensed exchanges.
+- Reading a watch-only address (balance from TronGrid or similar) — cheap.
+- Eject execution across custodians, and what «Mohajer does it» means for a
+  partner-held balance.
+
+### The dropped-zeros bug, found while building this
+
+v4.5 line 3966: a document-level `touchend` handler cancels any tap within
+320ms of the previous one, to block double-tap zoom. That is exactly fast
+typing on the keypad — «با تند تند زدن صفرها جا می‌ماند». `touch-action:
+manipulation` on `*` already prevents the zoom, so v5 lets buttons, keys and
+inputs through and keeps the guard only for empty background. Verified with
+synthetic touch events: three fast taps on a key, none cancelled; a double tap
+on background, still cancelled. **v4.5 still has this bug** and was left alone
+on purpose, because it is the version under test.
+
+### Verified (2026-10-12)
+
+No console errors; all 807 copy keys resolve, none duplicated. Every new flow
+was run including its failure paths: bad Tron address, under-minimum cash,
+wrong exchange code, non-$100 cash-out, over-balance, wrong SMS code, invalid
+Sheba. Sample portfolio: $6,528.81 = $1,200 + $1,500 + 22g × $102.80 + $800 +
+180M تومان ÷ 234,615. Theft coverage 42% = (6,528.81 − 3,761.60) ÷ 6,528.81.
+Eject fee to toman, by hand: $14.18 + $25.00 + $15.42 + $9.05 = $63.64. Old
+flows (convert, transfer, gold) unchanged. Testing aid: `?demo=1`, or the
+«+ نمونهٔ پول در چند جا» chip in the facilitator panel.
+
+Four class names collided with v4.5's global CSS (`.bar`, `.who`, `.dot`,
+`.hint`) and were renamed (`.sbar`, `.whob`, `.cdot`, `.fhint`). The symptom
+was empty share bars — found by measuring the element, not by eye.
+
 ### The first round's report (2026-10-09)
 
 `prototype/test-report.html` — a 15-slide deck on round «تست اول ارسال»,
