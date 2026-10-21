@@ -2399,6 +2399,128 @@ v5.2 by `scratchpad/build_v53.py`. v5.2 is untouched.
 - **Back navigation follows the move.** A place's page and «ثبت پول» go back to
   «امن‌سازی», not home.
 
+## 10q. v5.4 — امن‌سازی as three guided steps; home shows the value (2026-10-22)
+
+`prototype/wallet-v5.4.html` · `copy-v5.4.json` · `manifest-v5.4.json`, from
+v5.3 by `scratchpad/build_v54.py`. v5.3 is untouched.
+
+The user: the empty tab was too much information plus empty slots, and home
+was empty but should show the value («امن‌سازی سرمایه») while staying minimal.
+
+Benchmarks:
+- Stripe, Notion and Revolut «get started» checklists: one active step, one
+  button.
+- Credit Karma: the score is the reward, not an empty box.
+- iOS Settings and Revolut security: security collapsed into one row.
+- Monzo and Revolut home: one «next step» card that changes with progress.
+
+**«امن‌سازی» tab**
+- **Until set up:** a single card, «امن‌سازی سرمایه در ۳ قدم», with a progress
+  bar. Only the current step is open, and it carries the screen's one primary
+  button:
+  1. «اولین پولتان را به آشیانه بیاورید» → واریز
+  2. «بگویید بقیهٔ پس‌اندازتان کجاست» → ثبت پول در جای دیگر, or «جای دیگری
+     پول ندارم»
+  3. «ورود با اثر انگشت را روشن کنید» → one tap
+
+  Steps tick from real state (`setupSteps()`), and the card disappears when
+  all three are done. The old first-visit intro card is gone; the steps do
+  that job.
+- **Score, map, suggestions and «روز مبادا»** appear only once there is money.
+  The map's empty state was removed.
+- **Account security** is one row («امنیت حساب · ۲ از ۴ روشن») that opens a
+  sheet with the switches.
+
+**Home** is still the balance card plus **one quiet card**:
+- before setup: «امن‌سازی سرمایه» with the next step and three progress dots;
+- after setup: «امتیاز امنیت ۷۰۰ · خوب» with a small ring and «همه‌چیز مرتب
+  است» or «N پیشنهاد…».
+
+It is a whole-card tap with no button, so «واریز» stays the only primary on
+home.
+
+**Facilitator:** the chip «قدم‌های امن‌سازی از نو» resets steps 2 and 3.
+`.dots` collided with the intro slider and was renamed `.hsdots`.
+
+### v5.4, second pass (same file, not yet delivered when changed)
+
+- **Score: points from zero.** «۴۰۰ از ۱۰۰۰ · پایه» felt bad and meant nothing.
+  «امتیاز امن‌سازی» now starts at ۰; every good thing is **+۱** and every weak
+  spot **−۱** (`factorsOf()`, `points()`).
+  - +۱ each: money in more than one place; no place over half; ≥20% not tied
+    to any company (gold, cash, personal wallet); ≥10% always available
+    (آشیانه); fingerprint on; login SMS on; 12-word backup (if a personal
+    wallet exists).
+  - −۱ each: over 70% in one place; over 20% toman in the bank.
+  - New users start at ۰; login SMS now defaults to off.
+  - «امتیازتان از کجا آمده؟» opens the breakdown: earned items as statements,
+    missing ones as actions with their +۱.
+  - **Suggestions are the missing points.** Each shows +۱ (or +۲).
+    - Account items switch on with one tap.
+    - Money items open «قبل و بعد», preset to the smallest move that earns
+      a point; dragging further shows more points as more factors flip.
+  - The slider, «ثبت پول» and the details page all show the same signed points.
+  - The risk-based coverage model still drives the details page levels.
+- **Words.**
+  - «نوع دارایی / روش نگه‌داری» → «چه دارید / کجا نگه داشته‌اید».
+  - Levels → «خیلی خوب / خوب / جای بهتر شدن دارد».
+  - «پایه» and «از ۱۰۰۰» are gone.
+- **Tutorial.** The first visit to «امن‌سازی» opens a three-card sheet (iOS
+  «What's New» / Revolut tour pattern), skippable and shown once
+  (localStorage `mhj54-sftut`):
+  1. «امن‌سازی یعنی چه؟»
+  2. «امتیازتان از صفر شروع می‌شود»
+  3. «اول ببینید، بعد تصمیم بگیرید»
+
+  The facilitator chip «امن‌سازی از نو» resets the steps and the tutorial.
+- **«برداشت یک‌جای همه» left «امن‌سازی».** It is now in «خدمات», under a
+  «برداشت» section with «برگرداندن به تومان», and as a small link on the
+  withdraw screen («یا همه را یک‌جا برداشت کنید»).
+- **The «پیشنهاد ویژه» exchange is a real featured card.** A dark/gold card,
+  two concrete perks, distance and hours, one button; the others sit in a
+  quiet «صرافی‌های نزدیک شما» list. The perk is real in the prototype: half
+  the fee (0.5%, min $2.5 — **invented**).
+- **Collisions renamed:** `.why` (the gate reason text) → `.whybtn`; `.dots`
+  → `.hsdots`.
+
+## 10r. v5.5 — real «بستهٔ پیشنهادی»; account security leaves امن‌سازی (2026-10-22)
+
+`prototype/wallet-v5.5.html` · `copy-v5.5.json` · `manifest-v5.5.json`, from
+v5.4 by `scratchpad/build_v55.py`. v5.4 is untouched.
+
+- **Packages, not loose tips.** Three ready-made splits of savings (`PKGS`;
+  the shares are a team draft):
+
+  | Package | آشیانه | طلا | کیف پول شخصی | نقد |
+  |---|---|---|---|---|
+  | «متعادل» | 40 | 30 | 20 | 10 |
+  | «همیشه در دسترس» | 70 | 20 | — | 10 |
+  | «کمترین وابستگی» | 20 | 35 | 30 | 15 |
+
+  - **The best is promoted:** highest points, then the highest worst-case
+    coverage. Today that is «متعادل»: +۴ and 0.40, against «کمترین وابستگی»
+    +۴ / 0.35 and «همیشه در دسترس» +۳ / 0.30.
+  - **Layout:** one featured card («پیشنهاد آشیانه», points, colour bar,
+    legend, «ببینید چه تغییر می‌کند»). The other two are thin rows under
+    «بسته‌های دیگر», kept deliberately uncluttered.
+  - **Opening a package:** «الان» vs «با این بسته» bars, the score before →
+    after, the exact moves («از پیش آشیانه به طلا $600»…), and «قدم اول:
+    …». Nothing moves until the person acts.
+  - **Why this replaced the old suggestions:** the user's v5.3 screenshot had
+    the آشیانه → personal-wallet slider stuck at 400. The old worst-case score
+    did not react to that move. v5.4's points fixed it; v5.5 replaces the
+    loose suggestions and the single-move slider on this tab with packages.
+- **Account security** (PIN, fingerprint, login SMS, hide balance, devices)
+  left «امن‌سازی». It is now in «خدمات › حساب کاربری» and **no longer counts
+  in the score**; the score is only about where the money is (four +۱
+  factors, two −۱).
+- **Setup step 3** is now «یک بستهٔ پیشنهادی را ببینید»; opening any package
+  completes it.
+- **The home card** after setup: «بستهٔ متعادل امتیازتان را به +۴ می‌رساند»,
+  or «همه‌چیز مرتب است».
+- v4.5 already had a `mixBar()` function and a `.mixbar` style (the investment
+  baskets). The package versions are `pkBar` / `.pkbar`.
+
 ### The first round's report (2026-10-09)
 
 `prototype/test-report.html` — a 15-slide deck on round «تست اول ارسال»,
