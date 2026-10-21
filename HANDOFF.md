@@ -2548,6 +2548,53 @@ v5.5 by `scratchpad/build_v56.py`. v5.5 is untouched.
   «صرافی‌های دیگر» row, which opens a sheet. The flow is titled «انتقال به
   صرافی»: it is a transfer, unlike physical gold delivery.
 
+## 10t. v5.7 — «مدیریت محل نگهداری» flow; round home actions; a choice after تبدیل (2026-10-22)
+
+`prototype/wallet-v5.7.html` · `copy-v5.7.json` · `manifest-v5.7.json`, from
+v5.6 by `scratchpad/build_v57.py`. v5.6 is untouched.
+
+**Home actions.** Three round buttons with labels inside the balance card
+(Revolut / Wise / Monzo pattern): «واریز» (white, the primary), «برداشت»,
+«محل نگهداری». They replace the two pills and the outlined full-width button,
+whose spacing the user rejected.
+
+**«مدیریت محل نگهداری»** is its own screen (`mg`), reached from home and from
+«مدیریت» on the «پولتان کجاست» card.
+- **What you see:** the total, a colour bar of the split, and each place with
+  its % and $ (tap to open the place). Then the status: the score, and either
+  «با بستهٔ متعادل امتیازتان +۴ می‌شود · امتحان کنید» or «ترکیب پولتان خوب
+  است».
+- **«تغییر ترکیب»** opens the editor (`mg-edit`, Betterment / M1 Finance
+  allocation pattern):
+  - preset chips: الان, متعادل (marked «پیشنهادی»), همیشه در دسترس, کمترین
+    وابستگی;
+  - now / new bars, and one slider per place;
+  - **the total stays at 100%:** moving one slider rebalances the others in
+    proportion (`mgSet`);
+  - external places (Iranian/foreign exchange, bank) can only go down, «این را
+    خودتان جابه‌جا می‌کنید»;
+  - the score before → after and the exact moves update live.
+- **«ساختن برنامه»** turns the moves into «برنامهٔ جابه‌جایی شما» on the
+  management screen. Each step has a tick and its own action, chosen by
+  `stepAct`: gold delivery, personal wallet, transfer to an exchange, cash or
+  USDT deposit, convert, or «فروش در صرافی».
+- The «امن‌سازی» package cards now open this same editor, preset. The old
+  `pkg` screen is unused.
+
+**After تبدیل:** «انتخاب روش نگهداری» opens a short sheet, «این پول کجا
+بماند؟»:
+- همین‌جا در آشیانه
+- بخشی را طلا کنید
+- به کیف پول شخصی ببرید
+- دلار نقد تحویل بگیرید
+- ترکیب دلخواه (opens the editor)
+
+The user rightly called the old destination, the custody page, a wall of
+boxes. That page now shows one pro and one con per place instead of two each.
+
+**Setup steps:** the active step's button and link now span the card and are
+centred; they used to sit indented under the step text.
+
 ### The first round's report (2026-10-09)
 
 `prototype/test-report.html` — a 15-slide deck on round «تست اول ارسال»,
