@@ -2383,6 +2383,22 @@ every test file are untouched.
 screenshots to their left 80%. Scaling the body to 0.8 for the capture shows
 the full width. The layout itself was measured as correct.
 
+## 10p. v5.3 — «پولتان کجاست» moves to امن‌سازی; one primary per screen (2026-10-22)
+
+`prototype/wallet-v5.3.html` · `copy-v5.3.json` · `manifest-v5.3.json`, from
+v5.2 by `scratchpad/build_v53.py`. v5.2 is untouched.
+
+- **Home is only the balance card:** total, «واریز» (the one primary button)
+  and «برداشت». It also shows the cash-pickup banner or eject progress when
+  either is active.
+- **The map moved into «امن‌سازی», under the score.** Where the money is and how
+  safe it is now sit together.
+- **One primary per screen.** On an empty account the map's empty state had a
+  second white button («ثبت پولی که جای دیگر دارم»). Both empty-state buttons
+  are secondary now (soft + ghost).
+- **Back navigation follows the move.** A place's page and «ثبت پول» go back to
+  «امن‌سازی», not home.
+
 ### The first round's report (2026-10-09)
 
 `prototype/test-report.html` — a 15-slide deck on round «تست اول ارسال»,
