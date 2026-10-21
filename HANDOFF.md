@@ -2303,6 +2303,86 @@ What the numbers show on the sample portfolio:
   | Cash at home | 65% |
   | Toman in the bank | 0% |
 
+## 10o. v5.2 — calm home, an «امن‌سازی» tab, a score instead of a percent (2026-10-22)
+
+`prototype/wallet-v5.2.html` · `copy-v5.2.json` · `manifest-v5.2.json`. Built
+from v5.1 by `scratchpad/build_v52.py` + `build_v52b.py`; v5.1, v5.0, v4.5 and
+every test file are untouched.
+
+### Benchmarks used, and what is verified
+
+- **Blu (بلو):** minimal, bright, simple; short clear labels; few taps.
+  - Security lives in one place: app PIN, fingerprint, active devices, an SMS
+    after each login, temporary card block.
+  - Sources: gadgetnews.net and digiorange.ir reviews.
+  - Not found publicly: Blu's exact home layout or tab names. We did not copy
+    any, and should not claim to.
+- **Wallgold (وال‌گلد):** a gold app with one job per screen.
+- **DBS digibank «Security Hub»:** every security tool in one place.
+- **Google Security Checkup / Credit Karma:** status first, then positive
+  «recommended actions», never a list of threats.
+
+### What changed
+
+- **Home is calm.** Logo + «آشیانه», an eye to hide the balance (Blu-like),
+  history, the balance with واریز/برداشت, and «پولتان کجاست». No safety number,
+  no risks, no eject card (it appears only while an eject is in progress).
+  Tabs: خانه · انتقال · امن‌سازی · خدمات; واریز opens from the balance card.
+- **«امن‌سازی» tab.**
+  - **Intro, once:** a three-line card, dismissed with «فهمیدم»
+    (localStorage `mhj52-sf`). The facilitator chip shows it again.
+  - **«امتیاز امنیت».** A gauge from 400 to 1000 with پایه / خوب / عالی,
+    instead of a percent («۰٪ سالم» felt bad). It is the same worst-case
+    measure: score = 400 + 600 × coverage.
+  - **Two groups:**
+    - «نوع دارایی» — the asset itself: Tether can be frozen, toman inflates,
+      urgent cash, leaving the country.
+    - «روش نگه‌داری» — who holds it and where: company/exchange, foreign
+      account closed, Iranian exchange limits, home theft, lost key.
+  - **«بستهٔ پیشنهادی».** Positive actions with «+N امتیاز».
+    - Each one opens **«قبل و بعد»**: a slider showing the two places' shares,
+      the score before → after, and the tradeoff («وابستگی شما به … را کمتر
+      می‌کند، اما …»). Nothing moves until the person acts.
+    - The slider starts at the **best** amount. A fixed 30% move made
+      suggestions useless, because with a worst-case score a big move just
+      shifts the weakness.
+    - Each suggestion names one source place. The text, the +points and the
+      simulator all use it (`sugPlan`).
+    - «اگر بخشی را پیش خودم نگه دارم؟» opens the simulator from آشیانه to the
+      personal wallet.
+  - **«امنیت حساب»:** PIN (active), fingerprint, login SMS, hide balance,
+    active devices, and the 12-word backup when a personal wallet exists.
+  - **«برای روز مبادا»:** برداشت یک‌جای همه.
+  - **«بیشتر بدانید»:** the details page and the custody explainer.
+- **Words:** «ریسک/خطر» became «امنیت/محافظت».
+  - Risks are neutral nouns («سرقت از خانه», «کاهش ارزش تومان»), each with a
+    protection level (خوب / متوسط / پایه), no percent, no red.
+  - The real-exchange mode says «امنیت کم/متوسط/خوب».
+- **Scary copy rewritten, facts kept.** The custody, personal-wallet and key
+  lines no longer say «اگر گم شود، هیچ‌کس برنمی‌گرداند». Instead: «۱۲ کلمه را
+  جای امنی یادداشت کنید؛ با آن همیشه به پولتان می‌رسید».
+- **Transfer → «تحویل دلار نقد در صرافی».** Exchanges listed with one
+  «پیشنهاد ویژه» (a slot for promotion, `X_PROMO`) and the rest by distance,
+  with «نزدیک‌ترین» on the nearest. The flow:
+  1. amount in $100 notes;
+  2. time slot;
+  3. review sheet;
+  4. pickup code, address, hours, «تا ۳ روز»;
+  5. a home banner until pickup.
+
+  The map shows «آماده تحویل در …», then «تحویل‌گرفته از …». The fee is 1%,
+  min $5 — **invented**.
+- **First purchase:** the success screen explains ownership — «الان
+  دارایی‌تان کجاست؟ نزد بیت‌وانا، شریک نگهداری آشیانه» — with «انتخاب روش
+  نگهداری».
+- **Logo:** the original mark, with the name آشیانه, at the user's request.
+  Icons are the original `icon-*.png`. The arch drawing (`ash-*.png`) stays
+  only in v5.1.
+
+**Testing note:** in this desktop app the browser pane crops phone-size
+screenshots to their left 80%. Scaling the body to 0.8 for the capture shows
+the full width. The layout itself was measured as correct.
+
 ### The first round's report (2026-10-09)
 
 `prototype/test-report.html` — a 15-slide deck on round «تست اول ارسال»,
