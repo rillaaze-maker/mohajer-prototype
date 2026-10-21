@@ -2521,6 +2521,33 @@ v5.4 by `scratchpad/build_v55.py`. v5.4 is untouched.
 - v4.5 already had a `mixBar()` function and a `.mixbar` style (the investment
   baskets). The package versions are `pkBar` / `.pkbar`.
 
+## 10s. v5.6 — ownership after every purchase; «افزایش امنیت پس‌انداز»; exchange as a recipient (2026-10-22)
+
+`prototype/wallet-v5.6.html` · `copy-v5.6.json` · `manifest-v5.6.json`, from
+v5.5 by `scratchpad/build_v56.py`. v5.5 is untouched.
+
+- **Ownership after every تبدیل.** The «الان دارایی‌تان کجاست؟ نزد بیت‌وانا…
+  · انتخاب روش نگهداری» card shows after every successful purchase. It used to
+  show only after the first; the user said that was important.
+- **Wording.** «امن‌سازی سرمایه» implied the money is not safe now. The home
+  card and the setup title say «افزایش امنیت پس‌انداز». The tab keeps the
+  user's name, «امن‌سازی».
+- **Balance card.** A third, full-width outlined button, «مدیریت محل نگهداری»,
+  opens «امن‌سازی» scrolled to «پولتان کجاست» (`mgOpen`). «واریز» stays the
+  only primary.
+- **«امن‌سازی» is calmer.**
+  - While setup is unfinished, it shows only the steps and «پولتان کجاست»;
+    the score and packages appear after setup.
+  - The score card's spacing was redone.
+  - **Zero is written «صفر»:** a Persian «۰» renders as a dot and looked
+    broken, on the tab and on the home badge.
+  - The sentence follows the score, so there is no more «۱ کار خوب» beside a ۰.
+- **Transfer.** The promoted exchange is the first recipient under «انتقال به
+  صرافی»: a contact-style row with a gold outline, «پیشنهاد ویژه», «دلار نقد را
+  همان روز تحویل بگیرید · ۱٫۶ کیلومتر». The other exchanges sit behind one
+  «صرافی‌های دیگر» row, which opens a sheet. The flow is titled «انتقال به
+  صرافی»: it is a transfer, unlike physical gold delivery.
+
 ### The first round's report (2026-10-09)
 
 `prototype/test-report.html` — a 15-slide deck on round «تست اول ارسال»,
