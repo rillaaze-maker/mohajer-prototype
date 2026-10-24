@@ -3260,6 +3260,60 @@ Verified:
   - over-value amounts are blocked;
   - withdraw «همه» → basket removed and back on home.
 
+## 10y. v5.12 — «ثبت پول در جای دیگر» in two focused steps; a stepper in «نگهداری» (2026-10-25)
+
+`prototype/wallet-v5.12.html` · `copy-v5.12.json` · `manifest-v5.12.json`, from
+v5.11 by `scratchpad/build_v512.py`. v5.11 is untouched.
+
+**«ثبت پول در جای دیگر» (ext-add)** was a long list. Choosing «تتر نزد صرافی»
+added a kind picker and a risk list above the amount, so people had to scroll
+to type. It is now two steps on one screen:
+
+1. **Where:** a 2-column grid of five tiles (`#ea-types`, `.eat`), each with
+   an icon, a name and a 3–4-word line (`eaS_*`). Bank is a full-width tile.
+2. **How much:**
+   - a chip shows the choice, with «تغییر»;
+   - exchanges only: an «ایرانی | خارجی» segmented control (`.seg2`), plus
+     provider chips in the `risk=real` variant;
+   - a **big centred amount field**, focused automatically, with its unit;
+   - the score preview;
+   - name (optional);
+   - address (personal wallet only);
+   - **one calm line** «محافظت کمتری دارد در برابر: …» at the bottom;
+   - «ثبت» is visible without scrolling.
+- Back goes from step 2 to step 1. When the screen was opened for a specific
+  place (`eaOpen('gold')` etc.), back returns where the person came from.
+- Pattern: Kubera and Monarch «add asset» (type first, then a focused form)
+  and Revolut's big-amount screens.
+- The score preview no longer prints «۰», which renders like a dot; it uses
+  «صفر». When nothing changes it says «… می‌ماند».
+
+**«نگهداری» tab while the 3 steps are unfinished:**
+- A compact **stepper** at the top: three dots joined by a line, labelled
+  واریز / بقیهٔ پول / بستهٔ پیشنهادی. Done dots are green with a check; the
+  current one is solid.
+- Under it, **one card** for the current step: title, one line, one primary
+  button, and the alternative link.
+- Below that, **one simple visual** (`#sf-snap`): total, a stacked bar by
+  location, a legend, and one line saying details come after the steps.
+- Shares under 1% read «کمتر از ۱٪», and the biggest share is capped at 99%
+  when there are others.
+- The «جنس نگهداری» and «محل نگهداری» cards and the «راهنما» links are hidden
+  until the steps are done, then everything returns as in v5.10/5.11.
+
+Verified:
+- Integrity checks all pass; no class collides with v5.11.
+- Browser flows:
+  - $5 at آشیانه shows the stepper on step 2 and the snapshot;
+  - «ثبت پول در جای دیگر» → tile grid → «تتر نزد صرافی دیگر» → ایرانی →
+    300 → everything on one screen;
+  - back returns to the tiles;
+  - دلار نقد $1,500 → «ثبت شد.» → stepper on step 3, snapshot «آشیانه کمتر از
+    ۱٪ · خانه و گاوصندوق ۹۹٪»;
+  - finishing the package step restores the full tab;
+  - a direct open with `eaOpen('gold')` shows the form in grams, and back
+    leaves the screen.
+
 ---
 
 ## 11. Blu Bank — the reference
