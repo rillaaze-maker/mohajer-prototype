@@ -2595,6 +2595,139 @@ boxes. That page now shows one pro and one con per place instead of two each.
 **Setup steps:** the active step's button and link now span the card and are
 centred; they used to sit indented under the step text.
 
+## 10u. v5.8 — investment baskets and recent transactions on home (2026-10-24)
+
+`prototype/wallet-v5.8.html` · `copy-v5.8.json` · `manifest-v5.8.json`, from
+v5.7 by `scratchpad/build_v58.py`. v5.7 is untouched.
+
+Two home sections, shown **only when there is something in them**, so an empty
+account still sees the calm minimal home (`renderHomeMore`):
+- **«سبدهای سرمایه‌گذاری شما»**, once the person has picked a basket and put
+  money in it. Each row shows the basket name, risk dots, mix bar, amount
+  (hidden with the eye toggle) and «… سال گذشته». A tap opens the basket;
+  «همه» opens the investment tab. Pattern: the investments widget on the
+  Revolut and Robinhood home screens.
+- **«تراکنش‌های اخیر»:** the last three, each opening its receipt, plus «همه».
+  Pattern: Blu and Revolut home.
+
+This reverses the v5.1 decision to keep history off home. That came from a
+colleague's note; the user now wants it back. The clock button in the header
+stays, and still shows the pending dot.
+
+Verified with real flows: buy dollars → invest $300 in «سبد متعادل» → home
+shows the basket ($298.50 after fee) and both transactions. Tapping opens the
+receipt or the basket.
+
+## 10v. v5.9 — landing, «نگهداری», documents, plans, internet shutdown, shake for support (2026-10-24)
+
+`prototype/wallet-v5.9.html` · `copy-v5.9.json` · `manifest-v5.9.json`, from
+v5.8 by `scratchpad/build_v59a.py` + `build_v59b.py`. v5.8 is untouched.
+
+**Landing.** Built from the GPT brief the user shared.
+- A 2-second splash: the original mark scales in, the bird slides in, a soft
+  gold glow passes, then it fades. It is skipped with `?nosplash` or
+  reduced-motion.
+- Then one page:
+  - «پس‌اندازتان را دلاری کنید؛ همه‌اش را به یک جا نسپارید.»
+  - one line;
+  - $100,000 in three containers that fill on load (نزد آشیانه 50 /
+    کیف پول شخصی 30 / طلای فیزیکی 20);
+  - three short benefits;
+  - the trust cue (→ «مدارک و مجوزها»);
+  - «شروع با مبلغ کم» (goes straight to تبدیل with the small trial amount) and
+    «اول ببینید چطور کار می‌کند» (a three-step sheet).
+- No self-custody wording, no seed phrase, no basket percentages, no «کاملاً
+  امن».
+- Kept the app's formal register («کنید») rather than the brief's informal
+  «کن».
+
+**Wording.** «امن‌سازی» → tab «نگهداری», page «چیدمان پس‌انداز», «امتیاز
+چیدمان», «بهبود چیدمان». We agree with GPT: «امن‌سازی» sounded alarming and was
+confused with account security. The convert screen's trial chip says «شروع با
+مبلغ کم».
+
+**Removed.** «برداشت یک‌جای همه» has no entry point any more. The code stays
+for now; the in-progress home card cannot appear.
+
+**Investments are their own story.** They are out of the total, the map and
+«پیش آشیانه». Home's basket section shows its own total.
+
+**Place page, redone.**
+- Hero: icon, amount, share, and round actions (the same style as home).
+- One description line.
+- «این جا چطور است» as two chip groups: «محافظت‌شده در برابر» / «حواستان
+  باشد».
+- A clean item list.
+
+**Plan card, redone.** Progress bar, numbered circles, bold amount, a colour-dot
+route, one dark action button (`.pact`; `.act` collided with v4.5 again).
+
+**Balance card.** The amount's box overlapped the label by 11px. It is now 8px
+below the label and 10px above «به تومان».
+
+**Pickup and delivery time is the user's choice.** Gold pickup starts with no
+slot and the CTA waits for one. The hardware key order gained four delivery
+slots.
+
+**«مدارک و مجوزها».** For people who decide by documents: licence, custody
+contract, reserves report, legal contact, compensation. Each opens a sheet. It
+is linked next to the deposit options, from the landing and from خدمات. **All
+placeholders; the team must replace them with real documents before any
+test.**
+
+**«پلن‌ها» (WTP test).** Three real offers instead of asking «چقدر می‌دهی؟»:
+- شروع رایگان (up to $20);
+- استاندارد (0.75%, marked «بیشتر انتخاب می‌شود»);
+- ویژه/Private (callback).
+
+The choice is recorded in `mhjSnapshot().wtp` / `wtpFrom` (the landing CTA
+records `trial`). Amounts of $5,000 or more on تبدیل offer a callback from an
+account manager. **The prices and perks are invented.**
+
+**«اگر اینترنت قطع شد».** Research basis:
+- Iran's blackouts:
+  - June 2025: under 3% global access, while the domestic network kept bank
+    apps partly up.
+  - Jan–May 2026: the longest recorded. Phone lines were cut too, and at times
+    the national network itself.
+  - Exchanges paused crypto withdrawals (Wallex, Ramzinex, Aban Tether);
+    Tabdeal batched them; Nobitex's on-chain transfers stopped for days.
+- Ukraine's «Power Banking» branch network.
+- A Fed study finding no truly offline payment system.
+- The central bank's move to shut USSD payments, so USSD is **not** a
+  dependable fallback here.
+
+The page:
+- status (connected, or last balance and time);
+- call support / request a call;
+- **از قبل آماده باشید**: save the support number; make an **in-person
+  withdrawal code** to use with your national ID at partner exchanges; keep
+  part as cash or gold; 12 words on paper;
+- **وقتی قطع است**: the app on the domestic network (balance, toman to Sheba,
+  user transfers) if that network is up; partner exchanges with backup power
+  and connectivity; phone; and what waits for reconnection (USDT on-chain,
+  foreign exchanges);
+- a calm footer, with no «always works» promise.
+
+**Variant:** `?net=off`, the facilitator chip, or the browser's own
+`offline` event. An amber bar on every screen reads «اینترنت قطع است ·
+موجودی ساعت …» and leads to the page; USDT deposit waits. **The in-person code
+needs real operations with partner exchanges.**
+
+**Support.** «پشتیبانی» in خدمات: call, callback, chat.
+
+**Shake for a call.** Shaking anywhere asks «پشتیبانی با شما تماس بگیرد؟».
+- Guards against accidents:
+  - ≥4 hard peaks within 700ms, averaging ≤230ms apart, after stillness —
+    running is ~3–4 steps a second and is rejected;
+  - always a confirm, which auto-dismisses after 10s;
+  - a 30s cooldown;
+  - a switch in حساب کاربری (on by default);
+  - iOS motion permission is asked on the first touch.
+- Verified with synthetic motion: running at 3/s and 4/s → no prompt; a
+  deliberate shake → one prompt; a second within 30s → none; switched off →
+  none.
+
 ### The first round's report (2026-10-09)
 
 `prototype/test-report.html` — a 15-slide deck on round «تست اول ارسال»,
@@ -2992,6 +3125,92 @@ the toast and returns to the amount screen. Gold: 1g bar = $102.80 metal +
 $2.00 fabrication + $2.50 floor = $107.30 charged at order, $102.80 in
 توزیع دارایی. All 567 copy keys resolve — no `data-c` and no `C()` call points
 at a missing key.
+
+## 10w. v5.10 — «جنس» and «محل» as the two parameters; a mosaic editor; a flipping balance card (2026-10-24)
+
+`prototype/wallet-v5.10.html` · `copy-v5.10.json` · `manifest-v5.10.json`, from
+v5.9 by `scratchpad/build_v510.py`. v5.9 is untouched.
+
+**Two parameters, everywhere.** Every place has one type and one location:
+
+| place | جنس (`TYPE_OF`) | محل (`LOC_OF`) |
+|---|---|---|
+| mohajer | دلار | آشیانه |
+| self | دلار | کیف پول شخصی |
+| cash | دلار | خانه و گاوصندوق |
+| gold | طلا | خانه و گاوصندوق |
+| exir, exfx | دلار | صرافی‌ها |
+| bank | تومان | بانک |
+
+- The «نگهداری» tab and the «مدیریت محل نگهداری» page both show:
+  - **«جنس نگهداری»:** a donut plus a legend with % and $ (`typeHTML`);
+  - **«محل نگهداری»:** rows with icon, names of what's inside, a share bar, $
+    and % (`locHTML`).
+- Tapping a location opens the place directly, or a sheet when it holds more
+  than one (`locOpen`; خانه و گاوصندوق = دلار نقد + طلا).
+- The old tree (`#h-tree`) stays in the DOM but is hidden.
+
+**«تغییر ترکیب» editor.** It is rebuilt around two decisions: what type, and
+where the dollars sit.
+- Preset chips (الان / the three packages) are kept.
+- A **mosaic**: column width = type share, stacked tiles = location share
+  inside dollars. Gold and toman are one tile each. Each tile measures itself
+  and shows two lines, one line, the amount only, or nothing, so text is never
+  cut (`fitMos`). Tested on 204 states with 0 overflows.
+- The score line «امتیاز چیدمان x ← y» now sits **inside the visual card**, so
+  it is visible while dragging.
+- Two **drag split bars** (`splitDown`, pointer events, RTL, 1% steps, always
+  summing to 100%):
+  - type: دلار | طلا | تومان;
+  - dollar location: آشیانه | کیف پول شخصی | خانه و گاوصندوق (+ صرافی‌ها when
+    the person has some).
+- When a share is 0%, two handles sit on top of each other. The first movement
+  picks the one that can move in that direction.
+- `edToMix` / `mixToEd` translate to and from the 7-place mix. Exchange money
+  is split by the person's current exir/exfx ratio. `S.mgMix` feeds the
+  unchanged `mgMake` → plan.
+- Patterns: Betterment's two-way allocation slider; M1's slices that always
+  sum to 100%. The mosaic is our own answer to «isometric / visual» that stays
+  readable at phone width.
+
+**Balance card flips.**
+- The v4.5 «tap for toman» is gone.
+- A tap flips the card in 3D (0.75s). The card height animates to the face
+  being shown (`fitFlip`).
+- **Back:**
+  - کل دارایی (savings + investment);
+  - نزد آشیانه · تأییدشده;
+  - نزد خودتان یا جای دیگر · ثبت‌شده توسط خودتان;
+  - تحت سرمایه‌گذاری with «۲۴ ساعت گذشته ±x٪».
+- The eye toggle hides every number on the back.
+
+**Live investment value — decision: calm, not ticking.**
+- The value updates **once a minute** (`INV.drift`, a bounded random walk; a
+  real build reads prices) in the back, the home basket row and the section
+  total.
+- The anchor is «۲۴ ساعت گذشته» with a «هر دقیقه به‌روز می‌شود» note.
+- Down moves use the warm amber `--warn`, never red; nothing flashes.
+- Rationale:
+  - Curvo deliberately updates once a day to stop short-term reactions.
+  - Myopic loss aversion: the more often people look, the more losses they
+    see.
+  - Trading apps tick in real time because trading is their job; ours is
+    savings.
+
+Verified:
+- `node --check` passes; CSS braces balance; no missing or duplicate copy
+  keys; the JSON matches the definitions.
+- The class-collision check against v5.9 caught `.split` and `.bar`, renamed
+  to `.edsp` and `.lbar`.
+- Browser checks:
+  - flip front 111px → back 166px, with a 20px gap to the buttons;
+  - stacked-handle drags in both directions;
+  - presets;
+  - make plan → «برنامه ساخته شد» toast and plan steps;
+  - location sheet;
+  - live value up and down;
+  - hidden-amounts mode;
+  - light theme.
 
 ---
 
