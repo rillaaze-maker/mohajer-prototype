@@ -3418,6 +3418,48 @@ v5.13 by `scratchpad/build_v514.py`. v5.13 is untouched.
   the same columns as the featured exchange (icon 303–341, text 60–291,
   chevron 34–48, measured), with «۳ صرافی دیگر، به ترتیب نزدیکی».
 
+## 10ab. v5.15 — interactive landing by default; slide-to-spread at the bottom; live score gauge; instant page change (2026-10-25)
+
+`prototype/wallet-v5.15.html` · `copy-v5.15.json` · `manifest-v5.15.json`, from
+v5.14 by `scratchpad/build_v515.py` (+ `patch515.py`). v5.14 is untouched.
+
+- **The interactive landing is the default.** `?lnd=pages` (or the facilitator
+  chip) brings back the two-page version.
+- **Slide-to-spread lives at the bottom,** in the button's slot, like the
+  iPhone «slide to answer». It is the same size as the button (54px, full
+  width, measured), as a pill.
+  - When done, the fill reaches the end and the knob shows a check.
+  - After 320ms the pill morphs: radius 99 → 16, colour → the button colour
+    (measured identical, rgb 242,243,244), knob and hint fade.
+  - Then «ادامه» fades in on top. Nothing jumps.
+  - The hidden button is `visibility:hidden`, so its corners never peek out
+    behind the pill.
+- **A score gauge fills the empty space** between the containers and the
+  dots: a 160px semicircle in four segments, one per point.
+  - It fills **right to left** in green; the big number sits in the middle;
+    «امتیاز چیدمان» below; the ends are labelled «صفر» and «+۴».
+  - It uses the **real points model** (`pointsOfItems` on the
+    50/30/20 × $100k sample). While dragging it climbs صفر → +۱ (5%) → +۲
+    (40%) → +۳ (60%) → +۴ (100%), with a small bump each time it gains a point.
+  - Under it: «بیشترین سهم در یک جا: x٪» (amber), then «حالا به یک جا وابسته
+    نیست» (green).
+- **Page change without lag.** The carousel is a transform rail (`#lnd-trk`,
+  `--i`, 0.44s ease), not scroll + smooth scroll + a 700ms fallback.
+  - «ادامه» switches pages in the same frame.
+  - A finger swipe drags the rail; past 18% of the width it changes page,
+    otherwise it springs back.
+  - The knob and the stage don't start a page swipe.
+- `navigator.vibrate` runs only after a real user gesture, which keeps the
+  console clean.
+
+Verified:
+- The pill and the button are both at top 700, 54×339.
+- The gauge sequence was sampled at 14 points during a drag.
+- Morph end state: radius 16px, colour equal to the button's.
+- Instant page change; swipe back to slide 1.
+- Returning to the intro resets everything.
+- `?lnd=pages` still works.
+
 ---
 
 ## 11. Blu Bank — the reference
