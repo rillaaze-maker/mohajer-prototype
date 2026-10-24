@@ -3212,6 +3212,54 @@ Verified:
   - hidden-amounts mode;
   - light theme.
 
+## 10x. v5.11 — simpler home; quiet transactions; «سبد من» holding page (2026-10-25)
+
+`prototype/wallet-v5.11.html` · `copy-v5.11.json` · `manifest-v5.11.json`, from
+v5.10 by `scratchpad/build_v511.py`. v5.10 is untouched.
+
+- **Home: «بهبود چیدمان پس‌انداز» card removed.**
+  - The `#h-sf` element is gone.
+  - The same steps and score live in the «نگهداری» tab.
+  - `renderHomeSafe` already returns early when the element is missing.
+- **Home: «تراکنش‌های اخیر» made quiet.**
+  - No card; regular weight; ink-2/ink-3 colours.
+  - Outlined icons; 72% opacity.
+  - The «انجام شد» badge is hidden on home. Pending and failed badges still
+    show.
+  - Amounts are no longer green.
+- **Tapping a basket opens «سبد من» (`n-hold`), not the product page.**
+  - Pattern: the holding page in Robinhood, Wealthsimple and Betterment.
+  - **ارزش فعلی:** the live value from v5.10's `INV`, plus «از ابتدا» in $ and %,
+    plus «۲۴ ساعت گذشته».
+  - **Chart:** your value over ۳/۶/۱۲ months. `holdSeries` has about one point
+    every 3 days. The axis always spans at least 20% of the value, so small
+    moves look small. A note says the money entered today and that the past
+    is no guarantee.
+  - **«دارایی‌های شما در این سبد»:** mix bar plus $ per asset.
+  - **Details:** amount in, entry fee (now stored on the holding), swing, «قفل
+    زمانی: ندارد».
+  - The basket's own transactions.
+  - «دربارهٔ این سبد ›» opens the old product page.
+  - **Buttons:** primary «افزودن به سبد» goes to the amount screen, which
+    returns here. Ghost «برداشت از سبد» opens a sheet.
+- **Withdraw sheet:**
+  - amount field with chips for ۲۵٪ / ۵۰٪ / همه;
+  - fee 0.5% (`nestFee`) and the net «به موجودی دلاری شما»;
+  - a warning above the basket value;
+  - on confirm: a `nestOut` transaction, a toast, and a return home if the
+    basket is emptied.
+- The «سبدهای شما» list in the investment tab opens the same page.
+
+Verified:
+- `node --check` passes; CSS braces balance; no missing or duplicate copy
+  keys; the JSON matches the definitions; no new class collides with v5.10.
+- Browser flows:
+  - invest $100 → home shows the basket and two quiet transactions;
+  - tap the basket → holding page (value $100.69 at +1.2% drift; per-asset $);
+  - withdraw 50% → +$50.09 to the balance and a second transaction;
+  - over-value amounts are blocked;
+  - withdraw «همه» → basket removed and back on home.
+
 ---
 
 ## 11. Blu Bank — the reference
