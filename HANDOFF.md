@@ -3314,6 +3314,45 @@ Verified:
   - a direct open with `eaOpen('gold')` shows the form in grams, and back
     leaves the screen.
 
+## 10z. v5.13 — landing as two calm slides; «ورود به آشیانه» primary (2026-10-25)
+
+`prototype/wallet-v5.13.html` · `copy-v5.13.json` · `manifest-v5.13.json`, from
+v5.12 by `scratchpad/build_v513.py`. v5.12 is untouched.
+
+The user disliked the push of «شروع با مبلغ کم» and found the landing plus the
+«چطور کار می‌کند» sheet too crowded.
+
+- **Two swipeable slides** (`#lnd-car`, scroll-snap, RTL), with dots that
+  stretch on the active slide:
+  1. the proposition (`lnT`), one line, and the three-container visual;
+  2. «چطور کار می‌کند»: three steps with gold icons on a thin connecting line
+     (دلاری کنید / پخش کنید / در دسترس بماند, keys `ln2S*`), plus the
+     documents row.
+- The checklist (`lnB1–3`) and the header «چطور کار می‌کند؟» link are gone.
+  The keys stay in the copy file, unused.
+- **Buttons:**
+  - primary «ورود به آشیانه» (`lnHome` → home);
+  - ghost «شروع با مبلغ کم» (`lnStart`, the trial flow, unchanged).
+  - The `howOpen` sheet uses the same order.
+- Slide 1 advances to slide 2 **once**, after 6.5s, and only if the person
+  hasn't touched the carousel. Pattern: Revolut and Monzo onboarding.
+- `lnGo` falls back to an instant snap if smooth scrolling doesn't arrive in
+  700ms.
+- **Layout fix:** the global `.screen>*:not(.scroll):not(.center){flex:none}`
+  had pinned the column. A more specific rule lets it grow, so the buttons sit
+  at the bottom of the screen.
+- **Bug fixed from v5.9:** `go('intro')`, used by the facilitator chip
+  «صفحهٔ معرفی», threw because `#why-vis` no longer exists. It is now guarded,
+  and returning to the intro resets to slide 1.
+
+Verified:
+- Integrity checks all pass; no class collides with v5.12.
+- Buttons end at 798/812px.
+- Slide 2 is reachable by dots, swipe and auto-advance; there is no advance
+  after a touch.
+- Primary → home; secondary → convert with the trial flag.
+- Going back to the intro works with no console errors.
+
 ---
 
 ## 11. Blu Bank — the reference
