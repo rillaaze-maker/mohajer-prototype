@@ -3353,6 +3353,71 @@ Verified:
 - Primary → home; secondary → convert with the trial flag.
 - Going back to the intro works with no console errors.
 
+## 10aa. v5.14 — real back navigation; landing «ادامه»; interactive landing variant; alignment fixes (2026-10-25)
+
+`prototype/wallet-v5.14.html` · `copy-v5.14.json` · `manifest-v5.14.json`, from
+v5.13 by `scratchpad/build_v514.py`. v5.13 is untouched.
+
+**Back goes where you were.**
+- All 56 hard-wired back buttons (`go('home')`, `go('use')`, `go(S.xBack||…)`)
+  now call `goBack()`.
+- `go()` keeps a stack (`S.nav`):
+  - each forward move pushes the previous screen;
+  - tab roots (`.tabbed`: home, t-who, use, safe) and `intro` clear it;
+  - moving forward to a screen already in the stack (for example `mgMake` →
+    `mg`, or a quote expiry → amount) rewinds to it instead of looping.
+- Back plays the slide animation in reverse (`.nav-back`).
+- The phone or browser back button triggers the same `goBack` through
+  `popstate`; it closes an open sheet first.
+- `eaBack` still steps from the amount form back to the tiles first.
+- Verified paths:
+  - home → مدیریت → تغییر ترکیب → back → back = home;
+  - safe → place → back = safe;
+  - home → basket → add → back = basket → about → back = basket (it used to
+    go to the investment tab);
+  - use → docs → back = use;
+  - ext-add steps.
+
+**Landing.**
+- Slide 1's only button is «ادامه», which goes to slide 2. Slide 2 shows
+  «ورود به آشیانه» (primary) and «شروع با مبلغ کم» (ghost), so both pages are
+  read.
+- Auto-advance is removed.
+- `lnGo` updates the buttons immediately, not only on scroll.
+
+**Variant «ورود تعاملی»** (`?lnd=play`, or the facilitator chip «صفحهٔ ورود:
+دو صفحه / تعاملی»). Slide 1 becomes one interaction:
+- All $100,000 sits in the آشیانه container; the other two are empty and
+  dashed.
+- The person drags a knob right-to-left along a track («بکشید تا پخش شود»),
+  or taps the scene. Amounts and container heights follow the finger:
+  50 / 30 / 20 at the end.
+- The status line goes from «همه در یک جا: ۱۰۰٪» (amber) to «حالا به یک جا
+  وابسته نیست» (green check).
+- The headline's second line lights up, the knob becomes a check, and only
+  then does «ادامه» appear.
+- Releasing past 55% snaps to done; otherwise it springs back. A short haptic
+  plays when done.
+- The knob nudges gently until touched (off with reduced-motion).
+- Slide 2 is the same as the default.
+
+**Alignment and affordance fixes:**
+- `.tdots` (the «نگهداری» tutorial) was `row-reverse`, so the first page lit
+  the left dot. It is now right-to-left.
+- `.sugbtn` («بهبود چیدمان», «مشاهده»…) was nearly invisible in dark mode and
+  pinned to the top of its row. It is now a filled pill with a border and a
+  forward chevron, 36px tall, vertically centred (same centre as the badge
+  and text, measured).
+- Section links («همه», «مدیریت») are now link-coloured with a chevron and a
+  32px tap height.
+- **Plan steps** were rebuilt as one tappable row: circle | action title +
+  one-line route | amount | chevron. The circle, text, amount and chevron
+  share one centre line (measured on all 5 rows). Done steps strike through
+  the amount.
+- **«صرافی‌های دیگر»** was a floating text link. It is now an option row on
+  the same columns as the featured exchange (icon 303–341, text 60–291,
+  chevron 34–48, measured), with «۳ صرافی دیگر، به ترتیب نزدیکی».
+
 ---
 
 ## 11. Blu Bank — the reference
