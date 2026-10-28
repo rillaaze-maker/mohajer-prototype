@@ -3460,6 +3460,32 @@ Verified:
 - Returning to the intro resets everything.
 - `?lnd=pages` still works.
 
+## 10ac. Test dashboard: v5.0–v5.15 registered; v5.15 is the test build (2026-10-29)
+
+`prototype/test-versions.json` now lists 20 builds, newest first:
+5.15 … 5.0, then the existing 4.5, 4, 3, 2.
+
+- The existing four entries are byte-identical except that **v4.5's `status`
+  moved from `current` to `past`**. Only one build can be `current`, and it is
+  now **v5.15** (preselected in `test.html`, tagged «نسخهٔ تست»).
+- **Safe for links already sent.** Every console link carries `v=`, a bare
+  `t.html` defaults to `4.5`, and ids are compared as strings («5.10» ≠ «5.1»).
+- **Side effect:** `test-insights.html` now opens on v5.15 by default; v4.5
+  and older results are one pick away in the version selector.
+- **v5.4 was never on the live site** (404 for its html and copy). It is in the
+  registry, so its three files must be uploaded with this change.
+- Dates use the session dates converted to Solar Hijri (1405/07/20 … 1405/08/03).
+  The older entries say 1404, which looks like an older-session clock; left
+  untouched.
+- **Not run:** `t.html` was deliberately not opened locally. It posts a
+  partial session to the live collectors on page-leave, and test data must stay
+  clean. Instead:
+  - every listed file exists;
+  - the v5 builds expose `mhjSnapshot()`, `kind:'convert'` and `data-screen`,
+    the hooks the runner reads;
+  - `test.html` renders all 20 builds and generates
+    `t.html?v=5.15&r=1&c=tg&p=1.1`.
+
 ---
 
 ## 11. Blu Bank — the reference
