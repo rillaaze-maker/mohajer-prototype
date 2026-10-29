@@ -1,0 +1,672 @@
+<!doctype html>
+<!--
+  آشیانه · ارائهٔ نهایی — نگاهِ محصول
+  ─────────────────────────────────────────────────────────────────────
+  هر اسلاید یک <section class="sl" data-part="N">. ترتیب در فایل = ترتیب
+  در ارائه. برای افزودن بخشِ تیم‌های دیگر:
+    ۱. یک بخشِ تازه در جدول PARTS (پایینِ فایل) بنویسید، مثلاً 4: 'بخش چهارم · …'.
+    ۲. اسلایدهایشان را با data-part="4" هر جای فایل بگذارید.
+  شماره‌ها، نوار پیشرفت و نام بخش خودکار به‌روز می‌شوند.
+  کلیدها: ← یا فاصله = بعدی · → = قبلی · R = پخش دوبارهٔ شروع · P = چاپ/PDF
+  تصاویر از ./deck-assets/ می‌آیند؛ فونت از ./fonts/.
+-->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>آشیانه · ارائهٔ نهایی محصول</title>
+<meta name="robots" content="noindex">
+<style>
+@font-face{font-family:Dana;src:url('./fonts/Dana-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-DemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:Dana;src:url('./fonts/Dana-ExtraBold.woff2') format('woff2');font-weight:800;font-display:swap}
+:root{
+  --bg:#0C0E11; --bg2:#101318; --sf:#15181D; --sf2:#1B1F25; --ln:#252A31;
+  --ink:#F2F3F4; --ink2:#BCC2C9; --ink3:#848C95;
+  --gold:#D5A45C; --gold2:#E9C58C; --ok:#4FBF95; --warn:#E0B375; --blue:#5B8BD0; --vio:#9C84DD;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#07080A;overflow:hidden}
+body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+
+/* صحنهٔ ثابت ۱۹۲۰×۱۰۸۰، به اندازهٔ پنجره مقیاس می‌خورد */
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center;background:var(--bg);overflow:hidden}
+.sl{position:absolute;inset:0;padding:120px 128px 150px;display:flex;flex-direction:column;opacity:0;visibility:hidden;
+  transform:translateX(-24px);transition:opacity .5s ease,transform .6s cubic-bezier(.2,.8,.2,1),visibility .6s}
+.sl.on{opacity:1;visibility:visible;transform:none}
+.sl.alt{background:var(--bg2)}
+
+/* نوار بالا و پایین */
+#prog{position:absolute;top:0;right:0;height:5px;background:var(--gold);transition:width .5s ease;z-index:5}
+#foot{position:absolute;left:128px;right:128px;bottom:56px;display:flex;align-items:center;justify-content:space-between;font-size:24px;color:var(--ink3);z-index:5;pointer-events:none}
+#foot .brand{display:flex;align-items:center;gap:14px}
+#foot .brand svg{width:30px;height:30px}
+#part{font-weight:500}
+#cnt{font-weight:600}
+.splash-on #foot,.splash-on #prog{opacity:0}
+#foot,#prog{transition:opacity .4s}
+
+/* تایپوگرافی: ۱۴۰ / ۷۲ / ۴۴ / ۳۲ / ۲۴ */
+.eb{font-size:24px;font-weight:600;color:var(--gold);letter-spacing:.2px;display:flex;gap:14px;align-items:center}
+.eb .en{color:var(--ink3);font-weight:500;direction:ltr}
+.t{font-size:72px;font-weight:800;line-height:1.28;margin-top:18px;letter-spacing:-.5px}
+.t.md{font-size:60px}
+.lead{font-size:32px;color:var(--ink2);line-height:1.7;margin-top:18px;max-width:1400px}
+.sm{font-size:24px;color:var(--ink3);line-height:1.7}
+.gold{color:var(--gold)} .ok{color:var(--ok)} .warn{color:var(--warn)} .dim{color:var(--ink3)}
+.grow{flex:1}
+.row{display:flex;gap:32px}
+.col{display:flex;flex-direction:column;gap:24px}
+
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:28px;padding:36px 40px}
+.card h3{font-size:34px;font-weight:700;line-height:1.35}
+.card p{font-size:26px;color:var(--ink2);line-height:1.7;margin-top:10px}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:10px 22px;border-radius:99px;background:var(--sf2);border:1px solid var(--ln);font-size:24px;color:var(--ink2);white-space:nowrap}
+.chip.g{background:rgba(213,164,92,.12);border-color:rgba(213,164,92,.35);color:var(--gold2)}
+.chip.k{background:rgba(79,191,149,.12);border-color:rgba(79,191,149,.35);color:var(--ok)}
+.tag{display:inline-block;font-size:22px;font-weight:600;padding:4px 14px;border-radius:99px}
+.tag.u{background:rgba(79,191,149,.14);color:var(--ok)}
+.tag.r{background:rgba(91,139,208,.16);color:#8FB2E6}
+.tag.f{background:rgba(213,164,92,.14);color:var(--gold2)}
+
+/* گوشی */
+.ph{position:relative;width:300px;flex:none;border-radius:42px;overflow:hidden;border:7px solid #262B32;background:#0C0E11;box-shadow:0 30px 60px -20px rgba(0,0,0,.7)}
+.ph img{display:block;width:100%;height:auto}
+.ph.s{width:236px;border-radius:34px;border-width:6px}
+.ph.xs{width:178px;border-radius:26px;border-width:5px}
+.ph.crop{aspect-ratio:390/700}
+.ph.crop img{height:100%;object-fit:cover;object-position:top}
+.cap{font-size:24px;color:var(--ink2);text-align:center;line-height:1.6;margin-top:18px}
+.cap b{color:var(--ink);font-weight:700}
+.vtag{position:absolute;top:14px;right:14px;z-index:2;font-size:20px;font-weight:700;padding:4px 12px;border-radius:99px;background:rgba(12,14,17,.85);color:var(--gold2);border:1px solid rgba(213,164,92,.4)}
+.arrow{font-size:56px;color:var(--gold);align-self:center;line-height:1}
+
+/* اسلاید بخش */
+.div{justify-content:center}
+.div .n{font-size:220px;font-weight:800;color:transparent;-webkit-text-stroke:2px rgba(213,164,92,.55);line-height:1}
+.div .t{font-size:84px;margin-top:10px}
+.div ol{list-style:none;margin-top:44px;display:flex;flex-direction:column;gap:14px}
+.div li{font-size:30px;color:var(--ink2);display:flex;gap:18px;align-items:baseline}
+.div li i{font-style:normal;color:var(--gold);font-weight:700;min-width:56px}
+.div li span{color:var(--ink3);font-size:24px;direction:ltr}
+
+/* عددهای بزرگ */
+.stat{display:flex;flex-direction:column;gap:6px}
+.stat b{font-size:112px;font-weight:800;line-height:1;letter-spacing:-1px}
+.stat span{font-size:26px;color:var(--ink2);line-height:1.5}
+
+/* نمودار میله‌ای */
+.bars{display:flex;flex-direction:column;gap:18px}
+.br{display:grid;grid-template-columns:330px 1fr 70px;align-items:center;gap:20px;font-size:26px}
+.br .tr{height:40px;background:var(--sf2);border-radius:12px;overflow:hidden}
+.br .tr i{display:block;height:100%;border-radius:12px;background:#3A4049}
+.br.hi .tr i{background:var(--ok)}
+.br .v{font-weight:700;font-size:30px}
+.fun{display:grid;grid-template-columns:260px 1fr 90px;align-items:center;gap:20px;font-size:26px}
+.fun .tr{position:relative;height:40px;background:var(--sf2);border-radius:12px;overflow:hidden}
+.fun .op{position:absolute;inset:0 0 0 auto;background:#2F353D;border-radius:12px}
+.fun .dn{position:absolute;inset:0 0 0 auto;background:var(--gold);border-radius:12px}
+
+/* خط زمان */
+.tl{position:relative;display:grid;grid-template-columns:repeat(8,1fr);gap:0 10px;margin-top:46px}
+.tl:before{content:'';position:absolute;top:13px;right:0;left:0;height:2px;background:var(--ln)}
+.tl .it{position:relative;display:flex;flex-direction:column;gap:8px;padding-top:42px}
+.tl .it:before{content:'';position:absolute;top:4px;right:0;width:20px;height:20px;border-radius:50%;background:var(--bg);border:3px solid var(--gold)}
+.tl .it.hi:before{background:var(--gold)}
+.tl .v{font-size:26px;font-weight:800;color:var(--gold2);direction:ltr;text-align:right}
+.tl .d{font-size:23px;color:var(--ink2);line-height:1.5}
+
+/* شروع: پرنده */
+.splash{padding:0;justify-content:center;align-items:center;background:radial-gradient(ellipse at 50% 45%,#16191F 0%,#0C0E11 62%)}
+.spl{position:relative;width:1920px;height:1080px}
+.flight,.bob,.fall{position:absolute}
+.flight{left:880px;top:330px;width:160px;height:130px}
+.bird{width:160px;height:130px;filter:drop-shadow(0 10px 30px rgba(213,164,92,.35))}
+.old{position:absolute;left:0;right:0;top:520px;text-align:center;font-size:120px;font-weight:800;color:var(--ink);opacity:0}
+.old span{position:relative;display:inline-block}
+.old i{position:absolute;right:-12px;top:52%;height:10px;width:0;background:var(--gold);border-radius:6px}
+.ring{position:absolute;left:910px;top:345px;width:100px;height:100px;border-radius:50%;border:4px solid var(--gold2);opacity:0}
+.fe{position:absolute;left:955px;top:390px;width:14px;height:34px;border-radius:50% 50% 50% 50%/70% 70% 30% 30%;background:var(--gold);opacity:0}
+.cap1{position:absolute;left:0;right:0;top:820px;text-align:center;font-size:30px;color:var(--ink2);opacity:0}
+.cap1 b{color:var(--gold2);font-weight:700}
+.nw{position:absolute;left:0;right:0;top:310px;display:flex;flex-direction:column;align-items:center;gap:26px;opacity:0}
+.nw .mk{width:150px;height:150px;border-radius:40px;background:#1B1F25;border:1px solid #2A2F36;display:grid;place-items:center;box-shadow:0 20px 50px -18px rgba(0,0,0,.8)}
+.nw .mk svg{width:84px;height:84px}
+.nw h1{font-size:150px;font-weight:800;line-height:1.05;letter-spacing:-1px}
+.nw p{font-size:34px;color:var(--ink2)}
+.replay{position:absolute;left:128px;bottom:56px;font-size:22px;color:var(--ink3);opacity:0;transition:opacity .4s}
+
+.run .flight{animation:fly 1.6s cubic-bezier(.15,.75,.35,1) both}
+.run .bob{animation:bob .4s ease-in-out 0s 4 alternate both}
+.run .fall{animation:fall 1.15s cubic-bezier(.55,0,.95,.45) 1.72s both}
+.run .old{animation:oldIn .6s ease .35s both, oldOut .7s ease-in 2.25s both}
+.run .old i{animation:strike .35s ease-out 1.8s both}
+.run .ring{animation:ring .55s ease-out 1.62s both}
+.run .fe{animation:feather 1.9s ease-out 1.66s both}
+.run .cap1{animation:fadeUp .7s ease 3.0s both}
+.run .nw{animation:fadeUp .9s cubic-bezier(.2,.8,.2,1) 3.75s both}
+.run .replay{opacity:1;transition-delay:4.8s}
+@keyframes fly{from{transform:translate(-1150px,140px) rotate(8deg)}to{transform:none}}
+@keyframes bob{from{transform:translateY(-10px) rotate(-3deg)}to{transform:translateY(10px) rotate(3deg)}}
+@keyframes fall{0%{transform:none;opacity:1}12%{transform:translate(10px,-22px) rotate(-24deg)}100%{transform:translate(60px,760px) rotate(160deg);opacity:0}}
+@keyframes oldIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes oldOut{from{opacity:1;transform:none;filter:none}to{opacity:0;transform:translateY(40px);filter:blur(4px)}}
+@keyframes strike{from{width:0}to{width:calc(100% + 24px)}}
+@keyframes ring{from{opacity:1;transform:scale(.3)}to{opacity:0;transform:scale(2.4)}}
+@keyframes feather{0%{opacity:0;transform:translate(0,0) rotate(0)}10%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--r))}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+/* بعد از پخش، حالتِ پایانی می‌ماند */
+.done .flight,.done .old{display:none}
+.done .cap1,.done .nw{opacity:1;animation:none}
+@media (prefers-reduced-motion:reduce){
+  .run .flight,.run .old,.run .ring,.run .fe{display:none}
+  .run .cap1,.run .nw{animation:none;opacity:1}
+}
+
+/* چاپ / PDF: هر اسلاید یک صفحه */
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  html,body{overflow:visible;background:var(--bg)}
+  #stage{position:relative;left:0;top:0;transform:none!important;height:auto;overflow:visible}
+  .sl{position:relative;opacity:1;visibility:visible;transform:none;height:1080px;page-break-after:always;break-after:page}
+  #foot,#prog,.replay{display:none}
+  .splash .flight,.splash .old,.splash .ring,.splash .fe{display:none}
+  .splash .cap1,.splash .nw{opacity:1;animation:none}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+<div id="prog"></div>
+
+<!-- ═══ ۰ · شروع ═══════════════════════════════════════════════════ -->
+<section class="sl splash" data-part="0" id="s-splash">
+  <div class="spl" id="spl">
+    <div class="flight"><div class="bob"><div class="fall">
+      <svg class="bird" viewBox="0 0 49.33 39.99" fill="#D5A45C" aria-label="پرندهٔ نشان"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg>
+    </div></div></div>
+    <div class="ring"></div>
+    <i class="fe" style="--dx:-120px;--dy:300px;--r:-140deg"></i>
+    <i class="fe" style="--dx:90px;--dy:360px;--r:120deg"></i>
+    <i class="fe" style="--dx:-40px;--dy:420px;--r:200deg"></i>
+    <i class="fe" style="--dx:150px;--dy:250px;--r:-80deg"></i>
+    <div class="old"><span>مهاجر<i></i></span></div>
+    <div class="nw">
+      <div class="mk"><svg viewBox="0 0 49.33 39.99" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></div>
+      <h1>آشیانه</h1>
+      <p>ارائهٔ نهایی محصول · از فرضیه تا نسخهٔ <span class="num">5.15</span></p>
+    </div>
+    <div class="cap1"><b>بازخورد شمارهٔ ۱</b> · نامِ «مهاجر» برای کاربران حسِ خوبی نداشت؛ حالا «آشیانه».</div>
+    <div class="replay">R · پخش دوباره</div>
+  </div>
+</section>
+
+<!-- ═══ فهرست ═════════════════════════════════════════════════════ -->
+<section class="sl" data-part="0">
+  <div class="eb">مسیر این ارائه</div>
+  <h2 class="t">سه بخش، چهارده گام</h2>
+  <div class="row grow" style="margin-top:56px;align-items:stretch">
+    <div class="card grow" style="cursor:pointer" onclick="goTo('p1')">
+      <div class="eb">بخش اول</div><h3 style="margin-top:14px">ورودی‌ها و شکل‌گیری محصول</h3>
+      <p>کشف مسئله · یافته‌های مصاحبه · بنچمارک · فرضیهٔ ارزش · نسخهٔ اول</p>
+    </div>
+    <div class="card grow" style="cursor:pointer" onclick="goTo('p2')">
+      <div class="eb">بخش دوم</div><h3 style="margin-top:14px">یادگیری و اصلاح منطق محصول</h3>
+      <p>تست اولیه · تحلیل فاصله · نقدِ پاسخ اولیه · بازتعریف ارزش · اصول تازه</p>
+    </div>
+    <div class="card grow" style="cursor:pointer" onclick="goTo('p3')">
+      <div class="eb">بخش سوم</div><h3 style="margin-top:14px">از استراتژی به تجربهٔ محصول</h3>
+      <p>معماری تجربه · انتقال ارزش · تکامل نسخه‌ها · محصول امروز و آزمون بعد</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ بخش اول ═══════════════════════════════════════════════════ -->
+<section class="sl div alt" data-part="1" id="p1">
+  <div class="n num">01</div>
+  <h2 class="t">ورودی‌ها و شکل‌گیری محصول</h2>
+  <ol>
+    <li><i>۰۱</i>کشف مسئله <span>Problem Discovery</span></li>
+    <li><i>۰۲</i>یافته‌های مصاحبه <span>Customer Insights</span></li>
+    <li><i>۰۳</i>الگوهای موفق جهانی <span>Strategic Benchmarking</span></li>
+    <li><i>۰۴</i>فرضیهٔ ارزش اولیه <span>Initial Value Proposition</span></li>
+    <li><i>۰۵</i>نسخهٔ اول پروتوتایپ <span>Prototype V1</span></li>
+  </ol>
+</section>
+
+<section class="sl" data-part="1">
+  <div class="eb">۰۱ · کشف مسئله <span class="en">Problem Discovery</span></div>
+  <h2 class="t">مسئله، حفظِ اختیارِ مالی است؛<br><span class="gold">نه سودِ بیشتر.</span></h2>
+  <div class="row" style="margin-top:64px">
+    <div class="card grow"><h3>فرسایش ارزش</h3><p>تورم، پس‌اندازِ تومانی را آرام و پیوسته می‌خورد.</p></div>
+    <div class="card grow"><h3>قطع دسترسی</h3><p>تحریم و بحران، راه‌ها را یک‌شبه می‌بندند.</p></div>
+    <div class="card grow"><h3>بی‌اعتمادی به واسطه‌ها</h3><p>صرافی، حواله‌دار، حساب خارجی؛ هر کدام یک ریسکِ تازه.</p></div>
+    <div class="card grow"><h3>نگرانیِ دسترسی</h3><p>«وقتی لازم شد، به پولم می‌رسم؟»</p></div>
+  </div>
+  <div class="grow"></div>
+  <p class="lead" style="margin-top:0">در بحران، آدم‌ها یک <b class="gold">سبدِ بقا و اختیار</b> می‌سازند؛ نه فقط سرمایه‌گذاری.</p>
+  <p class="sm" style="margin-top:10px">فاز یک · ۲۰ مصاحبهٔ عمیق و بنچمارک در ۴ محور</p>
+</section>
+
+<section class="sl" data-part="1">
+  <div class="eb">۰۲ · یافته‌های مصاحبه <span class="en">Customer Insights</span></div>
+  <h2 class="t">کاربران مسیر دارند؛ <span class="gold">سیستم ندارند.</span></h2>
+  <div class="row" style="margin-top:36px;gap:14px;flex-wrap:wrap">
+    <span class="chip">مسیر فیزیکی</span><span class="chip">مسیر انسانی</span><span class="chip">مسیر دیجیتال</span><span class="chip">مسیر خارجی</span><span class="chip">مسیر حقوقی</span>
+    <span class="chip g">هیچ‌کدام به هم وصل نیستند</span>
+  </div>
+  <div class="row" style="margin-top:44px">
+    <div class="card grow"><h3>اعتمادِ امروز، انسانی است؛ نه نهادی.</h3></div>
+    <div class="card grow"><h3>در مبالغ بزرگ، مسئله از «انتقال» به «دفاع‌پذیری» می‌رسد.</h3></div>
+    <div class="card grow"><h3>بخشی از کاربران مشاور نمی‌خواهند؛ اجرا می‌خواهند.</h3></div>
+  </div>
+  <div class="grow"></div>
+  <div class="row" style="align-items:center;gap:20px">
+    <span class="sm">هزینهٔ واقعی فقط کارمزد نیست:</span>
+    <span class="chip">آشکار · نرخ و کارمزد</span><span class="chip">پنهان · زمان و ابهام</span><span class="chip">احساسی · استرس و وابستگی</span>
+  </div>
+  <p class="sm" style="margin-top:14px">بازتعریف فاز یک: از «نبودِ ابزار مالی» به «نبودِ اختیارِ مالیِ طراحی‌شده».</p>
+</section>
+
+<section class="sl" data-part="1">
+  <div class="eb">۰۳ · الگوهای موفق جهانی <span class="en">Strategic Benchmarking</span></div>
+  <h2 class="t md">بازارِ ایران شش «نیمه‌جواب» دارد</h2>
+  <div class="row grow" style="margin-top:40px;gap:40px">
+    <div class="col" style="width:520px">
+      <div class="card"><div class="eb">Revolut · <span class="num">UK · 70M+</span></div><h3 style="margin-top:10px">وِج: یک دردِ فوری و سنجش‌پذیر</h3></div>
+      <div class="card"><div class="eb">Midas · <span class="num">TR · 3.5M</span></div><h3 style="margin-top:10px">اعتماد، پیش از مقیاس</h3></div>
+      <div class="card"><h3>گسترش، بعد از تثبیتِ وِج</h3></div>
+    </div>
+    <div class="grow" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-content:start">
+      <div class="card" style="padding:26px 32px"><h3 style="font-size:30px">صرافی رمزارز</h3><p class="ok" style="font-size:24px">حفظ ارزش و تبدیل</p><p style="font-size:24px">جا می‌ماند: بعد از تبدیل چه؟</p></div>
+      <div class="card" style="padding:26px 32px"><h3 style="font-size:30px">کارت خارجی</h3><p class="ok" style="font-size:24px">خرج‌کردن بیرون</p><p style="font-size:24px">جا می‌ماند: مالکیت با شخص ثالث</p></div>
+      <div class="card" style="padding:26px 32px"><h3 style="font-size:30px">حواله و OTC</h3><p class="ok" style="font-size:24px">سرعت</p><p style="font-size:24px">جا می‌ماند: دفاع‌پذیریِ صفر</p></div>
+      <div class="card" style="padding:26px 32px"><h3 style="font-size:30px">حساب خارجی</h3><p class="ok" style="font-size:24px">دسترسی</p><p style="font-size:24px">جا می‌ماند: خطرِ مسدود شدن</p></div>
+      <div class="card" style="padding:26px 32px"><h3 style="font-size:30px">فین‌تکِ مهاجران</h3><p class="ok" style="font-size:24px">انتقال قانونی</p><p style="font-size:24px">جا می‌ماند: فقط برای خانواده</p></div>
+      <div class="card" style="padding:26px 32px"><h3 style="font-size:30px">مشاور ثروت</h3><p class="ok" style="font-size:24px">راهنمایی</p><p style="font-size:24px">جا می‌ماند: بی‌مقیاس، جدا از اجرا</p></div>
+    </div>
+  </div>
+  <p class="lead" style="margin-top:24px">شکافِ مرکزی: <b class="gold">سرعت × دفاع‌پذیری</b> — و هیچ لایه‌ای کلِ مسیر را به هم وصل نمی‌کند.</p>
+</section>
+
+<section class="sl" data-part="1">
+  <div class="eb">۰۴ · فرضیهٔ ارزش اولیه <span class="en">Initial Value Proposition</span></div>
+  <h2 class="t">«همسفر مالی، <span class="gold">مهاجر</span>»</h2>
+  <p class="lead">یک لایهٔ جابه‌جاییِ ثروت (Wealth Mobility Layer): تومان را دلار کن، نگهش دار، و هر وقت خواستی از آن استفاده کن.</p>
+  <div class="row" style="margin-top:44px;align-items:center;gap:20px">
+    <span class="chip g">حفظ ارزش</span><span class="arrow" style="font-size:32px">+</span>
+    <span class="chip g">اعتماد</span><span class="arrow" style="font-size:32px">+</span>
+    <span class="chip g">نگهداری شخصی</span><span class="arrow" style="font-size:32px">+</span>
+    <span class="chip g">تحویل فیزیکی</span><span class="arrow" style="font-size:32px">+</span>
+    <span class="chip">کاربردپذیریِ حداقلی</span>
+  </div>
+  <div class="row" style="margin-top:44px;gap:18px">
+    <div class="card grow" style="padding:28px 30px"><div class="eb">H1</div><p>حفظ ارزش و قابلِ استفاده ماندن، یک ارزش‌اند</p></div>
+    <div class="card grow" style="padding:28px 30px"><div class="eb">H2</div><p>نرخ روشن + حضانت + خروج = اعتمادِ کافی</p></div>
+    <div class="card grow" style="padding:28px 30px"><div class="eb">H3</div><p>خرید اشتراک، دلیلِ واقعیِ استفاده است</p></div>
+    <div class="card grow" style="padding:28px 30px"><div class="eb">H4</div><p>صندوقِ هدف حسِ کنترل می‌دهد، نه قفل</p></div>
+    <div class="card grow" style="padding:28px 30px"><div class="eb">H5</div><p>انتقال و برداشت، ترسِ گیر کردن را کم می‌کنند</p></div>
+  </div>
+  <div class="grow"></div>
+  <p class="sm">تصمیم دروازهٔ اول: شروع با Mass Affluent، Upper Affluent و High Earners؛ HNWI مقصد است، نه شروع.</p>
+</section>
+
+<section class="sl" data-part="1">
+  <div class="eb">۰۵ · نسخهٔ اول پروتوتایپ <span class="en">Prototype V1</span></div>
+  <h2 class="t md">از فرضیه به محصولی که می‌شود لمسش کرد</h2>
+  <div class="row grow" style="margin-top:36px;align-items:center;justify-content:space-between">
+    <div class="col" style="align-items:center;gap:0">
+      <div class="ph s"><span class="vtag num">v0</span><img src="./deck-assets/v0-home.png" alt="v0 خانه"></div>
+      <p class="cap"><b>پنج مسیرِ سند WS0</b><br>تبدیل · انتقال · اشتراک · صندوق هدف · برداشت</p>
+    </div>
+    <span class="arrow">←</span>
+    <div class="col" style="align-items:center;gap:0">
+      <div class="ph s"><span class="vtag num">v3</span><img src="./deck-assets/v3-invest.png" alt="سه سبد"></div>
+      <p class="cap"><b>سه سبدِ سرمایه‌گذاری</b><br>ترکیبِ هر سبد، پیش از انتخاب</p>
+    </div>
+    <div class="col" style="align-items:center;gap:0">
+      <div class="ph s"><span class="vtag num">v3</span><img src="./deck-assets/v3-map.png" alt="تحویل طلا"></div>
+      <p class="cap"><b>تحویل فیزیکی طلا</b><br>نقشه، صرافی، کد یک‌بارمصرف</p>
+    </div>
+    <div class="col" style="align-items:center;gap:0">
+      <div class="ph s"><span class="vtag num">v3</span><img src="./deck-assets/v3-key.png" alt="کلید"></div>
+      <p class="cap"><b>کلید شخصی</b><br>کلید فقط داخل دستگاه</p>
+    </div>
+  </div>
+  <p class="lead" style="margin-top:20px">دو ایدهٔ بنیان‌گذار در مرکز: <b class="gold">«پولت را بگذار زیر بالشتت»</b> و <b class="gold">«هر وقت خواستی، مالت را عینی کن»</b>.</p>
+</section>
+
+<!-- ═══ بخش دوم ═══════════════════════════════════════════════════ -->
+<section class="sl div alt" data-part="2" id="p2">
+  <div class="n num">02</div>
+  <h2 class="t">یادگیری و اصلاح منطق محصول</h2>
+  <ol>
+    <li><i>۰۶</i>تست اولیه و نتایج آن <span>Initial Testing</span></li>
+    <li><i>۰۷</i>فاصلهٔ ارزش با برداشت کاربر <span>Gap Analysis</span></li>
+    <li><i>۰۸</i>نقدِ پاسخ اولیه <span>Solution Reassessment</span></li>
+    <li><i>۰۹</i>بازتعریف ارزش <span>Strategic Reframing</span></li>
+    <li><i>۱۰</i>اصول طراحیِ تازه <span>Revised Product Principles</span></li>
+  </ol>
+</section>
+
+<section class="sl" data-part="2">
+  <div class="eb">۰۶ · تست اولیه <span class="en">Initial Testing</span></div>
+  <h2 class="t">کار با اپ را بلد بودند؛<br><span class="gold">فهم و اعتماد کم بود.</span></h2>
+  <div class="row grow" style="margin-top:48px;gap:56px">
+    <div class="col" style="width:620px">
+      <div class="eb dim" style="color:var(--ink3)">دور اول · جلسه‌های حضوری</div>
+      <div class="card" style="padding:26px 32px"><h3 style="font-size:30px">«این مگه شارژ حساب نیست؟»</h3><p style="font-size:24px">تبدیل، یک‌طرفه بود و با «شارژ» اشتباه گرفته می‌شد.</p></div>
+      <div class="card" style="padding:26px 32px"><h3 style="font-size:30px">کسی نمی‌دانست «صندوق» چیست.</h3></div>
+      <div class="card" style="padding:26px 32px"><h3 style="font-size:30px">اعتماد، یک نهاد می‌خواست؛ نه قابلیتِ بیشتر.</h3></div>
+    </div>
+    <div class="grow col" style="gap:20px">
+      <div class="eb dim" style="color:var(--ink3)">راندِ از راه دور · نسخهٔ ۴٫۵ · ۶ تا ۱۷ مهر ۱۴۰۵ · ۲۱ جلسه</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:36px 48px;margin-top:10px">
+        <div class="stat"><b class="ok">۱۱ از ۱۲</b><span>تبدیل را خودشان، بدون کمک، تمام کردند</span></div>
+        <div class="stat"><b class="warn">۲ از ۹</b><span>درست می‌دانستند پولشان کجا نگه داشته می‌شود</span></div>
+        <div class="stat"><b class="warn">۲ از ۵</b><span>میانهٔ اعتماد</span></div>
+        <div class="stat"><b class="gold">۷ از ۹</b><span>با این همه، خواستند در جریان بمانند یا در پایلوت باشند</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="sm">با ۸ پاسخِ کامل، این عددها جهت می‌دهند، نه حکم.</p>
+</section>
+
+<section class="sl" data-part="2">
+  <div class="eb">۰۷ · تحلیل فاصله <span class="en">Gap Analysis</span></div>
+  <h2 class="t md">مشکل فقط کاربردپذیری نبود؛ <span class="gold">ارزش و لنگرِ اعتماد منتقل نشد.</span></h2>
+  <div class="row grow" style="margin-top:44px;gap:64px">
+    <div class="grow col" style="gap:26px">
+      <p style="font-size:30px;font-weight:700">«پولی که تبدیل کرده‌اید کجا می‌ماند؟» <span class="dim" style="font-weight:400">· ۹ پاسخ</span></p>
+      <div class="bars">
+        <div class="br"><span>نمی‌دانم</span><div class="tr"><i style="width:100%"></i></div><b class="v">۳</b></div>
+        <div class="br hi"><span>نزد بیت‌وانا <span class="ok">(درست)</span></span><div class="tr"><i style="width:66%"></i></div><b class="v ok">۲</b></div>
+        <div class="br"><span>در کیف پول شخصی خودم</span><div class="tr"><i style="width:66%"></i></div><b class="v">۲</b></div>
+        <div class="br"><span>در حساب بانکی مهاجر</span><div class="tr"><i style="width:66%"></i></div><b class="v">۲</b></div>
+      </div>
+      <div class="row" style="gap:16px;margin-top:6px"><span class="chip">هدف تست: ۷۰٪</span><span class="chip g">نتیجه: ۲۲٪</span></div>
+    </div>
+    <div class="col" style="width:640px;gap:22px">
+      <p style="font-size:30px;font-weight:700">قابلیت‌ها: <span class="dim" style="font-weight:400">باز کردند / تمام کردند</span></p>
+      <div class="fun"><span>انتقال</span><div class="tr"><i class="op" style="width:100%"></i><i class="dn" style="width:56%"></i></div><b class="num">5/9</b></div>
+      <div class="fun"><span>تحویل طلا</span><div class="tr"><i class="op" style="width:89%"></i><i class="dn" style="width:44%"></i></div><b class="num">4/8</b></div>
+      <div class="fun"><span>برداشت</span><div class="tr"><i class="op" style="width:44%"></i><i class="dn" style="width:22%"></i></div><b class="num">2/4</b></div>
+      <div class="fun"><span>سرمایه‌گذاری</span><div class="tr"><i class="op" style="width:100%"></i><i class="dn" style="width:11%"></i></div><b class="num">1/9</b></div>
+      <div class="fun"><span>کیف پول شخصی</span><div class="tr"><i class="op" style="width:44%"></i><i class="dn" style="width:0%"></i></div><b class="num">0/4</b></div>
+    </div>
+  </div>
+  <p class="lead" style="margin-top:20px">۶ از ۱۶ نفر پیش از ورود، اول «امن یعنی چی؟» را باز کردند. <b>صفحهٔ توضیحِ جدا جواب نداد</b>؛ جواب باید همان‌جا باشد که سؤال پیش می‌آید.</p>
+</section>
+
+<section class="sl" data-part="2">
+  <div class="eb">۰۸ · نقدِ پاسخ اولیه <span class="en">Solution Reassessment</span></div>
+  <h2 class="t md">نگهداری شخصی و طلا ریسک را <span class="gold">حذف</span> نمی‌کنند؛ <span class="gold">پخش</span>ش می‌کنند.</h2>
+  <div class="row" style="margin-top:52px;gap:24px">
+    <div class="card grow"><div class="eb">کیف پول شخصی</div><p>هنوز تتر است: مسدودشدنی؛ و ۱۲ کلمه، گم‌شدنی.</p></div>
+    <div class="card grow"><div class="eb">طلای فیزیکی</div><p>دارایی دیگری است؛ در بحران دیر و با کارمزد فروخته می‌شود.</p></div>
+    <div class="card grow"><div class="eb">دلار نقد</div><p>برای کسی که می‌رود شاید تنها گزینه باشد؛ ولی دزدی‌پذیر است.</p></div>
+    <div class="card grow"><div class="eb">نزد یک شرکت</div><p>ساده و بازیابی‌پذیر؛ ولی وابسته به همان یک شرکت.</p></div>
+  </div>
+  <div class="grow"></div>
+  <div class="row" style="gap:24px">
+    <div class="card grow" style="border-color:rgba(224,179,117,.35)"><span class="tag u">تست</span><h3 style="margin-top:12px">۴ نفر کیف پول شخصی را باز کردند؛ هیچ‌کس تمامش نکرد.</h3></div>
+    <div class="card grow" style="border-color:rgba(91,139,208,.35)"><span class="tag r">بازبینی فنی</span><h3 style="margin-top:12px">«حتی به ما اعتماد نکنید» در حالت پایه نادرست بود؛ کلید نزد ما بود.</h3></div>
+  </div>
+</section>
+
+<section class="sl alt" data-part="2" style="justify-content:center">
+  <div class="eb">۰۹ · بازتعریف ارزش <span class="en">Strategic Reframing</span></div>
+  <p style="font-size:48px;color:var(--ink3);margin-top:40px;text-decoration:line-through;text-decoration-thickness:3px">نگهداریِ امنِ پول</p>
+  <h2 class="t" style="font-size:96px;line-height:1.3;margin-top:24px">همهٔ پس‌اندازتان را<br><span class="gold">به یک روش وابسته نکنید.</span></h2>
+  <div class="row" style="margin-top:56px;gap:18px">
+    <span class="chip g">پخش کردنِ روش‌های نگهداری</span>
+    <span class="chip g">کمتر وابسته به یک ریسک</span>
+    <span class="chip g">اختیارِ جابه‌جایی، دستِ کاربر</span>
+  </div>
+  <p class="lead" style="margin-top:48px">«در چند جا نگهش دار؛ اگر یکی خراب شد، بقیه می‌مانند.»</p>
+</section>
+
+<section class="sl" data-part="2">
+  <div class="eb">۱۰ · اصول طراحیِ تازه <span class="en">Revised Product Principles</span></div>
+  <h2 class="t md">چهار اصل، که از تحلیل بیرون آمد</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:44px">
+    <div class="card"><div class="eb">۱</div><h3 style="margin-top:8px">پس‌انداز، هستهٔ محصول است</h3><p>خانه همهٔ پس‌انداز را نشان می‌دهد، هر جا که هست؛ نه فقط موجودیِ ما را.</p></div>
+    <div class="card"><div class="eb">۲</div><h3 style="margin-top:8px">اعتماد از شفافیت می‌آید</h3><p>منبعِ هر عدد پیداست: «تأییدشده» یا «اعلام شما». شریک نام برده می‌شود. هرچه امضا نشده، «در حال بررسی» است.</p></div>
+    <div class="card"><div class="eb">۳</div><h3 style="margin-top:8px">حقِ انتخاب، با کاربر</h3><p>پیشنهاد هست، اجبار نیست. کاربر خودش جای پولش را انتخاب می‌کند.</p></div>
+    <div class="card"><div class="eb">۴</div><h3 style="margin-top:8px">انتقال و سرمایه‌گذاری، مکمل‌اند</h3><p>ابزارهای کنارِ هسته؛ نه خودِ ارزش.</p></div>
+  </div>
+  <div class="grow"></div>
+  <div class="row" style="gap:16px;flex-wrap:wrap">
+    <span class="chip">یک دکمهٔ اصلی در هر صفحه</span><span class="chip">آرام، نه ترسناک</span><span class="chip">زبان ساده؛ تومان، نه ریال</span><span class="chip">ادعای مطلق، ممنوع</span>
+  </div>
+</section>
+
+<!-- ═══ بخش سوم ═══════════════════════════════════════════════════ -->
+<section class="sl div alt" data-part="3" id="p3">
+  <div class="n num">03</div>
+  <h2 class="t">از استراتژی به تجربهٔ محصول</h2>
+  <ol>
+    <li><i>۱۱</i>بازطراحی ساختار تجربه <span>Experience Architecture</span></li>
+    <li><i>۱۲</i>تبدیل ارزش به ادراک کاربر <span>Value Communication</span></li>
+    <li><i>۱۳</i>مسیر تکامل نسخه‌ها <span>Product Evolution</span></li>
+    <li><i>۱۴</i>محصول امروز و آزمون بعد <span>Current Product &amp; Next Validation</span></li>
+  </ol>
+</section>
+
+<section class="sl" data-part="3">
+  <div class="eb">۱۱ · معماری تجربه <span class="en">Experience Architecture</span></div>
+  <h2 class="t md">خانهٔ آرام؛ <span class="gold">جزئیات، یک لمس آن‌طرف‌تر</span></h2>
+  <div class="row grow" style="margin-top:30px;align-items:center;gap:48px">
+    <div class="col" style="align-items:center;gap:0">
+      <div class="ph crop"><span class="vtag num">v5.0</span><img src="./deck-assets/v50-home.png" alt="خانهٔ نسخهٔ ۵٫۰"></div>
+      <p class="cap">همهٔ جزئیات روی خانه</p>
+    </div>
+    <span class="arrow">←</span>
+    <div class="col" style="align-items:center;gap:0">
+      <div class="ph crop"><span class="vtag num">v5.15</span><img src="./deck-assets/v515-home.png" alt="خانهٔ نسخهٔ ۵٫۱۵"></div>
+      <p class="cap">موجودی، سه اقدام؛ همین</p>
+    </div>
+    <div class="grow col" style="gap:16px;margin-right:24px">
+      <div class="card" style="padding:24px 30px"><h3 style="font-size:30px">خانه</h3><p style="font-size:24px">موجودی · واریز، برداشت، محل نگهداری · سبدها و تراکنش‌ها فقط وقتی هست</p></div>
+      <div class="card" style="padding:24px 30px"><h3 style="font-size:30px">نگهداری</h3><p style="font-size:24px">امتیاز چیدمان · جنس و محل · بستهٔ پیشنهادی</p></div>
+      <div class="card" style="padding:24px 30px"><h3 style="font-size:30px">انتقال</h3><p style="font-size:24px">به کاربر آشیانه، یا به صرافی</p></div>
+      <div class="card" style="padding:24px 30px"><h3 style="font-size:30px">خدمات</h3><p style="font-size:24px">طلا · دلار نقد · کیف پول شخصی · مدارک · پشتیبانی</p></div>
+      <p class="sm">الهام: خانهٔ مینیمالِ بلو؛ امن‌سازی، جدا از سرمایه‌گذاری و انتقال.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sl" data-part="3">
+  <div class="eb">۱۲ · تبدیل ارزش به ادراک <span class="en">Value Communication</span></div>
+  <h2 class="t md">یک سیستم برای پخشِ پس‌انداز؛ <span class="gold">نه چند خدمت مالی</span></h2>
+  <div class="row grow" style="margin-top:34px;justify-content:space-between;align-items:flex-start">
+    <div class="col" style="align-items:center;gap:0;width:440px">
+      <div class="ph s crop"><span class="vtag num">v5.2</span><img src="./deck-assets/v52-safe.png" alt="امتیاز از ۱۰۰۰"></div>
+      <p class="cap"><b>امتیاز از ۱۰۰۰ بود؛</b> «۴۰۰» ترسناک بود. حالا از <b>صفر</b> شروع می‌شود و هر قدمِ درست <b>+۱</b>.</p>
+    </div>
+    <div class="col" style="align-items:center;gap:0;width:440px">
+      <div class="ph s crop"><span class="vtag num">v5.10</span><img src="./deck-assets/v510-safe.png" alt="جنس و محل"></div>
+      <p class="cap"><b>دو پارامتر، یک تصویر:</b> جنس (دلار، طلا، تومان) و محل (آشیانه، کیف شخصی، خانه، صرافی).</p>
+    </div>
+    <div class="col" style="align-items:center;gap:0;width:440px">
+      <div class="ph s crop"><span class="vtag num">v5.15</span><img src="./deck-assets/v515-done.png" alt="ورود تعاملی"></div>
+      <p class="cap"><b>اولین لمس، خودِ ارزش است:</b> پول را با یک کشیدن پخش کنید و امتیاز از صفر به +۴ برسد.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sl" data-part="3">
+  <div class="eb">۱۳ · مسیر تکامل · مرداد تا مهر ۱۴۰۵ <span class="en">Product Evolution · v0 → v4.5</span></div>
+  <h2 class="t md">هر نسخه، جوابِ یک چیزی که شنیدیم</h2>
+  <div class="row" style="margin-top:36px;justify-content:space-between">
+    <div class="col" style="align-items:center;gap:0;width:236px"><div class="ph xs crop"><img src="./deck-assets/v0-home.png" alt=""></div><p class="cap"><b class="num">v0</b><br>پنج مسیرِ WS0، کلیک‌پذیر</p></div>
+    <div class="col" style="align-items:center;gap:0;width:236px"><div class="ph xs crop"><img src="./deck-assets/v1-home.png" alt=""></div><p class="cap"><b class="num">v1</b><br>نمای کلی، الگوی بلو</p></div>
+    <div class="col" style="align-items:center;gap:0;width:236px"><div class="ph xs crop"><img src="./deck-assets/v2-convert.png" alt=""></div><p class="cap"><b class="num">v2</b><br>تبدیلِ دوطرفه؛ نشانِ «آزمایشی» حذف شد</p></div>
+    <div class="col" style="align-items:center;gap:0;width:236px"><div class="ph xs crop"><img src="./deck-assets/v3-home.png" alt=""></div><p class="cap"><b class="num">v3</b><br>سرمایه‌گذاری، طلا، کلید؛ صندوق حذف شد</p></div>
+    <div class="col" style="align-items:center;gap:0;width:236px"><div class="ph xs crop"><img src="./deck-assets/v4-home.png" alt=""></div><p class="cap"><b class="num">v4</b><br>بودجهٔ متن؛ سه تب</p></div>
+    <div class="col" style="align-items:center;gap:0;width:236px"><div class="ph xs crop"><img src="./deck-assets/v45-home.png" alt=""></div><p class="cap"><b class="num">v4.5</b><br>کیف پول شخصی؛ توزیع دارایی</p></div>
+  </div>
+  <div class="grow"></div>
+  <div class="row" style="gap:16px;flex-wrap:wrap">
+    <span class="chip">چرا v2؟ «این مگه شارژ حساب نیست؟»</span>
+    <span class="chip">چرا v3؟ دو ایدهٔ بنیان‌گذار باید دیده می‌شد</span>
+    <span class="chip">چرا v4؟ برای شصت‌ساله‌ای که کریپتو نشنیده</span>
+    <span class="chip">چرا v4.5؟ «تو انتخاب می‌کنی پولت کجا باشد» دیده نمی‌شد</span>
+  </div>
+</section>
+
+<section class="sl" data-part="3">
+  <div class="eb">۱۳ · مسیر تکامل · مهر و آبان ۱۴۰۵ <span class="en">Product Evolution · v5.0 → v5.15</span></div>
+  <h2 class="t md">شانزده نسخه، یک جهت: <span class="gold">ساده‌تر، آرام‌تر، روشن‌تر</span></h2>
+  <div class="tl">
+    <div class="it hi"><span class="v">5.0</span><span class="d">نقشهٔ کلِ پس‌انداز؛ بازتعریف</span></div>
+    <div class="it"><span class="v">5.1</span><span class="d">نامِ آشیانه؛ امتیاز امنیت</span></div>
+    <div class="it"><span class="v">5.2</span><span class="d">تب امن‌سازی؛ خانهٔ آرام</span></div>
+    <div class="it"><span class="v">5.3</span><span class="d">یک دکمهٔ اصلی</span></div>
+    <div class="it"><span class="v">5.4</span><span class="d">سه قدم؛ امتیاز از صفر</span></div>
+    <div class="it"><span class="v">5.5</span><span class="d">بستهٔ پیشنهادی</span></div>
+    <div class="it"><span class="v">5.6</span><span class="d">انتخابِ محل، بعد از هر خرید</span></div>
+    <div class="it"><span class="v">5.7</span><span class="d">مدیریت محل نگهداری</span></div>
+  </div>
+  <div class="tl" style="margin-top:30px">
+    <div class="it"><span class="v">5.8</span><span class="d">سبدها و تراکنش‌ها در خانه</span></div>
+    <div class="it hi"><span class="v">5.9</span><span class="d">صفحهٔ ورود، مدارک، قطع اینترنت</span></div>
+    <div class="it hi"><span class="v">5.10</span><span class="d">جنس × محل</span></div>
+    <div class="it"><span class="v">5.11</span><span class="d">«سبد من»؛ خانهٔ ساده‌تر</span></div>
+    <div class="it"><span class="v">5.12</span><span class="d">ثبت پول در دو قدم</span></div>
+    <div class="it"><span class="v">5.13</span><span class="d">ورود در دو صفحه</span></div>
+    <div class="it"><span class="v">5.14</span><span class="d">بازگشتِ واقعی</span></div>
+    <div class="it hi"><span class="v">5.15</span><span class="d">ورودِ تعاملی</span></div>
+  </div>
+  <div class="grow"></div>
+  <div class="row" style="justify-content:space-between">
+    <div class="ph xs crop"><span class="vtag num">5.2</span><img src="./deck-assets/v52-home.png" alt=""></div>
+    <div class="ph xs crop"><span class="vtag num">5.7</span><img src="./deck-assets/v57-mg.png" alt=""></div>
+    <div class="ph xs crop"><span class="vtag num">5.9</span><img src="./deck-assets/v59-sos.png" alt=""></div>
+    <div class="ph xs crop"><span class="vtag num">5.10</span><img src="./deck-assets/v510-edit.png" alt=""></div>
+    <div class="ph xs crop"><span class="vtag num">5.11</span><img src="./deck-assets/v511-hold.png" alt=""></div>
+    <div class="ph xs crop"><span class="vtag num">5.12</span><img src="./deck-assets/v512-pick.png" alt=""></div>
+    <div class="ph xs crop"><span class="vtag num">5.15</span><img src="./deck-assets/v515-intro.png" alt=""></div>
+  </div>
+</section>
+
+<section class="sl" data-part="3">
+  <div class="eb">۱۳ · بازخورد ← تغییر <span class="en">What we heard, what we changed</span></div>
+  <h2 class="t md">تست، محصول را عوض کرد</h2>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:40px">
+    <div class="card" style="padding:26px 28px"><span class="tag u">کاربران</span><h3 style="font-size:28px;margin-top:12px">«مهاجر» حسِ خوبی نداشت</h3><p style="font-size:24px">← نامِ «آشیانه» <span class="num dim">v5.1</span></p></div>
+    <div class="card" style="padding:26px 28px"><span class="tag u">تست</span><h3 style="font-size:28px;margin-top:12px">«این مگه شارژ حساب نیست؟»</h3><p style="font-size:24px">← یک تبدیل، دوطرفه <span class="num dim">v2</span></p></div>
+    <div class="card" style="padding:26px 28px"><span class="tag u">تست</span><h3 style="font-size:28px;margin-top:12px">«صندوق» یعنی جعبهٔ قفل‌دار</h3><p style="font-size:24px">← صندوق‌ها حذف شدند <span class="num dim">v3</span></p></div>
+    <div class="card" style="padding:26px 28px"><span class="tag u">تست</span><h3 style="font-size:28px;margin-top:12px">اعتماد، نهاد می‌خواست</h3><p style="font-size:24px">← پشتوانه، سپس «مدارک و مجوزها» <span class="num dim">v2 · v5.9</span></p></div>
+    <div class="card" style="padding:26px 28px"><span class="tag r">بازبینی فنی</span><h3 style="font-size:28px;margin-top:12px">«حتی به ما» نادرست بود</h3><p style="font-size:24px">← هر جملهٔ حضانت از حالتِ واقعی ساخته می‌شود <span class="num dim">v3</span></p></div>
+    <div class="card" style="padding:26px 28px"><span class="tag u">تست</span><h3 style="font-size:28px;margin-top:12px">فقط ۲ از ۹ می‌دانستند پول کجاست</h3><p style="font-size:24px">← جواب روی خودِ خانه؛ بیت‌وانا با نام <span class="num dim">v5.0</span></p></div>
+    <div class="card" style="padding:26px 28px"><span class="tag f">بازبینی محصول</span><h3 style="font-size:28px;margin-top:12px">«۴۰۰ از ۱۰۰۰» ترسناک بود</h3><p style="font-size:24px">← امتیاز از صفر، با +۱ <span class="num dim">v5.4</span></p></div>
+    <div class="card" style="padding:26px 28px"><span class="tag f">بازبینی محصول</span><h3 style="font-size:28px;margin-top:12px">خانه شلوغ بود</h3><p style="font-size:24px">← جزئیات یک لمس عمیق‌تر <span class="dim"><span class="num">v5.1</span> تا <span class="num">v5.11</span></span></p></div>
+  </div>
+  <div class="grow"></div>
+  <p class="sm">برچسب‌ها: <span class="tag u">تست</span> یافتهٔ جلسه‌های کاربر · <span class="tag r">بازبینی فنی</span> و <span class="tag f">بازبینی محصول</span> نقدِ تیم پس از بررسیِ نسخه</p>
+</section>
+
+<section class="sl" data-part="3">
+  <div class="eb">۱۴ · محصول امروز <span class="en">Current Product · v5.15</span></div>
+  <h2 class="t md">آشیانه امروز</h2>
+  <div class="row grow" style="margin-top:30px;gap:28px;align-items:flex-start">
+    <div class="ph crop" style="width:280px"><img src="./deck-assets/v515-home.png" alt="خانه"></div>
+    <div class="ph crop" style="width:280px"><img src="./deck-assets/v510-edit.png" alt="تغییر ترکیب"></div>
+    <div class="ph crop" style="width:280px"><img src="./deck-assets/v511-hold.png" alt="سبد من"></div>
+    <div class="grow col" style="gap:12px">
+      <div class="card" style="padding:22px 28px"><h3 style="font-size:28px">حساب دلاری</h3><p style="font-size:24px;margin-top:4px">تبدیل، انتقال به کاربر یا صرافی، برداشت</p></div>
+      <div class="card" style="padding:22px 28px"><h3 style="font-size:28px">نقشهٔ کلِ پس‌انداز</h3><p style="font-size:24px;margin-top:4px">جنس × محل · ثبت پولِ جای دیگر</p></div>
+      <div class="card" style="padding:22px 28px"><h3 style="font-size:28px">امتیاز چیدمان</h3><p style="font-size:24px;margin-top:4px">بستهٔ پیشنهادی · برنامهٔ جابه‌جایی</p></div>
+      <div class="card" style="padding:22px 28px"><h3 style="font-size:28px">چند شکلِ نگهداری</h3><p style="font-size:24px;margin-top:4px">طلا و دلار نقد حضوری · کیف پول شخصی · سبدها</p></div>
+      <div class="card" style="padding:22px 28px"><h3 style="font-size:28px">برای روزِ بد</h3><p style="font-size:24px;margin-top:4px">حالت قطع اینترنت · پشتیبانی با تکان دادن · مدارک</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sl" data-part="3">
+  <div class="eb">۱۴ · آزمون بعد <span class="en">Next Validation</span></div>
+  <h2 class="t md">چه تثبیت شد، چه هنوز باید ثابت شود</h2>
+  <div class="row grow" style="margin-top:40px;gap:36px">
+    <div class="col" style="width:620px;gap:16px">
+      <div class="eb ok" style="color:var(--ok)">تثبیت‌شده</div>
+      <div class="card" style="padding:22px 30px"><p style="margin:0;color:var(--ink)">پس‌انداز در مرکز؛ پخش، به‌جای امن‌سازیِ یک‌جا</p></div>
+      <div class="card" style="padding:22px 30px"><p style="margin:0;color:var(--ink)">اعتماد با شفافیت: منبعِ هر عدد، نامِ شریک، مدارک</p></div>
+      <div class="card" style="padding:22px 30px"><p style="margin:0;color:var(--ink)">خانهٔ آرام؛ یک دکمهٔ اصلی در هر صفحه</p></div>
+      <div class="card" style="padding:22px 30px"><p style="margin:0;color:var(--ink)">زبان ساده، تومان؛ و نامِ «آشیانه»</p></div>
+    </div>
+    <div class="grow col" style="gap:16px">
+      <div class="eb">باید اعتبارسنجی شود</div>
+      <div class="card" style="padding:22px 30px"><h3 style="font-size:28px">ارزش</h3><p style="font-size:24px;margin-top:4px">آیا «پخش کردن» برای کاربر ارزشی روشن است؟ هدف: ۷۰٪ پاسخِ درست به «پول کجاست».</p></div>
+      <div class="card" style="padding:22px 30px"><h3 style="font-size:28px">مخاطبِ اصلی</h3><p style="font-size:24px;margin-top:4px">پس‌اندازِ بانکی و بالای ۴۵ سال، در راند اول تقریباً نبودند.</p></div>
+      <div class="card" style="padding:22px 30px"><h3 style="font-size:28px">اعتماد و قیمت</h3><p style="font-size:24px;margin-top:4px">مجوز، رابطهٔ روشن با بیت‌وانا، «۵ دلار امتحان»؛ و کارمزد، که هنوز کسی درباره‌اش نگفته.</p></div>
+      <div class="card" style="padding:22px 30px"><h3 style="font-size:28px">عددهای پیش‌نویس</h3><p style="font-size:24px;margin-top:4px">کارمزدها، ترکیبِ بسته‌ها، آستانهٔ امتیاز: منتظرِ تأیید تیم.</p></div>
+    </div>
+  </div>
+  <p class="sm" style="margin-top:18px">راندِ بعد: نسخهٔ ۵٫۱۵، با لینک جدا برای هر کانالِ مخاطبِ هدف.</p>
+</section>
+
+<section class="sl alt" data-part="3" style="justify-content:center;align-items:center;text-align:center">
+  <div style="width:150px;height:150px;border-radius:40px;background:#1B1F25;border:1px solid #2A2F36;display:grid;place-items:center">
+    <svg viewBox="0 0 49.33 39.99" fill="#D5A45C" style="width:84px;height:84px"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg>
+  </div>
+  <h2 class="t" style="font-size:110px;margin-top:40px">آشیانه</h2>
+  <p class="lead" style="margin-top:20px;max-width:none">پس‌اندازتان را دلاری کنید؛ <span class="gold">همه‌اش را به یک جا نسپارید.</span></p>
+</section>
+
+<div id="foot">
+  <div class="brand"><svg viewBox="0 0 49.33 39.99" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg><span id="part"></span></div>
+  <span id="cnt"></span>
+</div>
+</div>
+
+<script>
+/* بخش‌ها — برای افزودنِ ارائهٔ تیم‌های دیگر، یک خط اضافه کنید و اسلایدهایشان را با data-part همان عدد بگذارید */
+const PARTS={
+  0:'آشیانه · ارائهٔ نهایی محصول',
+  1:'بخش اول · ورودی‌ها و شکل‌گیری محصول',
+  2:'بخش دوم · یادگیری و اصلاح منطق محصول',
+  3:'بخش سوم · از استراتژی به تجربهٔ محصول'
+};
+const stage=document.getElementById('stage'), slides=[...document.querySelectorAll('.sl')];
+const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+let cur=0, splashT=null;
+function fit(){ const s=Math.min(innerWidth/1920,innerHeight/1080); stage.style.transform=`translate(-50%,-50%) scale(${s})`; }
+addEventListener('resize',fit); fit();
+function playSplash(){
+  const sp=document.getElementById('spl'); clearTimeout(splashT);
+  sp.classList.remove('run','done'); void sp.offsetWidth; sp.classList.add('run');
+  splashT=setTimeout(()=>{ sp.classList.remove('run'); sp.classList.add('done'); },5200);
+}
+function show(i){
+  i=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('on',k===i)); cur=i;
+  const s=slides[i];
+  document.getElementById('cnt').textContent=fa(i+1)+' / '+fa(slides.length);
+  document.getElementById('part').textContent=PARTS[s.dataset.part]||'';
+  document.getElementById('prog').style.width=((i+1)/slides.length*100)+'%';
+  stage.classList.toggle('splash-on',s.classList.contains('splash'));
+  if(s.classList.contains('splash')) playSplash();
+  history.replaceState(null,'','#'+(i+1));
+}
+function step(d){ show(cur+d); }
+function goTo(id){ const k=slides.findIndex(s=>s.id===id); if(k>=0) show(k); }
+/* راست‌به‌چپ: «بعدی» کلیدی است که به جهتِ خواندن اشاره می‌کند (چپ) */
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'||e.key===' '||e.key==='PageDown'||e.key==='Enter'||e.key==='ArrowDown'){ e.preventDefault(); step(1); }
+  else if(e.key==='ArrowRight'||e.key==='PageUp'||e.key==='Backspace'||e.key==='ArrowUp'){ e.preventDefault(); step(-1); }
+  else if(e.key==='Home') show(0); else if(e.key==='End') show(slides.length-1);
+  else if(e.key==='r'||e.key==='R'||e.key==='ق'){ if(slides[cur].classList.contains('splash')) playSplash(); }
+  else if(e.key==='p'||e.key==='P'||e.key==='ح') print();
+});
+stage.addEventListener('click',e=>{ if(e.target.closest('[onclick],a,button')) return; step(e.shiftKey?-1:1); });
+let tx=null; addEventListener('touchstart',e=>{ tx=e.touches[0].clientX; },{passive:true});
+addEventListener('touchend',e=>{ if(tx===null) return; const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>60) step(dx>0?1:-1); tx=null; });
+show(Math.max(0,(parseInt(location.hash.slice(1),10)||1)-1));
+</script>
+</body>
+</html>
