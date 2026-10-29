@@ -4,8 +4,9 @@
   ─────────────────────────────────────────────────────────────────────
   هر اسلاید یک <section class="sl" data-part="N">. ترتیب در فایل = ترتیب در ارائه.
   افزودنِ بخشِ تیم‌های دیگر:
-    ۱. یک خط به جدول PARTS (پایینِ فایل) اضافه کنید، مثلاً 4: 'بخش چهارم · …'.
-    ۲. اسلایدهایشان را با data-part="4" هر جای فایل بگذارید.
+    ۱. یک خط به جدول PARTS (پایینِ فایل) اضافه کنید، مثلاً 5: 'بخش پنجم · …'.
+    ۲. اسلایدهایشان را با data-part="5" هر جای فایل بگذارید.
+  تمِ روشن: رنگ‌ها فقط در :root. بخشِ ۴ (آزمون مجازی) شبیه‌سازی است و باید همین برچسب را داشته باشد.
   روایت (Duarte · sparkline): تا «نقطهٔ چرخش» (#s-pivot) تأکید نقره‌ای است —
   «آنچه هست». از آن‌جا طلا می‌آید و می‌ماند — «آنچه می‌تواند باشد».
   کلیدها: ← یا فاصله = بعدی · → = قبلی · R = پخش دوبارهٔ حرکت · P = چاپ/PDF
@@ -17,6 +18,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>آشیانه · ارائهٔ نهایی محصول</title>
 <meta name="robots" content="noindex">
+<link rel="icon" href="./icons/icon-192.png">
 <style>
 @font-face{font-family:Dana;src:url('./fonts/Dana-Light.woff2') format('woff2');font-weight:300;font-display:swap}
 @font-face{font-family:Dana;src:url('./fonts/Dana-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
@@ -24,14 +26,15 @@
 @font-face{font-family:Dana;src:url('./fonts/Dana-DemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
 @font-face{font-family:Dana;src:url('./fonts/Dana-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
 :root{
-  --bg:#0C0E11; --bg2:#101318; --sf:#14171C; --sf2:#1A1E24; --ln:#242930;
-  --ink:#F2F3F4; --ink2:#B7BDC5; --ink3:#7F8790;
-  --gold:#D5A45C; --gold2:#E9C58C; --silver:#AEB9C7;
-  --ok:#4FBF95; --warn:#E0B375;
-  --c-ash:#3D6FB6; --c-self:#7458B8; --c-gold:#D5A45C; --c-cash:#2F9E78;
+  --bg:#F6F4EF; --bg2:#EEEBE4; --sf:#FFFFFF; --sf2:#ECE8E1; --ln:#E0DCD3;
+  --ink:#15181C; --ink2:#4A4F57; --ink3:#878C93;
+  --gold:#A9721F; --gold2:#8F5F18; --silver:#53647A;
+  --ok:#1C8460; --warn:#C25339;
+  --c-ash:#3D6FB6; --c-self:#7458B8; --c-gold:#C99A4E; --c-cash:#2F9E78;
+  --shadow:0 1px 2px rgba(21,24,28,.04),0 10px 28px -18px rgba(21,24,28,.22);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#07080A;overflow:hidden}
+html,body{height:100%;background:#E7E4DD;overflow:hidden}
 body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;font-kerning:normal}
 .num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
 .en{direction:ltr;unicode-bidi:isolate}
@@ -63,21 +66,23 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 .col{display:flex;flex-direction:column;gap:24px}
 .mt56{margin-top:56px} .mt40{margin-top:40px} .mt24{margin-top:24px}
 
-.card{background:var(--sf);border:1px solid var(--ln);border-radius:24px;padding:32px 36px}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:24px;padding:32px 36px;box-shadow:var(--shadow)}
 .card h3{font-size:32px;font-weight:500;line-height:1.45}
 .card p{font-size:26px;font-weight:300;color:var(--ink2);line-height:1.75;margin-top:8px}
 .chip{display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 24px;border-radius:99px;background:var(--sf2);border:1px solid var(--ln);font-size:24px;line-height:1;color:var(--ink2);white-space:nowrap}
 .chip.a{background:color-mix(in srgb,var(--acc) 12%,transparent);border-color:color-mix(in srgb,var(--acc) 38%,transparent);color:var(--acc)}
 .tag{display:inline-block;font-size:20px;font-weight:500;line-height:1.6;padding:2px 14px;border-radius:99px}
-.tag.u{background:rgba(79,191,149,.14);color:var(--ok)}
-.tag.r{background:rgba(91,139,208,.16);color:#8FB2E6}
-.tag.f{background:rgba(213,164,92,.14);color:var(--gold2)}
+.tag.u{background:rgba(28,132,96,.11);color:var(--ok)}
+.tag.r{background:rgba(61,111,182,.11);color:#2F5E9E}
+.tag.f{background:rgba(169,114,31,.11);color:var(--gold2)}
+.tag.x{background:color-mix(in srgb,var(--warn) 11%,transparent);color:var(--warn)}
+.tag.n{background:var(--sf2);color:var(--ink2)}
 .dot{display:inline-block;width:12px;height:12px;border-radius:50%;flex:none}
 
 /* گوشی با نسبت واقعی ۳۹۰×۸۴۴ */
 .ph{--w:300px;position:relative;width:var(--w);flex:none;padding:calc(var(--w)*.032);border-radius:calc(var(--w)*.165);
   background:linear-gradient(150deg,#323843 0%,#181B20 38%,#0A0C0E 100%);
-  box-shadow:inset 0 0 0 1.5px #3B414B,inset 0 0 0 calc(var(--w)*.012) #0A0C0E,0 40px 80px -34px rgba(0,0,0,.9)}
+  box-shadow:inset 0 0 0 1.5px #3B414B,inset 0 0 0 calc(var(--w)*.012) #0A0C0E,0 36px 70px -38px rgba(21,24,28,.6)}
 .ph img{display:block;width:100%;aspect-ratio:390/844;object-fit:cover;object-position:top;border-radius:calc(var(--w)*.135);background:#0C0E11}
 .ph:after{content:'';position:absolute;top:calc(var(--w)*.062);left:50%;transform:translateX(-50%);width:calc(var(--w)*.27);height:calc(var(--w)*.074);border-radius:99px;background:#030405}
 .pw{display:flex;flex-direction:column;align-items:center}
@@ -91,6 +96,8 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 .div .n{font-size:200px;font-weight:300;color:transparent;-webkit-text-stroke:1.5px color-mix(in srgb,var(--acc) 70%,transparent);line-height:1}
 .div .t{font-size:80px;margin-top:16px}
 .div ol{list-style:none;margin-top:48px;display:flex;flex-direction:column;gap:16px}
+.div ol.two{display:grid;grid-template-columns:1fr 1fr;gap:18px 64px}
+.div .note{margin-top:40px}
 .div li{font-size:30px;font-weight:300;color:var(--ink2);display:flex;gap:20px;align-items:baseline;line-height:1.5}
 .div li i{font-style:normal;color:var(--acc);font-weight:500;min-width:56px}
 .div li span{color:var(--ink3);font-size:22px}
@@ -106,7 +113,7 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 
 /* ۰۱ · مسئله */
 .forces{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:64px}
-.force{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 24px 36px;border-radius:28px;background:var(--sf);border:1px solid var(--ln)}
+.force{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 24px 36px;border-radius:28px;background:var(--sf);border:1px solid var(--ln);box-shadow:var(--shadow)}
 .force svg{width:132px;height:132px;color:var(--acc)}
 .force h3{font-size:36px;font-weight:500;margin-top:24px;line-height:1.4}
 .force p{font-size:24px;font-weight:300;color:var(--ink2);margin-top:8px;line-height:1.6}
@@ -140,7 +147,7 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 
 /* ۰۳ · نیمه‌جواب‌ها */
 .halves{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
-.half{display:flex;align-items:center;gap:28px;padding:28px 32px;border-radius:24px;background:var(--sf);border:1px solid var(--ln)}
+.half{display:flex;align-items:center;gap:28px;padding:28px 32px;border-radius:24px;background:var(--sf);border:1px solid var(--ln);box-shadow:var(--shadow)}
 .half svg{width:96px;height:96px;flex:none;transform:rotate(-90deg)}
 .half .tk{fill:none;stroke:var(--sf2);stroke-width:10}
 .half .hf{fill:none;stroke:var(--acc);stroke-width:10;stroke-linecap:round;stroke-dasharray:125.7 251.3}
@@ -185,22 +192,22 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 .bars{display:flex;flex-direction:column;gap:20px}
 .br{display:grid;grid-template-columns:330px 1fr 64px;align-items:center;gap:24px;font-size:26px;font-weight:300;line-height:1.4}
 .br .tr{height:36px;background:var(--sf2);border-radius:10px;overflow:hidden}
-.br .tr i{display:block;height:100%;width:0;border-radius:10px;background:#3A4049;transition:width 1.1s cubic-bezier(.2,.8,.2,1);transition-delay:calc(500ms + var(--i,0)*110ms)}
+.br .tr i{display:block;height:100%;width:0;border-radius:10px;background:#BDB7AC;transition:width 1.1s cubic-bezier(.2,.8,.2,1);transition-delay:calc(500ms + var(--i,0)*110ms)}
 .sl.on .br .tr i{width:var(--w)}
 .br.hi .tr i{background:var(--ok)}
 .br .v{font-weight:500;font-size:30px}
 .fun{display:grid;grid-template-columns:240px 1fr 80px;align-items:center;gap:24px;font-size:26px;font-weight:300}
 .fun .tr{position:relative;height:36px;background:var(--sf2);border-radius:10px;overflow:hidden}
 .fun .op,.fun .dn{position:absolute;inset:0 0 0 auto;width:0;border-radius:10px;transition:width 1.1s cubic-bezier(.2,.8,.2,1);transition-delay:calc(500ms + var(--i,0)*110ms)}
-.fun .op{background:#2D333B} .fun .dn{background:var(--acc);transition-delay:calc(1000ms + var(--i,0)*110ms)}
+.fun .op{background:#DCD6CB} .fun .dn{background:var(--acc);transition-delay:calc(1000ms + var(--i,0)*110ms)}
 .sl.on .fun .op,.sl.on .fun .dn{width:var(--w)}
 
 /* ۰۸ · هر روش، ریسکِ خودش */
 .methods{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:56px}
-.mth{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:44px 24px 36px;border-radius:28px;background:var(--sf);border:1px solid var(--ln)}
+.mth{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:44px 24px 36px;border-radius:28px;background:var(--sf);border:1px solid var(--ln);box-shadow:var(--shadow)}
 .mth svg{width:112px;height:112px;color:var(--ink2)}
 .mth h3{font-size:32px;font-weight:500;margin-top:24px;line-height:1.4}
-.mth .rk{margin-top:20px;display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;border-radius:99px;background:rgba(224,179,117,.12);border:1px solid rgba(224,179,117,.35);color:var(--warn);font-size:23px;white-space:nowrap}
+.mth .rk{margin-top:20px;display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;border-radius:99px;background:color-mix(in srgb,var(--warn) 9%,transparent);border:1px solid color-mix(in srgb,var(--warn) 32%,transparent);color:var(--warn);font-size:23px;white-space:nowrap}
 .sl.on .mth .rk{animation:pop .6s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(1300ms + var(--i,0)*220ms)}
 
 /* خط زمان */
@@ -213,20 +220,24 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 .tl .d{font-size:23px;font-weight:300;color:var(--ink2);line-height:1.55}
 
 /* ═══ شروع: پرنده ═══ */
-.splash{padding:0;justify-content:center;align-items:center;background:radial-gradient(ellipse at 50% 45%,#16191F 0%,#0C0E11 62%)}
+.splash{padding:0;justify-content:center;align-items:center;background:radial-gradient(ellipse at 50% 42%,#FFFFFF 0%,#F6F4EF 64%)}
 .spl{position:relative;width:1920px;height:1080px}
 .flight,.bob,.fall{position:absolute}
 .flight{left:880px;top:330px;width:160px;height:130px}
-.bird{width:160px;height:130px;filter:drop-shadow(0 10px 30px rgba(213,164,92,.35))}
+.bird{width:160px;height:130px;filter:drop-shadow(0 10px 26px rgba(169,114,31,.28))}
 .old{position:absolute;left:0;right:0;top:520px;text-align:center;font-size:120px;font-weight:600;color:var(--ink);opacity:0}
 .old span{position:relative;display:inline-block}
 .old i{position:absolute;right:-12px;top:52%;height:8px;width:0;background:var(--gold);border-radius:6px}
 .ring0{position:absolute;left:910px;top:345px;width:100px;height:100px;border-radius:50%;border:3px solid var(--gold2);opacity:0}
-.fe{position:absolute;left:955px;top:390px;width:14px;height:34px;border-radius:50% 50% 50% 50%/70% 70% 30% 30%;background:var(--gold);opacity:0}
+/* پَر پَر شدن: هر پر سه لایه دارد — پرتاب (i)، افتادن (b)، تاب خوردن مثل پاندول (s) */
+.fx{position:absolute;left:960px;top:395px;width:0;height:0;pointer-events:none}
+.fx>i{position:absolute;left:0;top:0;opacity:0}
+.fx b,.fx s{display:block}
+.fx svg{display:block;width:var(--sz);height:calc(var(--sz)*3);margin:calc(var(--sz)*-1.5) 0 0 calc(var(--sz)*-.5);overflow:visible}
 .cap1{position:absolute;left:0;right:0;top:820px;text-align:center;font-size:30px;font-weight:300;color:var(--ink2);opacity:0}
 .cap1 b{color:var(--gold2);font-weight:500}
 .nw{position:absolute;left:0;right:0;top:300px;display:flex;flex-direction:column;align-items:center;gap:32px;opacity:0}
-.mk{width:150px;height:150px;border-radius:40px;background:#1B1F25;border:1px solid #2A2F36;display:grid;place-items:center;box-shadow:0 20px 50px -18px rgba(0,0,0,.8)}
+.mk{width:150px;height:150px;border-radius:40px;background:#FFFFFF;border:1px solid var(--ln);display:grid;place-items:center;box-shadow:0 20px 50px -26px rgba(21,24,28,.4)}
 .mk svg{width:84px;height:84px}
 .nw h1{font-size:150px;font-weight:600;line-height:1.1}
 .nw p{font-size:34px;font-weight:300;color:var(--ink2)}
@@ -236,7 +247,9 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 .run .old{animation:oldIn .6s ease .35s both, oldOut .7s ease-in 2.25s both}
 .run .old i{animation:strike .35s ease-out 1.8s both}
 .run .ring0{animation:ringFx .55s ease-out 1.62s both}
-.run .fe{animation:feather 1.9s ease-out 1.66s both}
+.run .fx>i{animation:fBurst .65s cubic-bezier(.12,.85,.3,1) 1.64s both}
+.run .fx b{animation:fDrop var(--fd) cubic-bezier(.32,.04,.6,1) 2.05s both}
+.run .fx s{animation:fSway var(--sw) ease-in-out 1.9s infinite alternate both}
 .run .cap1{animation:fadeUp .7s ease 3.0s both}
 .run .nw{animation:fadeUp .9s cubic-bezier(.2,.8,.2,1) 3.75s both}
 @keyframes fly{from{transform:translate(-1150px,140px) rotate(8deg)}to{transform:none}}
@@ -246,9 +259,11 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 @keyframes oldOut{from{opacity:1;transform:none;filter:none}to{opacity:0;transform:translateY(40px);filter:blur(4px)}}
 @keyframes strike{from{width:0}to{width:calc(100% + 24px)}}
 @keyframes ringFx{from{opacity:1;transform:scale(.3)}to{opacity:0;transform:scale(2.4)}}
-@keyframes feather{0%{opacity:0;transform:translate(0,0) rotate(0)}10%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--r))}}
+@keyframes fBurst{0%{opacity:0;transform:translate(0,0) scale(.3)}22%{opacity:1}100%{opacity:1;transform:translate(var(--bx),var(--by)) scale(1)}}
+@keyframes fDrop{0%{transform:none;opacity:1}82%{opacity:1}100%{transform:translateY(var(--fy));opacity:0}}
+@keyframes fSway{from{transform:translateX(calc(var(--sa)*-1)) rotate(calc(var(--br) - 28deg))}to{transform:translateX(var(--sa)) rotate(calc(var(--br) + 28deg))}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
-.done .flight,.done .old{display:none}
+.done .flight,.done .old,.done .fx{display:none}
 .done .cap1,.done .nw{opacity:1;animation:none}
 
 /* ═══ نقطهٔ چرخش · بزرگ، وسط، آرام ═════════════════════════════════
@@ -257,11 +272,11 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
    ۶٫۴: گاوصندوق می‌رود؛ چهار جا می‌آیند؛ سکه‌ها آرام پخش می‌شوند. ۸٫۶: طلا. مکث.
    ۹٫۶: همه بالا می‌روند و جمله، وسط، بالا می‌آید. */
 .pivot{padding:128px}
-.pivot:before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%,rgba(213,164,92,.17),transparent 62%);opacity:0;transition:opacity 1.6s ease}
+.pivot:before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%,rgba(169,114,31,.13),transparent 62%);opacity:0;transition:opacity 1.6s ease}
 .pivot.post:before{opacity:1}
 .pivot .eb{justify-content:center}
 .pv{position:absolute;left:128px;right:128px;top:300px;height:420px}
-.vault{position:absolute;left:532px;top:0;width:600px;height:400px;border-radius:44px;border:3px solid #3E4550;background:linear-gradient(180deg,#171A20,#121418);box-shadow:0 40px 90px -40px rgba(0,0,0,.9);opacity:0}
+.vault{position:absolute;left:532px;top:0;width:600px;height:400px;border-radius:44px;border:3px solid #CDC7BC;background:linear-gradient(180deg,#FFFFFF,#F1EEE8);box-shadow:0 40px 90px -46px rgba(21,24,28,.5);opacity:0}
 .vault .vl{position:absolute;left:0;right:0;top:60px;text-align:center;font-size:48px;font-weight:500;color:var(--ink)}
 .vault .vl span{position:relative;display:inline-block}
 .vault .vl i{position:absolute;right:-16px;top:55%;height:5px;width:0;background:var(--warn);border-radius:3px}
@@ -271,7 +286,7 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 .tg{position:absolute;top:30px;width:376px;height:330px;border-radius:40px;border:2px solid color-mix(in srgb,var(--c) 55%,transparent);background:color-mix(in srgb,var(--c) 10%,var(--sf));opacity:0}
 .tg b{position:absolute;left:0;right:0;top:44px;text-align:center;font-size:40px;font-weight:500;color:var(--ink)}
 .tg1{left:1288px;--c:var(--c-ash)} .tg2{left:859px;--c:var(--c-self)} .tg3{left:429px;--c:var(--c-gold)} .tg4{left:0;--c:var(--c-cash)}
-.coin{position:absolute;top:262px;width:92px;height:92px;margin:-46px 0 0 -46px;border-radius:50%;background:#9AA3AE;box-shadow:inset 0 -6px 0 rgba(0,0,0,.28),0 10px 24px -8px rgba(0,0,0,.7);opacity:0}
+.coin{position:absolute;top:262px;width:92px;height:92px;margin:-46px 0 0 -46px;border-radius:50%;background:#9AA3AE;box-shadow:inset 0 -6px 0 rgba(0,0,0,.16),0 10px 24px -10px rgba(21,24,28,.45);opacity:0}
 .c1{left:1040px;--tx:392px;--to:var(--c-ash)} .c2{left:936px;--tx:592px;--to:var(--c-ash)} .c3{left:832px;--tx:215px;--to:var(--c-self)}
 .c4{left:728px;--tx:-111px;--to:var(--c-gold)} .c5{left:624px;--tx:-436px;--to:var(--c-cash)}
 .c1,.c2,.c3,.c4,.c5{--ty:-2px}
@@ -311,10 +326,199 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 .pdone .tg,.pdone .pv-h span,.pdone .pv-chips .chip,.pdone .pv-q{opacity:1;transform:none;animation:none}
 .pdone .coin{opacity:1;animation:none;transform:translate(var(--tx),var(--ty));background:var(--to)}
 
+
+/* ═══ پاس ۴ · بخش تست، اعتماد، محصول و آزمون مجازی ═══ */
+.bad{color:var(--warn)}
+.panel{background:var(--sf);border:1px solid var(--ln);border-radius:28px;padding:32px 36px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.pn-k{font-size:24px;font-weight:500;color:var(--ink3);line-height:1.4}
+.big{font-size:112px;font-weight:300;line-height:1.05;margin-top:8px}
+.big small{font-size:34px;font-weight:300;color:var(--ink3);margin-right:14px}
+.pcap{font-size:23px;font-weight:300;color:var(--ink2);line-height:1.6}
+.pcap b{font-weight:500;color:var(--ink)}
+.lg-dot{display:inline-flex;align-items:center;gap:10px;font-size:22px;color:var(--ink3)}
+.lg-dot i{width:16px;height:16px;border-radius:50%;display:inline-block}
+
+/* قیف جلسه‌ها */
+.fnl{display:flex;align-items:flex-end;gap:20px;height:100%}
+.fnl .st{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.fnl .n{font-size:60px;font-weight:300;line-height:1;margin-bottom:14px}
+.fnl .bar{width:100%;height:0;border-radius:16px 16px 6px 6px;background:color-mix(in srgb,var(--acc) 26%,var(--sf));transition:height 1.2s cubic-bezier(.2,.8,.2,1);transition-delay:calc(450ms + var(--i,0)*150ms)}
+.fnl .st.k .bar{background:var(--acc)}
+.sl.on .fnl .bar{height:var(--h)}
+.fnl p{font-size:23px;font-weight:300;color:var(--ink2);margin-top:16px;text-align:center;line-height:1.45;height:68px}
+.aud{display:flex;flex-direction:column;gap:0}
+.aud div{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:15px 0;border-bottom:1px solid var(--ln);font-size:24px;font-weight:300;color:var(--ink2)}
+.aud div:last-child{border:0}
+.aud b{font-size:28px;font-weight:500;color:var(--ink);white-space:nowrap}
+
+/* هیستوگرام اعتماد */
+.hist{display:flex;align-items:flex-end;gap:14px;height:210px;margin-top:20px}
+.hist .c{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.hist .c b{font-size:28px;font-weight:500;margin-bottom:8px}
+.hist .c i{display:block;width:100%;height:0;min-height:4px;border-radius:10px 10px 4px 4px;background:#CFC9BE;transition:height 1s cubic-bezier(.2,.8,.2,1);transition-delay:calc(700ms + var(--i,0)*110ms)}
+.hist .c.lo i{background:var(--warn)}
+.sl.on .hist .c i{height:var(--h)}
+.hist .c span{font-size:21px;color:var(--ink3);margin-top:10px}
+.br.ans{grid-template-columns:340px 1fr 48px;gap:20px;font-size:24px}
+.br.ans .tr{height:30px}
+
+/* قیفِ قابلیت‌ها · قهرمان */
+.fun.lg{grid-template-columns:300px 1fr 96px;font-size:30px;gap:28px}
+.fun.lg .tr{height:50px;border-radius:14px}
+.fun.lg .op,.fun.lg .dn{border-radius:14px}
+.fun.lg b{font-size:34px}
+.fun span small{display:block;font-size:20px;line-height:1.45;margin-top:2px}
+
+/* نقل‌ها */
+.qg{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.qc{background:var(--sf);border:1px solid var(--ln);border-radius:24px;padding:34px 36px 30px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;gap:20px;min-height:236px}
+.qc p{font-size:32px;font-weight:400;line-height:1.6;color:var(--ink)}
+.qc .tag{align-self:flex-start}
+.qc.tr{border-color:color-mix(in srgb,var(--warn) 42%,transparent);background:color-mix(in srgb,var(--warn) 5%,var(--sf))}
+
+/* شش مانعِ اعتماد */
+.bx6{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.bx{position:relative;background:var(--sf);border:1px solid var(--ln);border-radius:24px;padding:30px 36px 32px;box-shadow:var(--shadow)}
+.bx .k{font-size:22px;font-weight:500;color:var(--acc);direction:ltr;text-align:right}
+.bx h3{font-size:36px;font-weight:500;margin-top:6px;line-height:1.4}
+.bx p{font-size:24px;font-weight:300;color:var(--ink2);margin-top:6px;line-height:1.6}
+.bx.deep{background:var(--ink);border-color:var(--ink)}
+.bx.deep h3{color:#fff} .bx.deep p{color:rgba(255,255,255,.72)} .bx.deep .k{color:rgba(255,255,255,.6)}
+.bx.deep em{position:absolute;top:30px;left:30px;font-style:normal;font-size:20px;font-weight:500;padding:4px 16px;border-radius:99px;background:rgba(255,255,255,.14);color:#fff}
+
+/* بنچمارکِ اعتماد */
+.wise{display:flex;gap:48px;margin-top:48px;flex:1}
+.wise .side{width:520px;display:flex;flex-direction:column;gap:12px}
+.wise .wm{font-size:112px;font-weight:700;line-height:1;direction:ltr;text-align:right;letter-spacing:-.02em}
+.kpi{display:flex;flex-direction:column;padding-top:20px;margin-top:12px;border-top:1px solid var(--ln)}
+.kpi b{font-size:60px;font-weight:300;line-height:1.15}
+.kpi span{font-size:22px;color:var(--ink3);font-weight:300}
+.mech{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-content:start}
+.mech .card .k{font-size:22px;font-weight:500;color:var(--acc)}
+.wg{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.wc{background:var(--sf);border:1px solid var(--ln);border-radius:24px;padding:26px 32px 24px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:4px}
+.wc .ctx{font-size:21px;color:var(--ink3);font-weight:400}
+.wc h3{font-size:34px;font-weight:600;direction:ltr;text-align:right;line-height:1.3;margin-top:2px}
+.wc .an{font-size:26px;font-weight:500;color:var(--acc);margin-top:4px}
+.wc p{font-size:22px;font-weight:300;color:var(--ink2);line-height:1.6}
+.wc .n{margin-top:auto;padding-top:12px;font-size:22px;color:var(--ink);font-weight:500;border-top:1px solid var(--ln)}
+
+/* همگرایی: سه منبع، یک جواب */
+.cv{position:relative;height:568px;margin-top:40px}
+.cv .src{position:absolute;right:0;width:620px;height:168px;background:var(--sf);border:1px solid var(--ln);border-radius:24px;padding:24px 34px;box-shadow:var(--shadow)}
+.cv .src1{top:0} .cv .src2{top:200px} .cv .src3{top:400px}
+.src h3{font-size:36px;font-weight:600;display:flex;justify-content:space-between;align-items:baseline}
+.src h3 span{font-size:21px;font-weight:400;color:var(--ink3)}
+.src p{font-size:24px;font-weight:300;color:var(--ink2);margin-top:8px;line-height:1.55}
+.cv svg{position:absolute;overflow:visible}
+.cv svg path{fill:none;stroke:var(--ink);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.cv .brace{right:636px;top:0;width:96px;height:568px}
+.cv .brace path{stroke-dasharray:1300}
+.sl.on .cv .brace path{animation:drawB 1.1s cubic-bezier(.6,0,.2,1) 1.2s both}
+@keyframes drawB{from{stroke-dashoffset:1300}}
+.cv .arw{right:744px;top:254px;width:200px;height:60px}
+.cv .arw path{stroke-dasharray:260}
+.sl.on .cv .arw path{animation:drawA .7s ease 2.2s both}
+@keyframes drawA{from{stroke-dashoffset:260}}
+.cv .bub{position:absolute;left:120px;top:4px;width:560px;height:560px;border-radius:50%;background:var(--ink);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 40px 90px -40px rgba(21,24,28,.6)}
+.bub small{font-size:40px;font-weight:300;opacity:.72;line-height:1.3}
+.bub b{font-size:160px;font-weight:700;line-height:1.2}
+.sl.on .cv .bub{animation:bubIn 1s cubic-bezier(.3,1.4,.5,1) 2.7s both}
+@keyframes bubIn{from{opacity:0;transform:scale(.6)}}
+.bub:before{content:'';position:absolute;inset:-20px;border-radius:50%;border:2px solid var(--ink);opacity:0}
+.sl.on .bub:before{animation:bubPulse 2.4s ease-out 3.7s 2}
+@keyframes bubPulse{0%{opacity:.45;transform:scale(1)}100%{opacity:0;transform:scale(1.16)}}
+
+/* ذره‌بین روی صفحه */
+.scr{position:relative}
+.hl{position:absolute;left:2.5%;right:2.5%;top:calc(var(--t)/844*100%);height:calc(var(--h)/844*100%);border:3px solid var(--acc);border-radius:12px;box-shadow:0 0 0 2px rgba(255,255,255,.35)}
+.hl b{position:absolute;top:-17px;right:-17px;width:34px;height:34px;border-radius:50%;background:var(--acc);color:#fff;font-size:19px;font-weight:600;display:grid;place-items:center}
+.sl.on .hl{animation:pop .6s cubic-bezier(.3,1.5,.5,1) both;animation-delay:calc(900ms + var(--i,0)*220ms)}
+.lens{width:100%;height:var(--lh);border-radius:16px;background-color:#0C0E11;background-repeat:no-repeat;background-size:calc(390px * var(--z)) auto;background-position:calc(var(--x,0) * var(--z) * -1px) calc(var(--y) * var(--z) * -1px);box-shadow:inset 0 0 0 1px rgba(21,24,28,.25)}
+.sl.on .lens{animation:lensIn 1.1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(500ms + var(--i,0)*160ms)}
+@keyframes lensIn{from{opacity:0;transform:scale(.94)}}
+.zc{background:var(--sf);border:1px solid var(--ln);border-radius:24px;padding:16px 16px 20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+.zc h3{font-size:28px;font-weight:500;padding:0 8px;display:flex;gap:12px;align-items:center;line-height:1.35}
+.zc h3 .no{width:34px;height:34px;border-radius:50%;background:var(--acc);color:#fff;font-size:19px;font-weight:600;display:grid;place-items:center;flex:none}
+.zc h3 .v{margin-right:auto;font-size:20px;font-weight:400;color:var(--ink3);direction:ltr}
+.zc p{font-size:22px;font-weight:300;color:var(--ink2);padding:0 8px;line-height:1.55}
+.zc .tag{margin:4px 8px 0;align-self:flex-start}
+.zg{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-content:start}
+.zm{display:flex;gap:24px;margin-top:40px;align-items:flex-start}
+.zh{display:flex;flex-direction:column;gap:16px}
+.zh .row{gap:24px;align-items:flex-start}
+.zh .cap{text-align:right;margin-top:4px;max-width:670px}
+.zmid{width:230px;flex:none;align-self:center;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.zmid .k{font-size:24px;color:var(--ink3);line-height:1.4}
+.zmid .o{font-size:44px;font-weight:300;color:var(--ink3)}
+.zmid .ar{font-size:40px;color:var(--acc);line-height:1}
+.zmid .n{font-size:92px;font-weight:300;color:var(--acc);line-height:1.1}
+.zmid .x{font-size:21px;color:var(--warn);line-height:1.45;margin-top:6px}
+
+/* دمبل: قبل ← بعد (راست‌به‌چپ) */
+.db{display:grid;grid-template-columns:170px 1fr 150px;align-items:center;gap:20px;font-size:23px;font-weight:300;min-height:56px}
+.db .tk{position:relative;height:12px;border-radius:6px;background:var(--sf2)}
+.db .tk .ln2{position:absolute;top:0;bottom:0;right:calc(var(--a)*1%);width:0;border-radius:6px;background:color-mix(in srgb,var(--acc) 40%,transparent);transition:width 1.1s cubic-bezier(.2,.8,.2,1);transition-delay:calc(700ms + var(--i,0)*140ms)}
+.sl.on .db .tk .ln2{width:calc((var(--b) - var(--a))*1%)}
+.db .tk .a,.db .tk .b{position:absolute;top:50%;width:24px;height:24px;margin:-12px -12px 0 0;border-radius:50%}
+.db .tk .a{right:calc(var(--a)*1%);background:var(--sf);border:3px solid var(--ink3)}
+.db .tk .b{right:calc(var(--a)*1%);background:var(--acc);box-shadow:0 0 0 4px var(--sf);transition:right 1.1s cubic-bezier(.2,.8,.2,1);transition-delay:calc(700ms + var(--i,0)*140ms)}
+.sl.on .db .tk .b{right:calc(var(--b)*1%)}
+.db .vv{font-size:23px;white-space:nowrap}
+.db .vv b{font-weight:500;color:var(--acc)}
+.db.md{grid-template-columns:1fr auto;grid-template-areas:"l v" "t t";gap:14px 16px;font-size:26px;min-height:0;margin-bottom:26px}
+.db.md>span:first-child{grid-area:l} .db.md .tk{grid-area:t;height:14px} .db.md .vv{grid-area:v;font-size:26px}
+.db.lg{grid-template-columns:270px 1fr 200px;font-size:28px;min-height:96px}
+.db.lg .tk{height:16px;border-radius:8px}
+.db.lg .tk .a,.db.lg .tk .b{width:32px;height:32px;margin:-16px -16px 0 0}
+.db.lg .vv{font-size:28px}
+.gh{display:flex;align-items:flex-end;gap:24px;height:300px;margin-top:40px}
+.gh .g{flex:1;display:flex;flex-direction:column;align-items:center;height:100%}
+.gh .bb{flex:1;width:100%;display:flex;gap:8px;align-items:flex-end}
+.gh .bb i{position:relative;flex:1;height:0;min-height:3px;border-radius:8px 8px 3px 3px;transition:height 1s cubic-bezier(.2,.8,.2,1);transition-delay:calc(700ms + var(--i,0)*110ms)}
+.gh .bb i.o{background:#CFC9BE} .gh .bb i.n{background:var(--acc)}
+.sl.on .gh .bb i{height:var(--h)}
+.gh .bb i em{position:absolute;bottom:100%;left:-10px;right:-10px;padding-bottom:6px;text-align:center;font-style:normal;font-size:21px;font-weight:500;color:var(--ink2)}
+.gh .g span{font-size:22px;color:var(--ink3);margin-top:12px}
+.sr{display:grid;grid-template-columns:230px 64px 1fr 170px;align-items:center;gap:22px;height:44px;font-size:23px;font-weight:300}
+.sr .tk{position:relative;height:2px;background:var(--ln)}
+.sr .tk .a,.sr .tk .b{position:absolute;top:50%;width:22px;height:22px;margin:-11px -11px 0 0;border-radius:50%;right:calc((var(--a) - 1)*25%)}
+.sr .tk .a{background:var(--sf);border:3px solid var(--ink3)}
+.sr .tk .b{background:var(--acc);box-shadow:0 0 0 3px var(--bg);transition:right 1s cubic-bezier(.2,.8,.2,1);transition-delay:calc(600ms + var(--i,0)*70ms)}
+.sl.on .sr .tk .b{right:calc((var(--b) - 1)*25%)}
+.sr .cv2{font-size:21px;color:var(--ink3);white-space:nowrap}
+.sr .cv2.up{color:var(--ok);font-weight:500}
+.sr.ax{height:32px;font-size:20px;color:var(--ink3)}
+.sr.ax .tk{height:auto;background:none;display:flex;justify-content:space-between}
+.pr{display:grid;grid-template-columns:250px 1fr;gap:24px;align-items:center;padding:18px 0;border-bottom:1px solid var(--ln)}
+.pr:last-child{border:0}
+.pr .lb{font-size:26px;font-weight:400;line-height:1.4}
+.pr .pb{display:flex;flex-direction:column;gap:10px}
+.pr .pb div{display:grid;grid-template-columns:1fr 84px;gap:16px;align-items:center}
+.pr .pb i{display:block;height:24px;width:0;border-radius:8px;transition:width 1.1s cubic-bezier(.2,.8,.2,1);transition-delay:calc(600ms + var(--i,0)*130ms)}
+.sl.on .pr .pb i{width:var(--w)}
+.pr .pb .r1 i{background:var(--acc)} .pr .pb .r2 i{background:var(--silver)}
+.pr .pb b{font-size:26px;font-weight:500}
+.pr.hot .lb{color:var(--warn);font-weight:500}
+.pr.hot .pb .r1 i,.pr.hot .pb .r2 i{background:var(--warn)} .pr.hot .pb .r2 i{opacity:.55}
+.fcg{display:grid;grid-template-columns:1fr 1fr;gap:20px 24px;margin-top:40px}
+.fc{display:grid;grid-template-columns:52px 1fr;gap:4px 20px;align-items:start;background:var(--sf);border:1px solid var(--ln);border-radius:22px;padding:22px 28px;box-shadow:var(--shadow)}
+.fc .no{grid-row:span 2;width:52px;height:52px;border-radius:50%;background:var(--sf2);display:grid;place-items:center;font-size:24px;font-weight:500;color:var(--ink2)}
+.fc .fr{font-size:22px;font-weight:300;color:var(--warn);line-height:1.5}
+.fc .to{font-size:28px;font-weight:500;line-height:1.45}
+.pdots{display:grid;grid-template-columns:repeat(14,44px);gap:14px}
+.pdots i{width:44px;height:44px;border-radius:50%;display:block}
+.sl.on .pdots i{animation:pop .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(400ms + var(--i,0)*28ms)}
+.pdots .A{background:var(--c-ash)} .pdots .B{background:var(--c-self)} .pdots .C{background:#BDB7AC}
+.leg3{display:flex;flex-direction:column;gap:18px;margin-top:40px}
+.leg3 div{display:flex;gap:18px;align-items:baseline;font-size:26px;font-weight:300;color:var(--ink2);line-height:1.5}
+.leg3 b{font-weight:600;color:var(--ink);min-width:96px;display:inline-flex;gap:12px;align-items:center}
+.leg3 b i{width:18px;height:18px;border-radius:50%;display:inline-block}
+
 @media (prefers-reduced-motion:reduce){
   .bd{transition:none;opacity:1;transform:none}
   .sl.on *{animation:none!important}
-  .run .flight,.run .old,.run .ring0,.run .fe{display:none}
+  .run .flight,.run .old,.run .ring0,.run .fx{display:none}
   .run .cap1,.run .nw{opacity:1}
 }
 @media print{
@@ -323,9 +527,12 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
   #stage{position:relative;left:0;top:0;transform:none!important;height:auto;overflow:visible}
   .sl{position:relative;opacity:1;visibility:visible;height:1080px;page-break-after:always;break-after:page}
   .bd{opacity:1;transform:none;transition:none}
-  .br .tr i,.fun .op,.fun .dn{width:var(--w);transition:none}
+  .br .tr i,.fun .op,.fun .dn,.pr .pb i{width:var(--w);transition:none}
+  .fnl .bar,.hist .c i,.gh .bb i{height:var(--h);transition:none}
+  .db .tk .ln2{width:calc((var(--b) - var(--a))*1%);transition:none} .db .tk .b{right:calc(var(--b)*1%);transition:none}
+  .sr .tk .b{right:calc((var(--b) - 1)*25%);transition:none}
   #foot,#prog{display:none}
-  .splash .flight,.splash .old,.splash .ring0,.splash .fe{display:none}
+  .splash .flight,.splash .old,.splash .ring0,.splash .fx{display:none}
   .splash .cap1,.splash .nw{opacity:1;animation:none}
   .pivot .vault,.pivot .risk{display:none}
   .pivot .pv{transform:translateY(-170px) scale(.82)}
@@ -342,16 +549,13 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 <section class="sl splash" data-part="0" id="s-splash">
   <div class="spl" id="spl">
     <div class="flight"><div class="bob"><div class="fall">
-      <svg class="bird" viewBox="0 0 49.33 39.99" fill="#D5A45C" aria-label="پرندهٔ نشان"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg>
+      <svg class="bird" viewBox="0 0 49.33 39.99" fill="#B47A26" aria-label="پرندهٔ نشان"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg>
     </div></div></div>
     <div class="ring0"></div>
-    <i class="fe" style="--dx:-120px;--dy:300px;--r:-140deg"></i>
-    <i class="fe" style="--dx:90px;--dy:360px;--r:120deg"></i>
-    <i class="fe" style="--dx:-40px;--dy:420px;--r:200deg"></i>
-    <i class="fe" style="--dx:150px;--dy:250px;--r:-80deg"></i>
+    <div class="fx" aria-hidden="true"><i style="--bx:-150px;--by:-90px;--br:-40deg;--sz:44px;--fy:384px;--fd:3.4s;--sw:1.0s;--sa:34px"><b><s><svg viewBox="0 0 24 72"><path d="M12 2C20 11 22 30 15 58L12 70 9 58C2 30 4 11 12 2Z" fill="#B47A26"/><path d="M19.5 21 13 25M4.6 33 11 36.5M18.4 43 13 46.5M6.6 50 11 52" stroke="#F6F4EF" stroke-width="1.6" stroke-linecap="round"/><path d="M12 7V72" stroke="#7A5216" stroke-width="1.3" stroke-linecap="round" opacity=".55"/></svg></s></b></i><i style="--bx:120px;--by:-130px;--br:30deg;--sz:38px;--fy:347px;--fd:3.1s;--sw:0.9s;--sa:28px"><b><s><svg viewBox="0 0 24 72"><path d="M12 2C20 11 22 30 15 58L12 70 9 58C2 30 4 11 12 2Z" fill="#C99A4E"/><path d="M19.5 21 13 25M4.6 33 11 36.5M18.4 43 13 46.5M6.6 50 11 52" stroke="#F6F4EF" stroke-width="1.6" stroke-linecap="round"/><path d="M12 7V72" stroke="#7A5216" stroke-width="1.3" stroke-linecap="round" opacity=".55"/></svg></s></b></i><i style="--bx:-60px;--by:-170px;--br:-10deg;--sz:32px;--fy:372px;--fd:3.6s;--sw:1.15s;--sa:40px"><b><s><svg viewBox="0 0 24 72"><path d="M12 2C20 11 22 30 15 58L12 70 9 58C2 30 4 11 12 2Z" fill="#DDBB82"/><path d="M19.5 21 13 25M4.6 33 11 36.5M18.4 43 13 46.5M6.6 50 11 52" stroke="#F6F4EF" stroke-width="1.6" stroke-linecap="round"/><path d="M12 7V72" stroke="#7A5216" stroke-width="1.3" stroke-linecap="round" opacity=".55"/></svg></s></b></i><i style="--bx:190px;--by:-40px;--br:70deg;--sz:49px;--fy:322px;--fd:3.0s;--sw:0.95s;--sa:30px"><b><s><svg viewBox="0 0 24 72"><path d="M12 2C20 11 22 30 15 58L12 70 9 58C2 30 4 11 12 2Z" fill="#B47A26"/><path d="M19.5 21 13 25M4.6 33 11 36.5M18.4 43 13 46.5M6.6 50 11 52" stroke="#F6F4EF" stroke-width="1.6" stroke-linecap="round"/><path d="M12 7V72" stroke="#7A5216" stroke-width="1.3" stroke-linecap="round" opacity=".55"/></svg></s></b></i><i style="--bx:-220px;--by:10px;--br:-80deg;--sz:35px;--fy:310px;--fd:2.9s;--sw:0.85s;--sa:26px"><b><s><svg viewBox="0 0 24 72"><path d="M12 2C20 11 22 30 15 58L12 70 9 58C2 30 4 11 12 2Z" fill="#C99A4E"/><path d="M19.5 21 13 25M4.6 33 11 36.5M18.4 43 13 46.5M6.6 50 11 52" stroke="#F6F4EF" stroke-width="1.6" stroke-linecap="round"/><path d="M12 7V72" stroke="#7A5216" stroke-width="1.3" stroke-linecap="round" opacity=".55"/></svg></s></b></i><i style="--bx:40px;--by:-210px;--br:15deg;--sz:29px;--fy:397px;--fd:3.8s;--sw:1.2s;--sa:44px"><b><s><svg viewBox="0 0 24 72"><path d="M12 2C20 11 22 30 15 58L12 70 9 58C2 30 4 11 12 2Z" fill="#B47A26"/><path d="M19.5 21 13 25M4.6 33 11 36.5M18.4 43 13 46.5M6.6 50 11 52" stroke="#F6F4EF" stroke-width="1.6" stroke-linecap="round"/><path d="M12 7V72" stroke="#7A5216" stroke-width="1.3" stroke-linecap="round" opacity=".55"/></svg></s></b></i><i style="--bx:-110px;--by:60px;--br:-120deg;--sz:41px;--fy:279px;--fd:2.8s;--sw:1.05s;--sa:30px"><b><s><svg viewBox="0 0 24 72"><path d="M12 2C20 11 22 30 15 58L12 70 9 58C2 30 4 11 12 2Z" fill="#DDBB82"/><path d="M19.5 21 13 25M4.6 33 11 36.5M18.4 43 13 46.5M6.6 50 11 52" stroke="#F6F4EF" stroke-width="1.6" stroke-linecap="round"/><path d="M12 7V72" stroke="#7A5216" stroke-width="1.3" stroke-linecap="round" opacity=".55"/></svg></s></b></i><i style="--bx:250px;--by:-110px;--br:110deg;--sz:26px;--fy:347px;--fd:3.5s;--sw:1.1s;--sa:38px"><b><s><svg viewBox="0 0 24 72"><path d="M12 2C20 11 22 30 15 58L12 70 9 58C2 30 4 11 12 2Z" fill="#C99A4E"/><path d="M19.5 21 13 25M4.6 33 11 36.5M18.4 43 13 46.5M6.6 50 11 52" stroke="#F6F4EF" stroke-width="1.6" stroke-linecap="round"/><path d="M12 7V72" stroke="#7A5216" stroke-width="1.3" stroke-linecap="round" opacity=".55"/></svg></s></b></i><i style="--bx:90px;--by:40px;--br:150deg;--sz:23px;--fy:298px;--fd:3.2s;--sw:0.8s;--sa:22px"><b><s><svg viewBox="0 0 24 72"><path d="M12 2C20 11 22 30 15 58L12 70 9 58C2 30 4 11 12 2Z" fill="#B47A26"/><path d="M19.5 21 13 25M4.6 33 11 36.5M18.4 43 13 46.5M6.6 50 11 52" stroke="#F6F4EF" stroke-width="1.6" stroke-linecap="round"/><path d="M12 7V72" stroke="#7A5216" stroke-width="1.3" stroke-linecap="round" opacity=".55"/></svg></s></b></i><i style="--bx:-270px;--by:-120px;--br:-150deg;--sz:26px;--fy:372px;--fd:3.7s;--sw:1.25s;--sa:42px"><b><s><svg viewBox="0 0 24 72"><path d="M12 2C20 11 22 30 15 58L12 70 9 58C2 30 4 11 12 2Z" fill="#DDBB82"/><path d="M19.5 21 13 25M4.6 33 11 36.5M18.4 43 13 46.5M6.6 50 11 52" stroke="#F6F4EF" stroke-width="1.6" stroke-linecap="round"/><path d="M12 7V72" stroke="#7A5216" stroke-width="1.3" stroke-linecap="round" opacity=".55"/></svg></s></b></i></div>
     <div class="old"><span>مهاجر<i></i></span></div>
     <div class="nw">
-      <div class="mk"><svg viewBox="0 0 49.33 39.99" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></div>
+      <div class="mk"><svg viewBox="0 0 49.33 39.99" fill="#B47A26"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></div>
       <h1>آشیانه</h1>
       <p>ارائهٔ نهایی محصول · از فرضیه تا نسخهٔ <span class="num">5.15</span></p>
     </div>
@@ -359,18 +563,17 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
   </div>
 </section>
 
-<!-- ═══ فهرست ═══ -->
 <section class="sl" data-part="0">
   <div class="eb">مسیر این ارائه</div>
-  <h2 class="t">سه بخش، چهارده گام، یک نقطهٔ چرخش</h2>
-  <div class="row grow mt56" style="align-items:stretch">
-    <div class="card grow" style="cursor:pointer" onclick="goTo('p1')"><div class="eb">بخش اول</div><h3 style="margin-top:16px">ورودی‌ها و شکل‌گیری محصول</h3><p>کشف مسئله · یافته‌های مصاحبه · بنچمارک · فرضیهٔ ارزش · نسخهٔ اول</p></div>
-    <div class="card grow" style="cursor:pointer" onclick="goTo('p2')"><div class="eb">بخش دوم</div><h3 style="margin-top:16px">یادگیری و اصلاح منطق محصول</h3><p>تست اولیه · تحلیل فاصله · نقدِ پاسخ اولیه · <span style="color:var(--gold2);font-weight:500">بازتعریف ارزش</span> · اصول تازه</p></div>
-    <div class="card grow" style="cursor:pointer" onclick="goTo('p3')"><div class="eb">بخش سوم</div><h3 style="margin-top:16px">از استراتژی به تجربهٔ محصول</h3><p>معماری تجربه · انتقال ارزش · تکامل نسخه‌ها · محصول امروز و آزمون بعد</p></div>
+  <h2 class="t">چهار بخش، یک نقطهٔ چرخش</h2>
+  <div class="row grow mt56" style="align-items:stretch;gap:24px">
+    <div class="card grow" style="cursor:pointer;flex-basis:0" onclick="goTo('p1')"><div class="eb">بخش اول</div><h3 style="margin-top:16px">ورودی‌ها و شکل‌گیری محصول</h3><p>کشف مسئله · مصاحبه · بنچمارک · فرضیهٔ ارزش · نسخهٔ اول</p></div>
+    <div class="card grow" style="cursor:pointer;flex-basis:0" onclick="goTo('p2')"><div class="eb">بخش دوم</div><h3 style="margin-top:16px">تست، چالشِ اعتماد و چرخش</h3><p>تست اولیه · فاصلهٔ ارزش · <b style="font-weight:600;color:var(--ink)">چالشِ اعتماد</b> · نقطهٔ چرخش · از منطق به محصول</p></div>
+    <div class="card grow" style="cursor:pointer;flex-basis:0" onclick="goTo('p3')"><div class="eb">بخش سوم</div><h3 style="margin-top:16px">از استراتژی به تجربهٔ محصول</h3><p>معماری تجربه · انتقال ارزش · تکامل نسخه‌ها · محصول امروز</p></div>
+    <div class="card grow" style="cursor:pointer;flex-basis:0" onclick="goTo('p4')"><div class="eb">بخش چهارم</div><h3 style="margin-top:16px">آزمون مجازی با پرسونا</h3><p><span class="num">v4.5</span> در برابر <span class="num">v5.15</span> · صفحه‌به‌صفحه · آنچه باید عوض شود</p></div>
   </div>
 </section>
 
-<!-- ═══ بخش اول ═══ -->
 <section class="sl div alt" data-part="1" id="p1">
   <div class="n num">01</div>
   <h2 class="t">ورودی‌ها و شکل‌گیری محصول</h2>
@@ -474,65 +677,197 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
   <p class="lead mt24">دو ایدهٔ بنیان‌گذار: <b class="acc">«پولت را بگذار زیر بالشتت»</b> و <b class="acc">«هر وقت خواستی، مالت را عینی کن»</b>.</p>
 </section>
 
-<!-- ═══ بخش دوم ═══ -->
 <section class="sl div alt" data-part="2" id="p2">
   <div class="n num">02</div>
-  <h2 class="t">یادگیری و اصلاح منطق محصول</h2>
-  <ol>
-    <li><i>۰۶</i>تست اولیه و نتایج آن <span class="en">Initial Testing</span></li>
-    <li><i>۰۷</i>فاصلهٔ ارزش با برداشت کاربر <span class="en">Gap Analysis</span></li>
-    <li><i>۰۸</i>نقدِ پاسخ اولیه <span class="en">Solution Reassessment</span></li>
-    <li><i>۰۹</i>بازتعریف ارزش · نقطهٔ چرخش <span class="en">Strategic Reframing</span></li>
-    <li><i>۱۰</i>اصول طراحیِ تازه <span class="en">Revised Product Principles</span></li>
+  <h2 class="t">تست، چالشِ اعتماد و چرخش</h2>
+  <ol class="two">
+    <li><i>۰۶</i>تست اولیه <span class="en">Initial Testing</span></li>
+    <li><i>۱۰</i>نقدِ پاسخ اولیه <span class="en">Solution Reassessment</span></li>
+    <li><i>۰۷</i>نتیجه: فهم و اعتماد <span class="en">Results</span></li>
+    <li><i>۱۱</i>بازتعریف ارزش · نقطهٔ چرخش <span class="en">Strategic Reframing</span></li>
+    <li><i>۰۸</i>تحلیل فاصله <span class="en">Gap Analysis</span></li>
+    <li><i>۱۲</i>از منطق به محصول <span class="en">Product Translation</span></li>
+    <li><i>۰۹</i><b style="font-weight:600;color:var(--ink)">چالشِ اعتماد</b> <span class="en">Trust Challenge</span></li>
+    <li><i>۱۳</i>اصول طراحیِ تازه <span class="en">Revised Principles</span></li>
   </ol>
 </section>
 
 <section class="sl" data-part="2">
   <div class="eb">۰۶ · تست اولیه <span class="en">Initial Testing</span></div>
-  <h2 class="t">کار با اپ را بلد بودند؛ <span class="acc">فهم و اعتماد کم بود.</span></h2>
-  <div class="rings mt56">
-    <div class="ring" style="--c:var(--ok);--d:519"><div class="rg"><svg viewBox="0 0 220 220"><circle class="tk" cx="110" cy="110" r="90"/><circle class="pg" cx="110" cy="110" r="90"/></svg><div class="v"><div><span data-up="11">۱۱</span><small>از ۱۲</small></div></div></div><p>تبدیل را خودشان، بی‌کمک تمام کردند</p></div>
-    <div class="ring" style="--c:var(--warn);--d:126"><div class="rg"><svg viewBox="0 0 220 220"><circle class="tk" cx="110" cy="110" r="90"/><circle class="pg" cx="110" cy="110" r="90"/></svg><div class="v"><div><span data-up="2">۲</span><small>از ۹</small></div></div></div><p>می‌دانستند پولشان کجاست</p></div>
-    <div class="ring" style="--c:var(--warn);--d:226"><div class="rg"><svg viewBox="0 0 220 220"><circle class="tk" cx="110" cy="110" r="90"/><circle class="pg" cx="110" cy="110" r="90"/></svg><div class="v"><div><span data-up="2">۲</span><small>از ۵</small></div></div></div><p>میانهٔ اعتماد</p></div>
-    <div class="ring" style="--c:var(--silver);--d:440"><div class="rg"><svg viewBox="0 0 220 220"><circle class="tk" cx="110" cy="110" r="90"/><circle class="pg" cx="110" cy="110" r="90"/></svg><div class="v"><div><span data-up="7">۷</span><small>از ۹</small></div></div></div><p>با این همه، خواستند در جریان بمانند</p></div>
+  <h2 class="t md">راند اول: آدم‌های واقعی، <span class="acc">از راه دور، بی‌کمک</span></h2>
+  <div class="row grow mt40" style="gap:40px;align-items:stretch">
+    <div class="panel grow">
+      <div class="pn-k">۲۱ جلسه، تا کجا رفتند</div>
+      <div class="fnl grow" style="margin-top:12px">
+        <div class="st"><span class="n" data-up="21">۲۱</span><i class="bar" style="--h:100%;--i:0"></i><p>لینک را<br>باز کردند</p></div>
+        <div class="st"><span class="n" data-up="16">۱۶</span><i class="bar" style="--h:76%;--i:1"></i><p>به چهار سؤالِ<br>اول جواب دادند</p></div>
+        <div class="st"><span class="n" data-up="12">۱۲</span><i class="bar" style="--h:57%;--i:2"></i><p>وارد اپ<br>شدند</p></div>
+        <div class="st k"><span class="n" data-up="11">۱۱</span><i class="bar" style="--h:52%;--i:3"></i><p>تبدیل را<br>تمام کردند</p></div>
+        <div class="st"><span class="n" data-up="8">۸</span><i class="bar" style="--h:38%;--i:4"></i><p>پاسخِ<br>کامل دادند</p></div>
+        <div class="st"><span class="n" data-up="2">۲</span><i class="bar" style="--h:10%;--i:5"></i><p>ویس<br>گذاشتند</p></div>
+      </div>
+    </div>
+    <div class="panel" style="width:560px">
+      <div class="pn-k">با چه کسانی</div>
+      <div class="aud" style="margin-top:8px">
+        <div>سن<b>۲۵ تا ۳۴ ساله</b></div>
+        <div>پس‌اندازشان دلار یا طلاست<b>۱۴ از ۱۶</b></div>
+        <div>با رمزارز کار کرده‌اند<b>۱۲ از ۱۶</b></div>
+        <div>پس‌انداز بانکی دارند<b>۱ از ۱۶</b></div>
+        <div>روی آیفون<b>۱۷ از ۲۱</b></div>
+        <div>از کجا آمدند<b>تلگرام</b></div>
+      </div>
+    </div>
+  </div>
+  <p class="sm mt24">نسخهٔ ۴٫۵ · ۶ تا ۱۷ مهر ۱۴۰۵ · ۲۱ جلسه، حدود ۱۸ نفر · کسانی که مشکل را قبلاً خودشان حل کرده‌اند؛ سخت‌گیرترین مخاطب</p>
+</section>
+
+<section class="sl" data-part="2">
+  <div class="eb">۰۷ · نتیجه <span class="en">Results</span></div>
+  <h2 class="t md">کار با اپ را بلد بودند؛ <span class="bad">ارزش را نفهمیدند، اعتماد نکردند.</span></h2>
+  <div class="row grow mt40" style="gap:24px;align-items:stretch">
+    <div class="panel" style="width:360px;align-items:center;text-align:center">
+      <div class="pn-k">کاربردپذیری</div>
+      <div class="ring" style="--c:var(--ok);--d:519;margin-top:28px"><div class="rg"><svg viewBox="0 0 220 220"><circle class="tk" cx="110" cy="110" r="90"/><circle class="pg" cx="110" cy="110" r="90"/></svg><div class="v"><div><span data-up="11">۱۱</span><small>از ۱۲</small></div></div></div><p>تبدیل را خودشان، بی‌کمک تمام کردند</p></div>
+      <span class="tag u" style="margin-top:20px">مشکل این نبود</span>
+    </div>
+    <div class="panel grow">
+      <div class="pn-k">فهم درستِ ارزش · «مهم‌ترین کاری که مهاجر می‌کند»</div>
+      <div class="big bad"><span data-up="4">۴</span><small>از ۹</small></div>
+      <div class="bars" style="gap:14px;margin-top:20px">
+        <div class="br ans hi"><span>حفظ ارزش، با کنترل و خروج <span class="ok">(درست)</span></span><div class="tr"><i style="--w:100%;--i:0"></i></div><b class="v ok">۴</b></div>
+        <div class="br ans"><span>نگهداری پول در یک اپ</span><div class="tr"><i style="--w:50%;--i:1"></i></div><b class="v">۲</b></div>
+        <div class="br ans"><span>بازده تضمین‌شده</span><div class="tr"><i style="--w:25%;--i:2"></i></div><b class="v">۱</b></div>
+        <div class="br ans"><span>خرید و فروش رمزارز</span><div class="tr"><i style="--w:25%;--i:3"></i></div><b class="v">۱</b></div>
+        <div class="br ans"><span>هنوز متوجه نشدم</span><div class="tr"><i style="--w:25%;--i:4"></i></div><b class="v">۱</b></div>
+      </div>
+      <div class="grow"></div>
+      <p class="pcap">۵ نفر از ۹، چیز دیگری دیدند: <b>یک اپ، یک صرافی، یک سودِ تضمینی.</b></p>
+    </div>
+    <div class="panel" style="width:500px">
+      <div class="pn-k">میانهٔ اعتماد · «اگر واقعی بود»</div>
+      <div class="big bad"><span data-up="2">۲</span><small>از ۵</small></div>
+      <div class="hist">
+        <div class="c lo"><b>۲</b><i style="--h:50%;--i:0"></i><span>۱ · اصلاً</span></div>
+        <div class="c lo"><b>۴</b><i style="--h:100%;--i:1"></i><span>۲</span></div>
+        <div class="c"><b>۲</b><i style="--h:50%;--i:2"></i><span>۳</span></div>
+        <div class="c"><b>۱</b><i style="--h:25%;--i:3"></i><span>۴</span></div>
+        <div class="c"><b>۰</b><i style="--h:0%;--i:4"></i><span>۵ · کاملاً</span></div>
+      </div>
+      <div class="grow"></div>
+      <p class="pcap">۶ از ۹ نفر ۱ یا ۲ دادند؛ <b>هیچ‌کس ۵ نداد.</b></p>
+    </div>
+  </div>
+  <p class="lead mt24" style="font-size:28px">با این همه، ۷ از ۹ خواستند در جریان بمانند: <b>نیاز هست؛ اعتماد نیست.</b></p>
+</section>
+
+<section class="sl" data-part="2">
+  <div class="eb">۰۸ · تحلیل فاصله <span class="en">Gap Analysis</span></div>
+  <h2 class="t md">مشکل کاربردپذیری نبود؛ <span class="acc">درکِ ارزش و لنگرِ اعتماد بود.</span></h2>
+  <div class="row grow mt24" style="gap:24px;align-items:stretch">
+    <div class="panel grow" style="padding:28px 40px">
+      <div class="row" style="justify-content:space-between;align-items:baseline">
+        <p style="font-size:32px;font-weight:500">قابلیت‌ها، از ۱۱ نفری که تبدیل کردند</p>
+        <div class="row" style="gap:28px"><span class="lg-dot"><i style="background:#DCD6CB"></i>باز کردند</span><span class="lg-dot"><i style="background:var(--acc)"></i>تا آخر بردند</span></div>
+      </div>
+      <div class="col" style="gap:20px;margin-top:24px">
+        <div class="fun lg"><span>انتقال</span><div class="tr"><i class="op" style="--w:100%;--i:0"></i><i class="dn" style="--w:56%;--i:0"></i></div><b class="num" style="font-weight:500">5/9</b></div>
+        <div class="fun lg"><span>تحویل طلا</span><div class="tr"><i class="op" style="--w:89%;--i:1"></i><i class="dn" style="--w:44%;--i:1"></i></div><b class="num" style="font-weight:500">4/8</b></div>
+        <div class="fun lg"><span>برداشت</span><div class="tr"><i class="op" style="--w:44%;--i:2"></i><i class="dn" style="--w:22%;--i:2"></i></div><b class="num" style="font-weight:500">2/4</b></div>
+        <div class="fun lg"><span>سرمایه‌گذاری<small class="bad">همه دیدند؛ یک نفر انجام داد</small></span><div class="tr"><i class="op" style="--w:100%;--i:3"></i><i class="dn" style="--w:11%;--i:3"></i></div><b class="num bad" style="font-weight:500">1/9</b></div>
+        <div class="fun lg"><span>کیف پول شخصی<small class="bad">هیچ‌کس تمام نکرد</small></span><div class="tr"><i class="op" style="--w:44%;--i:4"></i><i class="dn" style="--w:0%;--i:4"></i></div><b class="num bad" style="font-weight:500">0/4</b></div>
+      </div>
+    </div>
+    <div class="col" style="width:540px;gap:24px">
+      <div class="card grow"><span class="tag x">۱ · ارزش</span><h3 style="margin-top:16px">ارزش درک نشد</h3><p>آشیانه یک فهرستِ قابلیت دیده شد؛ نگهداریِ امن با کنترل و خروج، دیده نشد.</p></div>
+      <div class="card grow"><span class="tag x">۲ · لنگرِ اعتماد</span><h3 style="margin-top:16px">به لنگرِ اعتماد توجه نکردیم</h3><p>فقط <b style="color:var(--ink);font-weight:500">۲ از ۹</b> می‌دانستند پول کجاست. ۶ از ۱۶ نفر اول «امن یعنی چی؟» را باز کردند؛ جواب، در صفحه‌ای جدا بود.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sl" data-part="2">
+  <div class="eb">۰۸ · صدای کاربر <span class="en">In their words</span></div>
+  <h2 class="t md">حرفِ خودشان، <span class="acc">وسطِ کار</span></h2>
+  <div class="qg">
+    <div class="qc tr"><p>«امن یعنی چی؟»</p><span class="tag x">اعتماد</span></div>
+    <div class="qc tr"><p>«توضیحات کافی نبود.»</p><span class="tag x">اعتماد</span></div>
+    <div class="qc"><p>«خیلی گنگ است؛ مسیر مشخصی برای پیش رفتن ندارد.»</p><span class="tag n">ارزش</span></div>
+    <div class="qc"><p>«بخش‌بندی‌ها شفاف نیست؛ چرا کلید اصلی باید دریافت طلا باشد؟»</p><span class="tag n">ارزش</span></div>
+    <div class="qc"><p>«کاش مقداری سرمایهٔ اولیه می‌دادید که با آن کار کنیم.»</p><span class="tag n">انگیزه</span></div>
+    <div class="qc"><p>«امکان ویرایش مبلغ را ندارم، یا پیدا نکردم.»</p><span class="tag n">کاربردپذیری</span></div>
   </div>
   <div class="grow"></div>
-  <div class="row" style="gap:40px;align-items:flex-end">
-    <div class="qs grow"><p class="q">«این مگه شارژ حساب نیست؟»</p></div>
-    <div class="qs grow"><p class="q">«صندوق» برای کسی روشن نبود.</p></div>
-    <div class="qs grow"><p class="q">اعتماد، یک نهاد می‌خواست.</p></div>
-  </div>
-  <p class="sm mt24">راندِ از راه دور · نسخهٔ ۴٫۵ · ۶ تا ۱۷ مهر ۱۴۰۵ · ۲۱ جلسه · با ۸ پاسخِ کامل، جهت می‌دهد نه حکم</p>
+  <p class="sm">با دکمهٔ «گیر کردم»، بی‌نام · یک نفر سه بار «اعتماد نکردم» را زد، روی خانه و روی همان صفحهٔ توضیح</p>
 </section>
 
 <section class="sl" data-part="2">
-  <div class="eb">۰۷ · تحلیل فاصله <span class="en">Gap Analysis</span></div>
-  <h2 class="t md">مشکل فقط کاربردپذیری نبود؛ <span class="acc">ارزش و لنگرِ اعتماد منتقل نشد.</span></h2>
-  <div class="row grow mt56" style="gap:72px">
-    <div class="grow col" style="gap:28px">
-      <p style="font-size:30px;font-weight:500;line-height:1.5">«پولی که تبدیل کرده‌اید کجا می‌ماند؟» <span class="dim" style="font-weight:300">· ۹ پاسخ</span></p>
-      <div class="bars">
-        <div class="br"><span>نمی‌دانم</span><div class="tr"><i style="--w:100%;--i:0"></i></div><b class="v">۳</b></div>
-        <div class="br hi"><span>نزد بیت‌وانا <span class="ok">(درست)</span></span><div class="tr"><i style="--w:66%;--i:1"></i></div><b class="v ok">۲</b></div>
-        <div class="br"><span>در کیف پول شخصی خودم</span><div class="tr"><i style="--w:66%;--i:2"></i></div><b class="v">۲</b></div>
-        <div class="br"><span>در حساب بانکی مهاجر</span><div class="tr"><i style="--w:66%;--i:3"></i></div><b class="v">۲</b></div>
-      </div>
-      <div class="row" style="gap:16px"><span class="chip">هدف تست: ۷۰٪</span><span class="chip a">نتیجه: ۲۲٪</span></div>
-    </div>
-    <div class="col" style="width:620px;gap:24px">
-      <p style="font-size:30px;font-weight:500;line-height:1.5">قابلیت‌ها <span class="dim" style="font-weight:300">· باز کردند / تمام کردند</span></p>
-      <div class="fun"><span>انتقال</span><div class="tr"><i class="op" style="--w:100%;--i:0"></i><i class="dn" style="--w:56%;--i:0"></i></div><b class="num" style="font-weight:500">5/9</b></div>
-      <div class="fun"><span>تحویل طلا</span><div class="tr"><i class="op" style="--w:89%;--i:1"></i><i class="dn" style="--w:44%;--i:1"></i></div><b class="num" style="font-weight:500">4/8</b></div>
-      <div class="fun"><span>برداشت</span><div class="tr"><i class="op" style="--w:44%;--i:2"></i><i class="dn" style="--w:22%;--i:2"></i></div><b class="num" style="font-weight:500">2/4</b></div>
-      <div class="fun"><span>سرمایه‌گذاری</span><div class="tr"><i class="op" style="--w:100%;--i:3"></i><i class="dn" style="--w:11%;--i:3"></i></div><b class="num" style="font-weight:500">1/9</b></div>
-      <div class="fun"><span>کیف پول شخصی</span><div class="tr"><i class="op" style="--w:44%;--i:4"></i><i class="dn" style="--w:0%;--i:4"></i></div><b class="num" style="font-weight:500">0/4</b></div>
-    </div>
+  <div class="eb">۰۹ · چالشِ اعتماد · مصاحبه‌ها <span class="en">Trust Challenge</span></div>
+  <h2 class="t md">مصاحبه‌ها هم همین را گفته بودند: <span class="acc">اول اعتماد، بعد هر قابلیتی.</span></h2>
+  <div class="bx6">
+    <div class="bx"><div class="k">B1</div><h3>واقعی‌بودنِ دارایی</h3><p>دلار واقعاً آن‌جاست؟</p></div>
+    <div class="bx"><div class="k">B2</div><h3>مسدودی</h3><p>اگر حساب بسته شد، چه؟</p></div>
+    <div class="bx"><div class="k">B3</div><h3>خروج</h3><p>هر وقت خواستم، برمی‌گردد؟</p></div>
+    <div class="bx"><div class="k">B4</div><h3>شفافیتِ هزینه</h3><p>چقدر از پولم کم می‌شود؟</p></div>
+    <div class="bx deep"><div class="k">B5</div><em>عمیق‌ترین</em><h3>از دست دادنِ کنترل</h3><p>تصمیم دربارهٔ پولم با کیست؟</p></div>
+    <div class="bx"><div class="k">B6</div><h3>مشروعیت</h3><p>پشتِ این سرویس کیست؟</p></div>
   </div>
-  <p class="lead mt24">۶ از ۱۶ نفر، پیش از هر چیز «امن یعنی چی؟» را باز کردند. <b>توضیحِ جدا جواب نداد.</b></p>
+  <div class="grow"></div>
+  <p class="lead">«اعتمادِ امروز <b>انسانی</b> است؛ نه نهادی.» <span class="sm">· فاز یک: ۲۰ مصاحبهٔ عمیق و کارگاهِ اعتماد</span></p>
 </section>
 
 <section class="sl" data-part="2">
-  <div class="eb">۰۸ · نقدِ پاسخ اولیه <span class="en">Solution Reassessment</span></div>
+  <div class="eb">۰۹ · چالشِ اعتماد · بنچمارک <span class="en">Trust-first benchmark</span></div>
+  <h2 class="t md"><span class="en">Wise</span>: اعتماد، خودِ محصول بود؛ <span class="acc">نه یک صفحهٔ توضیح.</span></h2>
+  <div class="wise">
+    <div class="side">
+      <div class="wm">Wise</div>
+      <p class="pcap" style="font-size:26px">لندن، ۲۰۱۱ · از یک دلخوری شروع شد: <b>کارمزدی که بانک‌ها در نرخِ تبدیل پنهان می‌کردند.</b></p>
+      <div class="kpi"><b>۱۵٫۶ میلیون</b><span>مشتریِ فعال · سال مالی ۲۰۲۵</span></div>
+      <div class="kpi"><b>۱۴۵ میلیارد پوند</b><span>جابه‌جاییِ فرامرزی در همان سال</span></div>
+    </div>
+    <div class="mech">
+      <div class="card"><div class="k">۱</div><h3 style="margin-top:6px">نرخِ واقعی</h3><p>نرخِ میانهٔ بازار نشان داده می‌شود؛ سود در نرخ پنهان نمی‌شود.</p></div>
+      <div class="card"><div class="k">۲</div><h3 style="margin-top:6px">کارمزد، جدا و از قبل</h3><p>پیش از تأیید، دقیقاً پیداست چقدر کم می‌شود.</p></div>
+      <div class="card"><div class="k">۳</div><h3 style="margin-top:6px">مقایسهٔ عمومی</h3><p>ابزارِ مقایسه با بانک‌ها و رقبا، روی سایتِ خودش.</p></div>
+      <div class="card"><div class="k">۴</div><h3 style="margin-top:6px">ناظر و گزارش</h3><p>مجوزِ ناظرِ مالیِ بریتانیا، گزارشِ عمومی، و مشتریانی که سهام‌دارند.</p></div>
+    </div>
+  </div>
+  <div class="row mt24" style="align-items:center;justify-content:space-between">
+    <span class="chip a">درس برای ما: اعتماد را همان‌جا نشان بده که تصمیم گرفته می‌شود</span>
+    <span class="sm">منبع: wise.com، نامهٔ بنیان‌گذار · گزارش نتایج سال مالی منتهی به مارس ۲۰۲۵</span>
+  </div>
+</section>
+
+<section class="sl" data-part="2">
+  <div class="eb">۰۹ · چالشِ اعتماد · اقتصادهای تورمی و جنگ‌زده</div>
+  <h2 class="t md">جایی که پول در خطر بود، <span class="acc">برنده‌ها با یک لنگرِ اعتماد شروع کردند.</span></h2>
+  <div class="wg">
+    <div class="wc"><span class="ctx">اوکراین · جنگ</span><h3>Monobank</h3><span class="an">خاموش نشد</span><p>دو دیتاسنتر در کی‌یف و لویو، و انتقال به ابر؛ بی‌وقفه در جنگ.</p><span class="n">۶٫۷۷ ← نزدیک ۸ میلیون مشتریِ فعال</span></div>
+    <div class="wc"><span class="ctx">لبنان · مسدودیِ سپرده‌ها از ۲۰۱۹</span><h3>Whish Money</h3><span class="an">پول، در دسترس</span><p>وقتی بانک‌ها پول را نگه داشتند، حواله‌گرها جایشان را گرفتند؛ حتی برای حقوق.</p><span class="n">انتقالِ لیره، بدون کارمزد</span></div>
+    <div class="wc"><span class="ctx">آرژانتین · تورم</span><h3>Lemon · Belo</h3><span class="an">دلارِ دیجیتال، خرجِ محلی</span><p>پس‌انداز به دلارِ دیجیتال؛ خرج به پزو با کارت.</p><span class="n">پس‌اندازِ دلاری، بدون حسابِ خارجی</span></div>
+    <div class="wc"><span class="ctx">ترکیه · تورمِ ۴۰ تا ۵۰٪</span><h3>Midas</h3><span class="an">کارمزدِ روشن، با مجوز</span><p>یک اپِ تحت نظارت برای دارایی دلاری و بورس؛ کارمزدها اعلام‌شده.</p><span class="n">۳٫۵ میلیون کاربر</span></div>
+    <div class="wc"><span class="ctx">برزیل · بی‌اعتمادی به بانک‌ها</span><h3>Nubank</h3><span class="an">بی‌کارمزدِ پنهان</span><p>از نارضایتیِ عمیق از بانک‌ها شروع شد؛ ساده و روشن.</p><span class="n">۱۰۰ میلیون مشتری · ۲۰۲۴</span></div>
+    <div class="wc"><span class="ctx">افغانستان · پس از ۲۰۲۱</span><h3>HesabPay</h3><span class="an">کار، در نبودِ بانک</span><p>پرداخت و انتقال در بازاری نقدمحور و بی‌اعتماد به نهادها.</p><span class="n">بیش از ۱ میلیون کاربر</span></div>
+  </div>
+  <div class="grow"></div>
+  <p class="sm">الگو: هیچ‌کدام با فهرستِ قابلیت شروع نکردند · عددها از گزارش‌های رسمی یا اعلامِ خودِ شرکت‌هاست، نه حسابرسیِ مستقل</p>
+</section>
+
+<section class="sl" data-part="2">
+  <div class="eb">۰۹ · چالشِ اعتماد</div>
+  <h2 class="t md">سه راهِ جدا، <span class="acc">یک جواب</span></h2>
+  <div class="cv">
+    <div class="src src1"><h3>مصاحبه‌ها <span>۲۰ مصاحبه</span></h3><p>اعتماد انسانی است، نه نهادی؛ شش مانع، پیش از هر قابلیت.</p></div>
+    <div class="src src2"><h3>تست‌ها <span>۲۱ جلسه</span></h3><p>میانهٔ اعتماد ۲ از ۵؛ اولین کلیک: «امن یعنی چی؟»</p></div>
+    <div class="src src3"><h3>بنچمارک <span>۷ نمونه</span></h3><p><span class="en">Wise · Monobank · Whish · Midas</span>: اول اعتماد، بعد قابلیت.</p></div>
+    <svg class="brace" viewBox="0 0 96 568" aria-hidden="true"><path d="M88 6C60 6 52 18 52 44L52 252C52 272 40 284 8 284C40 284 52 296 52 316L52 524C52 550 60 562 88 562"/></svg>
+    <svg class="arw" viewBox="0 0 200 60" aria-hidden="true"><path d="M196 30H14M38 10 12 30 38 50"/></svg>
+    <div class="bub"><small>چالشِ اصلی</small><b>اعتماد</b></div>
+  </div>
+</section>
+
+<section class="sl" data-part="2">
+  <div class="eb">۱۰ · نقدِ پاسخ اولیه <span class="en">Solution Reassessment</span></div>
   <h2 class="t md">ریسک حذف نمی‌شود؛ <span class="acc">پخش می‌شود.</span></h2>
   <div class="methods pic">
     <div class="mth"><svg viewBox="0 0 112 112"><circle class="ln" cx="38" cy="56" r="20"/><path class="ln" d="M58 56h40M84 56v14M96 56v10"/></svg><h3>کیف پول شخصی</h3><span class="rk">هنوز تتر · ۱۲ کلمه</span></div>
@@ -547,9 +882,8 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
   </div>
 </section>
 
-<!-- ═══ ۰۹ · نقطهٔ چرخش ═══ -->
 <section class="sl pivot alt" data-part="2" data-label="نقطهٔ چرخش · بازتعریف ارزش" id="s-pivot">
-  <div class="eb">۰۹ · بازتعریف ارزش · نقطهٔ چرخش</div>
+  <div class="eb">۱۱ · بازتعریف ارزش · نقطهٔ چرخش</div>
   <div class="pv" id="pv">
     <div class="tg tg1"><b>آشیانه</b></div>
     <div class="tg tg2"><b>کیف پول شخصی</b></div>
@@ -574,7 +908,33 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 </section>
 
 <section class="sl" data-part="2">
-  <div class="eb">۱۰ · اصول طراحیِ تازه <span class="en">Revised Product Principles</span></div>
+  <div class="eb">۱۲ · از منطق به محصول <span class="en">Product Translation</span></div>
+  <h2 class="t md">منطق درست بود؛ حالا <span class="acc">در محصول دیده می‌شود.</span></h2>
+  <div class="row grow mt40" style="gap:32px;align-items:flex-start">
+    <div class="pw"><span class="vt">تبِ نگهداری · امن‌سازی</span><div class="ph" style="--w:256px"><div class="scr"><img src="./deck-assets/v510-safe.png" alt="تب نگهداری"><i class="hl" style="--t:68;--h:160;--i:0"><b>۱</b></i><i class="hl" style="--t:298;--h:150;--i:1"><b>۲</b></i><i class="hl" style="--t:452;--h:156;--i:2"><b>۳</b></i></div></div></div>
+    <div class="pw"><span class="vt">ثبت پولِ جای دیگر</span><div class="ph" style="--w:256px"><div class="scr"><img src="./deck-assets/v512-step.png" alt="ثبت پول در جای دیگر"><i class="hl" style="--t:66;--h:160;--i:3"><b>۴</b></i></div></div></div>
+    <div class="zg">
+      <div class="zc"><div class="lens" style="background-image:url(./deck-assets/v510-safe.png);--y:68;--x:-51;--z:1;--lh:160px;--i:0"></div><h3><span class="no">۱</span>امتیاز چیدمان<span class="v">v5.4</span></h3><p>از صفر شروع؛ هر قدمِ درست +۱. «پخش کردن» قابل اندازه‌گیری شد.</p></div>
+      <div class="zc"><div class="lens" style="background-image:url(./deck-assets/v510-safe.png);--y:298;--x:-51;--z:1;--lh:160px;--i:1"></div><h3><span class="no">۲</span>بستهٔ پیشنهادی<span class="v">v5.5</span></h3><p>یک ترکیبِ آماده: در دسترس بودن و وابسته نبودن، با هم.</p></div>
+      <div class="zc"><div class="lens" style="background-image:url(./deck-assets/v510-safe.png);--y:448;--x:-51;--z:1;--lh:160px;--i:2"></div><h3><span class="no">۳</span>حقِ انتخاب<span class="v">v5.7–5.10</span></h3><p>بسته‌های دیگر و تغییرِ ترکیب؛ تصمیم با کاربر.</p></div>
+      <div class="zc"><div class="lens" style="background-image:url(./deck-assets/v512-step.png);--y:66;--x:-51;--z:1;--lh:160px;--i:3"></div><h3><span class="no">۴</span>نقشهٔ کلِ پس‌انداز<span class="v">v5.12</span></h3><p>پولی که جای دیگر است هم ثبت می‌شود؛ تصویرِ کامل، نه فقط سهمِ ما.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sl" data-part="2">
+  <div class="eb">۱۲ · از منطق به محصول · اعتماد</div>
+  <h2 class="t md">جوابِ «امن است؟»، <span class="acc">همان‌جا که سؤال پیش می‌آید.</span></h2>
+  <div class="row grow mt40" style="gap:24px;align-items:flex-start">
+    <div class="zc grow" style="flex-basis:0"><span class="tag f">مشروعیت · واقعی‌بودنِ دارایی</span><h3>مدارک و مجوزها<span class="v">v5.9</span></h3><p>مجوز با استعلام، قراردادِ نگهداری، گزارشِ ذخایر.</p><div class="lens" style="background-image:url(./deck-assets/v59-docs.png);--y:105;--x:31;--z:1.12;--lh:360px;--i:0"></div></div>
+    <div class="zc grow" style="flex-basis:0"><span class="tag f">مسدودی · خروج</span><h3>اگر اینترنت قطع شد<span class="v">v5.9</span></h3><p>موجودیِ ذخیره‌شده، برداشتِ حضوری، تماس با پشتیبانی.</p><div class="lens" style="background-image:url(./deck-assets/v59-sos.png);--y:40;--x:31;--z:1.12;--lh:360px;--i:1"></div></div>
+    <div class="zc grow" style="flex-basis:0"><span class="tag f">کنترل</span><h3>پیش‌نمایش، نه اجرا<span class="v">v5.5</span></h3><p>تا خودتان تأیید نکنید، پولی جابه‌جا نمی‌شود.</p><div class="lens" style="background-image:url(./deck-assets/v55-pkg.png);--y:330;--x:31;--z:1.12;--lh:360px;--i:2"></div></div>
+    <div class="zc grow" style="flex-basis:0"><span class="tag f">پولم کجاست؟</span><h3>جای پول، روی صفحه<span class="v">v5.15</span></h3><p>هر محل یک ستون، با مبلغش؛ از اولین لمس.</p><div class="lens" style="background-image:url(./deck-assets/v515-done.png);--y:160;--x:31;--z:1.12;--lh:360px;--i:3"></div></div>
+  </div>
+</section>
+
+<section class="sl" data-part="2">
+  <div class="eb">۱۳ · اصول طراحیِ تازه <span class="en">Revised Product Principles</span></div>
   <h2 class="t md">چهار اصل، که از تحلیل بیرون آمد</h2>
   <div class="mt40" style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
     <div class="card"><div class="eb">۱</div><h3 style="margin-top:8px">پس‌انداز، هستهٔ محصول است</h3><p>خانه همهٔ پس‌انداز را نشان می‌دهد، هر جا که هست.</p></div>
@@ -588,20 +948,19 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
   </div>
 </section>
 
-<!-- ═══ بخش سوم ═══ -->
 <section class="sl div alt" data-part="3" id="p3">
   <div class="n num">03</div>
   <h2 class="t">از استراتژی به تجربهٔ محصول</h2>
   <ol>
-    <li><i>۱۱</i>بازطراحی ساختار تجربه <span class="en">Experience Architecture</span></li>
-    <li><i>۱۲</i>تبدیل ارزش به ادراک کاربر <span class="en">Value Communication</span></li>
-    <li><i>۱۳</i>مسیر تکامل نسخه‌ها <span class="en">Product Evolution</span></li>
-    <li><i>۱۴</i>محصول امروز و آزمون بعد <span class="en">Current Product &amp; Next Validation</span></li>
+    <li><i>۱۴</i>بازطراحی ساختار تجربه <span class="en">Experience Architecture</span></li>
+    <li><i>۱۵</i>تبدیل ارزش به ادراک کاربر <span class="en">Value Communication</span></li>
+    <li><i>۱۶</i>مسیر تکامل نسخه‌ها <span class="en">Product Evolution</span></li>
+    <li><i>۱۷</i>محصول امروز <span class="en">Current Product</span></li>
   </ol>
 </section>
 
 <section class="sl" data-part="3">
-  <div class="eb">۱۱ · معماری تجربه <span class="en">Experience Architecture</span></div>
+  <div class="eb">۱۴ · معماری تجربه <span class="en">Experience Architecture</span></div>
   <h2 class="t md">خانهٔ آرام؛ <span class="acc">جزئیات، یک لمس آن‌طرف‌تر</span></h2>
   <div class="row grow mt24" style="align-items:center;gap:48px">
     <div class="pw"><span class="vt">v5.0</span><div class="ph" style="--w:244px"><img src="./deck-assets/v50-home.png" alt="خانهٔ نسخهٔ ۵٫۰"></div><p class="cap">همهٔ جزئیات روی خانه</p></div>
@@ -618,7 +977,7 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 </section>
 
 <section class="sl" data-part="3">
-  <div class="eb">۱۲ · تبدیل ارزش به ادراک <span class="en">Value Communication</span></div>
+  <div class="eb">۱۵ · تبدیل ارزش به ادراک <span class="en">Value Communication</span></div>
   <h2 class="t md">یک سیستم برای پخشِ پس‌انداز؛ <span class="acc">نه چند خدمت مالی</span></h2>
   <div class="row grow mt24" style="justify-content:space-between;align-items:flex-start">
     <div class="pw" style="width:460px"><span class="vt">v5.2</span><div class="ph" style="--w:224px"><img src="./deck-assets/v52-safe.png" alt="امتیاز از ۱۰۰۰"></div><p class="cap"><b>«۴۰۰ از ۱۰۰۰» ترسناک بود.</b><br>حالا از صفر، و هر قدمِ درست +۱.</p></div>
@@ -628,7 +987,7 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 </section>
 
 <section class="sl" data-part="3">
-  <div class="eb">۱۳ · مسیر تکامل · مرداد تا مهر ۱۴۰۵ <span class="en">v0 → v4.5</span></div>
+  <div class="eb">۱۶ · مسیر تکامل · مرداد تا مهر ۱۴۰۵ <span class="en">v0 → v4.5</span></div>
   <h2 class="t md">هر نسخه، جوابِ چیزی که شنیدیم</h2>
   <div class="row mt40" style="justify-content:space-between">
     <div class="pw" style="width:236px"><div class="ph" style="--w:150px"><img src="./deck-assets/v0-home.png" alt=""></div><p class="cap"><b class="num">v0</b><br>پنج مسیرِ WS0</p></div>
@@ -648,7 +1007,7 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 </section>
 
 <section class="sl" data-part="3">
-  <div class="eb">۱۳ · مسیر تکامل · مهر و آبان ۱۴۰۵ <span class="en">v5.0 → v5.15</span></div>
+  <div class="eb">۱۶ · مسیر تکامل · مهر و آبان ۱۴۰۵ <span class="en">v5.0 → v5.15</span></div>
   <h2 class="t md">شانزده نسخه، یک جهت: <span class="acc">ساده‌تر، آرام‌تر، روشن‌تر</span></h2>
   <div class="tl">
     <div class="it hi"><span class="v">5.0</span><span class="d">نقشهٔ کلِ پس‌انداز</span></div>
@@ -683,7 +1042,7 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 </section>
 
 <section class="sl" data-part="3">
-  <div class="eb">۱۳ · بازخورد ← تغییر <span class="en">What we heard, what we changed</span></div>
+  <div class="eb">۱۶ · بازخورد ← تغییر <span class="en">What we heard, what we changed</span></div>
   <h2 class="t md">تست، محصول را عوض کرد</h2>
   <div class="mt40" style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px">
     <div class="card" style="padding:28px 30px"><span class="tag u">کاربران</span><h3 style="font-size:28px;margin-top:16px">«مهاجر» حسِ خوبی نداشت</h3><p style="font-size:24px">← نامِ «آشیانه» <span class="num dim">v5.1</span></p></div>
@@ -700,7 +1059,7 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 </section>
 
 <section class="sl" data-part="3">
-  <div class="eb">۱۴ · محصول امروز <span class="en">Current Product · v5.15</span></div>
+  <div class="eb">۱۷ · محصول امروز <span class="en">Current Product · v5.15</span></div>
   <h2 class="t md">آشیانه امروز</h2>
   <div class="row grow mt24" style="gap:28px;align-items:flex-start">
     <div class="pw"><div class="ph" style="--w:240px"><img src="./deck-assets/v515-home.png" alt="خانه"></div></div>
@@ -716,36 +1075,199 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
   </div>
 </section>
 
-<section class="sl" data-part="3">
-  <div class="eb">۱۴ · آزمون بعد <span class="en">Next Validation</span></div>
-  <h2 class="t md">چه تثبیت شد، چه هنوز باید ثابت شود</h2>
-  <div class="row grow mt24" style="gap:40px">
-    <div class="col" style="width:600px;gap:16px">
-      <div class="sm" style="color:var(--ok)">تثبیت‌شده</div>
-      <div class="card" style="padding:18px 28px"><p style="margin:0;color:var(--ink)">پس‌انداز در مرکز؛ پخش، به‌جای یک‌جا</p></div>
-      <div class="card" style="padding:18px 28px"><p style="margin:0;color:var(--ink)">اعتماد با شفافیت: منبعِ هر عدد، نامِ شریک</p></div>
-      <div class="card" style="padding:18px 28px"><p style="margin:0;color:var(--ink)">خانهٔ آرام؛ یک دکمهٔ اصلی</p></div>
-      <div class="card" style="padding:18px 28px"><p style="margin:0;color:var(--ink)">زبان ساده، تومان؛ و «آشیانه»</p></div>
+<section class="sl div alt" data-part="4" id="p4">
+  <div class="n num">04</div>
+  <h2 class="t">آزمون مجازی: <span class="num">v4.5</span> در برابر <span class="num">v5.15</span></h2>
+  <ol>
+    <li><i>۱۸</i>روش: ۴۲ پرسونا، دو نسخه <span class="en">Method</span></li>
+    <li><i>۱۹</i>فهم و اعتماد <span class="en">Results</span></li>
+    <li><i>۲۰</i>صفحه‌به‌صفحه <span class="en">Zoomed comparison</span></li>
+    <li><i>۲۱</i>منطقِ اشتباه، و آنچه محصول باید عوض کند <span class="en">What must change</span></li>
+  </ol>
+  <p class="sm note">شبیه‌سازی با پرسونا · صدای کاربرِ واقعی نیست · هیچ جلسه‌ای به راندِ واقعی یا سرور ارسال نشد</p>
+</section>
+
+<section class="sl" data-part="4">
+  <div class="eb">۱۸ · آزمون مجازی · روش <span class="en">Persona simulation</span></div>
+  <h2 class="t md">۴۲ پرسونای ثابت؛ <span class="acc">همان آدم‌ها، دو نسخه.</span></h2>
+  <div class="row grow mt56" style="gap:64px;align-items:flex-start">
+    <div class="col grow" style="gap:0">
+      <div class="pdots"><i class="A" style="--i:0"></i><i class="A" style="--i:1"></i><i class="A" style="--i:2"></i><i class="A" style="--i:3"></i><i class="A" style="--i:4"></i><i class="A" style="--i:5"></i><i class="A" style="--i:6"></i><i class="A" style="--i:7"></i><i class="A" style="--i:8"></i><i class="A" style="--i:9"></i><i class="A" style="--i:10"></i><i class="A" style="--i:11"></i><i class="A" style="--i:12"></i><i class="A" style="--i:13"></i><i class="A" style="--i:14"></i><i class="A" style="--i:15"></i><i class="A" style="--i:16"></i><i class="A" style="--i:17"></i><i class="A" style="--i:18"></i><i class="A" style="--i:19"></i><i class="A" style="--i:20"></i><i class="A" style="--i:21"></i><i class="A" style="--i:22"></i><i class="A" style="--i:23"></i><i class="A" style="--i:24"></i><i class="A" style="--i:25"></i><i class="B" style="--i:26"></i><i class="B" style="--i:27"></i><i class="B" style="--i:28"></i><i class="B" style="--i:29"></i><i class="B" style="--i:30"></i><i class="B" style="--i:31"></i><i class="B" style="--i:32"></i><i class="B" style="--i:33"></i><i class="C" style="--i:34"></i><i class="C" style="--i:35"></i><i class="C" style="--i:36"></i><i class="C" style="--i:37"></i><i class="C" style="--i:38"></i><i class="C" style="--i:39"></i><i class="C" style="--i:40"></i><i class="C" style="--i:41"></i></div>
+      <div class="leg3">
+        <div><b><i style="background:var(--c-ash)"></i>A · ۲۶</b>سگمنت هدف: پزشک، صاحب کسب‌وکار، مدیر و متخصص</div>
+        <div><b><i style="background:var(--c-self)"></i>B · ۸</b>دیجیتال‌تر، آشنا با رمزارز و سرمایه‌گذاری</div>
+        <div><b><i style="background:#BDB7AC"></i>C · ۸</b>مرزی و منفی؛ گروهِ کنترل</div>
+      </div>
+      <div class="row mt40" style="gap:12px;flex-wrap:wrap"><span class="chip">تبدیل</span><span class="chip">فهم ارزش</span><span class="chip">فهم محلِ نگهداری</span><span class="chip">اعتماد ۱ تا ۵</span><span class="chip">قدمِ بعد</span></div>
     </div>
-    <div class="grow col" style="gap:16px">
-      <div class="sm acc">باید اعتبارسنجی شود</div>
-      <div class="card" style="padding:18px 28px"><h3 style="font-size:28px">ارزش</h3><p style="font-size:24px;margin-top:4px">«پخش کردن» روشن است؟ هدف: ۷۰٪ پاسخِ درست به «پول کجاست».</p></div>
-      <div class="card" style="padding:18px 28px"><h3 style="font-size:28px">مخاطبِ اصلی</h3><p style="font-size:24px;margin-top:4px">پس‌اندازِ بانکی و بالای ۴۵ سال، در راند اول تقریباً نبودند.</p></div>
-      <div class="card" style="padding:18px 28px"><h3 style="font-size:28px">اعتماد و قیمت</h3><p style="font-size:24px;margin-top:4px">مجوز، بیت‌وانا، «۵ دلار امتحان»؛ و کارمزد، که هنوز کسی نگفته.</p></div>
-      <div class="card" style="padding:18px 28px"><h3 style="font-size:28px">عددهای پیش‌نویس</h3><p style="font-size:24px;margin-top:4px">کارمزدها، ترکیبِ بسته‌ها، آستانهٔ امتیاز.</p></div>
+    <div class="panel" style="width:620px;gap:16px">
+      <span class="tag x" style="align-self:flex-start">شبیه‌سازی</span>
+      <h3 style="font-size:36px;font-weight:500;line-height:1.4">این، کاربرِ واقعی نیست.</h3>
+      <p class="pcap">هر پرسونا با سن، شغل، شهر، درآمد، تجربهٔ دلار و رمزارز و <b>سبکِ اعتماد</b> ساخته شده. برای سنجیدنِ منطقِ محصول و پیش‌بینیِ اصطکاک خوب است؛ برای پولِ واقعی، ماندگاری و تمایل به پرداخت، نه.</p>
+      <p class="pcap">۱۳ مشاهدهٔ <span class="num">v4.5</span> از سوابقِ قبلی؛ بقیه آفلاین. هیچ جلسه‌ای به راندِ واقعی یا سرور ارسال نشد.</p>
     </div>
   </div>
-  <p class="sm" style="margin-top:16px">راندِ بعد: نسخهٔ ۵٫۱۵، با لینک جدا برای هر کانالِ مخاطبِ هدف.</p>
+</section>
+
+<section class="sl" data-part="4">
+  <div class="eb">۱۹ · آزمون مجازی · نتایج <span class="en">v4.5 → v5.15</span></div>
+  <h2 class="t md">فهم جهش کرد؛ <span class="acc">اعتماد بالا آمد، اما به ۵ نرسید.</span></h2>
+  <div class="row grow mt40" style="gap:24px;align-items:stretch">
+    <div class="panel grow" style="justify-content:center;gap:8px">
+      <div class="row" style="gap:28px;margin-bottom:12px"><span class="lg-dot"><i style="border:3px solid var(--ink3);background:var(--sf)"></i>v4.5</span><span class="lg-dot"><i style="background:var(--acc)"></i>v5.15</span></div>
+      <div class="db lg"><span>فهم ارزش</span><div class="tk" style="--a:31;--b:88;--i:0"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۳۱٪</span> ← <b>۸۸٪</b></span></div>
+      <div class="db lg"><span>فهم محلِ نگهداری</span><div class="tk" style="--a:50;--b:83;--i:1"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۵۰٪</span> ← <b>۸۳٪</b></span></div>
+      <div class="db lg"><span>تبدیل</span><div class="tk" style="--a:40.5;--b:59.5;--i:2"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۴۰٪</span> ← <b>۶۰٪</b></span></div>
+      <div class="db lg"><span>میانهٔ اعتماد</span><div class="tk" style="--a:40;--b:80;--i:3"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۲</span> ← <b>۴ از ۵</b></span></div>
+    </div>
+    <div class="panel" style="width:600px">
+      <div class="pn-k">پخشِ امتیازِ اعتماد · ۴۲ پرسونا</div>
+      <div class="gh"><div class="g"><div class="bb"><i class="o" style="--h:14%;--i:0"><em>۴</em></i><i class="n" style="--h:0%;--i:0"><em>۰</em></i></div><span>۱</span></div><div class="g"><div class="bb"><i class="o" style="--h:100%;--i:1"><em>۲۸</em></i><i class="n" style="--h:14%;--i:1"><em>۴</em></i></div><span>۲</span></div><div class="g"><div class="bb"><i class="o" style="--h:36%;--i:2"><em>۱۰</em></i><i class="n" style="--h:46%;--i:2"><em>۱۳</em></i></div><span>۳</span></div><div class="g"><div class="bb"><i class="o" style="--h:0%;--i:3"><em>۰</em></i><i class="n" style="--h:89%;--i:3"><em>۲۵</em></i></div><span>۴</span></div><div class="g"><div class="bb"><i class="o" style="--h:0%;--i:4"><em>۰</em></i><i class="n" style="--h:0%;--i:4"><em>۰</em></i></div><span>۵</span></div></div>
+      <p class="pcap mt24">در <span class="num">v4.5</span> هیچ‌کس ۴ یا ۵ نداد. در <span class="num">v5.15</span>، ۲۵ نفر ۴ دادند؛ <b>هنوز هیچ‌کس ۵.</b></p>
+    </div>
+  </div>
+  <p class="sm mt24">منبع: دادهٔ مقایسه‌ای ۴۲ پرسونا، v4.5 و v5.15 · شبیه‌سازی</p>
+</section>
+
+<section class="sl" data-part="4">
+  <div class="eb">۱۹ · آزمون مجازی · به تفکیکِ گروه</div>
+  <h2 class="t md">بیشترین جهش در سگمنت هدف؛ <span class="acc">گروهِ کنترل عمداً پایین ماند.</span></h2>
+  <div class="row grow mt40" style="gap:24px;align-items:stretch">
+    <div class="panel grow" style="flex-basis:0;gap:4px">
+      <div class="row" style="justify-content:space-between;align-items:baseline"><h3 style="font-size:34px;font-weight:600">A · سگمنت هدف</h3><span class="pn-k">۲۶ پرسونا</span></div>
+      <div class="col" style="gap:4px;margin-top:16px"><div class="db md"><span>تبدیل</span><div class="tk" style="--a:38;--b:65;--i:0"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۳۸٪</span> ← <b>۶۵٪</b></span></div><div class="db md"><span>فهم ارزش</span><div class="tk" style="--a:35;--b:96;--i:1"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۳۵٪</span> ← <b>۹۶٪</b></span></div><div class="db md"><span>فهم نگهداری</span><div class="tk" style="--a:42;--b:92;--i:2"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۴۲٪</span> ← <b>۹۲٪</b></span></div></div>
+      <p style="font-size:26px;margin-top:16px">میانهٔ اعتماد <span class="dim">۲</span> ← <b class="acc" style="font-weight:500">۴</b></p>
+      <div class="grow"></div>
+      <p class="pcap" style="margin-top:16px">حدود یک‌سوم هنوز تبدیل نمی‌کنند: <b>صرافِ آشنا، تصمیم با همسر، ترجیحِ طلای فیزیکی.</b></p>
+    </div>
+    <div class="panel grow" style="flex-basis:0;gap:4px">
+      <div class="row" style="justify-content:space-between;align-items:baseline"><h3 style="font-size:34px;font-weight:600">B · مقایسه</h3><span class="pn-k">۸ پرسونا</span></div>
+      <div class="col" style="gap:4px;margin-top:16px"><div class="db md"><span>تبدیل</span><div class="tk" style="--a:75;--b:88;--i:3"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۷۵٪</span> ← <b>۸۸٪</b></span></div><div class="db md"><span>فهم ارزش</span><div class="tk" style="--a:50;--b:100;--i:4"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۵۰٪</span> ← <b>۱۰۰٪</b></span></div><div class="db md"><span>فهم نگهداری</span><div class="tk" style="--a:88;--b:100;--i:5"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۸۸٪</span> ← <b>۱۰۰٪</b></span></div></div>
+      <p style="font-size:26px;margin-top:16px">میانهٔ اعتماد <span class="dim">۲٫۵</span> ← <b class="acc" style="font-weight:500">۴</b></p>
+      <div class="grow"></div>
+      <p class="pcap" style="margin-top:16px">برای کاربرِ آشنا اصطکاکِ مفهومی تقریباً نیست؛ <b>ولی به کلِ بازار تعمیم‌پذیر نیست.</b></p>
+    </div>
+    <div class="panel grow" style="flex-basis:0;gap:4px">
+      <div class="row" style="justify-content:space-between;align-items:baseline"><h3 style="font-size:34px;font-weight:600">C · مرزی و منفی</h3><span class="pn-k">۸ پرسونا</span></div>
+      <div class="col" style="gap:4px;margin-top:16px"><div class="db md"><span>تبدیل</span><div class="tk" style="--a:13;--b:13;--i:6"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۱۳٪</span> ← <b>۱۳٪</b></span></div><div class="db md"><span>فهم ارزش</span><div class="tk" style="--a:0;--b:50;--i:7"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۰٪</span> ← <b>۵۰٪</b></span></div><div class="db md"><span>فهم نگهداری</span><div class="tk" style="--a:38;--b:38;--i:8"><i class="ln2"></i><i class="a"></i><i class="b"></i></div><span class="vv"><span class="dim">۳۸٪</span> ← <b>۳۸٪</b></span></div></div>
+      <p style="font-size:26px;margin-top:16px">میانهٔ اعتماد <span class="dim">۲</span> ← <b class="acc" style="font-weight:500">۳</b></p>
+      <div class="grow"></div>
+      <p class="pcap" style="margin-top:16px">تبدیل همان ماند: <b>محصول برای همه به‌زور جذاب نشد؛</b> نشانهٔ خوب.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sl" data-part="4">
+  <div class="eb">۱۹ · آزمون مجازی · ۱۳ پرسونای مشترک</div>
+  <h2 class="t md">۱۳ نفری که با هر دو نسخه سنجیده شدند: <span class="acc">همه بالاتر؛ هیچ‌کس ۵.</span></h2>
+  <div class="row grow mt24" style="gap:48px;align-items:flex-start">
+    <div class="col grow" style="gap:0">
+      <div class="sr ax"><span>پرسونا</span><span>گروه</span><div class="tk"><span>اعتماد ۱</span><span>۲</span><span>۳</span><span>۴</span><span>۵</span></div><span></span></div>
+      <div class="sr"><span>شیرین</span><span class="tag n" style="justify-self:start">A</span><div class="tk" style="--a:3;--b:4;--i:0"><i class="a"></i><i class="b"></i></div><span class="cv2">تبدیل: بله ← بله</span></div><div class="sr"><span>کامران</span><span class="tag n" style="justify-self:start">A</span><div class="tk" style="--a:2;--b:4;--i:1"><i class="a"></i><i class="b"></i></div><span class="cv2 up">تبدیل: خیر ← بله</span></div><div class="sr"><span>دکتر آرمان</span><span class="tag n" style="justify-self:start">A</span><div class="tk" style="--a:3;--b:4;--i:2"><i class="a"></i><i class="b"></i></div><span class="cv2">تبدیل: بله ← بله</span></div><div class="sr"><span>دکتر سحر</span><span class="tag n" style="justify-self:start">A</span><div class="tk" style="--a:3;--b:4;--i:3"><i class="a"></i><i class="b"></i></div><span class="cv2">تبدیل: بله ← بله</span></div><div class="sr"><span>جلال</span><span class="tag n" style="justify-self:start">A</span><div class="tk" style="--a:2;--b:3;--i:4"><i class="a"></i><i class="b"></i></div><span class="cv2">تبدیل: خیر ← خیر</span></div><div class="sr"><span>بهروز</span><span class="tag n" style="justify-self:start">A</span><div class="tk" style="--a:2;--b:4;--i:5"><i class="a"></i><i class="b"></i></div><span class="cv2">تبدیل: بله ← بله</span></div><div class="sr"><span>مریم</span><span class="tag n" style="justify-self:start">A</span><div class="tk" style="--a:2;--b:4;--i:6"><i class="a"></i><i class="b"></i></div><span class="cv2">تبدیل: بله ← بله</span></div><div class="sr"><span>امیر</span><span class="tag n" style="justify-self:start">B</span><div class="tk" style="--a:2;--b:4;--i:7"><i class="a"></i><i class="b"></i></div><span class="cv2">تبدیل: بله ← بله</span></div><div class="sr"><span>سارا</span><span class="tag n" style="justify-self:start">B</span><div class="tk" style="--a:3;--b:4;--i:8"><i class="a"></i><i class="b"></i></div><span class="cv2">تبدیل: بله ← بله</span></div><div class="sr"><span>هستی</span><span class="tag n" style="justify-self:start">B</span><div class="tk" style="--a:3;--b:4;--i:9"><i class="a"></i><i class="b"></i></div><span class="cv2">تبدیل: بله ← بله</span></div><div class="sr"><span>ترانه</span><span class="tag n" style="justify-self:start">C</span><div class="tk" style="--a:2;--b:3;--i:10"><i class="a"></i><i class="b"></i></div><span class="cv2">تبدیل: خیر ← خیر</span></div><div class="sr"><span>فاطمه</span><span class="tag n" style="justify-self:start">C</span><div class="tk" style="--a:1;--b:2;--i:11"><i class="a"></i><i class="b"></i></div><span class="cv2">تبدیل: خیر ← خیر</span></div><div class="sr"><span>مجتبی</span><span class="tag n" style="justify-self:start">C</span><div class="tk" style="--a:2;--b:3;--i:12"><i class="a"></i><i class="b"></i></div><span class="cv2">تبدیل: خیر ← خیر</span></div>
+    </div>
+    <div class="col" style="width:440px;gap:20px">
+      <div class="panel" style="gap:4px"><span class="pn-k">تبدیل</span><span style="font-size:60px;font-weight:300"><span class="dim">۸</span> ← <span class="acc">۹</span></span></div>
+      <div class="panel" style="gap:4px"><span class="pn-k">میانهٔ اعتماد</span><span style="font-size:60px;font-weight:300"><span class="dim">۲</span> ← <span class="acc">۴</span></span></div>
+      <div class="panel" style="gap:4px"><span class="pn-k">قدمِ بعد</span><p class="pcap"><b>۴ نفر</b> از «فقط می‌خوانم» به «با مبلغ آزمایشی شروع می‌کنم» رفتند.</p></div>
+    </div>
+  </div>
+  <p class="sm" style="margin-top:12px">ردیف‌های v4.5 از سوابقِ قبلی؛ v5.15 شبیه‌سازی · <span class="lg-dot" style="font-size:20px"><i style="border:3px solid var(--ink3);background:var(--sf)"></i>v4.5</span> <span class="lg-dot" style="font-size:20px;margin-right:16px"><i style="background:var(--acc)"></i>v5.15</span></p>
+</section>
+
+<section class="sl" data-part="4">
+  <div class="eb">۲۰ · صفحه‌به‌صفحه · ارزش</div>
+  <h2 class="t md">پیامِ اول: <span class="acc">از فهرستِ قابلیت، به یک کار.</span></h2>
+  <div class="zm">
+    <div class="zh">
+      <span class="vt" style="text-align:right">v4.5</span>
+      <div class="row"><div class="ph" style="--w:190px"><div class="scr"><img src="./deck-assets/v45-intro.png" alt=""><i class="hl" style="--t:60;--h:427;--i:0"></i></div></div><div class="lens" style="background-image:url(./deck-assets/v45-intro.png);--y:60;--x:0;--z:1.17;--lh:500px;--i:0;width:456px;flex:none"></div></div>
+      <p class="cap">قولِ «آشیانهٔ امن»، و بلافاصله فهرستِ قابلیت‌ها: <b>انتقال، سرمایه‌گذاری، زیرِ بالشت.</b></p>
+    </div>
+    <div class="zmid"><span class="k">فهمِ ارزش</span><span class="o">۳۱٪</span><span class="ar">↓</span><span class="n">۸۸٪</span></div>
+    <div class="zh">
+      <span class="vt" style="text-align:right">v5.15</span>
+      <div class="row"><div class="ph" style="--w:190px"><div class="scr"><img src="./deck-assets/v515-intro.png" alt=""><i class="hl" style="--t:90;--h:427;--i:1"></i></div></div><div class="lens" style="background-image:url(./deck-assets/v515-intro.png);--y:90;--x:0;--z:1.17;--lh:500px;--i:1;width:456px;flex:none"></div></div>
+      <p class="cap">یک جمله، یک کار: <b>بکشید تا پخش شود</b>؛ امتیاز همان‌جا زنده می‌شود.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sl" data-part="4">
+  <div class="eb">۲۰ · صفحه‌به‌صفحه · جای پول</div>
+  <h2 class="t md">جای پول: <span class="acc">از صفحه‌ای جدا، به همان صفحهٔ اول.</span></h2>
+  <div class="zm">
+    <div class="zh">
+      <span class="vt" style="text-align:right">v4.5</span>
+      <div class="row"><div class="ph" style="--w:190px"><div class="scr"><img src="./deck-assets/v45-custody.png" alt=""><i class="hl" style="--t:40;--h:427;--i:0"></i></div></div><div class="lens" style="background-image:url(./deck-assets/v45-custody.png);--y:40;--x:0;--z:1.17;--lh:500px;--i:0;width:456px;flex:none"></div></div>
+      <p class="cap">جای پول، در صفحه‌ای جدا و <b>سه کارتِ پرمتن.</b></p>
+    </div>
+    <div class="zmid"><span class="k">فهمِ محلِ نگهداری</span><span class="o">۵۰٪</span><span class="ar">↓</span><span class="n">۸۳٪</span></div>
+    <div class="zh">
+      <span class="vt" style="text-align:right">v5.15</span>
+      <div class="row"><div class="ph" style="--w:190px"><div class="scr"><img src="./deck-assets/v515-done.png" alt=""><i class="hl" style="--t:100;--h:427;--i:1"></i></div></div><div class="lens" style="background-image:url(./deck-assets/v515-done.png);--y:100;--x:0;--z:1.17;--lh:500px;--i:1;width:456px;flex:none"></div></div>
+      <p class="cap">جای پول، روی همان صفحهٔ اول: <b>هر ستون یک محل، با مبلغش.</b></p>
+    </div>
+  </div>
+</section>
+
+<section class="sl" data-part="4">
+  <div class="eb">۲۰ · صفحه‌به‌صفحه · اعتماد</div>
+  <h2 class="t md">اعتماد: <span class="acc">از استعاره، به مدرک</span> — <span class="bad">ولی هنوز نمونه.</span></h2>
+  <div class="zm">
+    <div class="zh">
+      <span class="vt" style="text-align:right">v4.5</span>
+      <div class="row"><div class="ph" style="--w:190px"><div class="scr"><img src="./deck-assets/v45-ex-safe.png" alt=""><i class="hl" style="--t:150;--h:427;--i:0"></i></div></div><div class="lens" style="background-image:url(./deck-assets/v45-ex-safe.png);--y:150;--x:0;--z:1.17;--lh:500px;--i:0;width:456px;flex:none"></div></div>
+      <p class="cap">توضیحِ جدا، با استعاره: <b>«تومان مثل یخ در آفتاب است».</b></p>
+    </div>
+    <div class="zmid"><span class="k">میانهٔ اعتماد</span><span class="o">۲</span><span class="ar">↓</span><span class="n">۴</span><span class="x">در اجرای دوم: ۲</span></div>
+    <div class="zh">
+      <span class="vt" style="text-align:right">v5.15</span>
+      <div class="row"><div class="ph" style="--w:190px"><div class="scr"><img src="./deck-assets/v59-docs.png" alt=""><i class="hl" style="--t:90;--h:427;--i:1"></i></div></div><div class="lens" style="background-image:url(./deck-assets/v59-docs.png);--y:90;--x:0;--z:1.17;--lh:500px;--i:1;width:456px;flex:none"></div></div>
+      <p class="cap">مدرک با نام، و کنارش یک کار: استعلام، دیدن، خواندن. <b class="bad">مدارک هنوز نمونه‌اند.</b></p>
+    </div>
+  </div>
+</section>
+
+<section class="sl" data-part="4">
+  <div class="eb">۲۱ · آنچه آموختیم <span class="en">What we got wrong</span></div>
+  <h2 class="t md">دو اجرای جدا روی <span class="num">v5.15</span>: <span class="acc">فهم ثابت است؛ اعتماد نه.</span></h2>
+  <div class="row grow mt40" style="gap:40px;align-items:stretch">
+    <div class="panel grow">
+      <div class="row" style="gap:28px"><span class="lg-dot"><i style="background:var(--acc)"></i>اجرای ۱ · دادهٔ مقایسه‌ای</span><span class="lg-dot"><i style="background:var(--silver)"></i>اجرای ۲ · گزارشِ شبیه‌سازیِ v5.15</span></div>
+      <div style="margin-top:16px"><div class="pr"><span class="lb">فهم ارزش</span><div class="pb"><div class="r1"><i style="--w:88%;--i:0"></i><b>۸۸٪</b></div><div class="r2"><i style="--w:81%;--i:0"></i><b>۸۱٪</b></div></div></div><div class="pr"><span class="lb">فهم محلِ نگهداری</span><div class="pb"><div class="r1"><i style="--w:83%;--i:1"></i><b>۸۳٪</b></div><div class="r2"><i style="--w:71%;--i:1"></i><b>۷۱٪</b></div></div></div><div class="pr"><span class="lb">تبدیل</span><div class="pb"><div class="r1"><i style="--w:60%;--i:2"></i><b>۶۰٪</b></div><div class="r2"><i style="--w:45%;--i:2"></i><b>۴۵٪</b></div></div></div><div class="pr hot"><span class="lb">میانهٔ اعتماد</span><div class="pb"><div class="r1"><i style="--w:80%;--i:3"></i><b>۴ از ۵</b></div><div class="r2"><i style="--w:40%;--i:3"></i><b>۲ از ۵</b></div></div></div></div>
+    </div>
+    <div class="col" style="width:600px;gap:20px">
+      <div class="panel" style="gap:10px"><span class="pn-k">فرضِ ما</span><p style="font-size:36px;font-weight:500;line-height:1.45">اگر بفهمند، اعتماد می‌کنند.</p><p style="font-size:44px;font-weight:600" class="bad">نادرست بود.</p></div>
+      <div class="panel grow" style="background:var(--ink);border-color:var(--ink);gap:12px;justify-content:center"><p style="font-size:34px;font-weight:500;color:#fff;line-height:1.5">فهم لازم است؛ کافی نیست. <span style="color:#E5C38C">اعتماد، شاهد می‌خواهد.</span></p><p style="font-size:22px;font-weight:300;color:rgba(255,255,255,.7);line-height:1.6">«محصول حالا قابل‌فهم‌تر شده، اما برای پول واقعی هنوز شواهد اعتماد کافی ندارد.» · گزارش شبیه‌سازی</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sl" data-part="4">
+  <div class="eb">۲۱ · آنچه محصول باید عوض کند <span class="en">What must change</span></div>
+  <h2 class="t md">پس محصول هم باید عوض شود: <span class="acc">از توضیحِ اعتماد، به اثباتِ اعتماد.</span></h2>
+  <div class="fcg">
+    <div class="fc"><span class="no">۱</span><span class="fr">مدارک «نمونه»اند</span><span class="to">مدارکِ واقعی، قابلِ استعلام</span></div>
+    <div class="fc"><span class="no">۵</span><span class="fr">ادعاهای مطلق</span><span class="to">فقط جمله‌هایی که می‌شود ثابتشان کرد</span></div>
+    <div class="fc"><span class="no">۲</span><span class="fr">دو نام: مهاجر و آشیانه</span><span class="to">یک برند، همه‌جا</span></div>
+    <div class="fc"><span class="no">۶</span><span class="fr">خانهٔ صفر، بی‌روایت</span><span class="to">حالتِ شروع، با یک مسیر</span></div>
+    <div class="fc"><span class="no">۳</span><span class="fr">حداقل ۵۰ دلار، کنارِ دکمهٔ «۵ دلار امتحان»</span><span class="to">یک عدد؛ امتحان، واقعاً با ۵ دلار</span></div>
+    <div class="fc"><span class="no">۷</span><span class="fr">سه نام: آشیانه، بیت‌وانا، <span class="en">USDT</span></span><span class="to">یک جمله: «دلارتان نزد کیست»</span></div>
+    <div class="fc"><span class="no">۴</span><span class="fr">پنج انتخاب، بعد از تبدیل</span><span class="to">یک قدمِ بعدیِ پیشنهادی</span></div>
+    <div class="fc"><span class="no">۸</span><span class="fr">اعتمادِ انسانیِ ضعیف؛ برداشتِ اثبات‌نشده</span><span class="to">پشتیبانِ با نام، و سابقهٔ تسویهٔ قابل‌دیدن</span></div>
+  </div>
+  <div class="grow"></div>
+  <p class="lead" style="font-size:28px">راندِ بعد: <b>تستِ واقعی با سگمنت A</b> — اعتماد پیش و پس از تجربه، با مبلغِ واقعیِ آزمایشی.</p>
 </section>
 
 <section class="sl alt" data-part="3" style="justify-content:center;align-items:center;text-align:center">
-  <div class="mk"><svg viewBox="0 0 49.33 39.99" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></div>
+  <div class="mk"><svg viewBox="0 0 49.33 39.99" fill="#B47A26"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg></div>
   <h2 class="t" style="font-size:112px;margin-top:40px">آشیانه</h2>
   <p class="lead" style="margin-top:24px">پس‌اندازتان را دلاری کنید؛ <span class="acc">همه‌اش را به یک جا نسپارید.</span></p>
 </section>
 
 <div id="foot">
-  <div class="brand"><svg viewBox="0 0 49.33 39.99" fill="#D5A45C"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg><span id="part"></span></div>
+  <div class="brand"><svg viewBox="0 0 49.33 39.99" fill="#B47A26"><path d="M30.28,39.83q1.83-7.89,3.66-15.77c.1-.47.52-1.07.13-1.43s-1,.12-1.51.27c-6.83,2.13-13.88,2.55-21,2.57A91.81,91.81,0,0,1,0,24.81,142.7,142.7,0,0,0,14.58,21C23,18.22,31,14.81,38.23,9.62a15.5,15.5,0,0,0,5.1-5.48,7.72,7.72,0,0,1,6-4.14L30.63,40Z"/></svg><span id="part"></span></div>
   <span id="cnt" class="num" style="font-weight:500"></span>
 </div>
 </div>
@@ -756,7 +1278,8 @@ const PARTS={
   0:'آشیانه · ارائهٔ نهایی محصول',
   1:'بخش اول · ورودی‌ها و شکل‌گیری محصول',
   2:'بخش دوم · یادگیری و اصلاح منطق محصول',
-  3:'بخش سوم · از استراتژی به تجربهٔ محصول'
+  3:'بخش سوم · از استراتژی به تجربهٔ محصول',
+  4:'بخش چهارم · آزمون مجازی با پرسونا'
 };
 const stage=document.getElementById('stage'), slides=[...document.querySelectorAll('.sl')];
 const PIVOT=slides.findIndex(s=>s.id==='s-pivot');
@@ -766,16 +1289,16 @@ let cur=0, T=[];
 
 slides.forEach((s,k)=>{ if(k>PIVOT) s.classList.add('post'); });
 /* ورودِ تدریجی، به ترتیبِ خواندن */
-const BUILD='.eb,.t,.lead,.sm,.card,.pw,.chip,.ring,.br,.fun,.tl .it,.div li,.div .n,.arrow,.force,.half,.mth,.ins p,.q,.rt-n,.hub';
+const BUILD='.eb,.t,.lead,.sm,.card,.pw,.chip,.ring,.br,.fun,.tl .it,.div li,.div .n,.arrow,.force,.half,.mth,.ins p,.q,.rt-n,.hub,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid,.sr,.leg3 div';
 slides.forEach(s=>{ if(s.classList.contains('splash')||s.classList.contains('pivot')) return;
-  let k=0; s.querySelectorAll(BUILD).forEach(e=>{ if(e.parentElement.closest('.card,.pw,.ring,.force,.half,.mth,.chip')) return; e.classList.add('bd'); e.style.setProperty('--i',Math.min(k++,16)); }); });
+  let k=0; s.querySelectorAll(BUILD).forEach(e=>{ if(e.parentElement.closest('.card,.pw,.ring,.force,.half,.mth,.chip,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid')) return; e.classList.add('bd'); e.style.setProperty('--i',Math.min(k++,16)); }); });
 
 function fit(){ const s=Math.min(innerWidth/1920,innerHeight/1080); stage.style.transform=`translate(-50%,-50%) scale(${s})`; }
 addEventListener('resize',fit); fit();
 function clearT(){ T.forEach(clearTimeout); T=[]; }
 function later(fn,ms){ T.push(setTimeout(fn,ms)); }
 
-function playSplash(){ const sp=document.getElementById('spl'); sp.classList.remove('run','done'); void sp.offsetWidth; sp.classList.add('run'); later(()=>{ sp.classList.remove('run'); sp.classList.add('done'); },5200); }
+function playSplash(){ const sp=document.getElementById('spl'); sp.classList.remove('run','done'); void sp.offsetWidth; sp.classList.add('run'); later(()=>{ sp.classList.remove('run'); sp.classList.add('done'); },6000); }
 function playPivot(){
   const s=slides[PIVOT]; s.classList.remove('prun','pdone','post'); stage.classList.remove('post'); void s.offsetWidth;
   if(REDUCED){ s.classList.add('pdone','post'); stage.classList.add('post'); return; }

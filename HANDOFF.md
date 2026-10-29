@@ -3648,6 +3648,88 @@ dashboard and later merged with other departments' parts.
 
 ---
 
+## 10ag. Final deck, pass 4 — light theme, trust story, persona test (2026-10-29)
+
+`prototype/final-deck.html` is now 40 slides in four parts. It is built by a
+script (scratchpad `build_deck4.py`) from the pass-3 file.
+
+**Theme**
+- Light paper `#F6F4EF` with white cards and soft shadows.
+- Pre-pivot accent: slate `#53647A`. Post-pivot: darker gold `#A9721F`.
+- "Bad" is terracotta `#C25339`; it marks the test results that hurt.
+
+**Splash**
+- The droplets are gone. At impact, ten real feather shapes burst outward.
+- Each feather has three layers: burst (i), fall (b) and pendulum sway (s).
+- The splash now runs 6s.
+
+**Part 2 — «تست، چالشِ اعتماد و چرخش»**
+- Slides 1–8 are unchanged.
+- Test setup: the session funnel 21 → 16 → 12 → 11 → 8 → 2, plus the audience.
+- Results:
+  - small «کاربردپذیری» ring at 11/12, framed as not the problem;
+  - hero «فهم درستِ ارزش ۴ از ۹», with the five answers;
+  - «میانهٔ اعتماد ۲ از ۵», with the 1–5 histogram (2, 4, 2, 1, 0).
+  - «می‌دانستند پولشان کجاست» was removed here, as asked.
+- Gap: the features funnel is the hero. Two side cards: «ارزش درک نشد» and
+  «به لنگرِ اعتماد توجه نکردیم» (the 2/9 where-money stat now lives there).
+- Quotes: six «گیر کردم» quotes, with the trust ones tinted.
+- Trust challenge, four slides:
+  1. Interview barriers B1–B6, with B5 «از دست دادنِ کنترل» marked deepest.
+  2. Wise.
+  3. Six trust-first products in inflationary or war economies: Monobank,
+     Whish, Lemon/Belo, Midas, Nubank, HesabPay.
+  4. The sc3 convergence: مصاحبه‌ها / تست‌ها / بنچمارک → brace → arrow →
+     the bold black bubble «چالشِ اصلی: اعتماد».
+- Then reassessment and the pivot.
+- New after the pivot, «۱۲ · از منطق به محصول»:
+  - the نگهداری/امن‌سازی tab with numbered highlights and zoom lenses;
+  - trust features, each mapped to a barrier.
+
+**Part 3**
+- Unchanged, except renumbering.
+- «Next Validation» is deleted.
+
+**Part 4 — «آزمون مجازی» (new; SIMULATION, labelled on every slide)**
+- Method: 42 personas, A 26 / B 8 / C 8.
+- Dumbbells v4.5 → v5.15:
+  - value 31 → 88%;
+  - holding 50 → 83%;
+  - conversion 40 → 60%;
+  - median trust 2 → 4.
+- Trust histogram (4/28/10/0/0 → 0/4/13/25/0).
+- Per-group panels.
+- The 13 shared personas as a dot plot.
+- Three zoomed screen-vs-screen comparisons (value, where money, trust).
+- «دو اجرای جدا»:
+  - The comparative xlsx gives trust 4.
+  - The standalone v5.15 CSV gives trust 2 (P1 34/42, C2 30/42, conversion 19/42).
+  - Conclusion: «فهم لازم است؛ کافی نیست». The assumption "understanding →
+    trust" was wrong.
+- Eight friction → change cards, from «توضیحِ اعتماد» to «اثباتِ اعتماد».
+
+**Mechanics**
+- Zoom lens: `.lens` with `--y` (CSS px of the 390×844 screen), `--x` and
+  `--z`, plus `--lh` for the lens height.
+- Phone highlight: `.scr > .hl` with `--t` and `--h` in the same units.
+- `PARTS` has part 4. The next department uses 5.
+
+**Benchmark numbers are company-reported**
+- Wise FY2025: 15.6M active, £145.2bn cross-border.
+- Monobank: 6.77M → ~8M active in the first war year.
+- Midas: 3.5M users.
+- Nubank: 100M (May 2024).
+- HesabPay: 1M+ (self-reported).
+
+**Dashboard (`index.html`)**
+- It was hand-written, so it never picked up new builds; the test console reads
+  `test-versions.json` automatically, the dashboard does not.
+- Now: v5.15 as the test build, a grid of v5.0–v5.14, v4.5 as the previous build,
+  the round-1 report, the final deck as the main client item, and callout links
+  for v5.15.
+
+---
+
 ## 11. Blu Bank — the reference
 
 The team keeps pointing at Blu (بلوبانک, by Saman Bank) and it is now the primary
