@@ -329,6 +329,42 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 .pdone .coin{opacity:1;animation:none;transform:translate(var(--tx),var(--ty));background:var(--to)}
 
 
+
+/* ═══ تست میدانی · روش و صدا ═══ */
+.tlab{display:grid;grid-template-columns:repeat(7,1fr);gap:16px;margin-top:28px;align-items:start}
+.tlab .stp2{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.tlab .stp2 .ph{--w:176px}
+.tlab .n2{width:40px;height:40px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-size:20px;font-weight:600}
+.tlab h4{font-size:23px;font-weight:600;line-height:1.35}
+.tlab p{font-size:18px;font-weight:300;color:var(--ink2);line-height:1.5;margin-top:-4px}
+.tlab .stp2.hot .n2{background:var(--ink)} .tlab .stp2.hot h4{color:var(--acc)}
+.vwrap{display:grid;grid-template-columns:1fr 1fr 560px;gap:24px;margin-top:40px;align-items:stretch}
+.vp{background:var(--sf);border:1px solid var(--ln);border-radius:26px;padding:26px 30px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:18px}
+.vp .who2{display:flex;justify-content:space-between;align-items:baseline}
+.vp .who2 b{font-size:28px;font-weight:600}
+.vp .who2 span{font-size:20px;color:var(--ink3)}
+.vp .ctl{display:flex;align-items:center;gap:18px}
+.vp .pb{width:76px;height:76px;flex:none;border-radius:50%;border:0;background:var(--acc);display:grid;place-items:center;cursor:pointer;box-shadow:0 12px 26px -12px color-mix(in srgb,var(--acc) 70%,transparent)}
+.vp .pb svg{width:30px;height:30px;fill:#fff}
+.vp .wave{flex:1;height:110px;display:flex;align-items:center;gap:2px;cursor:pointer;direction:ltr}
+.vp .wave i{flex:1;border-radius:3px;background:#D8D2C7;min-height:4px;transition:background .15s}
+.vp .wave i.on{background:var(--acc)}
+.vp .tm2{font-size:21px;color:var(--ink3);direction:ltr;text-align:left;white-space:nowrap}
+.vp .cl{font-size:19px;color:var(--ink3)}
+.vp .cuts{display:flex;gap:10px;flex-wrap:wrap}
+.vp .cuts button{font-family:inherit;font-size:19px;padding:8px 16px;border-radius:99px;border:1px solid var(--ln);background:var(--bg);color:var(--ink2);cursor:pointer;direction:ltr}
+.vp .cuts button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.vp .miss{display:none;font-size:20px;color:var(--warn);line-height:1.5}
+.vp.missing .miss{display:block} .vp.missing .ctl,.vp.missing .cuts{opacity:.35;pointer-events:none}
+.vbs{display:flex;gap:40px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:96px}
+.vp.vb{width:640px;border-radius:40px 40px 40px 10px;padding:24px 30px 20px;gap:14px}
+.vp.vb .wave{height:64px}
+.vp.vb .who2 b{font-size:24px}
+.vq2{background:var(--ink);color:#fff;border-radius:26px;padding:26px 32px;display:flex;flex-direction:column;gap:12px}
+.vq2 h4{font-size:24px;font-weight:600;color:#E5C38C}
+.vq2 ol{list-style:none;display:flex;flex-direction:column;gap:12px;counter-reset:q}
+.vq2 li{counter-increment:q;display:grid;grid-template-columns:34px 1fr;gap:10px;font-size:21px;line-height:1.55;color:rgba(255,255,255,.88)}
+.vq2 li:before{content:counter(q,persian);width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:17px;color:#fff}
 /* ═══ پاس ۴ · بخش تست، اعتماد، محصول و آزمون مجازی ═══ */
 .bad{color:var(--warn)}
 .panel{background:var(--sf);border:1px solid var(--ln);border-radius:28px;padding:32px 36px;box-shadow:var(--shadow);display:flex;flex-direction:column}
@@ -1682,6 +1718,33 @@ aside.notes{display:none}
   <p class="lead" style="font-size:28px">راندِ بعد: <b>تستِ واقعی با سگمنت A</b> — اعتماد پیش و پس از تجربه، با مبلغِ واقعیِ آزمایشی.</p>
 </section>
 
+<section class="sl" data-part="4" data-label="تست میدانی · روش و صدا">
+  <div class="eb">پیوست · تست میدانی <span class="en">How we test</span></div>
+  <h2 class="t md">تستِ ما: یک لینک، بی‌راهنما؛ <span class="acc">و هر لحظه ثبت می‌شود.</span></h2>
+  <div class="tlab">
+    <div class="stp2"><span class="n2">۱</span><div class="ph"><img src="./deck-assets/tw-welcome.png" alt=""></div><h4>یک لینکِ اختصاصی</h4><p>نسخه، راند و کانال در خودِ لینک</p></div>
+    <div class="stp2"><span class="n2">۲</span><div class="ph"><img src="./deck-assets/tw-seg.png" alt=""></div><h4>چهار سؤالِ شناخت</h4><p>سن، تجربهٔ دلار، رمزارز، جای پس‌انداز</p></div>
+    <div class="stp2"><span class="n2">۳</span><div class="ph"><img src="./deck-assets/tw-brief.png" alt=""></div><h4>یک مأموریت</h4><p>«بخشی از پولتان را از تومان خارج کنید»؛ بدون راهنما</p></div>
+    <div class="stp2"><span class="n2">۴</span><div class="ph"><img src="./deck-assets/tw-app.png" alt=""></div><h4>خودِ اپ، زیرِ ذره‌بین</h4><p>هر ضربه، هر صفحه و هر مکث ثبت می‌شود</p></div>
+    <div class="stp2 hot"><span class="n2">۵</span><div class="ph"><img src="./deck-assets/tw-stuck.png" alt=""></div><h4>«گیر کردم»</h4><p>همان لحظه و همان صفحه: حس، و یک جمله</p></div>
+    <div class="stp2"><span class="n2">۶</span><div class="ph"><img src="./deck-assets/tw-end.png" alt=""></div><h4>چهار سؤالِ پایانی</h4><p>ارزش، جای پول، اعتماد ۱ تا ۵، قدمِ بعد</p></div>
+    <div class="stp2 hot"><span class="n2">۷</span><div class="ph"><img src="./deck-assets/tw-voice.png" alt=""></div><h4>ویس، با صدای خودشان</h4><p>چهار سؤال، حداکثر دو دقیقه</p></div>
+  </div>
+  <div class="grow"></div>
+  <div class="row" style="gap:12px;flex-wrap:wrap"><span class="chip a">کنسول زنده: لینک بساز، زنده ببین</span><span class="chip">نقشهٔ ضربه روی همان صفحه</span><span class="chip">ضربهٔ عصبی و ضربهٔ بی‌جواب</span><span class="chip">زمانِ هر صفحه</span><span class="chip">بی‌نام؛ بدون هیچ اطلاعات بانکی</span></div>
+</section>
+
+<section class="sl" data-part="4" data-label="تست میدانی · روش و صدا">
+  <div class="eb">پیوست · تست میدانی · صدای شرکت‌کننده‌ها <span class="en">In their own voice</span></div>
+  <h2 class="t md">و جواب می‌دهند؛ <span class="acc">با صدای خودشان.</span></h2>
+  <div class="vbs">
+    <div class="vp vb" data-src="./deck-voices/p1.mp3" data-dur="6.6"><div class="ctl"><button class="pb" aria-label="پخش"><svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></svg></button><div class="wave"><i style="height:34px"></i><i style="height:20px"></i><i style="height:38px"></i><i style="height:46px"></i><i style="height:46px"></i><i style="height:45px"></i><i style="height:29px"></i><i style="height:50px"></i><i style="height:56px"></i><i style="height:49px"></i><i style="height:32px"></i><i style="height:32px"></i><i style="height:22px"></i><i style="height:19px"></i><i style="height:5px"></i><i style="height:5px"></i><i style="height:5px"></i><i style="height:27px"></i><i style="height:42px"></i><i style="height:23px"></i><i style="height:24px"></i><i style="height:8px"></i><i style="height:13px"></i><i style="height:17px"></i><i style="height:11px"></i><i style="height:5px"></i><i style="height:20px"></i><i style="height:27px"></i><i style="height:39px"></i><i style="height:38px"></i><i style="height:38px"></i><i style="height:35px"></i><i style="height:32px"></i><i style="height:25px"></i><i style="height:20px"></i><i style="height:25px"></i><i style="height:29px"></i><i style="height:22px"></i><i style="height:16px"></i><i style="height:5px"></i></div><span class="tm2">0:00 / 0:07</span></div><div class="who2"><b>شرکت‌کنندهٔ ۱</b><span>۲۵ تا ۳۴ ساله · ۱۴ مهر</span></div><p class="miss">فایلِ صدا روی این دستگاه نیست.</p></div>
+    <div class="vp vb" data-src="./deck-voices/p2.mp3" data-dur="6.6"><div class="ctl"><button class="pb" aria-label="پخش"><svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></svg></button><div class="wave"><i style="height:27px"></i><i style="height:27px"></i><i style="height:40px"></i><i style="height:56px"></i><i style="height:44px"></i><i style="height:52px"></i><i style="height:42px"></i><i style="height:38px"></i><i style="height:21px"></i><i style="height:25px"></i><i style="height:36px"></i><i style="height:23px"></i><i style="height:56px"></i><i style="height:38px"></i><i style="height:18px"></i><i style="height:15px"></i><i style="height:16px"></i><i style="height:25px"></i><i style="height:31px"></i><i style="height:26px"></i><i style="height:40px"></i><i style="height:24px"></i><i style="height:25px"></i><i style="height:25px"></i><i style="height:15px"></i><i style="height:20px"></i><i style="height:18px"></i><i style="height:12px"></i><i style="height:12px"></i><i style="height:22px"></i><i style="height:16px"></i><i style="height:15px"></i><i style="height:12px"></i><i style="height:34px"></i><i style="height:24px"></i><i style="height:16px"></i><i style="height:26px"></i><i style="height:25px"></i><i style="height:11px"></i><i style="height:6px"></i></div><span class="tm2">0:00 / 0:07</span></div><div class="who2"><b>شرکت‌کنندهٔ ۲</b><span>۲۵ تا ۳۴ ساله · ۱۷ مهر</span></div><p class="miss">فایلِ صدا روی این دستگاه نیست.</p></div>
+  </div>
+  <div class="grow"></div>
+  <p class="sm">چند ثانیه از هر ویس · راند «تست اول ارسال»، نسخهٔ ۴٫۵ · بی‌نام · از ۶ نفری که به بخشِ ویس رسیدند، ۲ نفر صدا فرستادند</p>
+</section>
+
 <!-- ═══ بخش ۵ · ورک‌استریم ۲ ═══ -->
 <section class="sl div alt" data-part="5" id="p5">
   <div class="row" style="gap:16px;align-items:center"><span class="ptag">ورک‌استریم ۲ · فاز چهار</span><span class="ptag" style="background:var(--sf);color:var(--ink2)">آبان ۱۴۰۵ · <span class="en">V0.1</span></span></div>
@@ -2319,9 +2382,9 @@ let cur=0, T=[];
 
 slides.forEach((s,k)=>{ if(k>PIVOT) s.classList.add('post'); });
 /* ورودِ تدریجی، به ترتیبِ خواندن */
-const BUILD='.stair>div,.q4>div,.sgc>div,.sw .r,.rf .bl,.lad6 div,.pinl div,.cr4 div,.st2 tr,.fm tr,.mh2>div,.two2>div,.arms,.ms>div,.rv3,.dec7 .rows>div,.dec7 .side>div,.qbar,.tools,.kc,.cav,.fnote,.ask div,.ft,.lad>div,.cg>div,.tk5>div,.dc2,.mbp .it,.mbp .hd,.wv .bx,.nfn>div,.ep>div,.stp>div,.seq>div,.gp>div,.arch2 .lyr,.arch2 .srcs div,.wf .grp,.eb,.t,.lead,.sm,.card,.pw,.chip,.ring,.br,.fun,.tl .it,.div li,.div .n,.arrow,.force,.half,.mth,.ins p,.q,.rt-n,.hub,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid,.sr,.leg3 div';
+const BUILD='.stair>div,.q4>div,.sgc>div,.sw .r,.rf .bl,.lad6 div,.pinl div,.cr4 div,.st2 tr,.fm tr,.mh2>div,.two2>div,.arms,.ms>div,.rv3,.dec7 .rows>div,.dec7 .side>div,.qbar,.tools,.kc,.cav,.fnote,.ask div,.ft,.lad>div,.cg>div,.tk5>div,.dc2,.mbp .it,.mbp .hd,.wv .bx,.nfn>div,.ep>div,.stp>div,.seq>div,.gp>div,.arch2 .lyr,.arch2 .srcs div,.wf .grp,.eb,.t,.lead,.sm,.card,.pw,.chip,.ring,.br,.fun,.tl .it,.div li,.div .n,.arrow,.force,.half,.mth,.ins p,.q,.rt-n,.hub,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid,.sr,.leg3 div,.stp2,.vp,.vq2';
 slides.forEach(s=>{ if(s.classList.contains('splash')||s.classList.contains('pivot')) return;
-  let k=0; s.querySelectorAll(BUILD).forEach(e=>{ if(e.parentElement.closest('.stair>div,.q4>div,.sgc>div,.sw .r,.rf .bl,.mh2>div,.two2>div,.arms,.ms>div,.dec7 .rows>div,.dec7 .side>div,.kc,.cav,.ft,.lad>div,.cg>div,.tk5>div,.dc2,.mbp .it,.wv .bx,.nfn>div,.ep>div,.stp>div,.seq>div,.gp>div,.arch2 .lyr,.wf .grp,.card,.pw,.ring,.force,.half,.mth,.chip,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid')) return; e.classList.add('bd'); e.style.setProperty('--i',Math.min(k++,16)); }); });
+  let k=0; s.querySelectorAll(BUILD).forEach(e=>{ if(e.parentElement.closest('.stair>div,.q4>div,.sgc>div,.sw .r,.rf .bl,.mh2>div,.two2>div,.arms,.ms>div,.dec7 .rows>div,.dec7 .side>div,.kc,.cav,.ft,.lad>div,.cg>div,.tk5>div,.dc2,.mbp .it,.wv .bx,.nfn>div,.ep>div,.stp>div,.seq>div,.gp>div,.arch2 .lyr,.wf .grp,.card,.pw,.ring,.force,.half,.mth,.chip,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid,.stp2,.vp,.vq2')) return; e.classList.add('bd'); e.style.setProperty('--i',Math.min(k++,16)); }); });
 
 function fit(){ const s=Math.min(innerWidth/1920,innerHeight/1080); stage.style.transform=`translate(-50%,-50%) scale(${s})`; }
 addEventListener('resize',fit); fit();
@@ -2343,6 +2406,7 @@ function countUp(s){ s.querySelectorAll('[data-up]').forEach((e,k)=>{ const n=+e
 
 function show(i){
   i=Math.max(0,Math.min(slides.length-1,i)); clearT();
+  document.querySelectorAll('.vp').forEach(v=>v._au&&v._au.pause());
   slides.forEach((s,k)=>s.classList.toggle('on',k===i)); cur=i;
   const s=slides[i];
   const bks=slides.filter(x=>x.dataset.backup==='1'), bi=bks.indexOf(s);
@@ -2358,6 +2422,23 @@ function show(i){
   countUp(s);
   history.replaceState(null,'','#'+(i+1));
 }
+/* پخشِ صدا: موجِ قابل کلیک؛ هر برش فقط بازهٔ خودش را پخش می‌کند؛ با رفتن از اسلاید، صدا می‌ایستد */
+const fmtT=t=>{t=Math.max(0,Math.round(t));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');};
+document.querySelectorAll('.vp').forEach(v=>{
+  const au=new Audio(); au.preload='auto'; v._au=au; let stopAt=null;
+  au.src=v.dataset.src; fetch(v.dataset.src).then(r=>r.status===200?r.blob():null).then(bl=>{ if(bl&&bl.size>1000){ const t=au.currentTime; au.src=URL.createObjectURL(bl); au.currentTime=t; } }).catch(()=>{});
+  const bars=[...v.querySelectorAll('.wave i')], tm=v.querySelector('.tm2'), pb=v.querySelector('.pb'), dur=+v.dataset.dur;
+  const icon=pl=>pb.innerHTML=pl?'<svg viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>':'<svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></svg>';
+  au.addEventListener('error',()=>v.classList.add('missing'));
+  au.addEventListener('timeupdate',()=>{ const p=au.currentTime/dur; bars.forEach((b,k)=>b.classList.toggle('on',k/bars.length<p)); tm.textContent=fmtT(au.currentTime)+' / '+fmtT(dur);
+    if(stopAt!==null&&au.currentTime>=stopAt){ au.pause(); stopAt=null; } });
+  au.addEventListener('play',()=>{ document.querySelectorAll('.vp').forEach(o=>{ if(o!==v&&o._au) o._au.pause(); }); icon(1); });
+  au.addEventListener('pause',()=>{ icon(0); v.querySelectorAll('.cuts button').forEach(b=>b.classList.remove('on')); });
+  pb.onclick=e=>{ e.stopPropagation(); stopAt=null; au.paused?au.play():au.pause(); };
+  v.querySelector('.wave').onclick=e=>{ e.stopPropagation(); const r=e.currentTarget.getBoundingClientRect(); au.currentTime=(e.clientX-r.left)/r.width*dur; stopAt=null; au.play(); };
+  v.querySelectorAll('.cuts button').forEach(c=>c.onclick=e=>{ e.stopPropagation(); au.currentTime=+c.dataset.a; stopAt=+c.dataset.b; au.play(); setTimeout(()=>c.classList.add('on'),30); });
+  v.addEventListener('click',e=>e.stopPropagation());
+});
 /* پشتیبان‌ها خارج از مسیر اصلی‌اند: فقط با لینک یا هش باز می‌شوند و از آن‌جا به اسلایدِ مبدأ برمی‌گردند */
 const isBk=k=>!!slides[k]&&slides[k].dataset.backup==='1';
 const MAIN=slides.map((s,k)=>k).filter(k=>!isBk(k));
