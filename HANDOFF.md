@@ -3789,6 +3789,23 @@ script (scratchpad `build_deck4.py`) from the pass-3 file.
 
 ---
 
+## 10ai. Round 28 is the persona simulation, not people (2026-10-29)
+
+Colleagues said round «28» (14 sessions, v4.5) was a human test. It is not:
+- `Mohajer_Persona_Simulation_Handoff_for_Ali.md` says «آنچه تا الان انجام شده (v4.5، راند ۲۸): ۱۳ پرسونا».
+- The live data matches it exactly: 13 answered, 8 converted, trust median 2, next step 5 trial / 7 read / 1 nothing, Bitvana 9/13.
+- 12 of the 14 sessions ran on one Android viewport (600 high) within two hours.
+
+The product part still uses round 1 only (21 sessions).
+
+Slide 13 now carries verbatim golden quotes on trust from phase 1 «خروجی مصاحبه‌ها», interviews 3, 4, 5, 6, 8 and 9. They were read from the PDF pages, because text extraction drops the first words.
+
+Midas on slide 16: trust came from its SPK-licensed brokerage, with Borsa Istanbul trades settled through Takasbank.
+
+Waiting on the user's review: slide 14 text, and the other slide 16 businesses.
+
+---
+
 ## 11. Blu Bank — the reference
 
 The team keeps pointing at Blu (بلوبانک, by Saman Bank) and it is now the primary

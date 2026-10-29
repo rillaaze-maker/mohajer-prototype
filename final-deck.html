@@ -381,6 +381,9 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 .qc .ans .k{font-size:19px;color:var(--acc);font-weight:500}
 .qc .ans b{font-size:22px;font-weight:500;line-height:1.45}
 .qc .ans .v{font-size:19px;color:var(--ink3);direction:ltr;text-align:right}
+.qg.iv .qc p{padding-left:0;font-size:28px;line-height:1.65}
+.qg.iv .qc p b{font-weight:600}
+.qc .who{display:flex;gap:14px;align-items:center;font-size:21px;color:var(--ink3);padding-top:14px;border-top:1px solid var(--ln)}
 .qc.tr{border-color:color-mix(in srgb,var(--warn) 42%,transparent);background:color-mix(in srgb,var(--warn) 5%,var(--sf))}
 
 /* شش مانعِ اعتماد */
@@ -542,12 +545,12 @@ aside.notes{display:none}
 .pill{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:99px;font-size:17px;font-weight:500;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);white-space:nowrap;direction:ltr}
 
 /* خلاصهٔ مدیریتی: ۳۷ خانه */
-.wf{display:flex;gap:28px;align-items:flex-end;margin-top:56px}
+.wf{display:flex;gap:28px;align-items:flex-start;margin-top:56px}
 .wf .grp{display:flex;flex-direction:column;gap:14px}
 .wf .grp .cells{display:flex;gap:6px;flex-wrap:nowrap}
 .wf .grp .cells i{width:34px;height:96px;border-radius:8px;background:var(--c);display:block}
 .sl.on .wf .cells i{animation:pop .45s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(300ms + var(--i,0)*30ms)}
-.wf .grp .hd{display:flex;align-items:baseline;gap:14px}
+.wf .grp .hd{display:flex;align-items:flex-end;gap:14px;height:84px}
 .wf .grp .hd b{font-size:72px;font-weight:300;color:var(--c);line-height:1}
 .wf .grp .hd span{font-size:24px;font-weight:500;direction:ltr;color:var(--ink)}
 .wf .grp p{font-size:22px;font-weight:300;color:var(--ink2);line-height:1.55;max-width:var(--mw,560px)}
@@ -722,21 +725,21 @@ aside.notes{display:none}
 .fnote.em2{color:var(--ink);font-weight:400;background:color-mix(in srgb,var(--acc) 7%,var(--sf));border:0;border-radius:16px;padding:16px 20px}
 
 /* ستون‌ها */
-.cols{display:flex;align-items:flex-end;justify-content:space-around;height:350px;padding:0 24px;border-bottom:2px solid var(--ink)}
+.cols{display:flex;flex-direction:row-reverse;align-items:flex-end;justify-content:space-around;height:350px;padding:0 24px;border-bottom:2px solid var(--ink)}
 .cols .c{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;width:170px}
 .cols .c b{font-size:32px;font-weight:500;margin-bottom:10px}
 .cols .c i{display:block;width:100%;height:0;border-radius:12px 12px 0 0;background:var(--acc);transition:height 1.1s cubic-bezier(.2,.8,.2,1);transition-delay:calc(400ms + var(--i,0)*160ms)}
 .sl.on .cols .c i{height:var(--h)}
-.yrs{display:flex;justify-content:space-around;padding:0 24px}
+.yrs{display:flex;flex-direction:row-reverse;justify-content:space-around;padding:0 24px}
 .yrs span{width:170px;text-align:center;font-size:24px;color:var(--ink2);padding-top:12px}
 .mau{display:flex;align-items:center;margin-top:22px;padding:16px 24px;border-radius:16px;background:var(--sf);border:1px solid var(--ln)}
 .mau .lb{width:0;flex:none;position:relative}
-.mau .vals{flex:1;display:flex;justify-content:space-around}
+.mau .vals{flex:1;display:flex;flex-direction:row-reverse;justify-content:space-around}
 .mau .vals span{width:170px;text-align:center;font-size:30px;font-weight:500}
 .unit{font-size:21px;color:var(--ink3)}
 
 /* ستون‌های انباشته */
-.stk{display:flex;align-items:flex-end;justify-content:space-around;height:440px;border-bottom:2px solid var(--ink);padding:0 10px}
+.stk{display:flex;flex-direction:row-reverse;align-items:flex-end;justify-content:space-around;height:440px;border-bottom:2px solid var(--ink);padding:0 10px}
 .stk .c{display:flex;flex-direction:column-reverse;align-items:stretch;width:180px;height:100%;justify-content:flex-start;position:relative}
 .stk .c i{display:flex;align-items:center;justify-content:center;font-style:normal;font-size:18px;font-weight:500;color:#fff;height:0;overflow:hidden;transition:height 1s cubic-bezier(.2,.8,.2,1);transition-delay:calc(400ms + var(--i,0)*120ms);border-top:2px solid var(--bg)}
 .sl.on .stk .c i{height:var(--h)}
@@ -766,7 +769,7 @@ aside.notes{display:none}
 
 /* مسیر تجمعی ماهانه */
 .lc{position:relative;flex:1}
-.lc svg{width:100%;height:100%;overflow:visible}
+.lc svg{width:100%;height:100%;overflow:visible;direction:ltr}
 .lc .gl{stroke:var(--ln);stroke-width:1.5}
 .lc .z{stroke:var(--ink);stroke-width:2}
 .lc .ln3{fill:none;stroke:var(--acc);stroke-width:5;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:3000;stroke-dashoffset:0}
@@ -856,12 +859,13 @@ aside.notes{display:none}
 .pin circle{fill:#fff;stroke:var(--navy);stroke-width:4} .pin text{fill:var(--navy);font-weight:700;font-size:22px}
 .pin.o circle{stroke:var(--acc)} .pin.o text{fill:var(--acc)}
 .sl.on .pin{animation:pop .6s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(1500ms + var(--i,0)*250ms)}
-.pinl{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px}
+.pinl{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px;direction:ltr}
+.pinl>div,.cr4>div{direction:rtl}
 .pinl div{font-size:19px;color:var(--ink2);line-height:1.5;display:flex;gap:10px}
 .pinl b{flex:none;width:30px;height:30px;border-radius:50%;border:3px solid var(--navy);display:grid;place-items:center;font-size:16px;color:var(--navy)}
 .pinl div.o b{border-color:var(--acc);color:var(--acc)}
 .pinl h5{font-size:21px;font-weight:600;color:var(--ink)}
-.cr4{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:16px;border-radius:18px;overflow:hidden}
+.cr4{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:16px;border-radius:18px;overflow:hidden;direction:ltr}
 .cr4 div{padding:14px 20px;background:var(--peach);border-left:2px solid var(--bg);font-size:19px;color:var(--ink2);line-height:1.5}
 .cr4 div h5{font-size:22px;font-weight:600;color:var(--acc)}
 /* جدول S3/S2 */
@@ -1131,8 +1135,8 @@ aside.notes{display:none}
       <div class="pn-k">با چه کسانی</div>
       <div class="aud" style="margin-top:8px">
         <div>سن<b>۲۵ تا ۳۴ ساله</b></div>
-        <div>پس‌اندازشان دلار یا طلاست<b>۱۴ از ۱۶</b></div>
-        <div>با رمزارز کار کرده‌اند<b>۱۲ از ۱۶</b></div>
+        <div>پس‌اندازشان دلار یا طلاست<b>۱۵ از ۱۶</b></div>
+        <div>با رمزارز کار کرده‌اند<b>۱۴ از ۱۶</b></div>
         <div>پس‌انداز بانکی دارند<b>۱ از ۱۶</b></div>
         <div>روی آیفون<b>۱۷ از ۲۱</b></div>
         <div>از کجا آمدند<b>تلگرام</b></div>
@@ -1206,16 +1210,18 @@ aside.notes{display:none}
 </section>
 
 <section class="sl" data-part="2">
-  <div class="eb">۰۸ · صدای کاربر <span class="en">What they said → what changed</span></div>
-  <h2 class="t md">حرفِ خودشان در <span class="num">v4.5</span>؛ <span class="acc">و جوابش در نسخهٔ جدید</span></h2>
-  <div class="qg">
-    <div class="qc tr"><span class="tag x">اعتماد</span><p>«امن یعنی چی؟»</p><div class="ans"><div class="lens" style="background-image:url(./deck-assets/v59-docs.png);--y:105;--x:0;--z:0.6;--lh:118px;--i:0;width:232px;flex:none"></div><div><span class="k">در نسخهٔ جدید</span><b>جواب روی همان صفحه: مدارک و مجوزها، با استعلام</b><span class="v">v5.9</span></div></div></div>
-    <div class="qc tr"><span class="tag x">اعتماد</span><p>«توضیحات کافی نبود.»</p><div class="ans"><div class="lens" style="background-image:url(./deck-assets/v515-done.png);--y:180;--x:0;--z:0.6;--lh:118px;--i:1;width:232px;flex:none"></div><div><span class="k">در نسخهٔ جدید</span><b>به‌جای صفحهٔ توضیح، جای پول روی صفحهٔ اول</b><span class="v">v5.15</span></div></div></div>
-    <div class="qc"><span class="tag n">ارزش</span><p>«خیلی گنگ است؛ مسیر مشخصی برای پیش رفتن ندارد.»</p><div class="ans"><div class="lens" style="background-image:url(./deck-assets/v515-intro.png);--y:640;--x:0;--z:0.6;--lh:118px;--i:2;width:232px;flex:none"></div><div><span class="k">در نسخهٔ جدید</span><b>اولین لمس، یک کار: «بکشید تا پخش شود»</b><span class="v">v5.15</span></div></div></div>
-    <div class="qc"><span class="tag n">ارزش</span><p>«بخش‌بندی‌ها شفاف نیست؛ چرا کلید اصلی باید دریافت طلا باشد؟»</p><div class="ans"><div class="lens" style="background-image:url(./deck-assets/v515-home.png);--y:85;--x:0;--z:0.6;--lh:118px;--i:3;width:232px;flex:none"></div><div><span class="k">در نسخهٔ جدید</span><b>خانه: موجودی و سه اقدام؛ واریز، برداشت، محل نگهداری</b><span class="v">v5.11–5.15</span></div></div></div>
-    <div class="qc"><span class="tag n">انگیزه</span><p>«کاش مقداری سرمایهٔ اولیه می‌دادید که با آن کار کنیم.»</p><div class="ans"><div class="lens" style="background-image:url(./deck-assets/v515-intro.png);--y:178;--x:0;--z:0.6;--lh:118px;--i:4;width:232px;flex:none"></div><div><span class="k">در نسخهٔ جدید</span><b>یک نمونهٔ ۱۰۰ هزار دلاری؛ امتحان، بی‌پول</b><span class="v">v5.15</span></div></div></div>
-    <div class="qc"><span class="tag n">کاربردپذیری</span><p>«امکان ویرایش مبلغ را ندارم، یا پیدا نکردم.»</p><div class="ans"><div class="lens" style="background-image:url(./deck-assets/v512-amt.png);--y:150;--x:0;--z:0.6;--lh:118px;--i:5;width:232px;flex:none"></div><div><span class="k">در نسخهٔ جدید</span><b>مبلغ، بزرگ و بالای صفحه؛ بدون اسکرول</b><span class="v">v5.12</span></div></div></div>
+  <div class="eb">۰۹ · چالشِ اعتماد · از مصاحبه‌ها <span class="en">Interview evidence</span></div>
+  <h2 class="t md">در مصاحبه‌ها، <span class="acc">اعتماد پیش از هر قابلیتی بود.</span></h2>
+  <div class="qg iv">
+    <div class="qc"><p>«صراف به من هیچ ضمانتی نمی‌دهد؛ همه‌چیز کاملاً شانسی است. ممکن است فردا همین آقایی که ۱۵ سال با او کار می‌کنم، <b>توزرد از آب دربیاید.</b>»</p><div class="who"><span class="tag n">مصاحبهٔ ۵</span>صاحبان صنایع و تجار کلان</div></div>
+    <div class="qc"><p>«من برای اعتماد به یک سیستم مالی، دنبال <b>"شخصیت حقوقی"</b> هستم. باید بدانم چه تبار و اعتباری پشت این کار است.»</p><div class="who"><span class="tag n">مصاحبهٔ ۸</span>متخصصانِ مرفه</div></div>
+    <div class="qc"><p>«من به بانک ملی دلار دادم، ولی وقتی خواستم پس بگیرم به من ریال با نرخ دولتی داد! <b>از نظر من این کلاهبرداری بود.</b>»</p><div class="who"><span class="tag n">مصاحبهٔ ۶</span>متخصصانِ پرمشغله و آسیب‌دیده از سیستم</div></div>
+    <div class="qc"><p>«اصلاً اطمینان نمی‌کنم؛ ما به بابای خودمان هم اطمینان نکردیم و سند به نامش نزدیم، <b>چه برسد به پلتفرم آنلاین.</b>»</p><div class="who"><span class="tag n">مصاحبهٔ ۹</span>ثروتمندانِ سنتی و غیردیجیتال</div></div>
+    <div class="qc"><p>«اینجا ایران است؛ همیشه باید این پیه را به تنت بمالی که <b>صراف کلاهبرداری کند یا دولت اموالش را ببندد.</b>»</p><div class="who"><span class="tag n">مصاحبهٔ ۴</span>ثروتمندانِ پرمشغله</div></div>
+    <div class="qc"><p>«<b>شفافیت اعتمادساز است</b>، اما شفافیتی که من هم آن را بفهمم؛ مدل جعبهٔ شیشه‌ای.»</p><div class="who"><span class="tag n">مصاحبهٔ ۳</span>محافظه‌کار</div></div>
   </div>
+  <div class="grow"></div>
+  <p class="sm">فاز یک · نقل‌ها عیناً از «خروجی مصاحبه‌ها» (بخش نقل‌قول‌های طلایی)، فقط با اصلاح نگارشی</p>
 </section>
 
 <section class="sl" data-part="2">
@@ -1261,7 +1267,7 @@ aside.notes{display:none}
     <div class="wc"><span class="ctx">اوکراین · جنگ</span><h3>Monobank</h3><span class="an">خاموش نشد</span><p>دو دیتاسنتر در کی‌یف و لویو، و انتقال به ابر؛ بی‌وقفه در جنگ.</p><span class="n">۶٫۷۷ ← نزدیک ۸ میلیون مشتریِ فعال</span></div>
     <div class="wc"><span class="ctx">لبنان · مسدودیِ سپرده‌ها از ۲۰۱۹</span><h3>Whish Money</h3><span class="an">پول، در دسترس</span><p>وقتی بانک‌ها پول را نگه داشتند، حواله‌گرها جایشان را گرفتند؛ حتی برای حقوق.</p><span class="n">انتقالِ لیره، بدون کارمزد</span></div>
     <div class="wc"><span class="ctx">آرژانتین · تورم</span><h3>Lemon · Belo</h3><span class="an">دلارِ دیجیتال، خرجِ محلی</span><p>پس‌انداز به دلارِ دیجیتال؛ خرج به پزو با کارت.</p><span class="n">پس‌اندازِ دلاری، بدون حسابِ خارجی</span></div>
-    <div class="wc"><span class="ctx">ترکیه · تورمِ ۴۰ تا ۵۰٪</span><h3>Midas</h3><span class="an">کارمزدِ روشن، با مجوز</span><p>یک اپِ تحت نظارت برای دارایی دلاری و بورس؛ کارمزدها اعلام‌شده.</p><span class="n">۳٫۵ میلیون کاربر</span></div>
+    <div class="wc"><span class="ctx">ترکیه · تورمِ ۴۰ تا ۵۰٪</span><h3>Midas</h3><span class="an">اعتماد از مجوزِ درست</span><p>کارگزاریِ دارای مجوز و زیر نظرِ هیئت بازار سرمایهٔ ترکیه (SPK)؛ معاملات بورس استانبول با تسویهٔ Takasbank.</p><span class="n">۳٫۵ میلیون کاربر</span></div>
     <div class="wc"><span class="ctx">برزیل · بی‌اعتمادی به بانک‌ها</span><h3>Nubank</h3><span class="an">بی‌کارمزدِ پنهان</span><p>از نارضایتیِ عمیق از بانک‌ها شروع شد؛ ساده و روشن.</p><span class="n">۱۰۰ میلیون مشتری · ۲۰۲۴</span></div>
     <div class="wc"><span class="ctx">افغانستان · پس از ۲۰۲۱</span><h3>HesabPay</h3><span class="an">کار، در نبودِ بانک</span><p>پرداخت و انتقال در بازاری نقدمحور و بی‌اعتماد به نهادها.</p><span class="n">بیش از ۱ میلیون کاربر</span></div>
   </div>
@@ -1981,8 +1987,8 @@ aside.notes{display:none}
 
 <section class="sl hastools" data-part="6">
   <div class="eb">GTM · نگاشت روی منحنی پذیرش</div>
-  <h2 class="t md">شواهدِ ما از سمت راستِ شکاف آمده؛ <span class="acc">بازارِ ما آن‌سوی شکاف است.</span></h2>
-  <div class="ad"><svg viewBox="0 0 1664 470" aria-label="منحنی پذیرش"><path class="seg" style="--i:0" d="M1644.0,330 L1644.0,326.8 L1637.2,326.5 L1630.5,326.3 L1623.7,326.0 L1616.9,325.7 L1610.2,325.3 L1603.4,325.0 L1596.6,324.6 L1589.9,324.2 L1583.1,323.8 L1576.3,323.4 L1569.6,322.9 L1562.8,322.4 L1556.0,321.9 L1549.3,321.3 L1542.5,320.8 L1535.7,320.1 L1529.0,319.5 L1522.2,318.8 L1515.4,318.0 L1508.7,317.3 L1501.9,316.4 L1495.1,315.6 L1488.4,314.7 L1481.6,313.7 L1474.8,312.7 L1468.1,311.7 L1461.3,310.6 L1454.5,309.4 L1447.8,308.2 L1441.0,306.9 L1434.2,305.6 L1427.5,304.2 L1420.7,302.8 L1413.9,301.3 L1407.2,299.7 L1400.4,298.0 L1393.6,296.3 L1386.9,294.5 L1380.1,292.7 L1373.3,290.8 L1373.3,330 Z" fill="#1B2A47"/><text x="1509" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">نوآوران</text><text x="1509" y="398" text-anchor="middle" font-size="20" fill="#878C93">۲٫۵٪</text><path class="seg" style="--i:1" d="M1373.3,330 L1373.3,290.8 L1366.6,288.8 L1359.8,286.7 L1353.0,284.5 L1346.3,282.3 L1339.5,280.0 L1332.7,277.6 L1326.0,275.2 L1319.2,272.6 L1312.4,270.0 L1305.7,267.3 L1298.9,264.5 L1292.1,261.6 L1285.4,258.7 L1278.6,255.7 L1271.8,252.6 L1265.1,249.4 L1258.3,246.1 L1251.5,242.8 L1244.8,239.3 L1238.0,235.9 L1231.2,232.3 L1224.5,228.6 L1217.7,224.9 L1210.9,221.2 L1204.2,217.3 L1197.4,213.4 L1190.6,209.4 L1183.9,205.4 L1177.1,201.4 L1170.3,197.2 L1163.6,193.1 L1156.8,188.8 L1150.0,184.6 L1143.3,180.3 L1136.5,176.0 L1129.7,171.6 L1123.0,167.3 L1116.2,162.9 L1109.4,158.5 L1102.7,154.1 L1102.7,330 Z" fill="#33507F"/><text x="1238" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">پذیرندگان اولیه</text><text x="1238" y="398" text-anchor="middle" font-size="20" fill="#878C93">۱۳٫۵٪</text><path class="seg" style="--i:2" d="M1102.7,330 L1102.7,154.1 L1095.9,149.7 L1089.1,145.3 L1082.4,140.9 L1075.6,136.6 L1068.8,132.2 L1062.1,127.9 L1055.3,123.7 L1048.5,119.4 L1041.8,115.2 L1035.0,111.1 L1028.2,107.0 L1021.5,103.0 L1014.7,99.1 L1007.9,95.2 L1001.2,91.5 L994.4,87.8 L987.6,84.2 L980.9,80.7 L974.1,77.3 L967.3,74.1 L960.6,70.9 L953.8,67.9 L947.0,65.0 L940.3,62.3 L933.5,59.7 L926.7,57.2 L920.0,54.9 L913.2,52.8 L906.4,50.8 L899.7,48.9 L892.9,47.2 L886.1,45.7 L879.4,44.4 L872.6,43.2 L865.8,42.3 L859.1,41.4 L852.3,40.8 L845.5,40.4 L838.8,40.1 L832.0,40.0 L832.0,330 Z" fill="#D2570F"/><text x="967" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">اکثریت اولیه</text><text x="967" y="398" text-anchor="middle" font-size="20" fill="#878C93">۳۴٪</text><path class="seg" style="--i:3" d="M832.0,330 L832.0,40.0 L825.2,40.1 L818.5,40.4 L811.7,40.8 L804.9,41.4 L798.2,42.3 L791.4,43.2 L784.6,44.4 L777.9,45.7 L771.1,47.2 L764.3,48.9 L757.6,50.8 L750.8,52.8 L744.0,54.9 L737.3,57.2 L730.5,59.7 L723.7,62.3 L717.0,65.0 L710.2,67.9 L703.4,70.9 L696.7,74.1 L689.9,77.3 L683.1,80.7 L676.4,84.2 L669.6,87.8 L662.8,91.5 L656.1,95.2 L649.3,99.1 L642.5,103.0 L635.8,107.0 L629.0,111.1 L622.2,115.2 L615.5,119.4 L608.7,123.7 L601.9,127.9 L595.2,132.2 L588.4,136.6 L581.6,140.9 L574.9,145.3 L568.1,149.7 L561.3,154.1 L561.3,330 Z" fill="#F5B98F"/><text x="697" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">اکثریت دیرهنگام</text><text x="697" y="398" text-anchor="middle" font-size="20" fill="#878C93">۳۴٪</text><path class="seg" style="--i:4" d="M561.3,330 L561.3,154.1 L547.8,162.9 L534.3,171.6 L520.7,180.3 L507.2,188.8 L493.7,197.2 L480.1,205.4 L466.6,213.4 L453.1,221.2 L439.5,228.6 L426.0,235.9 L412.5,242.8 L398.9,249.4 L385.4,255.7 L371.9,261.6 L358.3,267.3 L344.8,272.6 L331.3,277.6 L317.7,282.3 L304.2,286.7 L290.7,290.8 L277.1,294.5 L263.6,298.0 L250.1,301.3 L236.5,304.2 L223.0,306.9 L209.5,309.4 L195.9,311.7 L182.4,313.7 L168.9,315.6 L155.3,317.3 L141.8,318.8 L128.3,320.1 L114.7,321.3 L101.2,322.4 L87.7,323.4 L74.1,324.2 L60.6,325.0 L47.1,325.7 L33.5,326.3 L20.0,326.8 L20.0,330 Z" fill="#CDD3DC"/><text x="372" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">دیرپذیرها</text><text x="372" y="398" text-anchor="middle" font-size="20" fill="#878C93">۱۶٪</text><line class="chasm" x1="1103" x2="1103" y1="10" y2="330"/><text x="1089" y="34" text-anchor="end" font-size="22" font-weight="700" fill="#1B2A47">شکاف (Chasm)</text><g class="pin " style="--i:0"><circle cx="1468" cy="282" r="22"/><text x="1468" y="290" text-anchor="middle">۱</text></g><g class="pin " style="--i:1"><circle cx="1238" cy="206" r="22"/><text x="1238" y="214" text-anchor="middle">۲</text></g><g class="pin o" style="--i:2"><circle cx="1008" cy="65" r="22"/><text x="1008" y="73" text-anchor="middle">۳</text></g><g class="pin " style="--i:3"><circle cx="683" cy="51" r="22"/><text x="683" y="59" text-anchor="middle">۴</text></g></svg></div>
+  <h2 class="t md">شواهدِ ما از سمت چپِ شکاف آمده؛ <span class="acc">بازارِ ما آن‌سوی شکاف است.</span></h2>
+  <div class="ad"><svg viewBox="0 0 1664 470" aria-label="منحنی پذیرش"><path class="seg" style="--i:0" d="M20.0,330 L20.0,326.8 L26.8,326.5 L33.5,326.3 L40.3,326.0 L47.1,325.7 L53.8,325.3 L60.6,325.0 L67.4,324.6 L74.1,324.2 L80.9,323.8 L87.7,323.4 L94.4,322.9 L101.2,322.4 L108.0,321.9 L114.7,321.3 L121.5,320.8 L128.3,320.1 L135.0,319.5 L141.8,318.8 L148.6,318.0 L155.3,317.3 L162.1,316.4 L168.9,315.6 L175.6,314.7 L182.4,313.7 L189.2,312.7 L195.9,311.7 L202.7,310.6 L209.5,309.4 L216.2,308.2 L223.0,306.9 L229.8,305.6 L236.5,304.2 L243.3,302.8 L250.1,301.3 L256.8,299.7 L263.6,298.0 L270.4,296.3 L277.1,294.5 L283.9,292.7 L290.7,290.8 L290.7,330 Z" fill="#1B2A47"/><text x="155" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">نوآوران</text><text x="155" y="398" text-anchor="middle" font-size="20" fill="#878C93">۲٫۵٪</text><path class="seg" style="--i:1" d="M290.7,330 L290.7,290.8 L297.4,288.8 L304.2,286.7 L311.0,284.5 L317.7,282.3 L324.5,280.0 L331.3,277.6 L338.0,275.2 L344.8,272.6 L351.6,270.0 L358.3,267.3 L365.1,264.5 L371.9,261.6 L378.6,258.7 L385.4,255.7 L392.2,252.6 L398.9,249.4 L405.7,246.1 L412.5,242.8 L419.2,239.3 L426.0,235.9 L432.8,232.3 L439.5,228.6 L446.3,224.9 L453.1,221.2 L459.8,217.3 L466.6,213.4 L473.4,209.4 L480.1,205.4 L486.9,201.4 L493.7,197.2 L500.4,193.1 L507.2,188.8 L514.0,184.6 L520.7,180.3 L527.5,176.0 L534.3,171.6 L541.0,167.3 L547.8,162.9 L554.6,158.5 L561.3,154.1 L561.3,330 Z" fill="#33507F"/><text x="426" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">پذیرندگان اولیه</text><text x="426" y="398" text-anchor="middle" font-size="20" fill="#878C93">۱۳٫۵٪</text><path class="seg" style="--i:2" d="M561.3,330 L561.3,154.1 L568.1,149.7 L574.9,145.3 L581.6,140.9 L588.4,136.6 L595.2,132.2 L601.9,127.9 L608.7,123.7 L615.5,119.4 L622.2,115.2 L629.0,111.1 L635.8,107.0 L642.5,103.0 L649.3,99.1 L656.1,95.2 L662.8,91.5 L669.6,87.8 L676.4,84.2 L683.1,80.7 L689.9,77.3 L696.7,74.1 L703.4,70.9 L710.2,67.9 L717.0,65.0 L723.7,62.3 L730.5,59.7 L737.3,57.2 L744.0,54.9 L750.8,52.8 L757.6,50.8 L764.3,48.9 L771.1,47.2 L777.9,45.7 L784.6,44.4 L791.4,43.2 L798.2,42.3 L804.9,41.4 L811.7,40.8 L818.5,40.4 L825.2,40.1 L832.0,40.0 L832.0,330 Z" fill="#D2570F"/><text x="697" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">اکثریت اولیه</text><text x="697" y="398" text-anchor="middle" font-size="20" fill="#878C93">۳۴٪</text><path class="seg" style="--i:3" d="M832.0,330 L832.0,40.0 L838.8,40.1 L845.5,40.4 L852.3,40.8 L859.1,41.4 L865.8,42.3 L872.6,43.2 L879.4,44.4 L886.1,45.7 L892.9,47.2 L899.7,48.9 L906.4,50.8 L913.2,52.8 L920.0,54.9 L926.7,57.2 L933.5,59.7 L940.3,62.3 L947.0,65.0 L953.8,67.9 L960.6,70.9 L967.3,74.1 L974.1,77.3 L980.9,80.7 L987.6,84.2 L994.4,87.8 L1001.2,91.5 L1007.9,95.2 L1014.7,99.1 L1021.5,103.0 L1028.2,107.0 L1035.0,111.1 L1041.8,115.2 L1048.5,119.4 L1055.3,123.7 L1062.1,127.9 L1068.8,132.2 L1075.6,136.6 L1082.4,140.9 L1089.1,145.3 L1095.9,149.7 L1102.7,154.1 L1102.7,330 Z" fill="#F5B98F"/><text x="967" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">اکثریت دیرهنگام</text><text x="967" y="398" text-anchor="middle" font-size="20" fill="#878C93">۳۴٪</text><path class="seg" style="--i:4" d="M1102.7,330 L1102.7,154.1 L1116.2,162.9 L1129.7,171.6 L1143.3,180.3 L1156.8,188.8 L1170.3,197.2 L1183.9,205.4 L1197.4,213.4 L1210.9,221.2 L1224.5,228.6 L1238.0,235.9 L1251.5,242.8 L1265.1,249.4 L1278.6,255.7 L1292.1,261.6 L1305.7,267.3 L1319.2,272.6 L1332.7,277.6 L1346.3,282.3 L1359.8,286.7 L1373.3,290.8 L1386.9,294.5 L1400.4,298.0 L1413.9,301.3 L1427.5,304.2 L1441.0,306.9 L1454.5,309.4 L1468.1,311.7 L1481.6,313.7 L1495.1,315.6 L1508.7,317.3 L1522.2,318.8 L1535.7,320.1 L1549.3,321.3 L1562.8,322.4 L1576.3,323.4 L1589.9,324.2 L1603.4,325.0 L1616.9,325.7 L1630.5,326.3 L1644.0,326.8 L1644.0,330 Z" fill="#CDD3DC"/><text x="1292" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">دیرپذیرها</text><text x="1292" y="398" text-anchor="middle" font-size="20" fill="#878C93">۱۶٪</text><line class="chasm" x1="561" x2="561" y1="10" y2="330"/><text x="575" y="34" text-anchor="start" font-size="22" font-weight="700" fill="#1B2A47">شکاف (Chasm)</text><g class="pin " style="--i:0"><circle cx="196" cy="282" r="22"/><text x="196" y="290" text-anchor="middle">۱</text></g><g class="pin " style="--i:1"><circle cx="426" cy="206" r="22"/><text x="426" y="214" text-anchor="middle">۲</text></g><g class="pin o" style="--i:2"><circle cx="656" cy="65" r="22"/><text x="656" y="73" text-anchor="middle">۳</text></g><g class="pin " style="--i:3"><circle cx="981" cy="51" r="22"/><text x="981" y="59" text-anchor="middle">۴</text></g></svg></div>
   <div class="pinl">
     <div><b>۱</b><span><h5>تست اول</h5>جوان، آشنا با رمزارز، همه تلگرام؛ شواهد ما از اینجاست</span></div>
     <div><b>۲</b><span><h5>S2</h5>کاربر دیجیتال چنددارایی، گروه مقایسه</span></div>
@@ -2188,8 +2194,8 @@ aside.notes{display:none}
       <tr class=""><td>تجمعی پس از پیش‌لانچ/CAPEX، بدون ذخیره</td><td><span class="nm neg">(۲۲۲٫۲)</span></td><td><span class="nm neg">(۹۷٫۵)</span></td><td><span class="nm">۴۸۲٫۴</span></td></tr>
     </table>
     <div class="col grow" style="gap:6px">
-      <span class="unit">تجمعی ماهانه پس از پیش‌لانچ و CAPEX، بدون ذخیرهٔ تسویه · هزار USD · ماه ۰ تا ۳۶</span>
-      <div class="lc"><svg id="cumChart" viewBox="0 0 700 520" data-v="-74.584,-98.06,-114.49,-129.84,-144.08,-157.21,-169.18,-181.07,-191.76,-201.24,-209.49,-216.48,-222.21,-234.56,-239.76,-241.41,-239.41,-233.67,-224.1,-211.62,-195.13,-175.5,-152.7,-126.72,-97.52,-76.09,-41.51,-3.69,37.4,81.75,129.38,179.95,233.82,290.99,351.48,415.29,482.43" aria-label="مسیر تجمعی ماهانه"></svg></div>
+      <span class="unit">تجمعی ماهانه پس از پیش‌لانچ و CAPEX، بدون ذخیرهٔ تسویه · هزار USD · زمان از چپ به راست، ماه ۰ تا ۳۶</span>
+      <div class="lc"><svg id="cumChart" viewBox="0 0 700 500" data-v="-74.584,-98.06,-114.49,-129.84,-144.08,-157.21,-169.18,-181.07,-191.76,-201.24,-209.49,-216.48,-222.21,-234.56,-239.76,-241.41,-239.41,-233.67,-224.1,-211.62,-195.13,-175.5,-152.7,-126.72,-97.52,-76.09,-41.51,-3.69,37.4,81.75,129.38,179.95,233.82,290.99,351.48,415.29,482.43" aria-label="مسیر تجمعی ماهانه"></svg></div>
     </div>
   </div>
   <aside class="notes"><b>۳ دقیقه</b> · نتیجهٔ عملیاتی ماهانه از ماه ۱۶ مثبت می‌شود. «سربه‌سر ماهانه»، «مثبت‌شدن نتیجهٔ سالانه» و «بازگشت تجمعی هزینه‌ها» سه تعریف متفاوت‌اند. نتیجهٔ نقدی این مدل سود خالص حسابداری یا جریان نقدی آزاد نهایی نیست. «جمع هزینهٔ مستقیم» حاصل دو ردیف قبل است و دوباره با آن‌ها جمع نمی‌شود.<span class="src">منبع: Base_PnL!D13:F19 و D24:F24، Monthly_Cash_Flow!O6:P41</span></aside>
@@ -2376,10 +2382,10 @@ let tx=null; addEventListener('touchstart',e=>{ tx=e.touches[0].clientX; },{pass
 addEventListener('touchend',e=>{ if(tx===null) return; const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>60) step(dx>0?1:-1); tx=null; });
 (function cumChart(){
   const svg=document.getElementById('cumChart'); if(!svg) return;
-  const v=svg.dataset.v.split(',').map(Number), W=700, H=520, L=70, R=600, T=30, B=470, lo=-300, hi=500;
-  const fd=t=>fa(t).replace('.','٫'), x=m=>R-(R-L)*m/36, y=val=>T+(hi-val)/(hi-lo)*(B-T), NS='http://www.w3.org/2000/svg';
-  const el=(t,a,txt)=>{ const e=document.createElementNS(NS,t); for(const k in a) e.setAttribute(k,a[k]); if(txt!==undefined) e.textContent=txt; svg.appendChild(e); return e; };
-  [-250,0,250,500].forEach(g=>{ el('line',{x1:L,x2:R,y1:y(g),y2:y(g),class:g===0?'z':'gl'}); el('text',{x:R+12,y:y(g)+6,'text-anchor':'start'},g<0?'('+fa(-g)+')':fa(g)); });
+  const v=svg.dataset.v.split(',').map(Number), W=700, H=500, L=96, R=660, T=30, B=450, lo=-300, hi=500;
+  const fd=t=>fa(t).replace('.','٫'), x=m=>L+(R-L)*m/36, y=val=>T+(hi-val)/(hi-lo)*(B-T), NS='http://www.w3.org/2000/svg';
+  const el=(t,a,txt)=>{ const e=document.createElementNS(NS,t); if(t==='text') e.setAttribute('direction','rtl'); for(const k in a) e.setAttribute(k,a[k]); if(txt!==undefined) e.textContent=txt; svg.appendChild(e); return e; };
+  [-250,0,250,500].forEach(g=>{ el('line',{x1:L,x2:R,y1:y(g),y2:y(g),class:g===0?'z':'gl'}); el('text',{x:L-14,y:y(g)+6,'text-anchor':'start'},g<0?'('+fa(-g)+')':fa(g)); });
   [0,12,24,36].forEach(m=>el('text',{x:x(m),y:B+34,'text-anchor':'middle'},'ماه '+fa(m)));
   const pts=v.map((val,m)=>[x(m),y(val)]);
   const neg=v.map((val,m)=>[x(m),y(Math.min(val,0))]), pos=v.map((val,m)=>[x(m),y(Math.max(val,0))]);
@@ -2387,10 +2393,10 @@ addEventListener('touchend',e=>{ if(tx===null) return; const dx=e.changedTouches
   area(neg,'an-neg'); area(pos,'an-pos');
   el('path',{d:'M'+pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' L'),class:'ln3'});
   const mark=(m,cls,txt,dy,anchor)=>{ el('circle',{cx:x(m),cy:y(v[m]),r:8,class:cls}); el('text',{x:x(m),y:y(v[m])+dy,'text-anchor':anchor||'middle',class:'lbl'},txt); };
-  mark(0,'dotw','ماه ۰: ('+fd('74.6')+')',44,'middle');
+  mark(0,'dotw','ماه ۰: ('+fd('74.6')+')',44,'end');
   mark(15,'dotw','اوج کسری: ('+fd('241.4')+') · ماه ۱۵',40);
-  const zx=x(27+3.69/(3.69+37.40)); el('circle',{cx:zx,cy:y(0),r:9,class:'dot'}); el('text',{x:zx,y:y(0)-22,'text-anchor':'middle',class:'lbl'},'ماه ۲۸: عبور از صفر');
-  mark(36,'dot',fd('482.4'),-20,'middle');
+  const zx=x(27+3.69/(3.69+37.40)); el('circle',{cx:zx,cy:y(0),r:9,class:'dot'}); el('text',{x:zx-18,y:y(0)-18,'text-anchor':'start',class:'lbl'},'ماه ۲۸: عبور از صفر');
+  mark(36,'dot',fd('482.4'),-20,'start');
 })();
 show(Math.max(0,(parseInt(location.hash.slice(1),10)||1)-1));
 </script>
