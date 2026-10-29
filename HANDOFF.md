@@ -3486,6 +3486,166 @@ Verified:
   - `test.html` renders all 20 builds and generates
     `t.html?v=5.15&r=1&c=tg&p=1.1`.
 
+## 10ad. Participant test on Vercel via GitHub Actions (2026-10-29)
+
+`prototype/.github/workflows/deploy-vercel.yml` publishes the participant test
+to Vercel, so the public address does not show the GitHub account
+(`rillaaze-maker.github.io`).
+
+- **Triggers:** every push to `main` that touches the test files (t.html,
+  test-kit/config/versions, wallet/copy/manifest, fonts, icons, the workflow
+  itself), plus «Run workflow» by hand.
+- **What it publishes:** only `t.html`, `test-kit.js`, `test-config.json`, the
+  chosen build (`TEST_VERSION`, now 5.15) with its copy and manifest,
+  `mohajer-key.png`, Dana fonts and icons.
+  - `test-versions.json` is cut down to that one build.
+  - It adds an `index.html` that redirects to `t.html?v=…&r=1&c=web&p=1.1`, a
+    `robots.txt`, and a `vercel.json` noindex header.
+  - No decks, docs, `HANDOFF.md`, results dashboard or `test-sessions.json`.
+- **Deploy:** `vercel link --yes --project ashiyaneh-test` (creates the project
+  on the first run, reuses it afterwards), then `vercel deploy --prod`.
+- **Secret:** one, `VERCEL_TOKEN`, added by the user in GitHub. It is never
+  handled in chat.
+- **Results:** they go to the same collectors, so the GitHub-hosted
+  `test-insights.html` still shows them under v5.15.
+- **New build later:** edit `TEST_VERSION` (and `VERCEL_PROJECT` if wanted) in
+  the workflow on GitHub and commit.
+- **Verified locally:** the YAML parses; the assemble step was dry-run on the
+  real prototype folder (21 files, 1.2 MB) and fails cleanly on a missing
+  version.
+- **Not verified here:** the Vercel CLI steps (they need the user's token).
+- **Caveats:** Vercel Hobby terms say non-commercial use only, and there are
+  reports of 403s for visitors from Iran. Test the address from an Iranian
+  connection before paying for ads.
+
+## 10ae. Self-hosted test on cPanel/DirectAdmin, with results and voices saved on the host (2026-10-29)
+
+`public-test/` (outside the repo) is the bundle to upload to `public_html`:
+the participant test (v5.15 only), plus three new files.
+
+- **`collect.php`:** a PHP twin of `test-collector.gs`, speaking the same
+  protocol.
+  - POST session → appended raw to `log/YYYY-MM.jsonl`; the latest copy per id
+    goes to `sessions/<id>.json`.
+  - POST `kind:'voice'` → `voices/v5.15__r1__<id>.webm` plus `voices.jsonl`,
+    deduplicated by id and size.
+  - GET `ping` / `has` / `voice` work for anyone. These are what the
+    participant page needs, and the `__probe__` answer is `found:false`, so the
+    recorder turns on.
+  - Lists, full export, voice list and `voiceget` (with `download=1`) need
+    `READ_KEY`. It ships empty, which means locked.
+  - Data goes to `../mohajer-test-data` (outside the web root), or to `_data/`
+    with a deny `.htaccess` if the host forbids that.
+  - Body cap is 12 MB; ids are sanitised.
+- **`.user.ini`:** `post_max_size` 16M for voices (a 6 MB recording is about
+  8 MB once encoded).
+- **`.htaccess`:** HTTPS redirect (the mic needs HTTPS), no directory
+  listings, hidden files and `.jsonl` denied, gzip, long cache for fonts,
+  noindex.
+- **`public-test/test-config.json`:** `endpoint` is `./collect.php` and
+  `endpoint2` is the Google script. Order matters: `t.html` decides whether to
+  show the recorder by probing **only the first endpoint**, so a Google outage
+  in Iran would otherwise hide the recorder. Both endpoints still receive
+  everything. The repo's own `test-config.json` is unchanged.
+- **Verified with PHP 8.3** (Google blanked in the copy):
+  - ping/probe; partial then final session (final wins);
+  - voice saved, duplicate ignored;
+  - has/voice found;
+  - locked without key; list, full and voices with key;
+  - path trick contained; 13 MB refused;
+  - real `t.html` on the host: `voiceReady:true`, and its `send()` landed and
+    was confirmed.
+- **Not yet done:** the results dashboard (`test.html`, `test-insights.html`
+  on GitHub) does not read the host. Host-only sessions (people in Iran whose
+  Google request fails) are visible via `collect.php?key=…&full=1` or the
+  host's file manager. A key-aware dashboard read is the next step if needed.
+
+## 10af. Final presentation — product POV (2026-10-29)
+
+`prototype/final-deck.html`: one self-contained HTML deck (Dana fonts from
+`./fonts/`, screens from `./deck-assets/`), meant to be linked from the
+dashboard and later merged with other departments' parts.
+
+- **Structure:** the user's 14 headings in three parts, plus dividers, an
+  agenda and a closing slide; 23 slides in all.
+  - Part 1: problem, insights, benchmark, initial value proposition, v1.
+  - Part 2: initial testing, gap, reassessment, reframing, principles.
+  - Part 3: architecture, value communication, evolution ×2, feedback →
+    change, current product, next validation.
+- **Opening animation:** the gold bird flies in, is "hit" mid-screen (ring and
+  feathers), and tumbles off while «مهاجر» is struck out. Then the caption
+  «بازخورد شمارهٔ ۱ · نامِ «مهاجر» برای کاربران حسِ خوبی نداشت» and the
+  آشیانه mark plus title appear. R replays it; reduced-motion and print show
+  the end state.
+- **Facts are sourced:**
+  - Phase-1 A3 overview: 20 interviews, six local half-answers, structural
+    gaps, «مسیر دارند، سیستم ندارند», Revolut 70M+ / Midas 3.5M, Gate 1.
+  - `test-report.html`: 11/12, 2/9, median 2/5, 7/9, the where-is-my-money
+    bars, the feature funnel, 6/16.
+  - This file: round-1 findings, team reviews, version reasons.
+  - Feedback cards are tagged by source: تست / بازبینی فنی / بازبینی محصول /
+    کاربران. The name feedback is the user's own statement.
+- **New screenshots:** 22 files `deck-assets/v5*-*.png`, made by
+  `scratchpad/capture_v5.py` (Playwright driving the installed Chrome, 390×844
+  @2x, dark). The v0–v4.5 shots were already there; no existing file was
+  overwritten.
+- **Navigation:** ← / Space / PageDown next, → / PageUp back, click; `#n` deep
+  link; P prints (`@page 1920×1080`, verified 23 pages).
+- **Adding departments:** add a line to `PARTS` and give their slides
+  `data-part="4"` (and so on). Numbering, progress and part label update
+  automatically. The instructions are in a comment at the top of the file.
+- **Verified:** every slide rendered at 1920×1080 with no element past the
+  safe area; all referenced images exist; no JS errors (the only 404 is
+  favicon.ico).
+
+**Second pass (same day): the pivot as the peak.**
+- **Narrative colour:** structured on Duarte's sparkline (what is → what could
+  be). Every slide before `#s-pivot` uses a silver accent (`--acc`). At the
+  pivot, gold arrives and stays for the rest of the deck. `.post` is set on
+  later slides and on `#stage`, so the progress bar turns gold too.
+- **Pivot motion (`playPivot`, about 6s):**
+  1. One vault «نگهداریِ امنِ پول» holds five coins.
+  2. «یک ریسک، همه‌چیز» appears; a crack draws across, the vault shakes and
+     the label is struck out.
+  3. The vault fades; four boxes appear (آشیانه, کیف پول شخصی, طلا,
+     دلار نقد) and the coins arc into them, taking each box's colour.
+  4. At 3s, gold and a warm glow arrive.
+  5. The headline rises line by line, then the chips and the quote.
+  - R replays it. Reduced-motion and print show the end state.
+- **Phones:** real 390×844 ratio, full screen (no crop), a bezel and a
+  Dynamic Island. Size is set per use with `--w`.
+- **Motion everywhere:** elements build in by reading order
+  (`.bd` + `--i` stagger), bars and the funnel grow, and big stats count up
+  from zero.
+- **Lighter type:** titles 600 (were 800), card titles 500, body 300/400, big
+  numbers Light 300.
+- **Verified:** 23 slides with no overflow and no errors; pivot frames checked
+  at 0.6, 1.75, 2.25, 2.9, 3.4, 4.2 and 6.2s.
+
+**Third pass (same day): bigger pivot, visual first half, typography.**
+- **Pivot, about 13s, centred and large:** a 600×400 vault and 92px coins
+  that drop in right-to-left like passcode dots. Then a hold, then
+  «یک ریسک، همه‌چیز» (3.3s), the crack (3.9s), the strike-through (5s) and
+  another hold. The vault leaves at 6.4s, four 376×330 places appear, and the
+  coins arc over 1.5s each. Gold arrives at 8.6s and holds. At 9.6s
+  everything lifts (−170px, ×0.82) and the centred headline, chips and quote
+  rise (10.1–12.1s).
+- **First half, to see rather than read:**
+  - problem: 4 animated pictograms (shrinking bars, a dropping barrier,
+    separating links, a turning clock);
+  - insights: 5 route nodes wired with fading dashes to an empty «سیستم؟» hub;
+  - benchmark: six half-filled rings, each with one strength and one gap;
+  - value proposition: a self-drawing flow تومان → دلار → نگه‌داشتن → استفاده,
+    with H1–H5 as one row of chips;
+  - testing: four stat rings that fill and count, with three short quotes;
+  - reassessment: four method icons, each popping a warn badge for the risk
+    it keeps.
+- **Typography:** no negative letter-spacing on Persian text (it breaks the
+  script); line-heights of 1.38 for titles and about 1.75 for body; one
+  8px-grid spacing set (16/24/40/56); chips at a fixed 52px height.
+- **Verified:** 23 slides, no overflow and no errors; pivot frames checked at
+  1.0, 2.6, 4.4, 5.6, 7.6, 9.2, 11 and 13.6s.
+
 ---
 
 ## 11. Blu Bank — the reference
