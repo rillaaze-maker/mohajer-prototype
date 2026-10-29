@@ -370,10 +370,15 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 .fun span small{display:block;font-size:20px;line-height:1.45;margin-top:2px}
 
 /* نقل‌ها */
-.qg{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
-.qc{background:var(--sf);border:1px solid var(--ln);border-radius:24px;padding:34px 36px 30px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;gap:20px;min-height:236px}
-.qc p{font-size:32px;font-weight:400;line-height:1.6;color:var(--ink)}
-.qc .tag{align-self:flex-start}
+.qg{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 24px;margin-top:32px}
+.qc{position:relative;background:var(--sf);border:1px solid var(--ln);border-radius:24px;padding:22px 28px 20px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+.qc p{font-size:26px;font-weight:400;line-height:1.55;color:var(--ink);padding-left:150px}
+.qc>.tag{position:absolute;top:26px;left:26px}
+.qc .ans{display:flex;gap:18px;align-items:center;padding-top:16px;border-top:1px solid var(--ln)}
+.qc .ans>div{display:flex;flex-direction:column;gap:4px}
+.qc .ans .k{font-size:19px;color:var(--acc);font-weight:500}
+.qc .ans b{font-size:22px;font-weight:500;line-height:1.45}
+.qc .ans .v{font-size:19px;color:var(--ink3);direction:ltr;text-align:right}
 .qc.tr{border-color:color-mix(in srgb,var(--warn) 42%,transparent);background:color-mix(in srgb,var(--warn) 5%,var(--sf))}
 
 /* شش مانعِ اعتماد */
@@ -786,18 +791,16 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 </section>
 
 <section class="sl" data-part="2">
-  <div class="eb">۰۸ · صدای کاربر <span class="en">In their words</span></div>
-  <h2 class="t md">حرفِ خودشان، <span class="acc">وسطِ کار</span></h2>
+  <div class="eb">۰۸ · صدای کاربر <span class="en">What they said → what changed</span></div>
+  <h2 class="t md">حرفِ خودشان در <span class="num">v4.5</span>؛ <span class="acc">و جوابش در نسخهٔ جدید</span></h2>
   <div class="qg">
-    <div class="qc tr"><p>«امن یعنی چی؟»</p><span class="tag x">اعتماد</span></div>
-    <div class="qc tr"><p>«توضیحات کافی نبود.»</p><span class="tag x">اعتماد</span></div>
-    <div class="qc"><p>«خیلی گنگ است؛ مسیر مشخصی برای پیش رفتن ندارد.»</p><span class="tag n">ارزش</span></div>
-    <div class="qc"><p>«بخش‌بندی‌ها شفاف نیست؛ چرا کلید اصلی باید دریافت طلا باشد؟»</p><span class="tag n">ارزش</span></div>
-    <div class="qc"><p>«کاش مقداری سرمایهٔ اولیه می‌دادید که با آن کار کنیم.»</p><span class="tag n">انگیزه</span></div>
-    <div class="qc"><p>«امکان ویرایش مبلغ را ندارم، یا پیدا نکردم.»</p><span class="tag n">کاربردپذیری</span></div>
+    <div class="qc tr"><span class="tag x">اعتماد</span><p>«امن یعنی چی؟»</p><div class="ans"><div class="lens" style="background-image:url(./deck-assets/v59-docs.png);--y:105;--x:0;--z:0.6;--lh:118px;--i:0;width:232px;flex:none"></div><div><span class="k">در نسخهٔ جدید</span><b>جواب روی همان صفحه: مدارک و مجوزها، با استعلام</b><span class="v">v5.9</span></div></div></div>
+    <div class="qc tr"><span class="tag x">اعتماد</span><p>«توضیحات کافی نبود.»</p><div class="ans"><div class="lens" style="background-image:url(./deck-assets/v515-done.png);--y:180;--x:0;--z:0.6;--lh:118px;--i:1;width:232px;flex:none"></div><div><span class="k">در نسخهٔ جدید</span><b>به‌جای صفحهٔ توضیح، جای پول روی صفحهٔ اول</b><span class="v">v5.15</span></div></div></div>
+    <div class="qc"><span class="tag n">ارزش</span><p>«خیلی گنگ است؛ مسیر مشخصی برای پیش رفتن ندارد.»</p><div class="ans"><div class="lens" style="background-image:url(./deck-assets/v515-intro.png);--y:640;--x:0;--z:0.6;--lh:118px;--i:2;width:232px;flex:none"></div><div><span class="k">در نسخهٔ جدید</span><b>اولین لمس، یک کار: «بکشید تا پخش شود»</b><span class="v">v5.15</span></div></div></div>
+    <div class="qc"><span class="tag n">ارزش</span><p>«بخش‌بندی‌ها شفاف نیست؛ چرا کلید اصلی باید دریافت طلا باشد؟»</p><div class="ans"><div class="lens" style="background-image:url(./deck-assets/v515-home.png);--y:85;--x:0;--z:0.6;--lh:118px;--i:3;width:232px;flex:none"></div><div><span class="k">در نسخهٔ جدید</span><b>خانه: موجودی و سه اقدام؛ واریز، برداشت، محل نگهداری</b><span class="v">v5.11–5.15</span></div></div></div>
+    <div class="qc"><span class="tag n">انگیزه</span><p>«کاش مقداری سرمایهٔ اولیه می‌دادید که با آن کار کنیم.»</p><div class="ans"><div class="lens" style="background-image:url(./deck-assets/v515-intro.png);--y:178;--x:0;--z:0.6;--lh:118px;--i:4;width:232px;flex:none"></div><div><span class="k">در نسخهٔ جدید</span><b>یک نمونهٔ ۱۰۰ هزار دلاری؛ امتحان، بی‌پول</b><span class="v">v5.15</span></div></div></div>
+    <div class="qc"><span class="tag n">کاربردپذیری</span><p>«امکان ویرایش مبلغ را ندارم، یا پیدا نکردم.»</p><div class="ans"><div class="lens" style="background-image:url(./deck-assets/v512-amt.png);--y:150;--x:0;--z:0.6;--lh:118px;--i:5;width:232px;flex:none"></div><div><span class="k">در نسخهٔ جدید</span><b>مبلغ، بزرگ و بالای صفحه؛ بدون اسکرول</b><span class="v">v5.12</span></div></div></div>
   </div>
-  <div class="grow"></div>
-  <p class="sm">با دکمهٔ «گیر کردم»، بی‌نام · یک نفر سه بار «اعتماد نکردم» را زد، روی خانه و روی همان صفحهٔ توضیح</p>
 </section>
 
 <section class="sl" data-part="2">
@@ -811,8 +814,6 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
     <div class="bx deep"><div class="k">B5</div><em>عمیق‌ترین</em><h3>از دست دادنِ کنترل</h3><p>تصمیم دربارهٔ پولم با کیست؟</p></div>
     <div class="bx"><div class="k">B6</div><h3>مشروعیت</h3><p>پشتِ این سرویس کیست؟</p></div>
   </div>
-  <div class="grow"></div>
-  <p class="lead">«اعتمادِ امروز <b>انسانی</b> است؛ نه نهادی.» <span class="sm">· فاز یک: ۲۰ مصاحبهٔ عمیق و کارگاهِ اعتماد</span></p>
 </section>
 
 <section class="sl" data-part="2">

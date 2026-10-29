@@ -3673,7 +3673,8 @@ script (scratchpad `build_deck4.py`) from the pass-3 file.
   - «می‌دانستند پولشان کجاست» was removed here, as asked.
 - Gap: the features funnel is the hero. Two side cards: «ارزش درک نشد» and
   «به لنگرِ اعتماد توجه نکردیم» (the 2/9 where-money stat now lives there).
-- Quotes: six «گیر کردم» quotes, with the trust ones tinted.
+- Quotes: six «گیر کردم» quotes from v4.5 (trust ones tinted). Each is paired with
+  «در نسخهٔ جدید»: a small crop of the v5 screen that answers it, plus the version.
 - Trust challenge, four slides:
   1. Interview barriers B1–B6, with B5 «از دست دادنِ کنترل» marked deepest.
   2. Wise.
