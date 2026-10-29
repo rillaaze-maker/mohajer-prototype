@@ -3731,6 +3731,64 @@ script (scratchpad `build_deck4.py`) from the pass-3 file.
 
 ---
 
+## 10ah. Final deck — colleague parts added (2026-10-29)
+
+**Order and size**
+- Order: product (parts 0–4) → **5 Workstream 2** → **6 GTM** → **7 Finance** → closing «آشیانه».
+- 80 sections: 77 slides on the main path, plus 3 finance backups outside it.
+
+**Build pipeline** (all scripts in the scratchpad):
+1. `build_deck4.py` (pass-3 backup → product)
+2. `build_parts.py` (WS2 + finance)
+3. `build_gtm.py` (GTM, which needs the GTM HTML for its notes)
+
+**Same identity, different part**
+- Same fonts, paper, bird and layout.
+- Each part has its own accent and a 12px edge strip on the right:
+  - WS2: green `#1E7A68`
+  - GTM: orange `#D2570F`, with Shayan's navy
+  - Finance: blue `#2D5B94`
+- The footer shows the part name. The progress bar takes the part colour.
+
+**Shared mechanics**
+- Speaker notes: `<aside class="notes">` per slide; the N key toggles them.
+- Backups: `data-backup="1"` keeps a slide off the main path and out of the counter. It opens only through `goTo('fb1')`. From a backup, Esc or ← returns to the slide it was opened from.
+
+**Workstream 2** (source: Google Doc «ورک استریم ۲ فاز ۴», exported to `ws2/`) — 17 slides:
+- 37-cell summary: Now 18 / Next 11 / Later 1 / NFN 7.
+- Roles and Read Model.
+- Decision ladder.
+- Weighted criteria.
+- 30×5 heatmap.
+- Domain strips.
+- Dependency severity.
+- Make/Buy/Partner.
+- Waves.
+- Not Feasible Now.
+- 6 epics.
+- 7 gates.
+- Data gaps.
+- Sequence.
+- Stop conditions.
+- Recommendation.
+
+**GTM** (sources in `gtm/`) — 13 slides, following the guide:
+- No test or money numbers.
+- Name only on the cover.
+- The «ابزار این صفحه» strip on every slide.
+- Shayan's speaker notes.
+- The adoption curve is drawn RTL, so its title says «سمت راستِ شکاف» where the original said «سمت چپ».
+
+**Finance** (source: `finance/Mohajer_Financial_Presentation_Designer_Prompt_v07.md`) — 7 slides plus 3 backups:
+- No cover.
+- The basis chip on every numeric slide.
+- Exact numbers from v0.7.
+- Cross-checked against the live sheet (gviz CSV): all match.
+- Slide 5's monthly cumulative chart uses Monthly_Cash_Flow months 0–36. Month 0 is −74.584; it crosses zero at month 28.
+- Font: Dana is kept for deck identity; the prompt asked for Vazirmatn.
+
+---
+
 ## 11. Blu Bank — the reference
 
 The team keeps pointing at Blu (بلوبانک, by Saman Bank) and it is now the primary
