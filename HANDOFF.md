@@ -3806,6 +3806,45 @@ Waiting on the user's review: slide 14 text, and the other slide 16 businesses.
 
 ---
 
+## 10aj. Field-test method slide and participant voices (2026-10-29)
+
+Two slides were added at the end of the product part, before Workstream 2. Both carry `data-label` «تست میدانی · روش و صدا».
+
+**How we test** (7 real screens of `t.html`)
+- The screens are `deck-assets/tw-*.png`, captured by `capture_test.py`.
+- Every request to anything other than localhost was aborted, so nothing reached the collector.
+- Flow: link → four intro questions → mission → app with tap logging → «گیر کردم» → four end questions → voice.
+
+**Update — voice slide simplified.** The slide is now «و جواب می‌دهند؛ با صدای خودشان»: two voice-message bubbles of 6.6 s each, `deck-voices/p1.mp3` (v1 0:20.0–0:26.6) and `deck-voices/p2.mp3` (v2 1:04.6–1:11.2). Both are cut at word gaps, with fades. The full-length `v1.mp3` / `v2.mp3` in `deck-voices/` are no longer used.
+
+Round 25 has two more voices (49 s, 21 s), but it is unconfirmed whether those were real people. Rounds «۴-oct» and «۱» are team tests (sessions of 3–29 s).
+
+**Their own voices** (first version)
+- Two round-1 recordings, saved as `deck-voices/v1.mp3` (83 s) and `deck-voices/v2.mp3` (80 s).
+- Pulled read-only with `voiceget`. The originals are in `voices-private/`.
+- Each card has a clickable waveform and cut chips that play only their range.
+- Audio stops when you leave the slide, and only one voice plays at a time.
+- Without range support, the browser can't seek: the stock python server fails, GitHub Pages works. `serve3.py` is a range-capable test server.
+
+**Open items**
+- The cuts are split at detected pauses (v1: 0:01–0:19, 0:20–0:38, 0:40–0:54, 0:55–1:22; v2: 0:02–1:03, 1:05–1:20). They are **not** chosen by content: no speech-to-text was available.
+- Privacy: participants agreed to send a voice to the team, not to have it published. The deck itself is public on GitHub Pages.
+
+---
+
+## 10ak. GTM v3 and «تست تمام نمی‌شود» (2026-10-30)
+
+**GTM is now Shayan's v3.** The build script is `build_gtm3.py`; the old `build_gtm.py` is superseded. Source: `gtm/v3/`.
+- 14 slides, including the new slide 4 «دو چیز… از همه مهم‌تر بود».
+- Every 🔒 item is kept: wording, honesty labels, order, the four-question strip on slides 4–14, and the tools line on every slide.
+- Laid out like the product part: one idea per slide, soft panels, tools as plain text, all classes prefixed `g`.
+- The adoption curve is drawn left to right, with the English Rogers names.
+- Pipeline: `build_deck4.py` → `build_parts.py` → `build_gtm3.py <deck> gtm/v3/Mohajer_GTM_Section_v3_Preview.html`.
+
+**Live round on v5.15.** Round «1» on v5.15 (Telegram, from 7 Aban) is real people. It had only 5 complete answers by 8 Aban, so at the user's request the deck shows **no data** from it. The last product slide only says «تست تمام نمی‌شود؛ تا محصول درست نشود.»
+
+---
+
 ## 11. Blu Bank — the reference
 
 The team keeps pointing at Blu (بلوبانک, by Saman Bank) and it is now the primary
@@ -3896,3 +3935,16 @@ Sources: [zoomit](https://www.zoomit.ir/tech-iran/402633-bluebox-of-bluebank/) �
 - **Never overwrite** a delivered artefact. New version = new file.
 - Finish every turn with **exactly which files to upload**.
 - Reply in **English**; product copy stays Persian.
+
+## 10al · Print set (booklets) — Aban 1405
+- Folder `print/` = everything to print, numbered: `00_Ashiyaneh_All_Booklets_A4.pdf` (104 p: master cover + contents, 01–04, notes, back), `01_Product` (32 p), `02_Persona_Test` (20 p, SIMULATION), `03_WS2_Capability` (20 p), `04_Financial_Projection` (28 p), `05/06` A3 landscape one-pagers.
+- Sources: `booklets/b0_all.py` (merge + copies to print/), `b1_persona.py`, `b2_product.py`, `b3_ws2.py` (parses `ws2/ws2-phase4.clean.md`; export tables are column-reversed → flipped), `b4_finance.py` (doc `finance/src/findoc.txt` + live sheet tab `finance/src/sh_Monthly_Cash_Flow.csv`; asserts 482.43 / −444.92 / peak −241.41 / month 16 / month 28), `op_a3.py`.
+- Shared look in `booklets/printkit.py`: `cover(i,…)` / `backcover(i,…)` series covers; colours = deck part colours (product gold, persona slate, WS2 #1E7A68, finance #2D5B94).
+- Finance rules kept: basis line on numeric pages; positive cumulative always with «بدون ذخیرهٔ تسویه»; 766.5 is not a pilot budget; no new numbers.
+- Booklet page counts are multiples of 4 (saddle-stitch ready). Rebuild order: b1, b2, b3, b4, op_a3, then b0_all.
+
+## 10am · v5.16 — copy rewrite + splash icon contrast (8 Aban 1405)
+- v5.15 is in live testing and is untouched. `wallet-v5.16.html` + `copy-v5.16.json` + `manifest-v5.16.json` are built by scratchpad `build_v516.py` from v5.15.
+- 356 of the 1,400 strings changed (304 rewritten by hand, the rest by automatic rules). Style guide: `UX_WRITING_GUIDE_FA.md`.
+- Splash: icon chips are now light (#F6F7F9) with saturated icon strokes, a ring and a shadow; they read on the empty dark jar and on the full colored fill.
+- `test-versions.json`: 5.16 added with status `ready`; 5.15 stays `current`, so the test console default is unchanged. `index.html`: v5.16 added to the grid and the headline updated.
