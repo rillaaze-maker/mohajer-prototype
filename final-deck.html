@@ -10,7 +10,7 @@
   روایت (Duarte · sparkline): تا «نقطهٔ چرخش» (#s-pivot) تأکید نقره‌ای است —
   «آنچه هست». از آن‌جا طلا می‌آید و می‌ماند — «آنچه می‌تواند باشد».
   کلیدها: ← یا فاصله = بعدی · → = قبلی · R = پخش دوبارهٔ حرکت · N = یادداشت ارائه‌دهنده · P = چاپ/PDF · Esc = بازگشت از پشتیبان
-  ترتیب: بخش ۰–۴ محصول · ۵ ورک‌استریم ۲ · ۶ GTM (شایان) · ۷ مالی · اسلاید پایانی.
+  ترتیب: بخش ۰–۴ محصول · ۵ ورک‌استریم ۲ · ۶ GTM (شایان، نسخهٔ ۳) · ۷ مالی · اسلاید پایانی.
   اسلایدِ پشتیبان: data-backup="1" — از مسیر اصلی و شمارنده بیرون است؛ فقط با goTo('id') باز می‌شود.
   فاصله‌گذاری: شبکهٔ ۸ پیکسلی؛ متنِ فارسی هرگز letter-spacing منفی نمی‌گیرد.
 -->
@@ -329,6 +329,26 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 .pdone .coin{opacity:1;animation:none;transform:translate(var(--tx),var(--ty));background:var(--to)}
 
 
+
+/* ═══ تست ادامه دارد ═══ */
+.live{display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 18px;border-radius:99px;background:color-mix(in srgb,var(--ok) 12%,transparent);color:var(--ok);font-size:20px;font-weight:600;margin-right:auto}
+.live:before{content:'';width:12px;height:12px;border-radius:50%;background:var(--ok);animation:liveDot 1.4s ease-in-out infinite}
+@keyframes liveDot{50%{opacity:.25;transform:scale(.7)}}
+.lvw{display:grid;grid-template-columns:420px 1fr 520px;gap:28px;margin-top:40px;align-items:stretch}
+.lvf{display:flex;flex-direction:column;gap:12px;justify-content:center}
+.lvf div{display:flex;align-items:center;gap:16px}
+.lvf i{display:block;height:46px;border-radius:12px;background:color-mix(in srgb,var(--acc) var(--k),var(--sf));width:var(--w);transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.lvf b{font-size:34px;font-weight:300;min-width:56px}
+.lvf span{font-size:20px;color:var(--ink2);white-space:nowrap}
+.lvc{display:flex;flex-direction:column;gap:14px}
+.lvc>div{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;background:var(--sf);border-radius:22px;padding:18px 26px;box-shadow:var(--shadow)}
+.lvc h4{font-size:24px;font-weight:600}
+.lvc .vs{font-size:22px;color:var(--ink3);direction:rtl;white-space:nowrap}
+.lvc .vs b{font-size:42px;font-weight:300;color:var(--acc);margin-right:8px}
+.lvc .vs b.bad{color:var(--warn)}
+.lvq{display:flex;flex-direction:column;gap:12px}
+.lvq p{background:var(--sf);border-radius:20px 20px 20px 6px;padding:16px 22px;font-size:23px;line-height:1.55;box-shadow:var(--shadow)}
+.lvq small{font-size:19px;color:var(--ink3)}
 
 /* ═══ تست میدانی · روش و صدا ═══ */
 .tlab{display:grid;grid-template-columns:repeat(7,1fr);gap:16px;margin-top:28px;align-items:start}
@@ -821,159 +841,203 @@ aside.notes{display:none}
 .ask b{flex:none;width:40px;height:40px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-size:20px}
 @media print{ #notes{display:none!important} .sl[data-part="5"]:after,.sl[data-part="7"]:after{display:block} }
 
-/* ═══ بخش ۶ · GTM — نارنجی و سرمه‌ایِ شایان، درون همان هویت ═══ */
+/* ═══ بخش ۶ · GTM (نسخهٔ ۳) — نارنجی و سرمه‌ایِ شایان؛ چیدمانِ بخش محصول ═══ */
 #stage[data-part="6"],.sl[data-part="6"],.sl.post[data-part="6"]{--acc:#D2570F}
-.sl[data-part="6"]{--navy:#1B2A47;--peach:#FBE3D2}
+.sl[data-part="6"]{--navy:#1B2A47;--peach:#FBE9DC;--cream:#F3EEE6}
 .sl[data-part="6"]:after{content:'';position:absolute;top:0;bottom:0;right:0;width:12px;background:var(--acc)}
 .sl.div[data-part="6"]{background:linear-gradient(160deg,#FFF6EF 0%,var(--bg2) 55%)}
-.tools{position:absolute;left:128px;right:128px;bottom:96px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.tools .k{font-size:19px;color:var(--ink3);margin-left:6px}
-.tools .t{font-size:18px;direction:ltr;padding:4px 14px;border-radius:99px;background:var(--sf);border:1px solid var(--ln);color:var(--ink2);white-space:nowrap}
-.sl[data-part="6"].hastools{padding-bottom:200px}
+.sl[data-part="6"].gt{padding-bottom:190px}
 .lt{direction:ltr;unicode-bidi:isolate;display:inline-block}
-/* پله‌های مسئله */
-.stair{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:end;margin-top:40px}
-.stair>div{background:var(--sf);border:1px solid var(--ln);border-radius:22px;padding:24px 26px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
-.stair>div:nth-child(1){min-height:200px} .stair>div:nth-child(2){min-height:250px} .stair>div:nth-child(3){min-height:300px} .stair>div:nth-child(4){min-height:350px;background:var(--navy);border-color:var(--navy)}
-.stair>div:nth-child(4) h3,.stair>div:nth-child(4) b{color:#fff} .stair>div:nth-child(4) p{color:rgba(255,255,255,.72)}
-.stair b{width:42px;height:42px;border-radius:50%;background:color-mix(in srgb,var(--acc) 14%,transparent);color:var(--acc);display:grid;place-items:center;font-size:21px;font-weight:600}
-.stair>div:nth-child(4) b{background:var(--acc);color:#fff}
-.stair h3{font-size:30px;font-weight:600;line-height:1.4;margin-top:auto}
-.stair p{font-size:21px;font-weight:300;color:var(--ink2);line-height:1.55}
-.qbar{margin-top:24px;display:flex;gap:24px;align-items:center;padding:20px 28px;border-radius:20px;background:var(--peach);font-size:28px;font-weight:500;line-height:1.5}
-.qbar small{font-size:21px;font-weight:400;color:var(--ink2);white-space:nowrap}
-/* چهار پرسش */
-.q4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px}
-.q4>div{display:flex;flex-direction:column;gap:12px}
-.q4 h3{font-size:32px;font-weight:600;color:#fff;background:var(--navy);border-radius:18px;padding:16px 22px}
-.q4 .tl2{background:var(--sf);border:1px solid var(--ln);border-radius:16px;padding:14px 20px;box-shadow:var(--shadow)}
-.q4 .tl2 b{display:block;font-size:22px;font-weight:600;direction:ltr;text-align:right;color:var(--ink)}
-.q4 .tl2 span{display:block;font-size:19px;font-weight:300;color:var(--ink2);line-height:1.5;margin-top:4px}
-/* ماتریس سگمنت */
-.segw{display:grid;grid-template-columns:760px 1fr;gap:40px;margin-top:32px;flex:1}
-.mx2{display:grid;grid-template-columns:150px 1fr 1fr;grid-template-rows:56px 1fr 1fr;gap:12px}
-.mx2 .ax{font-size:21px;color:var(--ink3);display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.4}
-.mx2 .cl{border-radius:22px;padding:20px 22px;background:var(--sf);border:1px solid var(--ln);display:flex;flex-direction:column;gap:4px}
-.mx2 .cl b{font-size:40px;font-weight:600;direction:ltr;text-align:right}
-.mx2 .cl span{font-size:20px;direction:ltr;text-align:right;color:var(--ink2)}
-.mx2 .cl em{font-style:normal;margin-top:auto;font-size:21px;font-weight:500;color:var(--ink3)}
-.mx2 .s3{background:var(--acc);border-color:var(--acc)} .mx2 .s3 b,.mx2 .s3 span,.mx2 .s3 em{color:#fff}
-.mx2 .s2{background:var(--navy);border-color:var(--navy)} .mx2 .s2 b,.mx2 .s2 span,.mx2 .s2 em{color:#fff}
-.sl.on .mx2 .s3{animation:pulseS3 2.2s ease-in-out 1.2s 2}
-@keyframes pulseS3{50%{box-shadow:0 0 0 14px color-mix(in srgb,var(--acc) 22%,transparent)}}
-.sgc{display:flex;flex-direction:column;gap:14px}
-.sgc>div{background:var(--sf);border:1px solid var(--ln);border-radius:20px;padding:18px 24px;box-shadow:var(--shadow);border-right:8px solid var(--c)}
-.sgc h4{font-size:26px;font-weight:600;color:var(--c)}
-.sgc p{font-size:20px;font-weight:300;color:var(--ink2);line-height:1.55;margin-top:4px}
-.sgc p b{font-weight:600;color:var(--ink)}
-/* قوت / ضعف */
-.sw{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:32px}
-.sw h3{font-size:26px;font-weight:600;padding:12px 20px;border-radius:14px;margin-bottom:10px}
-.sw .pos h3{background:color-mix(in srgb,var(--acc) 12%,transparent);color:var(--acc)} .sw .neg2 h3{background:#E9ECF1;color:var(--navy)}
-.sw .r{display:grid;grid-template-columns:1fr 36px 1.15fr;gap:10px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--ln)}
-.sw .r b{font-size:22px;font-weight:600;line-height:1.45}
-.sw .r i{font-style:normal;color:var(--ink3);font-size:26px;text-align:center}
-.sw .r span{font-size:20px;font-weight:300;color:var(--ink2);line-height:1.55}
-/* ریفرال */
-.rf{display:grid;grid-template-columns:1fr 1fr 1.1fr;gap:22px;margin-top:32px}
-.rf .bl{border-radius:22px;padding:22px 26px;background:var(--sf);border:1px solid var(--ln);box-shadow:var(--shadow)}
-.rf .bl h3{font-size:30px;font-weight:600;color:var(--acc)}
-.rf .bl p{font-size:21px;font-weight:300;color:var(--ink2);line-height:1.6;padding:10px 0;border-bottom:1px solid var(--ln)}
-.rf .bl p:last-child{border:0}
-.lad6{display:flex;flex-direction:column;gap:8px}
-.lad6 div{display:grid;grid-template-columns:44px 1fr;gap:4px 14px;align-items:center;border-radius:14px;padding:10px 16px;background:color-mix(in srgb,var(--acc) var(--k),var(--sf));color:var(--ink)}
-.lad6 b{grid-row:span 2;width:40px;height:40px;border-radius:50%;background:#fff;color:var(--acc);display:grid;place-items:center;font-size:20px;font-weight:600}
-.lad6 h4{font-size:22px;font-weight:600;line-height:1.35} .lad6 span{font-size:18px;opacity:.8}
-.lad6 div.hi{color:#fff} .lad6 div.hi span{opacity:.85}
-/* منحنی پذیرش */
-.ad{position:relative;margin-top:16px;height:470px}
-.ad svg{width:100%;height:100%;overflow:visible;direction:ltr}
-.ad text{font-family:Dana,Tahoma,sans-serif}
-.ad .seg{stroke:#fff;stroke-width:3}
-.ad .chasm{stroke:var(--navy);stroke-width:3;stroke-dasharray:10 9}
-.sl.on .ad .seg{animation:fadeUp .8s ease both;animation-delay:calc(300ms + var(--i,0)*150ms)}
-.pin circle{fill:#fff;stroke:var(--navy);stroke-width:4} .pin text{fill:var(--navy);font-weight:700;font-size:22px}
-.pin.o circle{stroke:var(--acc)} .pin.o text{fill:var(--acc)}
-.sl.on .pin{animation:pop .6s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(1500ms + var(--i,0)*250ms)}
-.pinl{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px;direction:ltr}
-.pinl>div,.cr4>div{direction:rtl}
-.pinl div{font-size:19px;color:var(--ink2);line-height:1.5;display:flex;gap:10px}
-.pinl b{flex:none;width:30px;height:30px;border-radius:50%;border:3px solid var(--navy);display:grid;place-items:center;font-size:16px;color:var(--navy)}
-.pinl div.o b{border-color:var(--acc);color:var(--acc)}
-.pinl h5{font-size:21px;font-weight:600;color:var(--ink)}
-.cr4{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:16px;border-radius:18px;overflow:hidden;direction:ltr}
-.cr4 div{padding:14px 20px;background:var(--peach);border-left:2px solid var(--bg);font-size:19px;color:var(--ink2);line-height:1.5}
-.cr4 div h5{font-size:22px;font-weight:600;color:var(--acc)}
-/* جدول S3/S2 */
-.st2{width:100%;border-collapse:separate;border-spacing:0 6px;margin-top:24px}
-.st2 th{font-size:24px;font-weight:600;padding:12px 22px;color:#fff;text-align:right}
-.st2 th.s3h{background:var(--acc);border-radius:14px 0 0 14px} .st2 th.s2h{background:var(--navy);border-radius:0 14px 14px 0}
-.st2 th:first-child{background:none}
-.st2 td{font-size:22px;padding:12px 22px;background:var(--sf);line-height:1.5;vertical-align:middle}
-.st2 td:first-child{background:none;font-weight:600;color:var(--ink3);font-size:21px;width:220px;padding-right:0}
-.st2 td.c3{border-right:4px solid var(--acc)} .st2 td.c2{border-right:1px solid var(--ln)}
-/* خانهٔ پیام */
-.mh2{display:grid;grid-template-columns:1fr 440px;gap:32px;margin-top:20px}
-.roof{position:relative;background:var(--navy);color:#fff;border-radius:22px 22px 6px 6px;padding:22px 34px;clip-path:polygon(0 26%,50% 0,100% 26%,100% 100%,0 100%);padding-top:64px;text-align:center}
-.roof b{display:block;font-size:34px;font-weight:600;line-height:1.45}
-.roof p{font-size:19px;font-weight:300;color:rgba(255,255,255,.75);line-height:1.6;margin-top:8px}
-.pil{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px}
-.pil>div{background:var(--sf);border:1px solid var(--ln);border-top:6px solid var(--acc);border-radius:6px 6px 16px 16px;padding:16px 20px;box-shadow:var(--shadow)}
-.pil h4{font-size:30px;font-weight:600;color:var(--acc)}
-.pil p{font-size:20px;line-height:1.5;margin-top:4px}
-.pil small{display:block;font-size:17px;color:var(--ink3);line-height:1.5;margin-top:8px}
-.base{margin-top:12px;padding:14px 22px;border-radius:12px;background:#E9ECF1;color:var(--navy);font-size:22px;font-weight:600;text-align:center}
-.dont{background:var(--sf);border:1px solid var(--ln);border-radius:22px;padding:22px 26px;box-shadow:var(--shadow)}
-.dont h4{font-size:24px;font-weight:600;margin-bottom:8px}
-.dont p{display:flex;gap:12px;align-items:center;font-size:22px;padding:10px 0;border-bottom:1px solid var(--ln)}
-.dont p:before{content:'';flex:none;width:26px;height:26px;border-radius:50%;background:color-mix(in srgb,var(--warn) 14%,transparent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpath d='M8 8l10 10M18 8 8 18' stroke='%23C25339' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") center/26px no-repeat}
-/* قیف پیام */
-.fm{width:100%;border-collapse:separate;border-spacing:0 6px;margin-top:20px}
-.fm th{font-size:21px;font-weight:600;padding:10px 18px;text-align:right;color:var(--ink3)}
-.fm th.s3h{color:var(--acc)} .fm th.s2h{color:var(--navy)}
-.fm td{font-size:21px;padding:11px 18px;background:var(--sf);line-height:1.45}
-.fm td:first-child{font-weight:600;background:var(--peach);border-radius:0 12px 12px 0;width:210px}
-.fm td:last-child{border-radius:12px 0 0 12px;color:var(--ink2)}
-.two2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:14px}
-.two2>div{border-radius:18px;padding:16px 22px;background:var(--sf);border:1px solid var(--ln);font-size:19px;line-height:1.6;color:var(--ink2)}
-.two2 h5{font-size:22px;font-weight:600;color:var(--ink);margin-bottom:4px}
-/* لانچ */
-.ln5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;align-items:end;margin-top:28px}
-.ln5>div{border-radius:18px 18px 6px 6px;padding:16px 18px;background:color-mix(in srgb,var(--acc) var(--k),var(--sf));display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow)}
-.ln5 .w{font-size:19px;font-weight:600;direction:ltr;text-align:right;color:var(--acc)}
-.ln5 h4{font-size:24px;font-weight:600;line-height:1.35}
-.ln5 p{font-size:18px;color:var(--ink2);line-height:1.5}
-.ln5 .g{margin-top:auto;font-size:17px;font-weight:600;color:var(--navy);padding-top:6px;border-top:1px solid color-mix(in srgb,var(--navy) 18%,transparent)}
-.ln5>div.dk{background:var(--navy)} .ln5>div.dk *{color:#fff!important} .ln5>div.dk .w{color:#FFB98A!important}
-.sl.on .ln5>div{animation:gateUp .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(250ms + var(--i,0)*140ms)}
-.gbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px;padding:14px 20px;border-radius:16px;background:var(--navy);color:#fff}
-.gbar b{font-size:22px;font-weight:600;margin-left:6px} .gbar span{font-size:18px;padding:5px 14px;border-radius:99px;background:rgba(255,255,255,.12)}
-.mbar{margin-top:10px;padding:12px 20px;border-radius:14px;background:var(--peach);font-size:19px;line-height:1.55}
-/* اندازه‌گیری */
-.ms{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:28px}
-.arms{position:relative;background:var(--sf);border:1px solid var(--ln);border-radius:22px;padding:22px 26px;box-shadow:var(--shadow)}
-.arm{display:flex;gap:16px;align-items:center;padding:12px 0}
-.arm b{flex:none;width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-size:28px;font-weight:700;color:#fff;background:var(--acc)}
-.arm.c b{background:var(--navy)}
-.arm span{font-size:23px;font-weight:500}
-.cmp2{display:flex;gap:12px;margin-top:10px}
-.cmp2 div{flex:1;border-radius:14px;padding:12px 16px;background:var(--peach);font-size:20px;line-height:1.45}
-.cmp2 div b{direction:ltr;display:inline-block}
-.fun5{display:flex;flex-direction:column;gap:8px;align-items:center}
-.fun5 div{height:52px;border-radius:12px;background:color-mix(in srgb,var(--acc) var(--k),var(--sf));display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:500;width:var(--w)}
-.fun5 div.key{background:var(--acc);color:#fff}
-.rv3{margin-top:18px;padding:16px 22px;border-radius:16px;border:1.5px dashed var(--navy);font-size:21px;line-height:1.6}
-.rv3 b{color:var(--navy)}
-/* تصمیم */
-.dec7{display:grid;grid-template-columns:1fr 470px;gap:28px;margin-top:28px}
-.dec7 .rows>div{display:grid;grid-template-columns:200px 1fr;gap:18px;align-items:center;padding:13px 22px;border-radius:14px;background:var(--sf);border:1px solid var(--ln);margin-bottom:8px}
-.dec7 .rows b{font-size:22px;color:var(--acc);font-weight:600}
-.dec7 .rows span{font-size:23px;line-height:1.5}
-.dec7 .side{display:flex;flex-direction:column;gap:14px}
-.dec7 .side>div{border-radius:20px;padding:20px 24px}
-.dec7 .path{background:var(--navy);color:#fff} .dec7 .path h4{font-size:24px;margin-bottom:8px}
-.dec7 .path p{font-size:20px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.88)}
-.dec7 .next{background:var(--peach);font-size:22px;line-height:1.55} .dec7 .next h4{font-size:22px;color:var(--acc)}
+/* نوار چهار پرسش */
+.gtrk{position:absolute;left:128px;top:122px;display:flex;gap:8px;z-index:3}
+.gtrk span{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 12px;border-radius:99px;background:var(--sf2);font-size:19px;color:var(--ink3);white-space:nowrap}
+.gtrk span i{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:14px;font-weight:600;color:var(--ink2)}
+.gtrk span.done i{background:color-mix(in srgb,var(--acc) 16%,transparent);color:var(--acc)}
+.gtrk span.on{background:var(--acc);color:#fff;font-weight:500}
+.gtrk span.on i{background:#fff;color:var(--acc)}
+/* ابزار این صفحه: متن، نه چیپ */
+.gtools{position:absolute;left:128px;right:128px;bottom:100px;font-size:20px;color:var(--ink3);display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.gtools b{font-weight:500;color:var(--ink2)}
+.gtools span{direction:ltr;unicode-bidi:isolate;color:var(--acc);font-weight:500}
+.gtools span+span:before{content:'·';color:var(--ink3);margin-right:14px}
+/* ۲ · مسئله: زنجیرهٔ علت و معلول */
+.gchain{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:72px}
+.gchain>div{position:relative;padding:0 0 0 40px}
+.gchain>div:not(:last-child):after{content:'←';position:absolute;left:4px;top:6px;font-size:36px;color:var(--ink3)}
+.gchain b{display:block;font-size:72px;font-weight:300;color:var(--acc);line-height:1}
+.gchain h3{font-size:32px;font-weight:600;line-height:1.4;margin-top:18px}
+.gchain p{font-size:22px;font-weight:300;color:var(--ink2);line-height:1.6;margin-top:8px}
+.gchain>div:last-child h3{color:var(--acc)}
+.gq{margin-top:64px;padding:26px 34px;border-radius:24px;background:var(--navy);color:#fff;display:flex;gap:24px;align-items:center}
+.gq small{font-size:22px;color:rgba(255,255,255,.7);white-space:nowrap}
+.gq b{font-size:30px;font-weight:500;line-height:1.5}
+/* ۳ · ابزارها */
+.gq4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px}
+.gq4>div{background:var(--sf);border-radius:24px;padding:26px 28px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:18px}
+.gq4 h3{font-size:30px;font-weight:600;color:var(--acc)}
+.gq4 h3 i{font-style:normal;color:var(--ink3);font-weight:400;margin-left:8px}
+.gq4 .t1 b{display:block;font-size:22px;font-weight:600;direction:ltr;text-align:right;color:var(--ink)}
+.gq4 .t1 span{display:block;font-size:19px;font-weight:300;color:var(--ink2);line-height:1.5;margin-top:2px}
+/* ۴ · دو یافته */
+.gfind{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:56px;flex:1}
+.gfind>div{border-radius:32px;padding:44px 48px;display:flex;flex-direction:column;gap:16px}
+.gfind>div:first-child{background:var(--cream)}
+.gfind>div:last-child{background:var(--navy);color:#fff}
+.gfind h3{font-size:64px;font-weight:600;line-height:1.2}
+.gfind>div:first-child h3{color:var(--acc)}
+.gfind .df{font-size:28px;font-weight:400;line-height:1.6}
+.gfind>div:last-child .df{color:rgba(255,255,255,.9)}
+.gfind ul{list-style:none;margin-top:auto;display:flex;flex-direction:column;gap:12px}
+.gfind li{font-size:22px;font-weight:300;line-height:1.5;display:flex;gap:14px;align-items:baseline}
+.gfind li em{font-style:normal;flex:none;font-size:18px;font-weight:600;padding:3px 12px;border-radius:99px;background:color-mix(in srgb,var(--acc) 14%,transparent);color:var(--acc)}
+.gfind>div:last-child li em{background:rgba(255,255,255,.14);color:#FFB98A}
+.gfind>div:last-child li{color:rgba(255,255,255,.82)}
+/* ۵ · سگمنت‌ها */
+.gseg{display:grid;grid-template-columns:840px 1fr;gap:36px;margin-top:36px}
+.gmx{display:grid;grid-template-columns:132px 1fr 1fr;grid-template-rows:52px 1fr 1fr;gap:12px;height:500px}
+.gmx .ax{font-size:20px;color:var(--ink3);display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.35}
+.gmx .ax b{color:var(--ink);font-weight:600;margin-right:6px}
+.gmx .cl{border-radius:24px;padding:20px 24px;background:var(--sf);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:4px}
+.gmx .cl b{font-size:40px;font-weight:600;direction:ltr;text-align:right;line-height:1.1}
+.gmx .cl span{font-size:18px;direction:ltr;text-align:right;color:var(--ink3)}
+.gmx .cl p{font-size:20px;line-height:1.45;margin-top:6px}
+.gmx .cl em{font-style:normal;margin-top:auto;font-size:19px;font-weight:600;color:var(--ink3)}
+.gmx .s3{background:var(--acc)} .gmx .s3 *{color:#fff!important}
+.gmx .s2{background:var(--navy)} .gmx .s2 *{color:#fff!important}
+.sl.on .gmx .s3{animation:gPulse 2.2s ease-in-out 1.2s 2}
+@keyframes gPulse{50%{box-shadow:0 0 0 14px color-mix(in srgb,var(--acc) 22%,transparent)}}
+.gsgc{display:flex;flex-direction:column;gap:16px}
+.gsgc>div{border-radius:22px;padding:20px 26px;background:var(--sf);box-shadow:var(--shadow);border-right:8px solid var(--c)}
+.gsgc h4{font-size:25px;font-weight:600;color:var(--c)}
+.gsgc p{font-size:19px;font-weight:300;color:var(--ink2);line-height:1.55;margin-top:5px}
+.gsgc p b{font-weight:600;color:var(--ink)}
+.gfoot{font-size:18px;color:var(--ink3);line-height:1.6}
+.gfoot b{color:var(--ink2);font-weight:600}
+/* ۶ · قوت/ضعف */
+.gsw{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:40px}
+.gsw h3{font-size:26px;font-weight:600;margin-bottom:8px}
+.gsw .pos h3{color:var(--acc)} .gsw .neg2 h3{color:var(--navy)}
+.gsw .r{display:grid;grid-template-columns:1fr 36px 1.1fr;gap:12px;align-items:center;padding:16px 20px;border-radius:16px}
+.gsw .r:nth-child(even){background:var(--sf)}
+.gsw .r b{font-size:23px;font-weight:600;line-height:1.45}
+.gsw .r i{font-style:normal;color:var(--ink3);font-size:26px;text-align:center}
+.gsw .r span{font-size:20px;font-weight:300;color:var(--ink2);line-height:1.55}
+.gres{margin-top:28px;font-size:26px;font-weight:500;line-height:1.55;padding:20px 28px;border-radius:20px;background:var(--peach)}
+/* ۷ · ریفرال */
+.grfc{display:grid;grid-template-columns:1fr 60px 1fr 60px 1fr;align-items:center;margin-top:36px;padding:22px 30px;border-radius:24px;background:var(--navy);color:#fff}
+.grfc div b{display:block;font-size:28px;font-weight:600}
+.grfc div span{font-size:20px;color:rgba(255,255,255,.75)}
+.grfc i{font-style:normal;font-size:34px;color:#FFB98A;text-align:center}
+.grf{display:grid;grid-template-columns:1fr 1fr 560px;gap:36px;margin-top:32px}
+.grf h3{font-size:28px;font-weight:600;color:var(--acc)}
+.grf p{font-size:21px;font-weight:300;color:var(--ink2);line-height:1.6;margin-top:10px}
+.grf p b{font-weight:600;color:var(--ink)}
+.gbonus{grid-column:1/3;align-self:end;padding:18px 24px;border-radius:18px;background:var(--cream);font-size:21px;line-height:1.6}
+.gbonus b{color:var(--acc);font-weight:600}
+.glad{grid-row:1/3;grid-column:3;display:flex;flex-direction:column;gap:6px}
+.glad .hd{font-size:20px;color:var(--ink3);margin-bottom:6px}
+.glad div.r{display:grid;grid-template-columns:38px 1fr;gap:2px 14px;align-items:center;padding:9px 16px;border-radius:14px;background:color-mix(in srgb,var(--acc) var(--k),var(--sf))}
+.glad div.r b{grid-row:span 2;width:36px;height:36px;border-radius:50%;background:#fff;color:var(--acc);display:grid;place-items:center;font-size:18px;font-weight:600}
+.glad div.r h4{font-size:21px;font-weight:600;line-height:1.3}
+.glad div.r span{font-size:17px;opacity:.85}
+.glad div.r.hi{color:#fff}
+/* ۸ · منحنی */
+.gad{position:relative;margin-top:0;height:410px}
+.gad svg{width:100%;height:100%;overflow:visible;direction:ltr}
+.gad text{font-family:Dana,Tahoma,sans-serif}
+.gad .seg{stroke:#fff;stroke-width:3}
+.gad .chasm{stroke:var(--navy);stroke-width:3;stroke-dasharray:10 9}
+.sl.on .gad .seg{animation:fadeUp .8s ease both;animation-delay:calc(300ms + var(--i,0)*150ms)}
+.gpin circle{fill:#fff;stroke:var(--navy);stroke-width:4} .gpin text{fill:var(--navy);font-weight:700;font-size:22px}
+.gpin.o circle{stroke:var(--acc)} .gpin.o text{fill:var(--acc)}
+.sl.on .gpin{animation:pop .6s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(1500ms + var(--i,0)*250ms)}
+.gpl{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;direction:ltr}
+.gpl>div{direction:rtl;font-size:19px;color:var(--ink2);line-height:1.5;display:flex;gap:10px}
+.gpl b{flex:none;width:30px;height:30px;border-radius:50%;border:3px solid var(--navy);display:grid;place-items:center;font-size:16px;color:var(--navy)}
+.gpl>div.o b{border-color:var(--acc);color:var(--acc)}
+.gpl h5{font-size:21px;font-weight:600;color:var(--ink)}
+.gcr{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:12px;direction:ltr}
+.gcr>div{direction:rtl;padding:10px 16px;border-radius:16px;background:var(--peach);font-size:19px;color:var(--ink2);line-height:1.5}
+.gcr h5{font-size:21px;font-weight:600;color:var(--acc)}
+.ghonest{margin-top:10px;font-size:19px;color:var(--ink2)}
+/* ۹ · S3/S2 */
+.gst{width:100%;border-collapse:collapse;margin-top:28px}
+.gst th{font-size:24px;font-weight:600;padding:12px 22px;text-align:right}
+.gst th.s3h{color:var(--acc)} .gst th.s2h{color:var(--navy)}
+.gst td{font-size:22px;padding:12px 22px;line-height:1.5;vertical-align:middle}
+.gst tr:nth-child(even) td{background:var(--sf)}
+.gst tr:nth-child(even) td:first-child{border-radius:0 14px 14px 0} .gst tr:nth-child(even) td:last-child{border-radius:14px 0 0 14px}
+.gst td:first-child{font-weight:600;color:var(--ink3);font-size:21px;width:220px}
+/* ۱۰ · خانهٔ پیام */
+.gmh{display:grid;grid-template-columns:1fr 420px;gap:36px;margin-top:24px}
+.groof{background:var(--navy);color:#fff;border-radius:22px 22px 8px 8px;clip-path:polygon(0 24%,50% 0,100% 24%,100% 100%,0 100%);padding:64px 40px 24px;text-align:center}
+.groof b{display:block;font-size:34px;font-weight:600;line-height:1.45}
+.groof p{font-size:19px;font-weight:300;color:rgba(255,255,255,.75);line-height:1.6;margin-top:8px}
+.gpil{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px}
+.gpil>div{background:var(--sf);border-top:6px solid var(--acc);border-radius:6px 6px 18px 18px;padding:16px 20px;box-shadow:var(--shadow)}
+.gpil h4{font-size:30px;font-weight:600;color:var(--acc)}
+.gpil p{font-size:20px;line-height:1.5;margin-top:4px}
+.gpil small{display:block;font-size:17px;color:var(--ink3);line-height:1.5;margin-top:8px}
+.gbase{margin-top:12px;padding:14px 22px;border-radius:12px;background:var(--cream);color:var(--navy);font-size:22px;font-weight:600;text-align:center}
+.gdont{background:var(--sf);border-radius:24px;padding:26px 30px;box-shadow:var(--shadow)}
+.gdont h4{font-size:24px;font-weight:600;margin-bottom:6px}
+.gdont p{display:flex;gap:12px;align-items:center;font-size:22px;padding:11px 0}
+.gdont p:before{content:'×';flex:none;width:28px;height:28px;border-radius:50%;background:color-mix(in srgb,var(--warn) 14%,transparent);color:var(--warn);display:grid;place-items:center;font-size:20px;font-weight:600}
+/* ۱۱ · قیف پیام */
+.gfm{width:100%;border-collapse:collapse;margin-top:22px}
+.gfm th{font-size:21px;font-weight:600;padding:10px 18px;text-align:right;color:var(--ink3)}
+.gfm th.s3h{color:var(--acc)} .gfm th.s2h{color:var(--navy)}
+.gfm td{font-size:21px;padding:11px 18px;line-height:1.45}
+.gfm tr:nth-child(even) td{background:var(--sf)}
+.gfm td:first-child{font-weight:600;width:210px}
+.gfm td:last-child{color:var(--ink2)}
+.gtwo{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px}
+.gtwo>div{border-radius:18px;padding:16px 22px;background:var(--cream);font-size:19px;line-height:1.6;color:var(--ink2)}
+.gtwo h5{font-size:21px;font-weight:600;color:var(--ink);margin-bottom:4px}
+/* ۱۲ · لانچ */
+.gln{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;align-items:end;margin-top:30px}
+.gln>div{border-radius:20px 20px 8px 8px;padding:18px 20px;background:color-mix(in srgb,var(--acc) var(--k),var(--sf));display:flex;flex-direction:column;gap:6px}
+.gln .w{font-size:19px;font-weight:600;direction:ltr;text-align:right;color:var(--acc)}
+.gln h4{font-size:24px;font-weight:600;line-height:1.35}
+.gln p{font-size:18px;color:var(--ink2);line-height:1.5}
+.gln .g{margin-top:auto;font-size:17px;font-weight:600;color:var(--navy)}
+.gln>div.dk{background:var(--navy)} .gln>div.dk *{color:#fff!important} .gln>div.dk .w{color:#FFB98A!important}
+.sl.on .gln>div{animation:gateUp .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(250ms + var(--i,0)*140ms)}
+.ggate{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px;padding:14px 20px;border-radius:16px;background:var(--navy);color:#fff}
+.ggate b{font-size:22px;font-weight:600;margin-left:6px} .ggate span{font-size:18px;padding:5px 14px;border-radius:99px;background:rgba(255,255,255,.12)}
+.gmoney{margin-top:10px;font-size:20px;line-height:1.55;color:var(--ink2)} .gmoney b{color:var(--ink)}
+/* ۱۳ · جدول ۲×۲ */
+.gms{display:grid;grid-template-columns:1fr 560px;gap:44px;margin-top:30px}
+.gab{display:grid;grid-template-columns:120px 1fr 1fr;grid-template-rows:48px 150px 150px;gap:12px;position:relative}
+.gab .h{font-size:20px;color:var(--ink3);display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.35}
+.gab .h b{font-size:30px;font-weight:600;color:var(--ink)}
+.gab .c{border-radius:22px;padding:16px 20px;display:flex;gap:16px;align-items:center;background:var(--sf);box-shadow:var(--shadow)}
+.gab .c b{flex:none;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:30px;font-weight:700;color:#fff;background:var(--acc)}
+.gab .c.n2 b{background:var(--navy)}
+.gab .c span{font-size:21px;font-weight:500;line-height:1.4}
+.gab .c.off{background:repeating-linear-gradient(135deg,transparent 0 12px,rgba(27,42,71,.06) 12px 24px);box-shadow:none;justify-content:center;color:var(--ink3);font-size:21px}
+.gfx{display:flex;gap:14px;margin-top:16px}
+.gfx div{flex:1;border-radius:16px;padding:12px 18px;background:var(--peach);font-size:21px;line-height:1.45}
+.gfx b{direction:ltr;display:inline-block;font-weight:700}
+.gnote{margin-top:12px;font-size:19px;color:var(--ink2);line-height:1.55}
+.gfn{display:flex;flex-direction:column;gap:8px;align-items:center}
+.gfn div{height:50px;border-radius:12px;background:color-mix(in srgb,var(--acc) var(--k),var(--sf));display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:500;width:var(--w)}
+.gfn div.key{background:var(--acc);color:#fff}
+.gback{margin-top:22px;padding:16px 24px;border-radius:18px;background:var(--navy);color:#fff;font-size:21px;line-height:1.6}
+.gback b{color:#FFB98A}
+/* ۱۴ · تصمیم */
+.gdec{display:grid;grid-template-columns:1fr 460px;gap:28px;margin-top:30px}
+.gdec .rows{background:var(--sf);border-radius:28px;padding:22px 34px;box-shadow:var(--shadow)}
+.gdec .rows>div{display:grid;grid-template-columns:210px 1fr;gap:18px;align-items:baseline;padding:11px 0}
+.gdec .rows>div+div{border-top:1px solid var(--ln)}
+.gdec .rows b{font-size:22px;color:var(--acc);font-weight:600}
+.gdec .rows span{font-size:25px;line-height:1.5}
+.gdec .side{display:flex;flex-direction:column;gap:16px}
+.gdec .path{border-radius:24px;padding:22px 28px;background:var(--navy);color:#fff}
+.gdec .path h4{font-size:24px;margin-bottom:6px}
+.gdec .path p{font-size:20px;padding:7px 0;color:rgba(255,255,255,.88)}
+.gdec .next{border-radius:24px;padding:22px 28px;background:var(--cream);font-size:22px;line-height:1.6}
+.gdec .next b{color:var(--acc)}
 
 @media (prefers-reduced-motion:reduce){
   .bd{transition:none;opacity:1;transform:none}
@@ -1745,6 +1809,12 @@ aside.notes{display:none}
   <p class="sm">چند ثانیه از هر ویس · راند «تست اول ارسال»، نسخهٔ ۴٫۵ · بی‌نام · از ۶ نفری که به بخشِ ویس رسیدند، ۲ نفر صدا فرستادند</p>
 </section>
 
+<section class="sl alt" data-part="4" data-label="تست میدانی · ادامه دارد" style="justify-content:center">
+  <div class="eb">پیوست · تست میدانی <span class="en">Testing never stops</span><span class="live">در حال اجرا</span></div>
+  <h2 class="t" style="font-size:96px;line-height:1.35;margin-top:24px">تست تمام نمی‌شود؛<br><span class="acc">تا محصول درست نشود.</span></h2>
+  <p class="lead mt40">نسخهٔ <span class="num">5.15</span> همین حالا در دستِ کاربرانِ واقعی است؛ هر راند، نسخهٔ بعدی را می‌سازد.</p>
+</section>
+
 <!-- ═══ بخش ۵ · ورک‌استریم ۲ ═══ -->
 <section class="sl div alt" data-part="5" id="p5">
   <div class="row" style="gap:16px;align-items:center"><span class="ptag">ورک‌استریم ۲ · فاز چهار</span><span class="ptag" style="background:var(--sf);color:var(--ink2)">آبان ۱۴۰۵ · <span class="en">V0.1</span></span></div>
@@ -1952,74 +2022,95 @@ aside.notes{display:none}
   <div class="row" style="gap:14px;flex-wrap:wrap"><span class="chip a">Capability Feasibility Matrix · ۳۰ قابلیت</span><span class="chip a">Final Capability Scope</span><span class="chip a">Partner &amp; Dependency Map</span><span class="chip a">Pilot Entry Gates · ۷ گیت</span></div>
 </section>
 
-<!-- ═══ بخش ۶ · GTM (شایان) ═══ -->
+<!-- ═══ بخش ۶ · GTM (شایان، نسخهٔ ۳) ═══ -->
 <section class="sl div alt" data-part="6" id="p6">
   <div class="row" style="gap:16px;align-items:center"><span class="ptag">شایان · فاز ۴ · آبان ۱۴۰۵</span></div>
   <div class="n num" style="margin-top:32px">06</div>
   <h2 class="t"><span class="en" style="color:inherit;font-size:inherit;font-weight:inherit">GTM</span> مهاجر</h2>
-  <p class="lead" style="margin-top:8px">از چالش‌ها و شواهد تا تصمیم ورود به بازار: <b>برای چه کسی، با چه پیامی، از کدام راه</b></p>
+  <p class="lead" style="margin-top:8px">از چالش‌ها و شواهد تا تصمیم ورود به بازار: <b>برای چه کسی، از کجا، با چه پیامی، با چه ریسکی</b></p>
   <ol class="two">
-    <li><i>۰۱</i>برای چه کسی؟</li><li><i>۰۳</i>از کجا شروع کنیم؟</li>
-    <li><i>۰۲</i>چرا مهاجر؟</li><li><i>۰۴</i>با چه ریسکی؟</li>
+    <li><i>۰۱</i>برای چه کسی؟</li><li><i>۰۳</i>چرا مهاجر؟</li>
+    <li><i>۰۲</i>از کجا شروع کنیم؟</li><li><i>۰۴</i>با چه ریسکی؟</li>
   </ol>
-  <aside class="notes"><b>۳۰ ثانیه.</b> این بخش GTM است برای ارائه یکپارچه. مسیر: ابزارها ← چالش‌ها ← سگمنت‌ها ← پیام ← کانال ← منحنی پذیرش ← لانچ ← تصمیم نهایی. تصمیم را آخر اعلام می‌کنم تا هر دلیل قبل از آن دیده شود. <b>نسخه کوتاه (حدود ۷ دقیقه):</b> اسلایدهای ۲، ۷ و ۱۱ را خیلی سریع رد کن.</aside>
+  <aside class="notes"><b>۳۰ ثانیه.</b> این بخش GTM است. چهار پرسش دارد: برای چه کسی؟ از کجا شروع کنیم؟ چرا مهاجر؟ با چه ریسکی؟ بالای هر اسلاید یک نوار کوچک نشان می‌دهد در کدام پرسش هستیم. مسیر: مسئله ← ابزارها ← سگمنت‌ها ← ریفرال و منحنی پذیرش ← پیام ← لانچ و آزمون ← تصمیم نهایی. تصمیم را آخر اعلام می‌کنم تا هر دلیل قبل از آن دیده شود. <b>نسخهٔ کوتاه (حدود ۱۰ دقیقه):</b> اسلایدهای مرور ابزارها، تمایز S3 و S2 و پیام در طول قیف را خیلی سریع رد کن.</aside>
 </section>
 
-<section class="sl hastools" data-part="6">
+<section class="sl gt" data-part="6">
+
   <div class="eb">GTM · نقطهٔ شروع</div>
   <h2 class="t md">از کجا شروع شد: <span class="acc">مسئله‌ای که رقبا کامل حل نکرده‌اند</span></h2>
-  <div class="stair">
+  <div class="gchain">
     <div><b>۱</b><h3>اعتماد در این صنعت کم است</h3><p>مردم به نگهداری و خروج پولشان مطمئن نیستند</p></div>
     <div><b>۲</b><h3>رقبا کامل حلش نکرده‌اند</h3><p>ابزارهایشان برای کسی که فقط می‌خواهد ارزش پولش را نگه دارد، پیچیده است</p></div>
     <div><b>۳</b><h3>مسئلهٔ ما حفظ ارزش است</h3><p>با منطقِ معامله‌محورِ صرافی‌های فعلی هم‌خوان نیست</p></div>
     <div><b>۴</b><h3>تست‌ها محصول را عوض کردند</h3><p>ساده‌تر و شفاف‌تر شد؛ روندش در بخش محصول گفته شد</p></div>
   </div>
-  <div class="qbar"><small>از اینجا GTM دو پرسش دارد:</small>این محصول را اول برای چه کسی عرضه کنیم؟ و چطور اعتماد را حل کنیم؟</div>
-  <div class="row" style="gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center"><span class="sm">چالش‌هایی که در مسیر دیدیم:</span><span class="chip" style="height:42px;font-size:20px">اعتماد و فهم نگهداری</span><span class="chip" style="height:42px;font-size:20px">فاصلهٔ علاقه تا واریز واقعی</span><span class="chip" style="height:42px;font-size:20px">نمونهٔ سوگیر</span><span class="chip" style="height:42px;font-size:20px">طلا: علاقه، نه تقاضا</span><span class="chip" style="height:42px;font-size:20px">هم‌راستایی با مدل مالی</span></div>
-<div class="tools"><span class="k">ابزار این صفحه:</span><span class="t">Jobs-to-be-Done</span><span class="t">Mom Test</span><span class="t">بنچمارک رقبا</span></div>
-<aside class="notes"><b>۱ دقیقه. داستان با مسئله شروع می‌شود، نه با ابزار.</b> در این صنعت اعتماد کم است و رقبا آن را کامل حل نکرده‌اند. مسئله‌ی اصلی ما حفظ ارزش بود و این با صرافی‌های فعلی که پیچیده و معامله‌محورند نمی‌خواند. تست‌ها محصول را ساده‌تر و شفاف‌تر کردند؛ این روند در بخش محصول ارائه شد و من از همان نقطه ادامه می‌دهم. پایین اسلاید چالش‌هایی است که در مسیر دیدیم. نتیجه: GTM دو پرسش دارد؛ اول برای چه کسی، دوم چطور اعتماد را حل کنیم.</aside>
+  <div class="gq"><small>از اینجا GTM چهار پرسش دارد:</small><b>برای چه کسی؟ از کجا شروع کنیم؟ چرا مهاجر؟ با چه ریسکی؟</b></div>
+  <p class="gfoot" style="margin-top:22px"><b>چالش‌هایی که در مسیر دیدیم:</b> اعتماد و فهم نگهداری · فاصلهٔ علاقه تا واریز واقعی · نمونهٔ سوگیر · طلا: علاقه، نه تقاضا · هم‌راستایی با مدل مالی</p>
+<div class="gtools"><b>ابزار این صفحه:</b><span>Jobs-to-be-Done</span><span>Mom Test</span><span>بنچمارک رقبا</span></div>
+<aside class="notes"><b>۱ دقیقه. داستان با مسئله شروع می‌شود، نه با ابزار.</b> در این صنعت اعتماد کم است و رقبا آن را کامل حل نکرده‌اند. مسئله‌ی اصلی ما حفظ ارزش بود و این با صرافی‌های فعلی که پیچیده و معامله‌محورند نمی‌خواند. تست‌ها محصول را ساده‌تر و شفاف‌تر کردند؛ این روند در بخش محصول ارائه شد و من از همان نقطه ادامه می‌دهم. پایین اسلاید چالش‌هایی است که در مسیر دیدیم. نتیجه: GTM چهار پرسش دارد؛ اول برای چه کسی، بعد از کجا شروع کنیم، چرا مهاجر، و با چه ریسکی.</aside>
 </section>
 
-<section class="sl hastools" data-part="6">
+<section class="sl gt" data-part="6">
+
   <div class="eb">GTM · مرور سریع ابزارها</div>
   <h2 class="t md">چهار پرسشِ GTM؛ <span class="acc">برای هرکدام، ابزارِ مشخص</span></h2>
-  <div class="q4">
-    <div><h3>برای چه کسی؟</h3><div class="tl2"><b>Jobs-to-be-Done + Mom Test</b><span>مصاحبه‌های فاز ۱: شغل واقعی پشت رفتار</span></div><div class="tl2"><b>Wedge Scorecard + Red Team</b><span>فاز ۲: چرا Wallet و دلار دیجیتال</span></div><div class="tl2"><b>سگمنت‌بندی دومحوره</b><span>فاز ۴: نیاز غالب × استفادهٔ دیجیتال ← S1 تا S4</span></div></div>
-    <div><h3>چرا مهاجر؟</h3><div class="tl2"><b>Value Proposition</b><span>سه‌لایه: ورود = سادگی · فعال‌سازی = اعتماد · توسعه = یکپارچگی</span></div><div class="tl2"><b>Control-led Progressive Trust</b><span>چهار لحظهٔ اعتماد از فاز ۳</span></div><div class="tl2"><b>Positioning + Message House</b><span>جمع‌بندی استراتژی پیام</span></div></div>
-    <div><h3>از کجا شروع کنیم؟</h3><div class="tl2"><b>Beachhead + Crossing the Chasm</b><span>Moore، روی منحنی پذیرش Rogers</span></div><div class="tl2"><b>معیارهای انتخاب کانال</b><span>هفت معیار: اعتماد، هزینهٔ سرنخ، اولین واریز، تکرارپذیری، …</span></div><div class="tl2"><b>آزمون سه‌بازویی</b><span>جداکردن اثر کانال از اثر سگمنت</span></div></div>
-    <div><h3>با چه ریسکی؟</h3><div class="tl2"><b>Go / Hold / Iterate</b><span>لانچ گیت‌دار و گیت هفتهٔ هشتم</span></div><div class="tl2"><b>Unit Economics</b><span>CAC، TPV، Contribution؛ مدل مالی آقای شمالی و محمدحسین</span></div><div class="tl2"><b>Decision Register + RACI</b><span>ثبت هر تصمیم و مسئول آن</span></div></div>
+  <div class="gq4">
+    <div><h3><i>۱</i>برای چه کسی؟</h3><div class="t1"><b>Jobs-to-be-Done + Mom Test</b><span>مصاحبه‌های فاز ۱: شغل واقعی پشت رفتار</span></div><div class="t1"><b>Wedge Scorecard + Red Team</b><span>فاز ۲: چرا Wallet و دلار دیجیتال</span></div><div class="t1"><b>سگمنت‌بندی دومحوره</b><span>فاز ۴: نیاز غالب × استفادهٔ دیجیتال ← S1 تا S4</span></div></div>
+    <div><h3><i>۲</i>از کجا شروع کنیم؟</h3><div class="t1"><b>Beachhead + Crossing the Chasm</b><span>Moore، روی منحنی پذیرش Rogers</span></div><div class="t1"><b>معیارهای انتخاب کانال</b><span>هفت معیار: اعتماد، هزینهٔ سرنخ، اولین واریز، تکرارپذیری، …</span></div><div class="t1"><b>Human Trust Bridge</b><span>ریفرال انسانی؛ یکی از چهار لحظهٔ اعتماد</span></div></div>
+    <div><h3><i>۳</i>چرا مهاجر؟</h3><div class="t1"><b>Value Proposition</b><span>سه‌لایه: ورود = سادگی · فعال‌سازی = اعتماد · توسعه = یکپارچگی</span></div><div class="t1"><b>Control-led Progressive Trust</b><span>چهار لحظهٔ اعتماد از فاز ۳</span></div><div class="t1"><b>Positioning + Message House</b><span>جمع‌بندی استراتژی پیام</span></div></div>
+    <div><h3><i>۴</i>با چه ریسکی؟</h3><div class="t1"><b>Go / Hold / Iterate</b><span>لانچ گیت‌دار و گیت هفتهٔ هشتم</span></div><div class="t1"><b>آزمون سه‌بازویی</b><span>جداکردن اثر کانال از اثر سگمنت</span></div><div class="t1"><b>Unit Economics</b><span>CAC، TPV، Contribution؛ مدل مالی آقای شمالی و محمدحسین</span></div><div class="t1"><b>Decision Register + RACI</b><span>ثبت هر تصمیم و مسئول آن</span></div></div>
   </div>
-<div class="tools"><span class="k">ابزار این صفحه:</span><span class="t">مرور ابزارها</span></div>
-<aside class="notes"><b>یک دقیقه.</b> فقط مرور: GTM چهار پرسش دارد و برای هرکدام ابزار مشخصی داریم. از اینجا به بعد هر دلیل را با نام ابزارش می‌گویم.</aside>
+<div class="gtools"><b>ابزار این صفحه:</b><span>مرور ابزارها</span></div>
+<aside class="notes"><b>یک دقیقه.</b> فقط مرور (کارفرما به چارچوب‌ها حساس است، پس نگهش می‌داریم): GTM چهار پرسش دارد و برای هرکدام ابزار مشخصی داریم. از اینجا به بعد هر دلیل را با نام ابزارش می‌گویم. ترتیب ستون‌ها همان ترتیب داستان است و نوار بالای اسلایدهای بعد هم همین چهار پرسش را نشان می‌دهد.</aside>
 </section>
 
-<section class="sl hastools" data-part="6">
+<section class="sl gt" data-part="6">
+<div class="gtrk"><span class="on"><i>۱</i>برای چه کسی؟</span><span class=""><i>۲</i>از کجا شروع کنیم؟</span><span class=""><i>۳</i>چرا مهاجر؟</span><span class=""><i>۴</i>با چه ریسکی؟</span></div>
+  <div class="eb">GTM · آنچه از فازهای قبل فهمیدیم</div>
+  <h2 class="t md">دو چیز در کشف‌های فازهای قبل <span class="acc">از همه مهم‌تر بود.</span></h2>
+  <div class="gfind">
+    <div><h3>نیاز غالب</h3><p class="df">بیشتر مردم دنبال نگه داشتن ارزش پولشان‌اند، نه معامله؛ بعضی هم دنبال تنوع و بازده.</p>
+      <ul><li><em>فاز ۱</em>مسئله از «خرید دلار» به «حفظ ارزش» چرخید</li><li><em>فاز ۱</em>کشمکش «بازده × آرامش»</li><li><em>فاز ۲</em>در Red Team، شغل غالب حفظ ارزش بود</li></ul></div>
+    <div><h3>استفادهٔ دیجیتال</h3><p class="df">بعضی با ابزار دیجیتال راحت‌اند. بعضی اعتماد را از آدم می‌گیرند، نه از ابزار.</p>
+      <ul><li><em>فاز ۱</em>اعتماد اغلب رابطه‌محور بود</li><li><em>فاز ۲</em>ثروتمندان بزرگ شبکهٔ صراف خودشان را دارند</li><li><em>تست اول</em>نمونه عمدتاً دیجیتال‌فعال بود</li></ul></div>
+  </div>
+<div class="gtools"><b>ابزار این صفحه:</b><span>Jobs-to-be-Done</span><span>Wedge Scorecard + Red Team</span></div>
+<aside class="notes"><b>۱ دقیقه.</b> قبل از هر سگمنت‌بندی، دو چیز را از کشف‌های فازهای قبل یادآوری می‌کنم که از همه مهم‌تر بودند. اول، نیاز غالب: مسئله «خرید دلار» نبود، «نگه داشتن ارزش و دانستن جای پول» بود. در فاز اول مسئله همین‌طور چرخید و در Red Team فاز دوم هم شغل غالب حفظ ارزش درآمد؛ بعضی‌ها هم دنبال تنوع و بازده‌اند. دوم، استفادهٔ دیجیتال و اعتماد: بعضی با ابزار دیجیتال راحت‌اند و بعضی اعتماد را از آدم می‌گیرند، نه از ابزار. فاز اول اعتماد را رابطه‌محور نشان داد؛ در فاز دوم دیدیم ثروتمندان بزرگ شبکهٔ صراف خودشان را دارند؛ و نمونهٔ تست اول هم عمدتاً دیجیتال‌فعال بود. این دو یافته را در اسلاید بعد برای GTM به کار می‌گیریم.</aside>
+</section>
+
+<section class="sl gt" data-part="6">
+<div class="gtrk"><span class="on"><i>۱</i>برای چه کسی؟</span><span class=""><i>۲</i>از کجا شروع کنیم؟</span><span class=""><i>۳</i>چرا مهاجر؟</span><span class=""><i>۴</i>با چه ریسکی؟</span></div>
   <div class="eb">GTM · سگمنت‌ها</div>
-  <h2 class="t md">S3 نقطهٔ شروع؛ <span class="acc">S2 آینه‌ای برای سنجیدنِ آن</span></h2>
-  <div class="segw">
-    <div class="mx2">
-      <span></span><span class="ax">نیاز غالب: <b style="color:var(--ink);margin-right:6px">حفظ ارزش</b></span><span class="ax">نیاز غالب: <b style="color:var(--ink);margin-right:6px">تخصیص و تنوع</b></span>
-      <span class="ax">استفادهٔ دیجیتال:<br><b style="color:var(--ink)">فعال</b></span>
-      <div class="cl"><b>S1</b><span>Active Converter</span><em>فرصت ثانویه</em></div>
-      <div class="cl s2"><b>S2</b><span>Multi-Asset Digital</span><em>گروه مقایسه</em></div>
-      <span class="ax">استفادهٔ دیجیتال:<br><b style="color:var(--ink)">کم</b></span>
-      <div class="cl s3"><b>S3</b><span>Digitally Underserved Preserver</span><em>نقطهٔ شروع · Beachhead</em></div>
-      <div class="cl"><b>S4</b><span>Underserved Allocator</span><em>فرصت توسعه</em></div>
+  <h2 class="t md">دو محور، چهار سگمنت: <span class="acc">از S3 شروع می‌کنیم</span></h2>
+  <div class="gseg">
+    <div>
+      <div class="gmx">
+        <span></span><span class="ax">نیاز غالب:<b>حفظ ارزش</b></span><span class="ax">نیاز غالب:<b>تخصیص و تنوع</b></span>
+        <span class="ax">استفادهٔ دیجیتال:<br><b>فعال</b></span>
+        <div class="cl"><b>S1</b><span>Active Converter</span><p>ابزار دارد؛ دلیل جدی برای تغییر می‌خواهد</p><em>فرصت ثانویه</em></div>
+        <div class="cl s2"><b>S2</b><span>Multi-Asset Digital</span><p>باتجربه در چند دارایی؛ مانعش هزینهٔ تغییر</p><em>گروه مقایسه</em></div>
+        <span class="ax">استفادهٔ دیجیتال:<br><b>کم</b></span>
+        <div class="cl s3"><b>S3</b><span>Digitally Underserved Preserver</span><p>ابزار دیجیتال را کم یا با تردید می‌گیرد</p><em>نقطهٔ شروع · Beachhead</em></div>
+        <div class="cl"><b>S4</b><span>Underserved Allocator</span><p>به تنوع نیاز دارد؛ ابزار دیجیتالش کم است</p><em>فرصت توسعه</em></div>
+      </div>
+      <p class="gfoot" style="margin-top:14px">تعریف‌های قبلی همپوشانی داشتند و برتری Scorecard شکننده بود. زیر هر سگمنت، سه طبقهٔ اقتصادی مدل مالی می‌نشیند؛ هدف عملی S3: بازار انبوه تا توانگر بالا.</p>
     </div>
-    <div class="sgc">
+    <div class="gsgc">
       <div style="--c:var(--acc)"><h4>S3 · نقطهٔ شروع</h4><p><b>کیست؟</b> اقدام واقعی برای حفظ ارزش دارد، توان مالی مناسب دارد، ولی از ابزار دیجیتال کم یا با تردید استفاده می‌کند. نمونهٔ دسترسی (فرضیه): پزشک، مدیر، صاحب کسب‌وکار.</p><p><b>چرا او؟</b> مسئله‌اش پیچیدگی و اعتماد است، نه نبود ابزار.</p><p><b>برمی‌گردیم اگر:</b> پذیرش دارایی دیجیتال محدود بماند یا هزینهٔ اعتمادسازی ساختاری بالا برود.</p></div>
       <div style="--c:var(--navy)"><h4>S2 · گروه مقایسه</h4><p><b>کیست؟</b> کاربر دیجیتال با سابقهٔ مدیریت چند دارایی که ابزار جایگزین دارد.</p><p><b>چرا نگهش داریم؟</b> جلوی سوگیری تأیید را می‌گیرد. <b>جایگزین S3 اگر:</b> با CAC و کیفیت واریز بهتر برسد.</p></div>
-      <p class="sm" style="font-size:19px">چرا دو محور؟ تعریف‌های قبلی همپوشانی داشتند و برتری Scorecard شکننده بود. زیر هر سگمنت، سه طبقهٔ اقتصادی مدل مالی می‌نشیند؛ هدف عملی S3: بازار انبوه تا توانگر بالا.</p>
+      <p class="gfoot"><b>پیوند با بخش ۴:</b> «سگمنت هدف» در آزمون مجازی همین S3 است؛ آن آزمون شبیه‌سازی بود و فقط جهت می‌دهد، نه شاهد.</p>
     </div>
   </div>
-<div class="tools"><span class="k">ابزار این صفحه:</span><span class="t">سگمنت‌بندی دومحوره</span><span class="t">Beachhead</span><span class="t">Jobs-to-be-Done</span></div>
-<aside class="notes"><b>۱ دقیقه.</b> دو محور مستقل: نیاز غالب و میزان استفاده دیجیتال. از تقاطعشان چهار سگمنت درمی‌آید. S3 کسی است که واقعاً دارد ارزش پولش را حفظ می‌کند ولی ابزار دیجیتال برایش پیچیده یا نامطمئن است؛ مسئله‌اش همان چیزی است که سادگی و شفافیت مهاجر حل می‌کند. S2 را عمداً به‌عنوان گروه مقایسه نگه می‌داریم تا فقط دنبال تأیید خودمان نباشیم. تعریف سگمنت با رفتار است، نه شغل؛ پزشک و مدیر نمونه‌ی دسترسی‌اند.</aside>
+<div class="gtools"><b>ابزار این صفحه:</b><span>سگمنت‌بندی دومحوره</span><span>Beachhead</span><span>Jobs-to-be-Done</span></div>
+<aside class="notes"><b>۱ دقیقه.</b> حالا همان دو چیز را برای GTM به کار می‌گیریم: نیاز غالب و استفادهٔ دیجیتال را دو محور می‌گیریم و از تقاطعشان چهار سگمنت درمی‌آید. هر چهار تا ویژگی روشن دارند و قوت و مانع هرکدام را می‌شناسیم؛ برای همین می‌شود تصمیم گرفت از کدام شروع کنیم. S3 کسی است که واقعاً دارد ارزش پولش را حفظ می‌کند ولی ابزار دیجیتال برایش پیچیده یا نامطمئن است؛ مسئله‌اش همان چیزی است که سادگی و شفافیت مهاجر حل می‌کند. S2 را عمداً به‌عنوان گروه مقایسه نگه می‌داریم تا فقط دنبال تأیید خودمان نباشیم. تعریف سگمنت با رفتار است، نه شغل؛ پزشک و مدیر نمونهٔ دسترسی‌اند. «سگمنت هدف» در آزمون مجازی بخش ۴ همین S3 است؛ آن شبیه‌سازی بود و فقط جهت می‌دهد، نه شاهد.</aside>
 </section>
 
-<section class="sl hastools" data-part="6">
+<section class="sl gt" data-part="6">
+<div class="gtrk"><span class="on"><i>۱</i>برای چه کسی؟</span><span class=""><i>۲</i>از کجا شروع کنیم؟</span><span class=""><i>۳</i>چرا مهاجر؟</span><span class=""><i>۴</i>با چه ریسکی؟</span></div>
   <div class="eb">GTM · چرا S3</div>
   <h2 class="t md">قوت‌های ما روی S3 سوار می‌شوند؛ <span class="acc">ضعف‌هایمان اذیتش نمی‌کنند.</span></h2>
-  <div class="sw">
+  <div class="gsw">
     <div class="pos"><h3>قوت‌های ما: روی S3 سوار می‌شوند</h3>
       <div class="r"><b>مسیر سادهٔ خرید و نگهداری دلار دیجیتال</b><i>←</i><span>S3 از پیچیدگی صرافی‌ها فاصله می‌گیرد؛ سادگی، دلیل ورود اوست</span></div>
       <div class="r"><b>نرخ، کارمزد و نتیجهٔ خالص پیش از تأیید</b><i>←</i><span>کسی که به ابزار مطمئن نیست، پیش از واریز می‌خواهد همه‌چیز را ببیند</span></div>
@@ -2031,139 +2122,155 @@ aside.notes{display:none}
       <div class="r"><b>برند و اعتماد هنوز ساخته نشده</b><i>←</i><span>معرفی انسانی از فرد معتمد، این شکاف را جبران می‌کند</span></div>
       <div class="r"><b>قابلیت‌های مکمل: کیف پول شخصی، سبد، طلا</b><i>←</i><span>ورود با دلار دیجیتال کافی است؛ بقیه برای توسعهٔ رابطه</span></div></div>
   </div>
-  <div class="qbar" style="font-size:24px;margin-top:20px"><small>نتیجه:</small>آنچه S3 می‌خواهد در قوت‌های ماست و آنچه نداریم او را اذیت نمی‌کند؛ آزمون سه‌بازویی این را می‌سنجد.</div>
-<div class="tools"><span class="k">ابزار این صفحه:</span><span class="t">Jobs-to-be-Done</span><span class="t">Value Proposition</span><span class="t">Beachhead</span></div>
+  <div class="gres"><b class="acc">نتیجه:</b> آنچه S3 می‌خواهد در قوت‌های ماست و آنچه نداریم او را اذیت نمی‌کند؛ آزمون سه‌بازویی این را می‌سنجد.</div>
+<div class="gtools"><b>ابزار این صفحه:</b><span>Jobs-to-be-Done</span><span>Value Proposition</span><span>Beachhead</span></div>
 <aside class="notes"><b>۱٫۳ دقیقه.</b> جواب «چرا S3». S3 کسی است که پیچیدگی را نمی‌خواهد و به ابزار مطمئن نیست. قوت‌های ما همان چیزی است که او می‌خواهد: سادگی، شفافیت پیش از واریز، توضیح نگهدارنده و پشتیبانی انسانی، و تمرکز روی حفظ ارزش. ضعف‌هایمان برای او اهمیتی ندارد: او معامله‌گر نیست؛ ورود مرحله‌ای با معرفی شخصی برایش طبیعی است؛ و اعتماد برند را معرفی انسانی جبران می‌کند.</aside>
 </section>
 
-<section class="sl hastools" data-part="6">
+<section class="sl gt" data-part="6">
+<div class="gtrk"><span class="done"><i>۱</i>برای چه کسی؟</span><span class="on"><i>۲</i>از کجا شروع کنیم؟</span><span class=""><i>۳</i>چرا مهاجر؟</span><span class=""><i>۴</i>با چه ریسکی؟</span></div>
   <div class="eb">GTM · ریفرال و کانال‌ها</div>
   <h2 class="t md">ریفرال انسانی هم مقیاس را کنترل می‌کند، <span class="acc">هم اعتماد را پل می‌زند.</span></h2>
-  <div class="rf">
-    <div class="bl"><h3>کنترل مقیاس</h3><p>لینک و کد دعوت = ظرفیت، منشأ جذب و آزمون در دست ماست</p><p>ورود موجی، نه یک‌باره؛ KYC، تسویه و برداشت زیر فشار محدود سنجیده می‌شود</p><p>کد، ابزار کنترل دسترسی است؛ نه پاداش و نه جایگزین KYC</p></div>
-    <div class="bl"><h3>پل اعتماد</h3><p>بزرگ‌ترین چالش، اعتماد بود؛ اعتماد از آدم منتقل می‌شود، نه از تبلیغ: <span class="lt">Human Trust Bridge</span></p><p>برای S3 معرفی انسانی؛ برای S2 مسیر مشابه، تا اثر کانال از اثر سگمنت جدا شود</p><p>اثرش با کانال غیررفرال مقایسه و سنجیده می‌شود</p></div>
-    <div><div class="pn-k" style="margin-bottom:10px">ترتیب کانال‌ها: اعتماد و قابلیت ردیابی، نه حجم</div><div class="lad6"><div class="hi" style="--k:100%"><b>1</b><h4>معرفی توسط افراد معتمد</h4><span>S3 · و S2 با مسیر مشابه</span></div><div class="hi" style="--k:78%"><b>2</b><h4>اجتماعات حرفه‌ای و محتوای مسئله‌محور</h4><span>S3 · اولین کانال خارج از آشنایان</span></div><div class="" style="--k:56%"><b>3</b><h4>اجتماعات مالی دیجیتال</h4><span>S2 · بازوی مقایسه</span></div><div class="" style="--k:36%"><b>4</b><h4>تولیدکنندگان محتوای معتبر</h4><span>پس از غربالگری و مجوز</span></div><div class="" style="--k:22%"><b>5</b><h4>جستجو و محتوای نیازمحور</h4><span>سرمایه‌گذاری تدریجی</span></div><div class="" style="--k:10%"><b>6</b><h4>کمپین گستردهٔ پرفورمنس</h4><span>پس از داده و مجوز</span></div></div></div>
+  <div class="grfc"><div><b>معرفی‌کنندهٔ معتبر</b><span>فرد معتمد یا هم‌حرفه‌ای</span></div><i>←</i><div><b>لینک و کد دعوت</b><span>ظرفیت · منشأ جذب · آزمون</span></div><i>←</i><div><b>کاربر دعوت‌شده</b><span>KYC ← اولین واریز</span></div></div>
+  <div class="grf">
+    <div><h3>کنترل مقیاس</h3><p>ورود موجی، نه یک‌باره؛ KYC، تسویه و برداشت زیر فشار محدود سنجیده می‌شود.</p><p>کد ابزار کنترل دسترسی است؛ <b>نه جایگزین KYC.</b></p></div>
+    <div><h3>پل اعتماد</h3><p>اعتماد از آدم منتقل می‌شود، نه از تبلیغ: <span class="lt">Human Trust Bridge</span></p><p>S3 با معرفی انسانی، S2 با مسیر مشابه؛ اثرش با کانال غیررفرال مقایسه می‌شود.</p></div>
+    <div class="glad"><div class="hd">ترتیب کانال‌ها: اعتماد و قابلیت ردیابی، نه حجم</div><div class="r hi" style="--k:100%"><b>۱</b><h4>معرفی توسط افراد معتمد</h4><span>S3 · و S2 با مسیر مشابه</span></div><div class="r hi" style="--k:78%"><b>۲</b><h4>اجتماعات حرفه‌ای و محتوای مسئله‌محور</h4><span>S3 · اولین کانال خارج از آشنایان</span></div><div class="r" style="--k:52%"><b>۳</b><h4>اجتماعات مالی دیجیتال</h4><span>S2 · بازوی مقایسه</span></div><div class="r" style="--k:32%"><b>۴</b><h4>تولیدکنندگان محتوای معتبر</h4><span>پس از غربالگری و مجوز</span></div><div class="r" style="--k:18%"><b>۵</b><h4>جستجو و محتوای نیازمحور</h4><span>سرمایه‌گذاری تدریجی</span></div><div class="r" style="--k:8%"><b>۶</b><h4>کمپین گستردهٔ پرفورمنس</h4><span>پس از داده و مجوز</span></div></div>
+    <div class="gbonus"><b>پاداش معرفی:</b> در لانچ اول تصویب نشده است. بخش مالی از ماه ۱۵ پاداشی را فرض می‌کند که آزمون‌نشده است و تصمیم جدا می‌خواهد.</div>
   </div>
-<div class="tools"><span class="k">ابزار این صفحه:</span><span class="t">Human Trust Bridge</span><span class="t">معیارهای انتخاب کانال</span><span class="t">لانچ گیت‌دار</span></div>
-<aside class="notes"><b>۱٫۲ دقیقه.</b> استراتژی ریفرال و کد دعوت دو کار می‌کند. یکی کنترل مقیاس: ظرفیت، منشأ جذب و آزمون در دست ماست و KYC، تسویه و برداشت زیر فشار کنترل‌شده سنجیده می‌شود؛ کد فقط کنترل دسترسی است، نه پاداش. دوم پل اعتماد: بزرگ‌ترین چالش ما اعتماد بود و اعتماد از آدم منتقل می‌شود. برای S3 معرفی انسانی است و برای S2 هم مسیر مشابه را می‌گیریم تا اثر کانال را از اثر سگمنت جدا کنیم. سمت چپ ترتیب کانال‌هاست: معرفی اول و بقیه به‌تدریج. معیارهای مقایسه کانال: تراکم S2/S3، انتقال اعتماد، هزینه سرنخ واجد شرایط، نرخ اولین واریز، تکرارپذیری، هزینه حمایت انسانی، ارزش کوهورت.</aside>
+<div class="gtools"><b>ابزار این صفحه:</b><span>Human Trust Bridge</span><span>معیارهای انتخاب کانال</span><span>لانچ گیت‌دار</span></div>
+<aside class="notes"><b>۱٫۲ دقیقه.</b> کد دعوت و ریفرال دو کار می‌کنند. یکی کنترل مقیاس: ظرفیت، منشأ جذب و آزمون در دست ماست و KYC، تسویه و برداشت زیر فشار کنترل‌شده سنجیده می‌شود؛ کد فقط کنترل دسترسی است. دوم پل اعتماد: بزرگ‌ترین چالش ما اعتماد بود و اعتماد از آدم منتقل می‌شود. برای S3 معرفی انسانی است و برای S2 هم مسیر مشابه را می‌گیریم تا اثر کانال را از اثر سگمنت جدا کنیم. <b>پاداش:</b> در لانچ اول پاداش معرفی تصویب نشده؛ بخش مالی از ماه ۱۵ و پس از ۱۰ هزار کاربر فعال یک دلار پاداش و تا ۴۰٪ جذب از معرفی را فرض می‌کند. آن فرض آزمون‌نشده است و جدا تصمیم‌گیری می‌شود. سمت چپ ترتیب کانال‌هاست: معرفی اول و بقیه به‌تدریج. معیارهای مقایسه کانال: تراکم S2/S3، انتقال اعتماد، هزینهٔ سرنخ واجد شرایط، نرخ اولین واریز، تکرارپذیری، هزینهٔ حمایت انسانی، ارزش کوهورت.</aside>
 </section>
 
-<section class="sl hastools" data-part="6">
+<section class="sl gt" data-part="6">
+<div class="gtrk"><span class="done"><i>۱</i>برای چه کسی؟</span><span class="on"><i>۲</i>از کجا شروع کنیم؟</span><span class=""><i>۳</i>چرا مهاجر؟</span><span class=""><i>۴</i>با چه ریسکی؟</span></div>
   <div class="eb">GTM · نگاشت روی منحنی پذیرش</div>
   <h2 class="t md">شواهدِ ما از سمت چپِ شکاف آمده؛ <span class="acc">بازارِ ما آن‌سوی شکاف است.</span></h2>
-  <div class="ad"><svg viewBox="0 0 1664 470" aria-label="منحنی پذیرش"><path class="seg" style="--i:0" d="M20.0,330 L20.0,326.8 L26.8,326.5 L33.5,326.3 L40.3,326.0 L47.1,325.7 L53.8,325.3 L60.6,325.0 L67.4,324.6 L74.1,324.2 L80.9,323.8 L87.7,323.4 L94.4,322.9 L101.2,322.4 L108.0,321.9 L114.7,321.3 L121.5,320.8 L128.3,320.1 L135.0,319.5 L141.8,318.8 L148.6,318.0 L155.3,317.3 L162.1,316.4 L168.9,315.6 L175.6,314.7 L182.4,313.7 L189.2,312.7 L195.9,311.7 L202.7,310.6 L209.5,309.4 L216.2,308.2 L223.0,306.9 L229.8,305.6 L236.5,304.2 L243.3,302.8 L250.1,301.3 L256.8,299.7 L263.6,298.0 L270.4,296.3 L277.1,294.5 L283.9,292.7 L290.7,290.8 L290.7,330 Z" fill="#1B2A47"/><text x="155" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">نوآوران</text><text x="155" y="398" text-anchor="middle" font-size="20" fill="#878C93">۲٫۵٪</text><path class="seg" style="--i:1" d="M290.7,330 L290.7,290.8 L297.4,288.8 L304.2,286.7 L311.0,284.5 L317.7,282.3 L324.5,280.0 L331.3,277.6 L338.0,275.2 L344.8,272.6 L351.6,270.0 L358.3,267.3 L365.1,264.5 L371.9,261.6 L378.6,258.7 L385.4,255.7 L392.2,252.6 L398.9,249.4 L405.7,246.1 L412.5,242.8 L419.2,239.3 L426.0,235.9 L432.8,232.3 L439.5,228.6 L446.3,224.9 L453.1,221.2 L459.8,217.3 L466.6,213.4 L473.4,209.4 L480.1,205.4 L486.9,201.4 L493.7,197.2 L500.4,193.1 L507.2,188.8 L514.0,184.6 L520.7,180.3 L527.5,176.0 L534.3,171.6 L541.0,167.3 L547.8,162.9 L554.6,158.5 L561.3,154.1 L561.3,330 Z" fill="#33507F"/><text x="426" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">پذیرندگان اولیه</text><text x="426" y="398" text-anchor="middle" font-size="20" fill="#878C93">۱۳٫۵٪</text><path class="seg" style="--i:2" d="M561.3,330 L561.3,154.1 L568.1,149.7 L574.9,145.3 L581.6,140.9 L588.4,136.6 L595.2,132.2 L601.9,127.9 L608.7,123.7 L615.5,119.4 L622.2,115.2 L629.0,111.1 L635.8,107.0 L642.5,103.0 L649.3,99.1 L656.1,95.2 L662.8,91.5 L669.6,87.8 L676.4,84.2 L683.1,80.7 L689.9,77.3 L696.7,74.1 L703.4,70.9 L710.2,67.9 L717.0,65.0 L723.7,62.3 L730.5,59.7 L737.3,57.2 L744.0,54.9 L750.8,52.8 L757.6,50.8 L764.3,48.9 L771.1,47.2 L777.9,45.7 L784.6,44.4 L791.4,43.2 L798.2,42.3 L804.9,41.4 L811.7,40.8 L818.5,40.4 L825.2,40.1 L832.0,40.0 L832.0,330 Z" fill="#D2570F"/><text x="697" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">اکثریت اولیه</text><text x="697" y="398" text-anchor="middle" font-size="20" fill="#878C93">۳۴٪</text><path class="seg" style="--i:3" d="M832.0,330 L832.0,40.0 L838.8,40.1 L845.5,40.4 L852.3,40.8 L859.1,41.4 L865.8,42.3 L872.6,43.2 L879.4,44.4 L886.1,45.7 L892.9,47.2 L899.7,48.9 L906.4,50.8 L913.2,52.8 L920.0,54.9 L926.7,57.2 L933.5,59.7 L940.3,62.3 L947.0,65.0 L953.8,67.9 L960.6,70.9 L967.3,74.1 L974.1,77.3 L980.9,80.7 L987.6,84.2 L994.4,87.8 L1001.2,91.5 L1007.9,95.2 L1014.7,99.1 L1021.5,103.0 L1028.2,107.0 L1035.0,111.1 L1041.8,115.2 L1048.5,119.4 L1055.3,123.7 L1062.1,127.9 L1068.8,132.2 L1075.6,136.6 L1082.4,140.9 L1089.1,145.3 L1095.9,149.7 L1102.7,154.1 L1102.7,330 Z" fill="#F5B98F"/><text x="967" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">اکثریت دیرهنگام</text><text x="967" y="398" text-anchor="middle" font-size="20" fill="#878C93">۳۴٪</text><path class="seg" style="--i:4" d="M1102.7,330 L1102.7,154.1 L1116.2,162.9 L1129.7,171.6 L1143.3,180.3 L1156.8,188.8 L1170.3,197.2 L1183.9,205.4 L1197.4,213.4 L1210.9,221.2 L1224.5,228.6 L1238.0,235.9 L1251.5,242.8 L1265.1,249.4 L1278.6,255.7 L1292.1,261.6 L1305.7,267.3 L1319.2,272.6 L1332.7,277.6 L1346.3,282.3 L1359.8,286.7 L1373.3,290.8 L1386.9,294.5 L1400.4,298.0 L1413.9,301.3 L1427.5,304.2 L1441.0,306.9 L1454.5,309.4 L1468.1,311.7 L1481.6,313.7 L1495.1,315.6 L1508.7,317.3 L1522.2,318.8 L1535.7,320.1 L1549.3,321.3 L1562.8,322.4 L1576.3,323.4 L1589.9,324.2 L1603.4,325.0 L1616.9,325.7 L1630.5,326.3 L1644.0,326.8 L1644.0,330 Z" fill="#CDD3DC"/><text x="1292" y="368" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">دیرپذیرها</text><text x="1292" y="398" text-anchor="middle" font-size="20" fill="#878C93">۱۶٪</text><line class="chasm" x1="561" x2="561" y1="10" y2="330"/><text x="575" y="34" text-anchor="start" font-size="22" font-weight="700" fill="#1B2A47">شکاف (Chasm)</text><g class="pin " style="--i:0"><circle cx="196" cy="282" r="22"/><text x="196" y="290" text-anchor="middle">۱</text></g><g class="pin " style="--i:1"><circle cx="426" cy="206" r="22"/><text x="426" y="214" text-anchor="middle">۲</text></g><g class="pin o" style="--i:2"><circle cx="656" cy="65" r="22"/><text x="656" y="73" text-anchor="middle">۳</text></g><g class="pin " style="--i:3"><circle cx="981" cy="51" r="22"/><text x="981" y="59" text-anchor="middle">۴</text></g></svg></div>
-  <div class="pinl">
+  <div class="gad"><svg viewBox="0 0 1664 460" aria-label="منحنی پذیرش"><path class="seg" style="--i:0" d="M20.0,300 L20.0,297.1 L26.8,296.8 L33.5,296.6 L40.3,296.3 L47.1,296.1 L53.8,295.8 L60.6,295.5 L67.4,295.1 L74.1,294.8 L80.9,294.4 L87.7,294.0 L94.4,293.6 L101.2,293.1 L108.0,292.6 L114.7,292.1 L121.5,291.6 L128.3,291.0 L135.0,290.4 L141.8,289.8 L148.6,289.1 L155.3,288.4 L162.1,287.7 L168.9,286.9 L175.6,286.0 L182.4,285.2 L189.2,284.3 L195.9,283.3 L202.7,282.3 L209.5,281.3 L216.2,280.2 L223.0,279.0 L229.8,277.8 L236.5,276.5 L243.3,275.2 L250.1,273.8 L256.8,272.4 L263.6,270.9 L270.4,269.3 L277.1,267.7 L283.9,266.0 L290.7,264.3 L290.7,300 Z" fill="#1B2A47"/><text x="155" y="334" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">نوآوران</text><text x="155" y="360" text-anchor="middle" font-size="18" fill="#4A4F57">(Innovators)</text><text x="155" y="386" text-anchor="middle" font-size="19" fill="#878C93">۲٫۵٪</text><path class="seg" style="--i:1" d="M290.7,300 L290.7,264.3 L297.4,262.5 L304.2,260.6 L311.0,258.6 L317.7,256.6 L324.5,254.5 L331.3,252.3 L338.0,250.1 L344.8,247.8 L351.6,245.4 L358.3,242.9 L365.1,240.4 L371.9,237.8 L378.6,235.1 L385.4,232.3 L392.2,229.5 L398.9,226.6 L405.7,223.6 L412.5,220.6 L419.2,217.5 L426.0,214.3 L432.8,211.0 L439.5,207.7 L446.3,204.4 L453.1,200.9 L459.8,197.4 L466.6,193.9 L473.4,190.3 L480.1,186.6 L486.9,182.9 L493.7,179.1 L500.4,175.3 L507.2,171.5 L514.0,167.6 L520.7,163.7 L527.5,159.8 L534.3,155.8 L541.0,151.9 L547.8,147.9 L554.6,143.9 L561.3,139.9 L561.3,300 Z" fill="#33507F"/><text x="426" y="334" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">پذیرندگان اولیه</text><text x="426" y="360" text-anchor="middle" font-size="18" fill="#4A4F57">(Early Adopters)</text><text x="426" y="386" text-anchor="middle" font-size="19" fill="#878C93">۱۳٫۵٪</text><path class="seg" style="--i:2" d="M561.3,300 L561.3,139.9 L568.1,135.9 L574.9,131.9 L581.6,127.9 L588.4,123.9 L595.2,120.0 L601.9,116.0 L608.7,112.2 L615.5,108.3 L622.2,104.5 L629.0,100.7 L635.8,97.0 L642.5,93.4 L649.3,89.8 L656.1,86.3 L662.8,82.8 L669.6,79.5 L676.4,76.2 L683.1,73.1 L689.9,70.0 L696.7,67.0 L703.4,64.2 L710.2,61.4 L717.0,58.8 L723.7,56.3 L730.5,53.9 L737.3,51.7 L744.0,49.6 L750.8,47.6 L757.6,45.8 L764.3,44.1 L771.1,42.6 L777.9,41.2 L784.6,40.0 L791.4,39.0 L798.2,38.1 L804.9,37.3 L811.7,36.7 L818.5,36.3 L825.2,36.1 L832.0,36.0 L832.0,300 Z" fill="#D2570F"/><text x="697" y="334" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">اکثریت اولیه</text><text x="697" y="360" text-anchor="middle" font-size="18" fill="#4A4F57">(Early Majority)</text><text x="697" y="386" text-anchor="middle" font-size="19" fill="#878C93">۳۴٪</text><path class="seg" style="--i:3" d="M832.0,300 L832.0,36.0 L838.8,36.1 L845.5,36.3 L852.3,36.7 L859.1,37.3 L865.8,38.1 L872.6,39.0 L879.4,40.0 L886.1,41.2 L892.9,42.6 L899.7,44.1 L906.4,45.8 L913.2,47.6 L920.0,49.6 L926.7,51.7 L933.5,53.9 L940.3,56.3 L947.0,58.8 L953.8,61.4 L960.6,64.2 L967.3,67.0 L974.1,70.0 L980.9,73.1 L987.6,76.2 L994.4,79.5 L1001.2,82.8 L1007.9,86.3 L1014.7,89.8 L1021.5,93.4 L1028.2,97.0 L1035.0,100.7 L1041.8,104.5 L1048.5,108.3 L1055.3,112.2 L1062.1,116.0 L1068.8,120.0 L1075.6,123.9 L1082.4,127.9 L1089.1,131.9 L1095.9,135.9 L1102.7,139.9 L1102.7,300 Z" fill="#F5B98F"/><text x="967" y="334" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">اکثریت دیرهنگام</text><text x="967" y="360" text-anchor="middle" font-size="18" fill="#4A4F57">(Late Majority)</text><text x="967" y="386" text-anchor="middle" font-size="19" fill="#878C93">۳۴٪</text><path class="seg" style="--i:4" d="M1102.7,300 L1102.7,139.9 L1116.2,147.9 L1129.7,155.8 L1143.3,163.7 L1156.8,171.5 L1170.3,179.1 L1183.9,186.6 L1197.4,193.9 L1210.9,200.9 L1224.5,207.7 L1238.0,214.3 L1251.5,220.6 L1265.1,226.6 L1278.6,232.3 L1292.1,237.8 L1305.7,242.9 L1319.2,247.8 L1332.7,252.3 L1346.3,256.6 L1359.8,260.6 L1373.3,264.3 L1386.9,267.7 L1400.4,270.9 L1413.9,273.8 L1427.5,276.5 L1441.0,279.0 L1454.5,281.3 L1468.1,283.3 L1481.6,285.2 L1495.1,286.9 L1508.7,288.4 L1522.2,289.8 L1535.7,291.0 L1549.3,292.1 L1562.8,293.1 L1576.3,294.0 L1589.9,294.8 L1603.4,295.5 L1616.9,296.1 L1630.5,296.6 L1644.0,297.1 L1644.0,300 Z" fill="#CDD3DC"/><text x="1292" y="334" text-anchor="middle" font-size="22" font-weight="600" fill="#15181C">دیرپذیرها</text><text x="1292" y="360" text-anchor="middle" font-size="18" fill="#4A4F57">(Laggards)</text><text x="1292" y="386" text-anchor="middle" font-size="19" fill="#878C93">۱۶٪</text><line class="chasm" x1="561" x2="561" y1="6" y2="300"/><text x="575" y="28" text-anchor="start" font-size="22" font-weight="700" fill="#1B2A47">شکاف (Chasm)</text><g class="gpin " style="--i:0"><circle cx="196" cy="253" r="22"/><text x="196" y="261" text-anchor="middle">۱</text></g><g class="gpin " style="--i:1"><circle cx="426" cy="184" r="22"/><text x="426" y="192" text-anchor="middle">۲</text></g><g class="gpin o" style="--i:2"><circle cx="656" cy="56" r="22"/><text x="656" y="64" text-anchor="middle">۳</text></g><g class="gpin " style="--i:3"><circle cx="981" cy="43" r="22"/><text x="981" y="51" text-anchor="middle">۴</text></g></svg></div>
+  <div class="gpl">
     <div><b>۱</b><span><h5>تست اول</h5>جوان، آشنا با رمزارز، همه تلگرام؛ شواهد ما از اینجاست</span></div>
     <div><b>۲</b><span><h5>S2</h5>کاربر دیجیتال چنددارایی، گروه مقایسه</span></div>
     <div class="o"><b>۳</b><span><h5>S3 · Beachhead</h5>پراگماتیست با درد جدی حفظ ارزش</span></div>
     <div><b>۴</b><span><h5>مقیاس مدل مالی</h5>بازار انبوه (۸۳٪ کاربران در مقیاس)</span></div>
   </div>
-  <div class="cr4">
+  <div class="gcr">
     <div><h5>۱ · یک جیب مشخص</h5>S3 هم‌حرفه‌ای، نه «همه»</div>
     <div><h5>۲ · محصول کامل</h5>اعتماد، خروج و پشتیبانی انسانی <span class="lt">(Whole Product)</span></div>
     <div><h5>۳ · مرجع از همتا</h5>پراگماتیست از همانند خودش می‌پذیرد: <span class="lt">Referral-only</span></div>
     <div><h5>۴ · جیب مجاور</h5>اجتماع حرفه‌ای بعدی؛ عمومی‌سازی در گیت جدا</div>
   </div>
-  <p class="sm" style="margin-top:8px;font-size:19px">جای هر گروه روی منحنی برآورد تیم است، نه اندازه‌گیری؛ درصدها مدل نظری Rogers است، نه دادهٔ بازار ایران.</p>
-<div class="tools"><span class="k">ابزار این صفحه:</span><span class="t">Crossing the Chasm (Moore)</span><span class="t">Diffusion of Innovations (Rogers)</span><span class="t">Beachhead</span></div>
+  <p class="ghonest">جای هر گروه روی منحنی برآورد تیم است، نه اندازه‌گیری؛ درصدها مدل نظری Rogers است، نه دادهٔ بازار ایران.</p>
+<div class="gtools"><b>ابزار این صفحه:</b><span>Crossing the Chasm (Moore)</span><span>Diffusion of Innovations (Rogers)</span><span>Beachhead</span></div>
 <aside class="notes"><b>۱٫۵ دقیقه. اینجا همه چیز به هم وصل می‌شود.</b> منحنی را بخوانید: تست اول از نوآوران و پذیرندگان اولیه بود (جوان، کریپتو، تلگرام). این گروه با ویژگی و کنجکاوی می‌پذیرد. S3 پراگماتیست است: درد حفظ ارزش واقعی دارد ولی فقط وقتی می‌پذیرد که اعتماد و خروج را ببیند و از همانند خودش بشنود. پس او آن‌طرف شکاف است. نتیجه دو چیز است: یک، شواهد تست اول برای S3 کافی نیست و باید تست S2/S3 را انجام دهیم. دو، راه عبور همان چهار گام پایین است: یک جیب، محصول کامل، مرجع همتا، جیب مجاور. <b>صادقانه بگو:</b> جای هر گروه روی منحنی قضاوت ماست و اندازه‌گیری نشده؛ درصدهای منحنی هم مدل Rogers است، نه داده بازار ایران.</aside>
 </section>
 
-<section class="sl hastools" data-part="6">
+<section class="sl gt" data-part="6">
+<div class="gtrk"><span class="done"><i>۱</i>برای چه کسی؟</span><span class="done"><i>۲</i>از کجا شروع کنیم؟</span><span class="on"><i>۳</i>چرا مهاجر؟</span><span class=""><i>۴</i>با چه ریسکی؟</span></div>
   <div class="eb">GTM · تمایز دو سگمنت</div>
   <h2 class="t md">S3 و S2 <span class="acc">در پیام، کانال، رسانه و مقیاس فرق دارند.</span></h2>
-  <table class="st2"><tr><th></th><th class="s3h">S3 · نقطهٔ شروع</th><th class="s2h">S2 · گروه مقایسه</th></tr><tr><td>انگیزهٔ انتخاب</td><td class="c3">ارزش پولم را بی‌پیچیدگی و با دانستن جای آن نگه دارم</td><td class="c2">تجربه‌ای منسجم‌تر از ابزارهایی که الان دارم</td></tr><tr><td>مانع اصلی</td><td class="c3">فهم نگهداری، اعتماد، پذیرش دارایی دیجیتال</td><td class="c2">هزینهٔ تغییر، مقایسهٔ نرخ و امکانات</td></tr><tr><td>پیام اول</td><td class="c3">ساده و شفاف: پولت کجاست و چطور برمی‌گردد</td><td class="c2">مدیریت چنددارایی با هزینه و وضعیت روشن</td></tr><tr><td>کانال و پیام‌رسان</td><td class="c3">معرفی معتبر، بعد اجتماع حرفه‌ای؛ فرد معتمد یا هم‌حرفه‌ای</td><td class="c2">اجتماعات مالی دیجیتال؛ همان مسیر معرفی برای کنترل مقایسه</td></tr><tr><td>رسانه و فرمت</td><td class="c3">گفت‌وگوی یک‌به‌یک، نشست کوچک، صفحهٔ توضیح اعتماد، پرسش‌وپاسخ</td><td class="c2">محتوای مقایسه‌ای کوتاه، صفحهٔ کارمزد و قابلیت‌ها</td></tr><tr><td>مقیاس و سرعت</td><td class="c3">کندتر و ظرفیت‌محدود؛ اعتماد از مرجع شخصی می‌آید</td><td class="c2">سریع‌تر و پراکنده‌تر؛ ابزار جایگزین همیشه در دسترس است</td></tr><tr><td>معیار موفقیت</td><td class="c3"><span class="lt">Qualified → First Funding</span>، فهم نگهدارنده، هزینهٔ پشتیبانی</td><td class="c2">دلیل اولین واریز، مانع تغییر، CAC تا واریز</td></tr></table>
-  <p class="sm" style="margin-top:8px;font-size:19px">این تفاوت‌ها با آزمون سه‌بازویی سنجیده می‌شوند.</p>
-<div class="tools"><span class="k">ابزار این صفحه:</span><span class="t">Jobs-to-be-Done</span><span class="t">معیارهای انتخاب کانال</span><span class="t">آزمون سه‌بازویی</span></div>
+  <table class="gst"><tr><th></th><th class="s3h">S3 · نقطهٔ شروع</th><th class="s2h">S2 · گروه مقایسه</th></tr><tr><td>انگیزهٔ انتخاب</td><td>ارزش پولم را بی‌پیچیدگی و با دانستن جای آن نگه دارم</td><td>تجربه‌ای منسجم‌تر از ابزارهایی که الان دارم</td></tr><tr><td>مانع اصلی</td><td>فهم نگهداری، اعتماد، پذیرش دارایی دیجیتال</td><td>هزینهٔ تغییر، مقایسهٔ نرخ و امکانات</td></tr><tr><td>پیام اول</td><td>ساده و شفاف: پولت کجاست و چطور برمی‌گردد</td><td>مدیریت چنددارایی با هزینه و وضعیت روشن</td></tr><tr><td>کانال و پیام‌رسان</td><td>معرفی معتبر، بعد اجتماع حرفه‌ای؛ فرد معتمد یا هم‌حرفه‌ای</td><td>اجتماعات مالی دیجیتال؛ همان مسیر معرفی برای کنترل مقایسه</td></tr><tr><td>رسانه و فرمت</td><td>گفت‌وگوی یک‌به‌یک، نشست کوچک، صفحهٔ توضیح اعتماد، پرسش‌وپاسخ</td><td>محتوای مقایسه‌ای کوتاه، صفحهٔ کارمزد و قابلیت‌ها</td></tr><tr><td>مقیاس و سرعت</td><td>کندتر و ظرفیت‌محدود؛ اعتماد از مرجع شخصی می‌آید</td><td>سریع‌تر و پراکنده‌تر؛ ابزار جایگزین همیشه در دسترس است</td></tr><tr><td>معیار موفقیت</td><td><span class="lt">Qualified → First Funding</span>، فهم نگهدارنده، هزینهٔ پشتیبانی</td><td>دلیل اولین واریز، مانع تغییر، CAC تا واریز</td></tr></table>
+  <p class="gfoot" style="margin-top:10px">این تفاوت‌ها با آزمون سه‌بازویی سنجیده می‌شوند.</p>
+<div class="gtools"><b>ابزار این صفحه:</b><span>Jobs-to-be-Done</span><span>معیارهای انتخاب کانال</span><span>آزمون سه‌بازویی</span></div>
 <aside class="notes"><b>۱٫۳ دقیقه.</b> هر ردیف یک تصمیم است. S3 مانعش فهم و اعتماد است، پس پیامش «پولت کجاست» و پیام‌رسانش آدم معتمد است؛ فرمتش گفت‌وگو و صفحه‌ی توضیح اعتماد. S2 مانعش هزینه‌ی تغییر است، پس پیامش مقایسه و یکپارچگی است و در جامعه‌ی مالی دیجیتال دیده می‌شود. مقیاس: S3 کندتر ولی با اعتماد بیشتر، S2 سریع‌تر ولی با ابزار جایگزین. آزمون سه‌بازویی همین‌ها را می‌سنجد.</aside>
 </section>
 
-<section class="sl hastools" data-part="6">
+<section class="sl gt" data-part="6">
+<div class="gtrk"><span class="done"><i>۱</i>برای چه کسی؟</span><span class="done"><i>۲</i>از کجا شروع کنیم؟</span><span class="on"><i>۳</i>چرا مهاجر؟</span><span class=""><i>۴</i>با چه ریسکی؟</span></div>
   <div class="eb">GTM · استراتژی پیام</div>
   <h2 class="t md">یک سقف، سه ستون، یک پایه: <span class="acc">پیامی به اندازهٔ شواهدش</span></h2>
-  <div class="mh2">
+  <div class="gmh">
     <div>
-      <div class="roof"><b>ارزش پولت را ساده نگه دار؛ پیش از واریز بدان کجاست و چطور برمی‌گردد</b><p>برای کسی که ارزش پولش را حفظ می‌کند اما ابزار دیجیتال را پیچیده یا نامطمئن می‌بیند، مهاجر راه ساده و شفاف تبدیل و مدیریت دلار دیجیتال است؛ برخلاف ابزارهای معامله‌محور، پیش از ورود پول نشان می‌دهد پول کجا می‌ماند و چطور خارج می‌شود.</p></div>
-      <div class="pil">
+      <div class="groof"><b>ارزش پولت را ساده نگه دار؛ پیش از واریز بدان کجاست و چطور برمی‌گردد</b><p>برای کسی که ارزش پولش را حفظ می‌کند اما ابزار دیجیتال را پیچیده یا نامطمئن می‌بیند، مهاجر راه ساده و شفاف تبدیل و مدیریت دلار دیجیتال است؛ برخلاف ابزارهای معامله‌محور، پیش از ورود پول نشان می‌دهد پول کجا می‌ماند و چطور خارج می‌شود.</p></div>
+      <div class="gpil">
         <div><h4>ساده</h4><p>از دلار دیجیتال شروع کن؛ چند قدم، بدون پیچیدگی صرافی</p><small>اثبات: مسیر تبدیل که در تست‌ها قابل‌انجام بود</small></div>
         <div><h4>شفاف</h4><p>پیش از تأیید، نرخ، کارمزد و نتیجهٔ خالص را ببین</p><small>اثبات: Quote پیش از تأیید + رضایت صریح · <span class="lt">Backed &amp; Traceable</span></small></div>
         <div><h4>قابل‌بررسی</h4><p>بدان پولت کجا می‌ماند، چه کسی نگه می‌دارد و چطور خارج می‌شود</p><small>اثبات: صفحهٔ نگهدارنده و شریک، رسید، مسیر خروج، پشتیبانی انسانی · <span class="lt">Proof Before Money</span></small></div>
       </div>
-      <div class="base">پایه: هر ادعا = سند شریک + رفتار واقعی محصول. بدون سند، نمی‌گوییم.</div>
+      <div class="gbase">پایه: هر ادعا = سند شریک + رفتار واقعی محصول. بدون سند، نمی‌گوییم.</div>
     </div>
-    <div class="dont"><h4>آنچه بدون سند نمی‌گوییم</h4><p>«اصل سرمایه تضمین‌شده»</p><p>«سود بدون ریسک»</p><p>«امنیت مطلق»</p><p>«همیشه فوری برداشت کن»</p><p style="border:0">«بدون کارمزد»</p></div>
+    <div class="gdont"><h4>آنچه بدون سند نمی‌گوییم</h4><p>«اصل سرمایه تضمین‌شده»</p><p>«سود بدون ریسک»</p><p>«امنیت مطلق»</p><p>«همیشه فوری برداشت کن»</p><p>«بدون کارمزد»</p></div>
   </div>
-<div class="tools"><span class="k">ابزار این صفحه:</span><span class="t">Positioning (Moore)</span><span class="t">Message House</span><span class="t">Control-led Trust</span><span class="t">Value Proposition</span></div>
+<div class="gtools"><b>ابزار این صفحه:</b><span>Positioning (Moore)</span><span>Message House</span><span>Control-led Trust</span><span>Value Proposition</span></div>
 <aside class="notes"><b>۱٫۵ دقیقه.</b> یک سقف، سه ستون و یک پایه. بالا: پیام چتری و جمله پوزیشنینگ. ستون‌ها از Value Proposition سه‌لایه می‌آیند: ساده (ورود)، شفاف و قابل‌بررسی (فعال‌سازی). ستون سوم از چهار اصل اعتماد ساخته شده، چون چالش اول ما اعتماد بود. پایه: هیچ ادعایی بدون سند. سمت چپ عبارت‌هایی است که بدون سند نمی‌گوییم.</aside>
 </section>
 
-<section class="sl hastools" data-part="6">
+<section class="sl gt" data-part="6">
+<div class="gtrk"><span class="done"><i>۱</i>برای چه کسی؟</span><span class="done"><i>۲</i>از کجا شروع کنیم؟</span><span class="on"><i>۳</i>چرا مهاجر؟</span><span class=""><i>۴</i>با چه ریسکی؟</span></div>
   <div class="eb">GTM · پیام در طول قیف</div>
   <h2 class="t md">همان خانه، دو لحن: <span class="acc">پیام S3 و S2 در پنج لحظهٔ سفر</span></h2>
-  <table class="fm"><tr><th>لحظهٔ سفر</th><th class="s3h">پیام S3 · روشن‌بودن</th><th class="s2h">پیام S2 · مقایسه</th><th>اثبات و فراخوان</th></tr><tr><td>آشنایی</td><td>راهی ساده‌تر برای مدیریت ارزش</td><td>تجربهٔ منسجم‌تر مدیریت چنددارایی</td><td>صفحهٔ معرفی؛ درخواست دسترسی</td></tr><tr><td>ارزیابی اعتماد</td><td>پول و دارایی کجا نگهداری می‌شود؟</td><td>تفاوت حقوق، کنترل و کارمزد چیست؟</td><td>توضیح شریک، شرایط، محدودیت‌ها</td></tr><tr><td>دعوت و فعال‌سازی</td><td>دسترسی مرحله‌ای، بدون شتاب</td><td>تجربهٔ واقعی با شروط شفاف</td><td>دعوت، KYC، مراحل قابل‌مشاهده</td></tr><tr><td>پیش از واریز</td><td>کارمزد، نتیجه و خروج قابل‌فهم</td><td>مقایسهٔ ارزش استفاده و هزینه</td><td>Quote و تأیید صریح</td></tr><tr><td>بعد از واریز</td><td>دسترسی روشن به دارایی و پشتیبانی</td><td>امکانات مکمل متناسب با نیاز</td><td>رسید، موجودی، پیام رفتارمحور</td></tr></table>
-  <div class="two2">
+  <table class="gfm"><tr><th>لحظهٔ سفر</th><th class="s3h">پیام S3 · روشن‌بودن</th><th class="s2h">پیام S2 · مقایسه</th><th>اثبات و فراخوان</th></tr><tr><td>آشنایی</td><td>راهی ساده‌تر برای مدیریت ارزش</td><td>تجربهٔ منسجم‌تر مدیریت چنددارایی</td><td>صفحهٔ معرفی؛ درخواست دسترسی</td></tr><tr><td>ارزیابی اعتماد</td><td>پول و دارایی کجا نگهداری می‌شود؟</td><td>تفاوت حقوق، کنترل و کارمزد چیست؟</td><td>توضیح شریک، شرایط، محدودیت‌ها</td></tr><tr><td>دعوت و فعال‌سازی</td><td>دسترسی مرحله‌ای، بدون شتاب</td><td>تجربهٔ واقعی با شروط شفاف</td><td>دعوت، KYC، مراحل قابل‌مشاهده</td></tr><tr><td>پیش از واریز</td><td>کارمزد، نتیجه و خروج قابل‌فهم</td><td>مقایسهٔ ارزش استفاده و هزینه</td><td>Quote و تأیید صریح</td></tr><tr><td>بعد از واریز</td><td>دسترسی روشن به دارایی و پشتیبانی</td><td>امکانات مکمل متناسب با نیاز</td><td>رسید، موجودی، پیام رفتارمحور</td></tr></table>
+  <div class="gtwo">
     <div><h5>سه آزمایش پیام · هرکدام فقط یک تغییر</h5>M1 «حفظ ارزش ساده و شفاف» (S3) · M2 «پیش از ورود پول، نگهداری و خروج را بدانید» · M3 «مدیریت منسجم چنددارایی» (S2). معیار: <b style="color:var(--ink)">واریز واقعی، نه کلیک.</b> پیام طلا در موج اول جای دلار دیجیتال را نمی‌گیرد.</div>
     <div><h5>چرا این پیام‌ها برای این دو سگمنت؟</h5>مانع S3 فهم و اعتماد است (اضطراب «پولم کجاست؟»)؛ پیامش همان را جواب می‌دهد و با مرجع انسانی می‌رسد. مانع S2 هزینهٔ تغییر است؛ پیامش مقایسه و یکپارچگی است.</div>
   </div>
-<div class="tools"><span class="k">ابزار این صفحه:</span><span class="t">Message House</span><span class="t">آزمون سه‌بازویی</span><span class="t">Proof Before Money</span></div>
+<div class="gtools"><b>ابزار این صفحه:</b><span>Message House</span><span>آزمون سه‌بازویی</span><span>Proof Before Money</span></div>
 <aside class="notes"><b>۱ دقیقه.</b> خانه یکی است، لحن دو تا. هر ردیف یک لحظه از سفر است. S3 در هر لحظه با «روشن‌بودن» ارزیابی می‌شود: پول کجاست، هزینه چیست، خروج چطور است. S2 با «مقایسه». پایین راست: سه آزمایش پیام با یک تغییر در هرکدام؛ معیار واریز واقعی است، نه کلیک. پایین چپ: چرا این پیام برای این دو سگمنت.</aside>
 </section>
 
-<section class="sl hastools" data-part="6">
+<section class="sl gt" data-part="6">
+<div class="gtrk"><span class="done"><i>۱</i>برای چه کسی؟</span><span class="done"><i>۲</i>از کجا شروع کنیم؟</span><span class="done"><i>۳</i>چرا مهاجر؟</span><span class="on"><i>۴</i>با چه ریسکی؟</span></div>
   <div class="eb">GTM · لانچ</div>
   <h2 class="t md">عبور از شکاف با پنج پله؛ <span class="acc">هر پله گیت دارد.</span></h2>
-  <div class="ln5">
-    <div style="--k:10%;min-height:250px;--i:0"><span class="w">آخرین ماه Pre-launch</span><h4>آزمون سلامت عملیات</h4><p>دسترسی منتخب، سقف مبلغ، تست خروج واقعی</p><span class="g">هدف: سلامت پول، نه ظرفیت بازار</span></div>
-    <div class="dk" style="min-height:300px;--i:1"><span class="w">W1–W8</span><h4>Referral-only · جیب اول</h4><p>موج‌های دعوت از شبکه‌های معتبر و مستقل؛ S3 هم‌حرفه‌ای</p><span class="g">گیت W8: شش شرط</span></div>
-    <div style="--k:30%;min-height:340px;--i:2"><span class="w">W9–W12</span><h4>غیررفرالِ کنترل‌شده · جیب مجاور</h4><p>اجتماع حرفه‌ای و محتوا؛ مقایسهٔ S2/S3 و رفرال/غیررفرال</p><span class="g">بدون واسطهٔ شخصی هم کار می‌کند؟</span></div>
-    <div style="--k:20%;min-height:380px;--i:3"><span class="w">W13–W16 و بعد</span><h4>گسترش ظرفیت</h4><p>افزایش سهمیهٔ کانال‌های موفق؛ کوهورت ۶۰ و ۹۰ روزه</p><span class="g">تصویب حجم و بودجه، جدا</span></div>
-    <div style="--k:12%;min-height:420px;--i:4"><span class="w">تصمیم مستقل</span><h4>عمومی‌سازی</h4><p>حذف دعوت‌محوری برای واجدان شرایط، فقط پس از گیت مستقل</p><span class="g">گیت جداگانه</span></div>
+  <div class="gln">
+    <div style="--k:8%;min-height:240px;--i:0"><span class="w">آخرین ماه Pre-launch</span><h4>آزمون سلامت عملیات</h4><p>دسترسی منتخب، سقف مبلغ، تست خروج واقعی</p><span class="g">هدف: سلامت پول، نه ظرفیت بازار</span></div>
+    <div class="dk" style="min-height:290px;--i:1"><span class="w">W1–W8</span><h4>Referral-only · جیب اول</h4><p>موج‌های دعوت از شبکه‌های معتبر و مستقل؛ S3 هم‌حرفه‌ای</p><span class="g">گیت W8: شش شرط</span></div>
+    <div style="--k:26%;min-height:330px;--i:2"><span class="w">W9–W12</span><h4>غیررفرالِ کنترل‌شده · جیب مجاور</h4><p>اجتماع حرفه‌ای و محتوا؛ مقایسهٔ S2/S3 و رفرال/غیررفرال</p><span class="g">بدون واسطهٔ شخصی هم کار می‌کند؟</span></div>
+    <div style="--k:18%;min-height:370px;--i:3"><span class="w">W13–W16 و بعد</span><h4>گسترش ظرفیت</h4><p>افزایش سهمیهٔ کانال‌های موفق؛ کوهورت ۶۰ و ۹۰ روزه</p><span class="g">تصویب حجم و بودجه، جدا</span></div>
+    <div style="--k:10%;min-height:410px;--i:4"><span class="w">تصمیم مستقل</span><h4>عمومی‌سازی</h4><p>حذف دعوت‌محوری برای واجدان شرایط، فقط پس از گیت مستقل</p><span class="g">گیت جداگانه</span></div>
   </div>
-  <div class="gbar"><b>گیت هفتهٔ هشتم</b><span>گسترهٔ داده: چند شبکهٔ مستقل</span><span>سلامت مالی: نبود نقص بحرانی</span><span>سلامت اعتماد: فهم نگهدارنده</span><span>دادهٔ رابطه: یک کوهورت ۳۰ روزه</span><span>اقتصاد: CAC تمام‌شده</span><span>دسترسی قانونی کانال</span></div>
-  <div class="mbar"><b>پول:</b> ساخت ظرفیت و ابزار از Pre-launch · جذب پولی محدود فقط پس از عبور از گیت · افزایش بودجه فقط با دادهٔ واقعی CAC · <b>بدون هدف عددی کاربر برای هر موج</b></div>
-<div class="tools"><span class="k">ابزار این صفحه:</span><span class="t">لانچ گیت‌دار</span><span class="t">Bowling Alley (Moore)</span><span class="t">Unit Economics</span></div>
+  <div class="ggate"><b>گیت هفتهٔ هشتم</b><span>گسترهٔ داده: چند شبکهٔ مستقل</span><span>سلامت مالی: نبود نقص بحرانی</span><span>سلامت اعتماد: فهم نگهدارنده</span><span>دادهٔ رابطه: یک کوهورت ۳۰ روزه</span><span>اقتصاد: CAC تمام‌شده</span><span>دسترسی قانونی کانال</span></div>
+  <p class="gmoney"><b>پول:</b> ساخت ظرفیت و ابزار از Pre-launch · جذب پولی محدود فقط پس از عبور از گیت · افزایش بودجه فقط با دادهٔ واقعی CAC · <b>بدون هدف عددی کاربر برای هر موج</b></p>
+<div class="gtools"><b>ابزار این صفحه:</b><span>لانچ گیت‌دار</span><span>Bowling Alley (Moore)</span><span>Unit Economics</span></div>
 <aside class="notes"><b>۱ دقیقه.</b> لانچ همان عبور از شکاف است. پله اول فقط سلامت پول را می‌سنجد و نباید با ماه اول مالی یکی شود. بعد ۶ تا ۸ هفته فقط با دعوت، از شبکه‌های مستقل؛ این «جیب اول» است. گیت هفته هشتم شش شرط دارد و اگر بسته نشد، دو هفته اصلاح و بازبینی. بعد کانال غیررفرال با سقف، سپس گسترش، و در آخر عمومی‌سازی که تصمیم مستقل است. هدف عددی کاربر برای هر موج نداریم؛ ظرفیت عملیات و کیفیت مراجعه‌کنندگان تعیین می‌کند. هزینه پولی جذب فقط بعد از گیت.</aside>
 </section>
 
-<section class="sl hastools" data-part="6">
+<section class="sl gt" data-part="6">
+<div class="gtrk"><span class="done"><i>۱</i>برای چه کسی؟</span><span class="done"><i>۲</i>از کجا شروع کنیم؟</span><span class="done"><i>۳</i>چرا مهاجر؟</span><span class="on"><i>۴</i>با چه ریسکی؟</span></div>
   <div class="eb">GTM · اندازه‌گیری و آزمون</div>
   <h2 class="t md">چطور می‌فهمیم درست رفتیم: <span class="acc">سه بازو، یک قیف، شرطِ بازگشت</span></h2>
-  <div class="ms">
-    <div class="arms">
-      <div class="arm"><b>A</b><span>S3 از معرفی معتبر</span></div>
-      <div class="arm"><b>B</b><span>S3 از اجتماع حرفه‌ای و محتوا</span></div>
-      <div class="arm c"><b>C</b><span>S2 از مسیر مشابه معرفی</span></div>
-      <div class="cmp2"><div><b>A ↔ B</b> = اثر کانال</div><div><b>A ↔ C</b> = اثر سگمنت</div></div>
-      <p class="sm" style="margin-top:12px;font-size:19px">حدود ۱۵ تا ۲۰ نفر واجد شرایط در هر بازو، فقط برای یادگیری؛ توان آماری برای تفاوت کوچک ندارد.</p>
+  <div class="gms">
+    <div>
+      <div class="gab">
+        <span></span><span class="h">معرفی معتبر</span><span class="h">اجتماع حرفه‌ای و محتوا</span>
+        <span class="h"><b>S3</b></span>
+        <div class="c"><b>A</b><span>S3 از معرفی معتبر</span></div>
+        <div class="c"><b>B</b><span>S3 از اجتماع حرفه‌ای و محتوا</span></div>
+        <span class="h"><b>S2</b></span>
+        <div class="c n2"><b>C</b><span>S2 از مسیر مشابه معرفی</span></div>
+        <div class="c off">اجرا نمی‌شود</div>
+      </div>
+      <div class="gfx"><div><b>A ↔ B</b> = اثر کانال · سگمنت یکی، کانال فرق می‌کند</div><div><b>A ↔ C</b> = اثر سگمنت · کانال یکی، سگمنت فرق می‌کند</div></div>
+      <p class="gnote">حدود ۱۵ تا ۲۰ نفر واجد شرایط در هر بازو، فقط برای یادگیری؛ توان آماری برای تفاوت کوچک ندارد.</p>
     </div>
     <div>
-      <div class="fun5">
-        <div style="--w:100%;--k:12%"><span class="lt">Lead → Qualified</span></div>
-        <div style="--w:88%;--k:20%">دعوت ← KYC</div>
+      <div class="gfn">
+        <div style="--w:100%;--k:10%"><span class="lt">Lead → Qualified</span></div>
+        <div style="--w:88%;--k:18%">دعوت ← KYC</div>
         <div class="key" style="--w:76%">اولین واریز واقعی</div>
-        <div style="--w:64%;--k:28%">اولین تبدیل</div>
-        <div style="--w:52%;--k:36%">واریز مجدد و مانده</div>
+        <div style="--w:64%;--k:26%">اولین تبدیل</div>
+        <div style="--w:52%;--k:34%">واریز مجدد و مانده</div>
       </div>
-      <p class="fnote" style="margin-top:10px">دو سنجهٔ جدای CAC: تا اولین واریز، و تا فعالِ ماه اول · نگهداشت سه‌گانه: مانده، واریز، فعالیت · اعتماد با پرسش فهم، نه بازدید صفحه</p>
+      <p class="gnote">دو سنجهٔ جدای CAC: تا اولین واریز، و تا فعالِ ماه اول · نگهداشت سه‌گانه: مانده، واریز، فعالیت · اعتماد با پرسش فهم، نه بازدید صفحه</p>
     </div>
   </div>
-  <div class="rv3"><b>از S3 برمی‌گردیم اگر:</b> پذیرش دارایی دیجیتال در S3 محدود بماند · هزینهٔ اعتمادسازی و پشتیبانی ساختاراً بالا باشد · S2 با CAC قابل‌دفاع و واریز بهتر برسد.</div>
-<div class="tools"><span class="k">ابزار این صفحه:</span><span class="t">آزمون سه‌بازویی</span><span class="t">Cohort</span><span class="t">Unit Economics</span><span class="t">Decision Register</span></div>
-<aside class="notes"><b>۱ دقیقه.</b> سه بازو برای جدا کردن اثر کانال از اثر سگمنت. اگر S3 را از معرفی و S2 را از تبلیغ بگیریم، تفاوت را نمی‌توان به سگمنت نسبت داد؛ برای همین S2 هم از مسیر مشابه می‌آید. قیف از Lead تا واریز مجدد است و موفقیت را اولین واریز واقعی می‌دانیم. CAC را دو جا می‌سنجیم چون مدل مالی هنوز مخرجش را یکدست نکرده. پایین: شرط بازگشت از S3 از قبل نوشته شده تا بعداً با اراده اصلاحش نکنیم.</aside>
+  <div class="gback"><b>از S3 برمی‌گردیم اگر:</b> پذیرش دارایی دیجیتال در S3 محدود بماند · هزینهٔ اعتمادسازی و پشتیبانی ساختاراً بالا باشد · S2 با CAC قابل‌دفاع و واریز بهتر برسد.</div>
+<div class="gtools"><b>ابزار این صفحه:</b><span>آزمون سه‌بازویی</span><span>Cohort</span><span>Unit Economics</span><span>Decision Register</span></div>
+<aside class="notes"><b>۱ دقیقه.</b> سه بازو برای جدا کردن اثر کانال از اثر سگمنت. جدول دوبه‌دو را بخوانید: A و B هر دو S3 هستند و فقط کانالشان فرق دارد؛ پس تفاوتشان اثر کانال است. A و C هر دو از مسیر معرفی می‌آیند و فقط سگمنتشان فرق دارد؛ پس تفاوتشان اثر سگمنت است. خانهٔ چهارم، S2 از اجتماع حرفه‌ای، عمداً اجرا نمی‌شود. اگر S3 را از معرفی و S2 را از تبلیغ بگیریم، تفاوت را نمی‌توان به سگمنت نسبت داد؛ برای همین S2 هم از مسیر مشابه می‌آید. قیف از Lead تا واریز مجدد است و موفقیت را اولین واریز واقعی می‌دانیم. CAC را دو جا می‌سنجیم چون مدل مالی هنوز مخرجش را یکدست نکرده. پایین: شرط بازگشت از S3 از قبل نوشته شده تا بعداً با اراده اصلاحش نکنیم.</aside>
 </section>
 
-<section class="sl hastools" data-part="6">
+<section class="sl gt" data-part="6">
+<div class="gtrk"><span class="done"><i>۱</i>برای چه کسی؟</span><span class="done"><i>۲</i>از کجا شروع کنیم؟</span><span class="done"><i>۳</i>چرا مهاجر؟</span><span class="on"><i>۴</i>با چه ریسکی؟</span></div>
   <div class="eb">GTM · تصمیم نهایی</div>
   <h2 class="t md">تصمیم GTM: <span class="acc">شروع از S3، با پیامِ قابل‌اثبات و کانالِ اعتمادمحور</span></h2>
-  <div class="dec7">
+  <div class="gdec">
     <div class="rows"><div><b>ورودی</b><span>دلار دیجیتال؛ شروع از حفظ ارزش</span></div><div><b>سگمنت</b><span>S3 نقطهٔ شروع با شرط بازبینی؛ S2 گروه مقایسه</span></div><div><b>پوزیشنینگ و پیام</b><span>ساده · شفاف · قابل‌بررسی؛ اثبات پیش از پول</span></div><div><b>عرضه</b><span>دعوت‌محور؛ Referral-only ۶ تا ۸ هفته؛ گیت W8</span></div><div><b>کانال</b><span>معرفی معتبر ← اجتماع حرفه‌ای؛ S2 برای مقایسه</span></div><div><b>هزینه</b><span>ساخت ظرفیت از ابتدا؛ جذب پولی و افزایش بودجه پس از گیت</span></div><div><b>بازبینی</b><span>شرط بازگشت از S3 از پیش مشخص است</span></div></div>
     <div class="side">
-      <div class="path"><h4>مسیر پیش رو</h4><p>آزمون سه‌بازویی S3 و S2</p><p>لانچ دعوت‌محور با موج‌های ظرفیت‌دار</p><p>گیت هفتهٔ هشتم و گسترش مرحله‌ای</p><p style="border:0">اندازه‌گیری CAC و کیفیت واریز</p></div>
-      <div class="next"><h4>پیوند با بخش بعد</h4>اقتصاد جذب و ارقام را بخش <b>پیش‌بینی مالی</b> ارائه می‌کند.</div>
+      <div class="path"><h4>مسیر پیش رو</h4><p>آزمون سه‌بازویی S3 و S2</p><p>لانچ دعوت‌محور با موج‌های ظرفیت‌دار</p><p>گیت هفتهٔ هشتم و گسترش مرحله‌ای</p><p>اندازه‌گیری CAC و کیفیت واریز</p></div>
+      <div class="next"><b>ادامه: بخش پیش‌بینی مالی.</b> اقتصاد جذب و ارقام آن‌جاست؛ آن ارقام سناریوی مدل‌اند، نه هدف موج‌های دعوت.</div>
     </div>
   </div>
-<div class="tools"><span class="k">ابزار این صفحه:</span><span class="t">Decision Register</span><span class="t">لانچ گیت‌دار</span><span class="t">RACI</span></div>
-<aside class="notes"><b>۱٫۵ دقیقه، اعلام تصمیم.</b> هفت تصمیم: ورودی دلار دیجیتال؛ S3 به‌عنوان نقطه‌ی شروع با S2 برای مقایسه؛ پوزیشنینگ «ساده، شفاف، قابل‌بررسی»؛ عرضه‌ی دعوت‌محور تا گیت هفته‌ی هشتم؛ کانال از معرفی به اجتماع حرفه‌ای؛ هزینه‌ی پولی بعد از گیت؛ و شرط بازگشت از پیش مشخص. سمت چپ مسیر پیش رو است. جمع‌بندی: S3 را با پیامی قابل‌اثبات و کانالی بر پایه‌ی اعتماد شروع می‌کنیم. اقتصاد جذب و ارقام را بخش بعد، Financial Projection، توضیح می‌دهد.</aside>
+<div class="gtools"><b>ابزار این صفحه:</b><span>Decision Register</span><span>لانچ گیت‌دار</span><span>RACI</span></div>
+<aside class="notes"><b>۱٫۵ دقیقه، اعلام تصمیم.</b> هفت تصمیم: ورودی دلار دیجیتال؛ S3 به‌عنوان نقطهٔ شروع با S2 برای مقایسه؛ پوزیشنینگ «ساده، شفاف، قابل‌بررسی»؛ عرضهٔ دعوت‌محور تا گیت هفتهٔ هشتم؛ کانال از معرفی به اجتماع حرفه‌ای؛ هزینهٔ پولی بعد از گیت؛ و شرط بازگشت از پیش مشخص. سمت چپ مسیر پیش رو و پل به بخش مالی است. جمع‌بندی: S3 را با پیامی قابل‌اثبات و کانالی بر پایهٔ اعتماد شروع می‌کنیم. اقتصاد جذب و ارقام را بخش بعد، Financial Projection، توضیح می‌دهد؛ آن ارقام سناریوی مدل‌اند و هدف عددی موج‌های دعوت نیستند.</aside>
 </section>
 
 <!-- ═══ بخش ۷ · مالی (۷ اصلی + ۳ پشتیبانِ خارج از مسیر) ═══ -->
@@ -2382,9 +2489,9 @@ let cur=0, T=[];
 
 slides.forEach((s,k)=>{ if(k>PIVOT) s.classList.add('post'); });
 /* ورودِ تدریجی، به ترتیبِ خواندن */
-const BUILD='.stair>div,.q4>div,.sgc>div,.sw .r,.rf .bl,.lad6 div,.pinl div,.cr4 div,.st2 tr,.fm tr,.mh2>div,.two2>div,.arms,.ms>div,.rv3,.dec7 .rows>div,.dec7 .side>div,.qbar,.tools,.kc,.cav,.fnote,.ask div,.ft,.lad>div,.cg>div,.tk5>div,.dc2,.mbp .it,.mbp .hd,.wv .bx,.nfn>div,.ep>div,.stp>div,.seq>div,.gp>div,.arch2 .lyr,.arch2 .srcs div,.wf .grp,.eb,.t,.lead,.sm,.card,.pw,.chip,.ring,.br,.fun,.tl .it,.div li,.div .n,.arrow,.force,.half,.mth,.ins p,.q,.rt-n,.hub,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid,.sr,.leg3 div,.stp2,.vp,.vq2';
+const BUILD='.gchain>div,.gq,.gq4>div,.gfind>div,.gmx .cl,.gsgc>div,.gsw .r,.gres,.grfc,.grf>div,.glad div.r,.gpl>div,.gcr>div,.gst tr,.gmh>div,.gfm tr,.gtwo>div,.ggate,.gmoney,.gab .c,.gfx,.gfn div,.gback,.gdec .rows>div,.gdec .side>div,.gtools,.gfoot,.ghonest,.gnote,.kc,.cav,.fnote,.ask div,.ft,.lad>div,.cg>div,.tk5>div,.dc2,.mbp .it,.mbp .hd,.wv .bx,.nfn>div,.ep>div,.stp>div,.seq>div,.gp>div,.arch2 .lyr,.arch2 .srcs div,.wf .grp,.eb,.t,.lead,.sm,.card,.pw,.chip,.ring,.br,.fun,.tl .it,.div li,.div .n,.arrow,.force,.half,.mth,.ins p,.q,.rt-n,.hub,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid,.sr,.leg3 div,.stp2,.vp,.vq2,.lvc>div,.lvq p,.lvf div';
 slides.forEach(s=>{ if(s.classList.contains('splash')||s.classList.contains('pivot')) return;
-  let k=0; s.querySelectorAll(BUILD).forEach(e=>{ if(e.parentElement.closest('.stair>div,.q4>div,.sgc>div,.sw .r,.rf .bl,.mh2>div,.two2>div,.arms,.ms>div,.dec7 .rows>div,.dec7 .side>div,.kc,.cav,.ft,.lad>div,.cg>div,.tk5>div,.dc2,.mbp .it,.wv .bx,.nfn>div,.ep>div,.stp>div,.seq>div,.gp>div,.arch2 .lyr,.wf .grp,.card,.pw,.ring,.force,.half,.mth,.chip,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid,.stp2,.vp,.vq2')) return; e.classList.add('bd'); e.style.setProperty('--i',Math.min(k++,16)); }); });
+  let k=0; s.querySelectorAll(BUILD).forEach(e=>{ if(e.parentElement.closest('.gchain>div,.gq4>div,.gfind>div,.gsgc>div,.gsw .r,.grf>div,.gmh>div,.gtwo>div,.gab .c,.gdec .rows>div,.gdec .side>div,.gq,.gres,.gback,.kc,.cav,.ft,.lad>div,.cg>div,.tk5>div,.dc2,.mbp .it,.wv .bx,.nfn>div,.ep>div,.stp>div,.seq>div,.gp>div,.arch2 .lyr,.wf .grp,.card,.pw,.ring,.force,.half,.mth,.chip,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid,.stp2,.vp,.vq2')) return; e.classList.add('bd'); e.style.setProperty('--i',Math.min(k++,16)); }); });
 
 function fit(){ const s=Math.min(innerWidth/1920,innerHeight/1080); stage.style.transform=`translate(-50%,-50%) scale(${s})`; }
 addEventListener('resize',fit); fit();
