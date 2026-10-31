@@ -451,6 +451,21 @@ body{font-family:Dana,Tahoma,sans-serif;color:var(--ink);-webkit-font-smoothing:
 .bx.deep{background:var(--ink);border-color:var(--ink)}
 .bx.deep h3{color:#fff} .bx.deep p{color:rgba(255,255,255,.72)} .bx.deep .k{color:rgba(255,255,255,.6)}
 .bx.deep em{position:absolute;top:30px;left:30px;font-style:normal;font-size:20px;font-weight:500;padding:4px 16px;border-radius:99px;background:rgba(255,255,255,.14);color:#fff}
+.tbg{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+.tb6{background:var(--sf);border:1px solid var(--ln);border-radius:22px;padding:20px 26px 18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.tb6 .hd{display:flex;align-items:center;gap:12px}
+.tb6 .cd{font-size:17px;font-weight:600;direction:ltr;color:var(--acc);background:color-mix(in srgb,var(--acc) 12%,transparent);border-radius:8px;padding:2px 10px}
+.tb6 .hd b{font-size:27px;font-weight:600}
+.tb6 .tbt{margin-right:auto;font-size:16px;font-weight:600;padding:3px 12px;border-radius:99px;background:rgba(255,255,255,.14);color:#fff}
+.tb6 .qq{font-size:23px;font-weight:500;line-height:1.5;color:var(--ink)}
+.tb6 .rw{display:grid;grid-template-columns:52px 1fr;gap:10px;font-size:18px;font-weight:300;line-height:1.6;color:var(--ink2);border-top:1px solid var(--ln);padding-top:9px}
+.tb6 .rw .lb{font-size:15px;font-weight:600;color:var(--ink3);padding-top:2px}
+.tb6 .rw i{font-style:normal;font-size:15px;font-weight:500;color:var(--acc);white-space:nowrap}
+.tb6.hot{background:var(--ink);border-color:var(--ink)}
+.tb6.hot .hd b,.tb6.hot .qq{color:#fff}.tb6.hot .rw{color:rgba(255,255,255,.78);border-color:rgba(255,255,255,.14)}
+.tb6.hot .rw .lb{color:rgba(255,255,255,.5)}.tb6.hot .cd{color:#fff;background:rgba(255,255,255,.14)}.tb6.hot .rw i{color:#E9C58C}
+.tbl{font-size:22px;line-height:1.65;color:var(--ink2);border-right:4px solid var(--acc);padding:4px 18px 4px 0}
+.tbl b{color:var(--ink);font-weight:600}
 
 /* بنچمارکِ اعتماد */
 .wise{display:flex;gap:48px;margin-top:48px;flex:1}
@@ -1325,16 +1340,12 @@ aside.notes{display:none}
 </section>
 
 <section class="sl" data-part="2">
-  <div class="eb">۰۹ · چالشِ اعتماد · مصاحبه‌ها <span class="en">Trust Challenge</span></div>
-  <h2 class="t md">مصاحبه‌ها هم همین را گفته بودند: <span class="acc">اول اعتماد، بعد هر قابلیتی.</span></h2>
-  <div class="bx6">
-    <div class="bx"><div class="k">B1</div><h3>واقعی‌بودنِ دارایی</h3><p>دلار واقعاً آن‌جاست؟</p></div>
-    <div class="bx"><div class="k">B2</div><h3>مسدودی</h3><p>اگر حساب بسته شد، چه؟</p></div>
-    <div class="bx"><div class="k">B3</div><h3>خروج</h3><p>هر وقت خواستم، برمی‌گردد؟</p></div>
-    <div class="bx"><div class="k">B4</div><h3>شفافیتِ هزینه</h3><p>چقدر از پولم کم می‌شود؟</p></div>
-    <div class="bx deep"><div class="k">B5</div><em>عمیق‌ترین</em><h3>از دست دادنِ کنترل</h3><p>تصمیم دربارهٔ پولم با کیست؟</p></div>
-    <div class="bx"><div class="k">B6</div><h3>مشروعیت</h3><p>پشتِ این سرویس کیست؟</p></div>
-  </div>
+  <div class="eb">۰۹ · چالش اعتماد · نقشهٔ موانع <span class="en">Trust barriers</span></div>
+  <h2 class="t md">شش پرسش پیش از اولین واریز؛ <span class="acc">هر کدام، یک جواب در محصول.</span></h2>
+  <div class="tbg"><div class="tb6 hot"><div class="hd"><span class="cd">B1</span><b>پشتوانهٔ دارایی</b><span class="tbt">قوی‌ترین شاهد</span></div><p class="qq">«این دلار واقعاً وجود دارد؟»</p><div class="rw"><span class="lb">شاهد</span><span>فقط ۲ نفر از ۹ نفر می‌دانستند پولشان کجا نگهداری می‌شود. <i>تست ۴٫۵</i></span></div><div class="rw"><span class="lb">پاسخ</span><span>مدارک و مجوزها، قرارداد نگهداری و گزارش ذخایر</span></div></div><div class="tb6"><div class="hd"><span class="cd">B2</span><b>خطر مسدودی</b></div><p class="qq">«اگر حساب یا شریک بسته شود، پولم چه می‌شود؟»</p><div class="rw"><span class="lb">شاهد</span><span>«ممکن است صراف کلاهبرداری کند یا دولت اموالش را ببندد.» <i>مصاحبهٔ ۴</i></span></div><div class="rw"><span class="lb">پاسخ</span><span>پخش پس‌انداز در چند جا، تا به یک طرف وابسته نباشد</span></div></div><div class="tb6"><div class="hd"><span class="cd">B3</span><b>خروج</b></div><p class="qq">«هر وقت بخواهم، پولم برمی‌گردد؟»</p><div class="rw"><span class="lb">شاهد</span><span>دلار سپرده بود؛ ریال با نرخ دولتی پس گرفت. <i>مصاحبهٔ ۶</i></span></div><div class="rw"><span class="lb">پاسخ</span><span>برداشت همان روز، برداشت حضوری و حالت قطع اینترنت</span></div></div><div class="tb6"><div class="hd"><span class="cd">B4</span><b>شفافیت هزینه</b></div><p class="qq">«دقیقاً چقدر از پولم کم می‌شود؟»</p><div class="rw"><span class="lb">شاهد</span><span>«شفافیت اعتمادساز است؛ اما شفافیتی که من هم بفهمم.» <i>مصاحبهٔ ۳</i></span></div><div class="rw"><span class="lb">پاسخ</span><span>نرخ و همهٔ هزینه‌ها، پیش از تأیید و قطعی</span></div></div><div class="tb6"><div class="hd"><span class="cd">B5</span><b>کنترل</b></div><p class="qq">«تصمیم دربارهٔ پولم هنوز با خودم است؟»</p><div class="rw"><span class="lb">شاهد</span><span>کیف پول شخصی را ۴ نفر باز کردند و هیچ‌کس تمامش نکرد. <i>تست ۴٫۵</i></span></div><div class="rw"><span class="lb">پاسخ</span><span>پیش‌نمایش هر تغییر؛ بی‌تأیید شما، پولی جابه‌جا نمی‌شود</span></div></div><div class="tb6"><div class="hd"><span class="cd">B6</span><b>مشروعیت</b></div><p class="qq">«پشت این سرویس چه کسی است؟»</p><div class="rw"><span class="lb">شاهد</span><span>«برای اعتماد، دنبال شخصیت حقوقی هستم.» <i>مصاحبهٔ ۸</i></span></div><div class="rw"><span class="lb">پاسخ</span><span>نام شریک، مسئول پاسخ‌گویی و پشتیبان انسانی</span></div></div></div>
+  <div class="grow"></div>
+  <div class="tbl"><b>آنچه آموختیم:</b> کنترل یعنی حق انتخاب و تأیید، نه لزوماً نگهداری شخصی. و اعتماد با توضیح ساخته نمی‌شود؛ با شاهدی که همان لحظه دیده شود.</div>
+  <p class="sm">نقشهٔ موانع از کارگاه اعتماد تیم آمد؛ سپس با مصاحبه‌های فاز یک و تست نسخهٔ ۴٫۵ (راند «تست اول ارسال») سنجیده شد.</p>
 </section>
 
 <section class="sl" data-part="2">
@@ -2489,9 +2500,9 @@ let cur=0, T=[];
 
 slides.forEach((s,k)=>{ if(k>PIVOT) s.classList.add('post'); });
 /* ورودِ تدریجی، به ترتیبِ خواندن */
-const BUILD='.gchain>div,.gq,.gq4>div,.gfind>div,.gmx .cl,.gsgc>div,.gsw .r,.gres,.grfc,.grf>div,.glad div.r,.gpl>div,.gcr>div,.gst tr,.gmh>div,.gfm tr,.gtwo>div,.ggate,.gmoney,.gab .c,.gfx,.gfn div,.gback,.gdec .rows>div,.gdec .side>div,.gtools,.gfoot,.ghonest,.gnote,.kc,.cav,.fnote,.ask div,.ft,.lad>div,.cg>div,.tk5>div,.dc2,.mbp .it,.mbp .hd,.wv .bx,.nfn>div,.ep>div,.stp>div,.seq>div,.gp>div,.arch2 .lyr,.arch2 .srcs div,.wf .grp,.eb,.t,.lead,.sm,.card,.pw,.chip,.ring,.br,.fun,.tl .it,.div li,.div .n,.arrow,.force,.half,.mth,.ins p,.q,.rt-n,.hub,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid,.sr,.leg3 div,.stp2,.vp,.vq2,.lvc>div,.lvq p,.lvf div';
+const BUILD='.gchain>div,.gq,.gq4>div,.gfind>div,.gmx .cl,.gsgc>div,.gsw .r,.gres,.grfc,.grf>div,.glad div.r,.gpl>div,.gcr>div,.gst tr,.gmh>div,.gfm tr,.gtwo>div,.ggate,.gmoney,.gab .c,.gfx,.gfn div,.gback,.gdec .rows>div,.gdec .side>div,.gtools,.gfoot,.ghonest,.gnote,.kc,.cav,.fnote,.ask div,.ft,.lad>div,.cg>div,.tk5>div,.dc2,.mbp .it,.mbp .hd,.wv .bx,.nfn>div,.ep>div,.stp>div,.seq>div,.gp>div,.arch2 .lyr,.arch2 .srcs div,.wf .grp,.eb,.t,.lead,.sm,.card,.pw,.chip,.ring,.br,.fun,.tl .it,.div li,.div .n,.arrow,.force,.half,.mth,.ins p,.q,.rt-n,.hub,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid,.sr,.leg3 div,.stp2,.vp,.vq2,.tb6,.lvc>div,.lvq p,.lvf div';
 slides.forEach(s=>{ if(s.classList.contains('splash')||s.classList.contains('pivot')) return;
-  let k=0; s.querySelectorAll(BUILD).forEach(e=>{ if(e.parentElement.closest('.gchain>div,.gq4>div,.gfind>div,.gsgc>div,.gsw .r,.grf>div,.gmh>div,.gtwo>div,.gab .c,.gdec .rows>div,.gdec .side>div,.gq,.gres,.gback,.kc,.cav,.ft,.lad>div,.cg>div,.tk5>div,.dc2,.mbp .it,.wv .bx,.nfn>div,.ep>div,.stp>div,.seq>div,.gp>div,.arch2 .lyr,.wf .grp,.card,.pw,.ring,.force,.half,.mth,.chip,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid,.stp2,.vp,.vq2')) return; e.classList.add('bd'); e.style.setProperty('--i',Math.min(k++,16)); }); });
+  let k=0; s.querySelectorAll(BUILD).forEach(e=>{ if(e.parentElement.closest('.gchain>div,.gq4>div,.gfind>div,.gsgc>div,.gsw .r,.grf>div,.gmh>div,.gtwo>div,.gab .c,.gdec .rows>div,.gdec .side>div,.gq,.gres,.gback,.kc,.cav,.ft,.lad>div,.cg>div,.tk5>div,.dc2,.mbp .it,.wv .bx,.nfn>div,.ep>div,.stp>div,.seq>div,.gp>div,.arch2 .lyr,.wf .grp,.card,.pw,.ring,.force,.half,.mth,.chip,.panel,.qc,.bx,.wc,.src,.zc,.fc,.zh,.zmid,.stp2,.vp,.vq2,.tb6')) return; e.classList.add('bd'); e.style.setProperty('--i',Math.min(k++,16)); }); });
 
 function fit(){ const s=Math.min(innerWidth/1920,innerHeight/1080); stage.style.transform=`translate(-50%,-50%) scale(${s})`; }
 addEventListener('resize',fit); fit();
